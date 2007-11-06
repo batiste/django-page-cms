@@ -1,0 +1,10 @@
+{% load pages %}
+<li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+    {% if children.count %}
+    <ul>
+    {% for child in children %}
+        {% show_menu child url %}
+    {% endfor %}
+    </ul>
+    {% endif %}
+</li>

@@ -1,0 +1,13 @@
+
+-   fields: {name: english}
+    model: pages.language
+    pk: en
+-   fields: {name: french}
+    model: pages.language
+    pk: fr
+-   fields: {name: german}
+    model: pages.language
+    pk: de
+-   fields: {name: italian}
+    model: pages.language
+    pk: it

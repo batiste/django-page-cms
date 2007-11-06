@@ -1,0 +1,101 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_modify adminmedia %}
+{% block title %}List of page{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css" />
+{% endblock %}
+
+{% block content %}
+<!-- Content -->
+
+<h1>{% if add %}Add{% else %}Change{% endif %} page</h1>
+<div id="content-main">
+
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+  <!--<li><a href="history/" class="historylink">{% trans "History" %}</a></li>-->
+  {% if has_absolute_url %}<li><a href="{{ page.get_absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+
+<form action="" method="post" id="page_form">
+<div>
+
+<fieldset class="module aligned ()">
+<div class="form-row" >
+  {% if form.language.errors %}<ul class="errorlist inline"><li>{{ form.language.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_title" class="required">Language:</label>
+    {{ form.language }}
+    
+    {% if not add %}
+    <script>
+    s = document.getElementById('id_language');
+    
+    s.onchange=function(){
+        index = s.selectedIndex;
+        array = window.location.href.split('?');
+        window.location.href=array[0]+'?language='+ s.options[index].value;
+        }
+    </script>
+    {% endif %}
+</div>
+
+<div class="form-row" >
+  {% if form.title.errors %}<ul class="errorlist"><li>{{ form.title.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_title" class="required">Title:</label> 
+  {{ form.title }}
+</div>
+
+<div class="form-row" >
+  {% if form.slug.errors %}<ul class="errorlist"><li>{{ form.slug.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_title" class="required">Slug:</label> 
+  {{ form.slug }}
+</div>
+
+<div class="form-row" >
+  {% if form.body.errors %}<ul class="errorlist"><li>{{ form.body.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_body" class="required">Body:</label>
+  {{ form.body }}
+</div>
+
+<div class="form-row{% if form.status.errors %} errors{% endif %}" >
+  {% if form.status.errors %}<ul class="errorlist"><li>{{ form.status.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_status" class="required">Status:</label> 
+  {{ form.status }}
+</div>
+
+<div class="form-row" >
+  {% if form.parent.errors %}<ul class="errorlist"><li>{{ form.parent.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_parent">Parent page:</label> 
+  {{ form.parent }}
+</div>
+
+{% if form.template %}
+<div class="form-row" >
+  {% if form.template.errors %}<ul class="errorlist"><li>{{ form.template.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_parent">Template:</label> 
+  {{ form.template }}
+</div>
+{% endif %}
+
+</fieldset>
+
+<div class="submit-row">
+<p class="float-left"><a href="delete/" class="deletelink">Delete</a></p>
+<!--<input type="submit" value="Save and add another" name="_addanother"  />
+<input type="submit" value="Save and continue editing" name="_continue" />-->
+<input type="submit" value="Save" class="default" />
+</div>
+
+<script type="text/javascript">document.getElementById("id_title").focus();</script>
+
+</div>
+</form></div>
+
+<br class="clear" />
+</div>
+<!-- END Content -->
+{% endblock %}

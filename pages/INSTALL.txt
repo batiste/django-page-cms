@@ -1,0 +1,62 @@
+=A little django CMS application=
+
+Author : Batiste Bieler : http://batiste.dosimple.ch/blog/
+
+The goal of this project is to create a simple Django application to administrate static hierarchical web pages in multiple languages.
+
+Key features:
+
+  * Create/Edit/Delete hierarchical pages
+  * Django admin integration
+  * Multilingual support
+  * Multiple inherited template support
+  * As simple as possible
+
+==Install==
+
+First, copy the pages directory into your project directory.
+
+Add pages to your installed apps :
+
+{{{
+INSTALLED_APPS = (
+    ...
+    'pages',
+)
+}}}
+
+===Install urls===
+
+{{{
+    (r'^pages/$', 'pages.views.slug'),
+    (r'^pages/(?P<slug>[^/]+)/$', 'pages.views.slug'),
+    (r'^pages/.*/(?P<slug>[^/]+)/$', 'pages.views.slug'),
+    
+    (r'^admin/pages/page/$', 'pages.admin_views.list_page'),
+    (r'^admin/pages/page/add/$', 'pages.admin_views.add'),
+    (r'^admin/pages/page/(?P<page_id>\d+)/$', 'pages.admin_views.modify'),
+    (r'^admin/', include('django.contrib.admin.urls')),
+}}}
+
+You *must* also set the DEFAULT_PAGE_TEMPLATE variable in your settings if you want that the slug function works.
+
+You can also add the PAGE_TEMPLATE variable in your settings if you want template  customization:
+
+{{{
+PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
+}}}
+
+Cool.html and nice.html must exists in your template directory. If you don't set PAGE_TEMPLATES, the app will run fine anyway.
+
+==Retrieve localized content in templates==
+
+To know the preferred language of the user, you have to give the request to template tag: 
+
+{{{
+ <h2>{% show_content current_page 'title' request %}</h2>
+ <p>{% show_content current_page 'body' request %}</p>
+}}}
+
+==Compatibility==
+
+The pages app as been developed using the last Django trunk. Python 2.4 is needed because a relative import is used in pages/templatetags/pages.py

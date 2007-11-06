@@ -8,6 +8,7 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
+DEFAULT_PAGE_TEMPLATE = 'index.html'
 PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
 
 MANAGERS = ADMINS

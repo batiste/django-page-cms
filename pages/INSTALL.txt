@@ -12,7 +12,19 @@ Key features:
   * Multiple inherited template support
   * As simple as possible
 
-==Install==
+==Test it==
+
+To test this CMS checkout the code with subversion : 
+
+{{{svn checkout http://django-page-cms.googlecode.com/svn/trunk/ django-page-cms}}}
+
+And then, run the development server :
+
+{{{manage.py runserver}}}
+
+There is a default sqlite3 database. You can log in the admin with the user name *admin* and password *admin*.
+
+==Install in legacy project==
 
 First, copy the pages directory into your project directory.
 
@@ -40,7 +52,7 @@ INSTALLED_APPS = (
 
 You *must* also set the DEFAULT_PAGE_TEMPLATE variable in your settings if you want that the slug function works.
 
-You can also add the PAGE_TEMPLATE variable in your settings if you want template  customization:
+You can also add the PAGE_TEMPLATES variable in your settings if you want template  customization:
 
 {{{
 PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
@@ -59,4 +71,4 @@ To know the preferred language of the user, you have to give the request to temp
 
 ==Compatibility==
 
-The pages app as been developed using the last Django trunk. Python 2.4 is needed because a relative import is used in pages/templatetags/pages.py
+The pages app as been developed using the latest Django trunk (6635). Python 2.5 is needed because of the new decorator syntax.

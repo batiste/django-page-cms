@@ -36,14 +36,14 @@ class PageDraftsManager(models.Manager):
         return super(PageDraftsManager, self).get_query_set().filter(status=0)
 
 class Page(models.Model):
-    """(Page description)"""
+    """A simple hierarchical page model"""
 
     STATUSES = (
         (0, _('Draft')),
         (1, _('Published'))
     )
     
-    # how to handle slug in with i18n ?
+    # slugs are the same for each language
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
@@ -52,7 +52,7 @@ class Page(models.Model):
     
     status = models.IntegerField(choices=STATUSES, radio_admin=True, default=0)
     template = models.CharField(maxlength=100, null=True, blank=True)
-    # todo
+    # TODO : add the possibility to change the order of the page acording this variable
     # order = models.IntegerField()
 
     # Managers
@@ -69,14 +69,12 @@ class Page(models.Model):
             self.publication_date = datetime.now()
         super(Page, self).save()
         
-    def title(self):
-        # TODO : find a way to get request.LANGUAGE_CODE here
-        c = Content.get_content(self, 'fr', 0, True)
+    def title(self, lang):
+        c = Content.get_content(self, lang, 0, True)
         return c
     
-    def body(self):
-        # TODO : find a way to get request.LANGUAGE_CODE here
-        c = Content.get_content(self, 'fr', 1, True)
+    def body(self, lang):
+        c = Content.get_content(self, lang, 1, True)
         return c
     
     def get_absolute_url(self):
@@ -116,6 +114,7 @@ class Page(models.Model):
             return "%s" % (self.slug)
         
 class Content(models.Model):
+    """A block of content, tied to a page, for a particular language"""
     CONTENT_TYPE = ((0, 'title'),(1,'body'))
     language = models.ForeignKey(Language)
     body = models.TextField()

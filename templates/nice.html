@@ -1,4 +1,4 @@
-{% load menu %}
+{% load pages %}
 
 <h1>A django minimal CMS based on pages (nice template)</h1>
 
@@ -11,6 +11,6 @@
 </ul>
 
 {% if current_page %}
-<h2>{% show_content current_page 'title' request %}</h2>
-<p>{% show_content current_page 'body' request %}</p>
+<h2>{% show_content current_page 'title' %}</h2>
+<p>{% show_content current_page 'body' %}</p>
 {% endif %}

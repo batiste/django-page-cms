@@ -8,7 +8,7 @@ from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
 
 def get_form(request, dict=None, current_page=None):
-    
+    """get the custom form to create or edit a page in the admin interface"""
     if current_page:
         parent_choices = [(page.id, page.slug) for page in Page.objects.exclude(pk=current_page.id)]
     else:
@@ -57,6 +57,7 @@ def get_form(request, dict=None, current_page=None):
 @staff_member_required
 @auto_render
 def add(request):
+    """create a new page for a particular language"""
     opts = Page._meta
     add = True
     if(request.POST):
@@ -85,11 +86,11 @@ def add(request):
 @staff_member_required
 @auto_render
 def modify(request, page_id):
+    """modifiy a page in a particular language"""
     opts = Page._meta
     change = True
     has_absolute_url = True
     page = Page.objects.get(pk=page_id)
-    original = page.title()
     if(request.POST):
         form = get_form(request, request.POST, page)
         if form.is_valid():

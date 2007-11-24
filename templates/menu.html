@@ -1,5 +1,5 @@
 {% load pages %}
-<li><a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+<li><a href="{{ page.get_absolute_url }}">{% show_content page 'title' %}</a>
     {% if children.count %}
     <ul>
     {% for child in children %}

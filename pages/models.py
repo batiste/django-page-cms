@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
 class Language(models.Model):
+    """A simple model to bescribe available languages for pages"""
     id = models.CharField(primary_key=True, maxlength=8)
     name = models.CharField(maxlength=20)
     
@@ -12,6 +13,7 @@ class Language(models.Model):
     
     @classmethod
     def get_from_request(cls, request, current_page=None):
+        """Return the most obvious language according the request"""
         if 'language' in request.GET:
             l=Language.objects.get(pk=request.GET['language'])
         elif 'language' in request.POST:
@@ -20,11 +22,13 @@ class Language(models.Model):
             try:
                 l=Language.objects.get(pk=request.LANGUAGE_CODE)
             except Language.DoesNotExist:
-                languages = current_page.get_languages()
-                if len(languages) > 0:
-                    l=languages[0]
-                else:
-                    l=Language.objects.latest('id')
+                # in last resort, get the first lanugage available in the page
+                if current_page:
+                    languages = current_page.get_languages()
+                    if len(languages) > 0:
+                        l=languages[0]
+        if not l:
+            l=Language.objects.latest('id')
         return l
 
 class PagePublishedManager(models.Manager):
@@ -81,7 +85,7 @@ class Page(models.Model):
         return '/pages/'+self.get_url()
     
     def get_languages(self):
-        """Get the list of all existing languages for this page"""
+        """get the list of all existing languages for this page"""
         contents = Content.objects.filter(page=self, type=1)
         languages = []
         for c in contents:
@@ -89,6 +93,7 @@ class Page(models.Model):
         return languages
         
     def get_url(self):
+        """get the url of this page, adding parent's slug"""
         url = self.slug + '/'
         p = self.parent
         while p:
@@ -98,6 +103,8 @@ class Page(models.Model):
         return url
         
     def get_template(self):
+        """get the template of this page if defined 
+        or if closer parent if defined or None otherwise"""
         p = self
         while p:
             if p.template:
@@ -129,6 +136,7 @@ class Content(models.Model):
     
     @classmethod
     def set_or_create_content(cls, page, language, type, body):
+        """set or create a content for a particular page and language"""
         try:
             c = Content.objects.get(page=page, language=language, type=type)
             c.body = body
@@ -139,6 +147,7 @@ class Content(models.Model):
         
     @classmethod
     def get_content(cls, page, language, type, language_fallback=False):
+        """get a content for a particular page and language. Fallback in another language if wanted"""
         try:
             c = Content.objects.get(language=language, page=page, type=type)
             return c.body

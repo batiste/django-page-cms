@@ -132,7 +132,7 @@ class Content(models.Model):
         pass
     
     def __str__(self):
-        return "%s :: %s" % (self.page.title(), self.body[0:15])
+        return "%s :: %s" % (self.page.slug, self.body[0:15])
     
     @classmethod
     def set_or_create_content(cls, page, language, type, body):

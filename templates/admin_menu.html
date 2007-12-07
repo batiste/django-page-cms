@@ -4,7 +4,6 @@
         <a href="{{ url }}{{ page.id }}/?language={{ lang }}">{{ lang }}</a>
         <span style="font-weight:normal">|</span>
     {% endfor %}
-    {{ page.order }}
     {% if page.brothers.count %}
     <span class="up-down">
         {% if not page.is_first %}<a href="{{ url }}{{ page.id }}/up/" class="pages-up">up</a>{% endif %}

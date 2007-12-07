@@ -4,6 +4,24 @@
 {% block bodyclass %}change-list{% endblock %}
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}</div>{% endblock %}{% endif %}
 {% block coltype %}flex{% endblock %}
+{% block extrastyle %}
+<style>
+.pages-up {
+background:url(/media/img/admin/arrow-up.gif) left center no-repeat;
+padding-left:12px;
+}
+.pages-down {
+background:url(/media/img/admin/arrow-down.gif) left center no-repeat;
+padding-left:12px;
+}
+.row1 .up-down{
+    background:#fff;
+}
+.row2 .up-down{
+    background:#eee;
+}
+</style>
+{% endblock %}
 {% block content %}
 <div id="content-main">
 {% block object-tools %}

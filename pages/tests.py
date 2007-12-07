@@ -34,3 +34,16 @@ class PagesTestCase(TestCase):
                     # if there is no content in this, there must at least have something 
                     # in another one
                     self.assertNotEqual(Content.get_content(p, l, 0, True), None)
+                    
+    def test_03_order(self):
+        """The order of a new page must be the greatest across his brothers"""
+        user = User.objects.get(pk=1)
+        page = Page(author=user, slug="just-a-test")
+        page.save()
+        self.assertTrue(page.is_last())
+        max = page.order
+        for p in page.brothers():
+            if p.order > max:
+                max = p.order
+        self.assertEqual(max, page.order)
+        

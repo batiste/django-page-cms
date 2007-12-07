@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Language(models.Model):
     """A simple model to bescribe available languages for pages"""
-    id = models.CharField(primary_key=True, maxlength=8)
+    id = models.CharField(primary_key=True, max_length=8)
     name = models.CharField(maxlength=20)
     
     def __str__(self):
@@ -57,7 +57,7 @@ class Page(models.Model):
     status = models.IntegerField(choices=STATUSES, radio_admin=True, default=0)
     template = models.CharField(maxlength=100, null=True, blank=True)
     # TODO : add the possibility to change the order of the page acording this variable
-    # order = models.IntegerField()
+    order = models.IntegerField()
 
     # Managers
     objects = models.Manager()
@@ -66,13 +66,74 @@ class Page(models.Model):
 
     class Admin:
         pass
+    
+    class Meta:
+        ordering = ['order']
 
     def save(self):
         self.slug = slugify(self.slug)
         if self.status == 1 and self.publication_date is None:
+            from datetime import datetime
             self.publication_date = datetime.now()
+        if not self.status:
+            self.status = 0
+        recalculate_order = False
+        #if not self.order:
+        #    self.order=1
+        #    recalculate_order = True
         super(Page, self).save()
+        #if recalculate_order:
+        #    self.set_default_order()
+        #    super(Page, self).save()
         
+    def set_default_order(self):
+        max = 0
+        brothers = self.brothers()
+        if brothers.count():
+            for brother in brothers:
+                if brother.order > max:
+                    max = brother.order
+        self.order = max + 1
+    
+    def brothers_and_me(self):
+        if self.parent:
+            return Page.objects.filter(parent=self.parent)
+        else:
+            return Page.objects.filter(parent__isnull=True)
+        
+    def brothers(self):
+        return self.brothers_and_me().exclude(pk=self.id)
+        
+    def is_first(self):
+        return self.brothers_and_me().order_by('order')[0:1][0] == self
+    
+    def is_last(self):
+        return self.brothers_and_me().order_by('-order')[0:1][0] == self
+        
+    def up(self):
+        brother = self.brothers().order_by('-order').filter(order__lt=self.order)[0:1]
+        if not brother.count():
+            return False
+        brother = brother[0]
+        brother_order = brother.order
+        brother.order = self.order
+        self.order = brother_order
+        brother.save()
+        self.save()
+        return True
+        
+    def down(self):
+        brother = self.brothers().order_by('order').filter(order__gt=self.order)[0:1]
+        if not brother.count():
+            return False
+        brother = brother[0]
+        brother_order = brother.order
+        brother.order = self.order
+        self.order = brother_order
+        brother.save()
+        self.save()
+        return True
+
     def title(self, lang):
         c = Content.get_content(self, lang, 0, True)
         return c
@@ -116,9 +177,9 @@ class Page(models.Model):
 
     def __str__(self):
         if self.parent:
-            return "%s :: %s" % (self.parent.slug, self.slug)
+            return "%s :: %s :: %d" % (self.parent.slug, self.slug, self.order)
         else:
-            return "%s" % (self.slug)
+            return "%s :: %d" % (self.slug, self.order)
         
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""

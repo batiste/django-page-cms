@@ -129,7 +129,8 @@
       "creation_date": "2007-11-06 15:11:25", 
       "template": "nice.html", 
       "publication_date": null, 
-      "slug": "my-first-page"
+      "slug": "my-first-page",
+      "order": 1
     }
   }, 
   {
@@ -142,7 +143,8 @@
       "creation_date": "2007-11-06 16:44:17", 
       "template": "cool.html", 
       "publication_date": null, 
-      "slug": "my-sub-page"
+      "slug": "my-sub-page",
+      "order": 2
     }
   }, 
   {
@@ -155,7 +157,8 @@
       "creation_date": "2007-11-06 16:44:31", 
       "template": "cool.html", 
       "publication_date": null, 
-      "slug": "my-second-page"
+      "slug": "my-second-page",
+      "order": 3
     }
   }, 
   {
@@ -168,7 +171,8 @@
       "creation_date": "2007-11-06 16:45:02", 
       "template": "nice.html", 
       "publication_date": null, 
-      "slug": "just-an-example-1"
+      "slug": "just-an-example-1",
+      "order": 4
     }
   }, 
   {
@@ -181,7 +185,8 @@
       "creation_date": "2007-11-06 16:45:28", 
       "template": "", 
       "publication_date": null, 
-      "slug": "just-an-example-2"
+      "slug": "just-an-example-2",
+      "order": 5
     }
   }, 
   {
@@ -194,7 +199,8 @@
       "creation_date": "2007-11-06 16:45:42", 
       "template": "", 
       "publication_date": null, 
-      "slug": "just-an-example-3"
+      "slug": "just-an-example-3",
+      "order": 6
     }
   }, 
   {

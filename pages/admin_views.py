@@ -98,11 +98,17 @@ def modify(request, page_id):
             Content.set_or_create_content(page, language, 0, form.cleaned_data['title'])
             Content.set_or_create_content(page, language, 1, form.cleaned_data['body'])
             if form.cleaned_data['parent']:
-                p = Page.objects.get(pk=form.cleaned_data['parent'])
-                # avoid to create a infinite loop
-                if p!=page:
-                    page.parent = p
+                parent = Page.objects.get(pk=form.cleaned_data['parent'])
+                # if the parent as moved we need to update order
+                if page.parent != parent:
+                    page.parent = parent
+                    page.set_default_order()
+                page.parent = parent
             else:
+                # if the parent as moved we need to update order
+                if page.parent != None:
+                    page.parent = None
+                    page.set_default_order()
                 page.parent = None
             page.status = form.cleaned_data['status']
             page.slug = form.cleaned_data['slug']
@@ -129,3 +135,17 @@ def list_page(request):
     opts = Page._meta
     pages = Page.objects.filter(parent__isnull=True)
     return 'admin/pages/page/change_list.html', locals()
+
+@staff_member_required
+@auto_render
+def up(request, page_id):
+    page = Page.objects.get(pk=page_id)
+    page.up()
+    return HttpResponseRedirect("../../")
+
+@staff_member_required
+@auto_render
+def down(request, page_id):
+    page = Page.objects.get(pk=page_id)
+    page.down()
+    return HttpResponseRedirect("../../")

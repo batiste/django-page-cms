@@ -56,7 +56,6 @@ class Page(models.Model):
     
     status = models.IntegerField(choices=STATUSES, radio_admin=True, default=0)
     template = models.CharField(maxlength=100, null=True, blank=True)
-    # TODO : add the possibility to change the order of the page acording this variable
     order = models.IntegerField()
 
     # Managers
@@ -78,13 +77,14 @@ class Page(models.Model):
         if not self.status:
             self.status = 0
         recalculate_order = False
-        #if not self.order:
-        #    self.order=1
-        #    recalculate_order = True
+        if not self.order:
+            self.order=1
+            recalculate_order = True
         super(Page, self).save()
-        #if recalculate_order:
-        #    self.set_default_order()
-        #    super(Page, self).save()
+        # not so proud of this code
+        if recalculate_order:
+            self.set_default_order()
+            super(Page, self).save()
         
     def set_default_order(self):
         max = 0

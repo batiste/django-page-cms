@@ -110,28 +110,26 @@ class Page(models.Model):
     def is_last(self):
         return self.brothers_and_me().order_by('-order')[0:1][0] == self
         
+    @classmethod
+    def switch_page(cls, page1, page2):
+        buffer =  page1.order
+        page1.order = page2.order
+        page2.order = buffer
+        page1.save()
+        page2.save()
+        
     def up(self):
         brother = self.brothers().order_by('-order').filter(order__lt=self.order)[0:1]
         if not brother.count():
             return False
-        brother = brother[0]
-        brother_order = brother.order
-        brother.order = self.order
-        self.order = brother_order
-        brother.save()
-        self.save()
+        Page.switch_page(self, brother[0])
         return True
         
     def down(self):
         brother = self.brothers().order_by('order').filter(order__gt=self.order)[0:1]
         if not brother.count():
             return False
-        brother = brother[0]
-        brother_order = brother.order
-        brother.order = self.order
-        self.order = brother_order
-        brother.save()
-        self.save()
+        Page.switch_page(self, brother[0])
         return True
 
     def title(self, lang):

@@ -137,7 +137,7 @@
     "pk": 2, 
     "model": "pages.page", 
     "fields": {
-      "status": 0, 
+      "status": 1, 
       "parent": 1, 
       "author": 1, 
       "creation_date": "2007-11-06 16:44:17", 
@@ -165,7 +165,7 @@
     "pk": 4, 
     "model": "pages.page", 
     "fields": {
-      "status": 0, 
+      "status": 1, 
       "parent": 3, 
       "author": 1, 
       "creation_date": "2007-11-06 16:45:02", 
@@ -179,7 +179,7 @@
     "pk": 5, 
     "model": "pages.page", 
     "fields": {
-      "status": 0, 
+      "status": 1, 
       "parent": 3, 
       "author": 1, 
       "creation_date": "2007-11-06 16:45:28", 
@@ -193,7 +193,7 @@
     "pk": 6, 
     "model": "pages.page", 
     "fields": {
-      "status": 0, 
+      "status": 1, 
       "parent": 2, 
       "author": 1, 
       "creation_date": "2007-11-06 16:45:42", 

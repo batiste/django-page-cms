@@ -69,6 +69,15 @@ class Page(models.Model):
     class Meta:
         ordering = ['order']
 
+    @classmethod
+    def get_status_code(cls, content_type):
+        code = None
+        for ct in Content.CONTENT_TYPE:
+            if ct[1] == content_type:
+                code = ct[0]
+                break
+        return code
+
     def save(self):
         self.slug = slugify(self.slug)
         if self.status == 1 and self.publication_date is None:

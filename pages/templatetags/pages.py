@@ -18,11 +18,7 @@ def show_admin_menu(context, page, url='/admin/pages/page/'):
 def show_content(context, page, content_type):
     l = Language.get_from_request(context['request'])
     request = context['request']
-    code = None
-    for ct in Content.CONTENT_TYPE:
-        if ct[1] == content_type:
-            code = ct[0]
-            break
+    code = Page.get_status_code(content_type)
     if code is not None:
         c = Content.get_content(page, l, code, True)
         if c:

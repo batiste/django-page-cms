@@ -121,6 +121,7 @@ def modify(request, page_id):
             return HttpResponseRedirect("../")
     else:
         l=Language.get_from_request(request)
+        traduction_language = Language.objects.exclude(pk=l.id)
         if page.parent:
             parent_id  = page.parent.id
         else:
@@ -149,3 +150,14 @@ def down(request, page_id):
     page = Page.objects.get(pk=page_id)
     page.down()
     return HttpResponseRedirect("../../")
+
+#@staff_member_required
+@auto_render
+def traduction(request, page_id, language_id):
+    page = Page.objects.get(pk=page_id)
+    l = Language.objects.get(pk=language_id)
+    title = Content.get_content(page, l, 0, True)
+    if Content.get_content(page, l, 0) !=  title:
+        language_error = True
+    body = Content.get_content(page, l, 1, True)
+    return 'admin/pages/page/traduction_helper.html', locals()

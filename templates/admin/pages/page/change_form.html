@@ -25,6 +25,48 @@
 <div>
 
 <fieldset class="module aligned ()">
+
+<div class="form-row" style="float:right;width:45%">
+  <label for="id_title" class="required">Language helper:</label>
+    <select id="traduction_helper_select">
+    <option value="" selected="selected">------</option>
+    {% for lang in traduction_language %}
+    <option value="{{ lang.id }}">{{ lang.name }}</option>
+    {% endfor %}
+    </select>
+    <div id="traduction_helper_content" style="clear:both;margin-top:1em;background:#FFFFCC;padding:1em;display:none"></div>
+    <script>
+    var get = function(s){ return document.getElementById(s)};
+    var helper_select = get('traduction_helper_select');
+    var xmlHttp = false;
+    /*@cc_on @*/
+    /*@if (@_jscript_version >= 5)
+    try {xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");} catch (e) {
+        try {xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");} catch (e2) {xmlHttp = false;}
+    }
+    @end @*/
+    if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+        xmlHttp = new XMLHttpRequest();
+    }
+    helper_select.onchange=function() {
+        var index = helper_select.selectedIndex;
+        if(index == 0) {
+            get('traduction_helper_content').style['display']='none'; return;
+        }
+        var array = window.location.href.split('?');
+        xmlHttp.open("GET", array[0]+'traduction/'+helper_select.options[index].value+'/' , true);
+        xmlHttp.onreadystatechange = function(){
+            if (xmlHttp.readyState == 4) {
+                get('traduction_helper_content').innerHTML = xmlHttp.responseText;
+                get('traduction_helper_content').style['display']='block';
+            }
+        }
+        xmlHttp.send(null);
+    }
+    </script>
+</div>
+
+
 <div class="form-row" >
   {% if form.language.errors %}<ul class="errorlist inline"><li>{{ form.language.errors|join:", " }}</li></ul>{% endif %}
   <label for="id_title" class="required">Language:</label>
@@ -32,12 +74,11 @@
     
     {% if not add %}
     <script>
-    s = document.getElementById('id_language');
-    
-    s.onchange=function(){
-        index = s.selectedIndex;
-        array = window.location.href.split('?');
-        window.location.href=array[0]+'?language='+ s.options[index].value;
+    var lang_select = document.getElementById('id_language');
+    lang_select.onchange=function(){
+        var index = lang_select.selectedIndex;
+        var array = window.location.href.split('?');
+        window.location.href=array[0]+'?language='+ lang_select.options[index].value;
         }
     </script>
     {% endif %}

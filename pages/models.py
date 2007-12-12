@@ -162,12 +162,11 @@ class Page(models.Model):
         
     def get_url(self):
         """get the url of this page, adding parent's slug"""
-        url = self.slug + '/'
+        url = "%s-%d/" % (self.slug, self.id)
         p = self.parent
         while p:
             url = p.slug + '/' + url
             p = p.parent
-
         return url
         
     def get_template(self):

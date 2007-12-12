@@ -6,10 +6,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django import newforms as forms
     
 @auto_render
-def slug(request, slug=None):
+def details(request, page_id=None):
     template = None
-    if slug:
-        current_page = Page.published.get(slug=slug)
+    if page_id:
+        current_page = Page.published.get(id=page_id)
         template = current_page.get_template()
     pages = Page.published.filter(parent__isnull=True)
     if not template:

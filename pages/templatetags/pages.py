@@ -1,5 +1,5 @@
 from django import template
-from ..pages.models import Language, Content
+from ..pages.models import Language, Content, Page
 register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)

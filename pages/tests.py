@@ -23,7 +23,7 @@ class PagesTestCase(TestCase):
                     if parent.template:
                         break
                     parent = p.parent
-                #the page must have inherited of it's parent template
+                #the page must have inherited of its parent template
                 self.assertEqual(parent.template, p.get_template())
                 
     def test_03_content(self):

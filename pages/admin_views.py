@@ -41,7 +41,7 @@ def get_form(request, dict=None, current_page=None):
         
         def clean_parent(self):
             if self.cleaned_data['parent'] and current_page and int(self.cleaned_data['parent'])==int(current_page.id):
-                raise forms.ValidationError('A page cannot be it\'s parent')
+                raise forms.ValidationError('A page cannot be its own parent')
             return self.cleaned_data['parent']
         
     from django.http import QueryDict

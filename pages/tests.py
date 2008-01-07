@@ -27,7 +27,7 @@ class PagesTestCase(TestCase):
                 self.assertEqual(parent.template, p.get_template())
                 
     def test_03_content(self):
-        """Check if there is always one content a least by page"""
+        """Check if there is always one content at least by page"""
         for p in Page.objects.all():
             for l in Language.objects.all():
                 if Content.get_content(p, l, 0) == None:

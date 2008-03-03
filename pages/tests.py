@@ -17,13 +17,13 @@ class PagesTestCase(TestCase):
         """Check if the template inheritance is working right"""
         for p in Page.objects.all():
             if p.template == '' and not p.get_template() == None:
-                #there is a parent with a template, go find it
+                # there is a parent with a template, go find it
                 parent = p.parent
                 while True:
                     if parent.template:
                         break
                     parent = p.parent
-                #the page must have inherited of its parent template
+                # the page must have inherited of its parent template
                 self.assertEqual(parent.template, p.get_template())
                 
     def test_03_content(self):

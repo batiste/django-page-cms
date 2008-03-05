@@ -1,14 +1,5 @@
 {% load hierarchical %}
-<li>
-    {% if node.linked_objects.all %}
-        <span style="float:right;font-weight:normal">
-        linked objects -
-        {% for lo in node.linked_objects.all %}
-            {{ lo.content_type|truncateletters:"18" }} : {{ lo.object|truncateletters:"18" }},
-        {% endfor %}
-        </span>
-    {% endif %}
-
+<td {% if level %}style="padding-left:{{level}}em"{% endif %}>
     <a href="{{ url }}{{ node.id }}/"  style="margin-right:1em;">{{ node.name }}</a>
     {% for lang in node.get_languages %} 
         <a href="{{ url }}{{ node.id }}/?language={{ lang }}">{{ lang }}</a>
@@ -21,12 +12,18 @@
         {% if not node.is_last %}<a href="{{ url }}{{ node.id }}/down/" class="nodes-down">down</a>{% endif %}
     </span>
     {% endif %}
-    
-    {% if children.count %}
-    <ul>
-    {% for child in children %}
-        {% show_admin_menu child url %}
+</td>
+<td>
+    {% for lo in node.linked_objects.all %}
+        {% if lo.object.get_admin_url %}
+            <a href="{{ lo.object.get_admin_url }}">{{ lo.content_type|truncateletters:"18" }} : {{ lo.object|truncateletters:"18" }} {% if not forloop.last %},{% endif %}</a>
+        {% endif %}
     {% endfor %}
-    </ul>
-    {% endif %}
-</li>
+
+{% if children.count %}
+</tr>
+{% for child in children %}
+    <tr>{% show_admin_menu child url level %}</tr>
+{% endfor %}
+<tr>
+{% endif %}

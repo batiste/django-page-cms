@@ -96,6 +96,9 @@ class Page(models.Model):
         c = Content.get_content(self, lang, 1, True)
         return c
     
+    def get_admin_url(self):
+        return '/admin/pages/page/%d/' % self.id
+        
     def get_absolute_url(self):
         return '/pages/'+self.get_url()
     

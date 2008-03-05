@@ -8,9 +8,13 @@ def show_menu(context, node, url='/'):
     return locals()"""
 
 @register.inclusion_tag('hierarchical/admin_menu.html', takes_context=True)
-def show_admin_menu(context, node, url='/admin/hierarchical/hierarchicalnode/'):
+def show_admin_menu(context, node, url='/admin/hierarchical/hierarchicalnode/', level=None):
     children = node.children.all()
     request = context['request']
+    if level is None:
+        level = 0
+    else:
+        level = level+2
     return locals()
 
 @register.filter(name='truncateletters')

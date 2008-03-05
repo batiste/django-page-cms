@@ -15,11 +15,11 @@ padding-left:12px;
 background:url(/media/img/admin/arrow-down.gif) left center no-repeat;
 padding-left:12px;
 }
-.row1 .up-down{
-    background:#fff;
-}
-.row2 .up-down{
+.up-down{
     background:#eee;
+}
+tr{
+    padding-left:1em;
 }
 </style>
 {% endblock %}
@@ -39,19 +39,16 @@ padding-left:12px;
 <table cellspacing="0">
 <thead>
 <tr>
-<th>
-node
-</th>
+<th>nodes</th>
+<th>linked objects</th>
 </tr>
 </thead>
 <tbody>
 
 {% for node in nodes %}
-<tr class="{% cycle row1,row2 %}"><th>
-<ul>
+<tr>
     {% show_admin_menu node %}
-</ul>
-</th></tr>
+</tr>
 {% endfor %}
 
 </tbody>

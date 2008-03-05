@@ -1,0 +1,1108 @@
+[
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2008-03-04 13:28:41", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$b2a85$541d0fcef58288663aff1096ff8169447ceb2bb8", 
+      "email": "admin@admin.com", 
+      "date_joined": "2007-11-06 14:00:44"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_message", 
+      "name": "Can add message", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_message", 
+      "name": "Can change message", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_message", 
+      "name": "Can delete message", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_group", 
+      "name": "Can add group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_group", 
+      "name": "Can change group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_group", 
+      "name": "Can delete group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_user", 
+      "name": "Can add user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_user", 
+      "name": "Can change user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_user", 
+      "name": "Can delete user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_permission", 
+      "name": "Can add permission", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_permission", 
+      "name": "Can change permission", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_permission", 
+      "name": "Can delete permission", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_contenttype", 
+      "name": "Can add content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_contenttype", 
+      "name": "Can change content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_contenttype", 
+      "name": "Can delete content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_session", 
+      "name": "Can add session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_session", 
+      "name": "Can change session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_session", 
+      "name": "Can delete session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_logentry", 
+      "name": "Can add log entry", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_logentry", 
+      "name": "Can change log entry", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_logentry", 
+      "name": "Can delete log entry", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_content", 
+      "name": "Can add content", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_content", 
+      "name": "Can change content", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_content", 
+      "name": "Can delete content", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_page", 
+      "name": "Can add page", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_page", 
+      "name": "Can change page", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_page", 
+      "name": "Can delete page", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_language", 
+      "name": "Can add language", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_language", 
+      "name": "Can change language", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_language", 
+      "name": "Can delete language", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_hierarchicalobject", 
+      "name": "Can add hierarchical object", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_hierarchicalobject", 
+      "name": "Can change hierarchical object", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_hierarchicalobject", 
+      "name": "Can delete hierarchical object", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_hierarchicalnode", 
+      "name": "Can add hierarchical node", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_hierarchicalnode", 
+      "name": "Can change hierarchical node", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_hierarchicalnode", 
+      "name": "Can delete hierarchical node", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "content", 
+      "name": "content", 
+      "app_label": "pages"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "contenttype", 
+      "name": "content type", 
+      "app_label": "contenttypes"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "group", 
+      "name": "group", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "hierarchicalnode", 
+      "name": "hierarchical node", 
+      "app_label": "hierarchical"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "hierarchicalobject", 
+      "name": "hierarchical object", 
+      "app_label": "hierarchical"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "language", 
+      "name": "language", 
+      "app_label": "pages"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "logentry", 
+      "name": "log entry", 
+      "app_label": "admin"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "message", 
+      "name": "message", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "page", 
+      "name": "page", 
+      "app_label": "pages"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "permission", 
+      "name": "permission", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "session", 
+      "name": "session", 
+      "app_label": "sessions"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "user", 
+      "name": "user", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": "680a339b6da0f855a67d30760f4858cd", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2008-03-18 11:54:17", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmQ3MjM3M2EwOGYxMWVjOWI0N2Rh\nNDg2YTk0NDQ5YzMw\n"
+    }
+  }, 
+  {
+    "pk": "0787142bb907e76fcbe241c680893365", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2008-03-18 13:28:41", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmQ3MjM3M2EwOGYxMWVjOWI0N2Rh\nNDg2YTk0NDQ5YzMw\n"
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 17:06:41", 
+      "object_repr": "node 6", 
+      "object_id": "6", 
+      "change_message": "Changed parent.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 17:06:35", 
+      "object_repr": "node 4", 
+      "object_id": "4", 
+      "change_message": "Changed parent.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-05 17:06:15", 
+      "object_repr": "node 7", 
+      "object_id": "7", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-05 17:05:26", 
+      "object_repr": "node 6", 
+      "object_id": "6", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-05 17:05:12", 
+      "object_repr": "node 5", 
+      "object_id": "5", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 17:03:48", 
+      "object_repr": "node 1", 
+      "object_id": "2", 
+      "change_message": "Changed order.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 16:59:05", 
+      "object_repr": "node 4", 
+      "object_id": "4", 
+      "change_message": "Changed order.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 16:55:45", 
+      "object_repr": "node 1", 
+      "object_id": "2", 
+      "change_message": "Changed order.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 3, 
+      "action_time": "2008-03-05 16:23:43", 
+      "object_repr": "node 4 : page-3", 
+      "object_id": "13", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 16:21:57", 
+      "object_repr": "node 4", 
+      "object_id": "4", 
+      "change_message": "Changed name.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 16:21:52", 
+      "object_repr": "node 3", 
+      "object_id": "1", 
+      "change_message": "Changed parent.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-05 16:21:47", 
+      "object_repr": "node4", 
+      "object_id": "4", 
+      "change_message": "Changed parent.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-05 16:21:40", 
+      "object_repr": "node4", 
+      "object_id": "4", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 3, 
+      "action_time": "2008-03-05 12:08:36", 
+      "object_repr": "node 1 : node 1", 
+      "object_id": "1", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 3, 
+      "action_time": "2008-03-05 12:08:32", 
+      "object_repr": "node 1 : admin", 
+      "object_id": "2", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 13:47:03", 
+      "object_repr": "node 3", 
+      "object_id": "1", 
+      "change_message": "Changed name.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 13:46:56", 
+      "object_repr": "node 2", 
+      "object_id": "3", 
+      "change_message": "Changed name.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 13:46:50", 
+      "object_repr": "node 1", 
+      "object_id": "2", 
+      "change_message": "Changed name.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-04 13:44:27", 
+      "object_repr": "asdf333", 
+      "object_id": "3", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-04 12:24:55", 
+      "object_repr": "HierarchicalObject object", 
+      "object_id": "1", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 12:06:02", 
+      "object_repr": "asfd", 
+      "object_id": "2", 
+      "change_message": "No fields changed.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 12:02:54", 
+      "object_repr": "art3rq34r3", 
+      "object_id": "1", 
+      "change_message": "Changed name.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 2, 
+      "action_time": "2008-03-04 12:02:49", 
+      "object_repr": "asf", 
+      "object_id": "1", 
+      "change_message": "No fields changed.", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-04 11:55:28", 
+      "object_repr": "asfd", 
+      "object_id": "2", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "admin.logentry", 
+    "fields": {
+      "action_flag": 1, 
+      "action_time": "2008-03-04 11:54:52", 
+      "object_repr": "asf", 
+      "object_id": "1", 
+      "change_message": "", 
+      "user": 1, 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 2", 
+      "type": 0, 
+      "page": 2, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 2", 
+      "type": 1, 
+      "page": 2, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 1", 
+      "type": 0, 
+      "page": 3, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 1", 
+      "type": 1, 
+      "page": 3, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "asdf23r23", 
+      "type": 0, 
+      "page": 3, 
+      "language": "fr"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "asfdpa\u00e8\u00e9spd\u00e8fp2f32", 
+      "type": 1, 
+      "page": 3, 
+      "language": "fr"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 3", 
+      "type": 0, 
+      "page": 1, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 3", 
+      "type": 1, 
+      "page": 1, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "asdfasd", 
+      "type": 0, 
+      "page": 1, 
+      "language": "fr"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "f6745745", 
+      "type": 1, 
+      "page": 1, 
+      "language": "fr"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "ljhjk", 
+      "type": 0, 
+      "page": 1, 
+      "language": "de"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "ztfufz", 
+      "type": 1, 
+      "page": 1, 
+      "language": "de"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 4", 
+      "type": 0, 
+      "page": 4, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "pages.content", 
+    "fields": {
+      "body": "page 4", 
+      "type": 1, 
+      "page": 4, 
+      "language": "en"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "pages.page", 
+    "fields": {
+      "status": 1, 
+      "author": 1, 
+      "creation_date": "2008-03-04 13:50:34", 
+      "template": "", 
+      "publication_date": null, 
+      "slug": "page-3"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "pages.page", 
+    "fields": {
+      "status": 1, 
+      "author": 1, 
+      "creation_date": "2008-03-04 14:15:16", 
+      "template": "cool.html", 
+      "publication_date": null, 
+      "slug": "page-2"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "pages.page", 
+    "fields": {
+      "status": 1, 
+      "author": 1, 
+      "creation_date": "2008-03-04 14:16:18", 
+      "template": "", 
+      "publication_date": null, 
+      "slug": "page-1"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "pages.page", 
+    "fields": {
+      "status": 1, 
+      "author": 1, 
+      "creation_date": "2008-03-05 16:23:24", 
+      "template": "nice.html", 
+      "publication_date": null, 
+      "slug": "page-4"
+    }
+  }, 
+  {
+    "pk": "en", 
+    "model": "pages.language", 
+    "fields": {
+      "name": "english"
+    }
+  }, 
+  {
+    "pk": "fr", 
+    "model": "pages.language", 
+    "fields": {
+      "name": "french"
+    }
+  }, 
+  {
+    "pk": "de", 
+    "model": "pages.language", 
+    "fields": {
+      "name": "german"
+    }
+  }, 
+  {
+    "pk": "it", 
+    "model": "pages.language", 
+    "fields": {
+      "name": "italian"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "hierarchical.hierarchicalobject", 
+    "fields": {
+      "node": 1, 
+      "object_id": 1, 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "hierarchical.hierarchicalobject", 
+    "fields": {
+      "node": 2, 
+      "object_id": 3, 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "hierarchical.hierarchicalobject", 
+    "fields": {
+      "node": 3, 
+      "object_id": 2, 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "hierarchical.hierarchicalobject", 
+    "fields": {
+      "node": 4, 
+      "object_id": 4, 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 1", 
+      "parent": null, 
+      "order": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 2", 
+      "parent": 2, 
+      "order": 1
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 5", 
+      "parent": 3, 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 6", 
+      "parent": null, 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 3", 
+      "parent": 3, 
+      "order": 3
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 7", 
+      "parent": null, 
+      "order": 3
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "hierarchical.hierarchicalnode", 
+    "fields": {
+      "name": "node 4", 
+      "parent": 3, 
+      "order": 4
+    }
+  }
+]

@@ -1,16 +1,15 @@
 {% load cache %}
 {% load pages %}
+{% load hierarchical %}
 
 <h1>{% block title %}A django minimal CMS based on pages{% endblock %}</h1>
 
 <h2>Navigation (as nested list)</h2>
 
 <ul>
-{% cache 300 navigation %}
     {% for page in pages %}
         {% show_menu page %}
     {% endfor %}
-{% endcache %}
 </ul>
 
 <h2>Content</h2>

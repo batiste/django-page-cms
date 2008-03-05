@@ -2,11 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
+from hierarchical.models import HierarchicalNode
 
 class Language(models.Model):
     """A simple model to bescribe available languages for pages"""
     id = models.CharField(primary_key=True, max_length=8)
-    name = models.CharField(maxlength=20)
+    name = models.CharField(max_length=20)
     
     def __str__(self):
         return self.name.capitalize()
@@ -50,13 +52,12 @@ class Page(models.Model):
     # slugs are the same for each language
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(User)
-    parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
+    #parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
     publication_date = models.DateTimeField(editable=False, null=True)
     
     status = models.IntegerField(choices=STATUSES, radio_admin=True, default=0)
-    template = models.CharField(maxlength=100, null=True, blank=True)
-    order = models.IntegerField()
+    template = models.CharField(max_length=100, null=True, blank=True)
 
     # Managers
     objects = models.Manager()
@@ -64,10 +65,10 @@ class Page(models.Model):
     drafts = PageDraftsManager()
 
     class Admin:
-        pass
+        list_display = ('slug', 'traductions', 'nodes')
     
-    class Meta:
-        ordering = ['order']
+    #class Meta:
+    #    ordering = ['order']
 
     @classmethod
     def get_status_code(cls, content_type):
@@ -85,62 +86,8 @@ class Page(models.Model):
             self.publication_date = datetime.now()
         if not self.status:
             self.status = 0
-        recalculate_order = False
-        if not self.order:
-            self.order=1
-            recalculate_order = True
         super(Page, self).save()
-        # not so proud of this code
-        if recalculate_order:
-            self.set_default_order()
-            super(Page, self).save()
-        
-    def set_default_order(self):
-        max = 0
-        brothers = self.brothers()
-        if brothers.count():
-            for brother in brothers:
-                if brother.order > max:
-                    max = brother.order
-        self.order = max + 1
     
-    def brothers_and_me(self):
-        if self.parent:
-            return Page.objects.filter(parent=self.parent)
-        else:
-            return Page.objects.filter(parent__isnull=True)
-        
-    def brothers(self):
-        return self.brothers_and_me().exclude(pk=self.id)
-        
-    def is_first(self):
-        return self.brothers_and_me().order_by('order')[0:1][0] == self
-    
-    def is_last(self):
-        return self.brothers_and_me().order_by('-order')[0:1][0] == self
-        
-    @classmethod
-    def switch_page(cls, page1, page2):
-        buffer =  page1.order
-        page1.order = page2.order
-        page2.order = buffer
-        page1.save()
-        page2.save()
-        
-    def up(self):
-        brother = self.brothers().order_by('-order').filter(order__lt=self.order)[0:1]
-        if not brother.count():
-            return False
-        Page.switch_page(self, brother[0])
-        return True
-        
-    def down(self):
-        brother = self.brothers().order_by('order').filter(order__gt=self.order)[0:1]
-        if not brother.count():
-            return False
-        Page.switch_page(self, brother[0])
-        return True
-
     def title(self, lang):
         c = Content.get_content(self, lang, 0, True)
         return c
@@ -163,10 +110,10 @@ class Page(models.Model):
     def get_url(self):
         """get the url of this page, adding parent's slug"""
         url = "%s-%d/" % (self.slug, self.id)
-        p = self.parent
+        p = HierarchicalNode.get_parent_object(self)
         while p:
             url = p.slug + '/' + url
-            p = p.parent
+            p = HierarchicalNode.get_parent_object(p)
         return url
         
     def get_template(self):
@@ -174,19 +121,27 @@ class Page(models.Model):
         or if closer parent if defined or None otherwise"""
         p = self
         while p:
+            if not p:
+                return None
             if p.template:
                 return p.template
-            if p.parent:
-                p = p.parent
-            else:
-                return None
+            p = HierarchicalNode.get_parent_object(p)
+
+    def traductions(self):
+        langs = ""
+        for lang in self.get_languages():
+            langs += '%s, ' % lang
+        return langs[0:-2]
+        
+    def nodes(self):
+        nodes = ""
+        for node in HierarchicalNode.get_nodes_by_object(self):
+            nodes += '%s, ' % node.name
+        return nodes[0:-2]
 
     def __str__(self):
-        if self.parent:
-            return "%s :: %s :: %d" % (self.parent.slug, self.slug, self.order)
-        else:
-            return "%s :: %d" % (self.slug, self.order)
-        
+        return "%s" % (self.slug)
+
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
     CONTENT_TYPE = ((0, 'title'),(1,'body'))

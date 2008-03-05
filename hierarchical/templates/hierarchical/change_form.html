@@ -1,0 +1,94 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_modify adminmedia %}
+{% block title %}Change node{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css" />
+{% endblock %}
+
+{% block content %}
+<!-- Content -->
+<div id="content" class="colM">
+
+<h1>{% if add %}Add{% else %}Change{% endif %} hierarchical object</h1>
+<div id="content-main">
+
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+  <!--<li><a href="history/" class="historylink">{% trans "History" %}</a></li>-->
+  {% if has_absolute_url %}<li><a href="{{ node.get_absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+
+<form action="" method="post" id="hierarchicalobject_form">
+<div>
+
+<fieldset class="module aligned ()">
+
+<div class="form-row" >
+    {% if form.node.errors %}<ul class="errorlist inline"><li>{{ form.node.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_node" class="required">Node:</label>
+    {{ form.node }}
+</div>
+
+<div class="form-row" >
+    {% if form.content_type.errors %}<ul class="errorlist inline"><li>{{ form.content_type.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_content_type" class="required">Content type:</label>
+    {{ form.content_type }}
+</div>
+
+<div class="form-row" >
+    {% if form.object_id.errors %}<ul class="errorlist inline"><li>{{ form.object_id.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_object_id" class="required">Object id:</label>
+    <select id="id_object_id" name="object_id"></select>
+</div>
+
+</fieldset>
+
+<div class="submit-row">
+<p class="float-left"><a href="delete/" class="deletelink">Delete</a></p>
+<!--<input type="submit" value="Save and add another" name="_addanother"  />
+<input type="submit" value="Save and continue editing" name="_continue" />-->
+<input type="submit" value="Save" class="default" />
+</div>
+
+</div>
+</form></div>
+
+   <script type="text/javascript">
+    var op = document.createElement('OPTION');
+    var get = function(s){ return document.getElementById(s)};
+    var content_type = get('id_content_type');
+    var xmlHttp = false;
+    /*@cc_on @*/
+    /*@if (@_jscript_version >= 5)
+    try {xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");} catch (e) {
+        try {xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");} catch (e2) {xmlHttp = false;}
+    }
+    @end @*/
+    if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+        xmlHttp = new XMLHttpRequest();
+    }
+    
+    var load_objects = function() {
+        var index = content_type.selectedIndex;
+        xmlHttp.open("GET", '/admin/hierarchical/objects_by_model/'+content_type.options[index].value , true);
+        xmlHttp.onreadystatechange = function(){
+            if (xmlHttp.readyState == 4) {
+                get('id_object_id').innerHTML = xmlHttp.responseText;
+            }
+        }
+        xmlHttp.send(null);
+    };
+    
+    content_type.onchange=load_objects;
+    load_objects();
+    
+    </script>
+
+<br class="clear" />
+</div>
+<!-- END Content -->
+{% endblock %}

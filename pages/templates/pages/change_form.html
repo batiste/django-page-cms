@@ -34,7 +34,7 @@
     <option value="{{ lang.id }}">{{ lang.name }}</option>
     {% endfor %}
     </select>
-    <div id="traduction_helper_content" style="clear:both;margin-top:1em;background:#FFFFCC;padding:1em;display:none"></div>
+    <div id="traduction_helper_content" style="clear:both;margin-top:1em;background:#ffc;padding:1em;display:none"></div>
     <script>
     var get = function(s){ return document.getElementById(s)};
     var helper_select = get('traduction_helper_select');
@@ -109,9 +109,9 @@
 </div>
 
 <div class="form-row" >
-  {% if form.parent.errors %}<ul class="errorlist"><li>{{ form.parent.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_parent">Parent page:</label> 
-  {{ form.parent }}
+  {% if form.node.errors %}<ul class="errorlist"><li>{{ form.node.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_parent">Node:</label> 
+  {{ form.node }}
 </div>
 
 {% if form.template %}

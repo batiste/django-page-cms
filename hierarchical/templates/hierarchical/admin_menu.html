@@ -1,0 +1,32 @@
+{% load hierarchical %}
+<li>
+    {% if node.linked_objects.all %}
+        <span style="float:right;font-weight:normal">
+        linked objects -
+        {% for lo in node.linked_objects.all %}
+            {{ lo.content_type|truncateletters:"18" }} : {{ lo.object|truncateletters:"18" }},
+        {% endfor %}
+        </span>
+    {% endif %}
+
+    <a href="{{ url }}{{ node.id }}/"  style="margin-right:1em;">{{ node.name }}</a>
+    {% for lang in node.get_languages %} 
+        <a href="{{ url }}{{ node.id }}/?language={{ lang }}">{{ lang }}</a>
+        <span style="font-weight:normal">|</span>
+    {% endfor %}
+    {% if node.brothers.count %}
+    <span class="up-down">
+        {% if not node.is_first %}<a href="{{ url }}{{ node.id }}/up/" class="nodes-up">up</a>{% endif %}
+        {% if not node.is_last and not node.is_first %}<span style="font-weight:normal">|</span>{% endif %}
+        {% if not node.is_last %}<a href="{{ url }}{{ node.id }}/down/" class="nodes-down">down</a>{% endif %}
+    </span>
+    {% endif %}
+    
+    {% if children.count %}
+    <ul>
+    {% for child in children %}
+        {% show_admin_menu child url %}
+    {% endfor %}
+    </ul>
+    {% endif %}
+</li>

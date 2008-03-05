@@ -1,20 +1,19 @@
 from django import template
+#import pages.models
+#from pages.models import Language, Content, Page
 from ..pages.models import Language, Content, Page
+from ..hierarchical.models import HierarchicalNode, HierarchicalObject
 register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)
 def show_menu(context, page, url='/'):
-    children = page.children.filter(status=1)
+    nodes = HierarchicalNode.get_nodes_by_object(page)
+    if len(nodes) > 0:
+        children = nodes[0].get_children_objects(page)
     request = context['request']
     return locals()
 
-@register.inclusion_tag('admin_menu.html', takes_context=True)
-def show_admin_menu(context, page, url='/admin/pages/page/'):
-    children = page.children.all()
-    request = context['request']
-    return locals()
-
-@register.inclusion_tag('content.html', takes_context=True)
+@register.inclusion_tag('pages/content.html', takes_context=True)
 def show_content(context, page, content_type):
     l = Language.get_from_request(context['request'])
     request = context['request']

@@ -142,16 +142,15 @@ class HierarchicalObject(models.Model):
     @classmethod
     def update_for_object(cls, object, new_nodes):
         ctype = ContentType.objects.get_for_model(object)
-        if new_nodes is list:
-            new_nodes = [int(n) for n in new_nodes]
-        elif not new_nodes:
-            new_nodes = []
+        if new_nodes:
+            if new_nodes is not list:
+                new_nodes = [new_nodes]
         else:
-            new_nodes = [int(new_nodes)]
-        current_nodes = [int(node.id) for node in HierarchicalNode.get_nodes_by_object(object)]
+            new_nodes = []
+        current_nodes = HierarchicalNode.get_nodes_by_object(object)
         for node in new_nodes:
             if node not in current_nodes:
-                n = HierarchicalNode.objects.get(pk=node)
+                n = HierarchicalNode.objects.get(pk=node.id)
                 HierarchicalObject(node=n, object_id=object.id, content_type=ctype).save()
         for node in current_nodes:
             if node not in new_nodes:

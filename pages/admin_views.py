@@ -11,12 +11,6 @@ from django.utils.translation import ugettext as _
 def get_form(request, dict=None, current_page=None):
     """get the custom form to create or edit a page in the admin interface"""
 
-    node_choices = [(node.id, node.name) for node in HierarchicalNode.objects.all()]
-    node_choices.insert(0,('','------'))
-    
-    """if initial_nodes:
-        initial_nodes = [int(n.id) for n in initial_nodes]"""
-    
     language_choices = [(lang.id, lang.name) for lang in Language.objects.all()]
     l = Language.get_from_request(request, current_page)
     import settings
@@ -32,7 +26,7 @@ def get_form(request, dict=None, current_page=None):
         body = forms.CharField(widget=forms.Textarea(), required=request.POST) # hackish
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
-        node = forms.ChoiceField(choices=node_choices, required=False)
+        node = forms.ModelChoiceField(HierarchicalNode.objects.all(), required=False)
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
         

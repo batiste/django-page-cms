@@ -36,7 +36,6 @@ class HierarchicalNode(models.Model):
             for brother in brothers:
                 if brother.order >= max:
                     max = brother.order
-        print max
         self.order = max+1
     
     def brothers_and_me(self):
@@ -85,6 +84,7 @@ class HierarchicalNode(models.Model):
     
     @classmethod
     def get_first_level_objects(cls, model):
+        """return objects associated with first level nodes"""
         ctype = ContentType.objects.get_for_model(model)
         nodes = HierarchicalNode.objects.filter(parent__isnull=True)
         objs = HierarchicalObject.objects.filter(content_type=ctype, node__in=nodes).order_by('hierarchical_hierarchicalnode.order').select_related()
@@ -92,19 +92,19 @@ class HierarchicalNode(models.Model):
     
     @classmethod
     def get_nodes_by_model(cls, model):
-        """get all nodes associated with an object of the given model"""
+        """return nodes associated with an object of the given model"""
         ctype = ContentType.objects.get_for_model(model)
         return HierarchicalNode.objects.filter(linked_objects__content_type=ctype).distinct()
     
     @classmethod
     def get_nodes_by_object(cls, object):
-        """get all nodes associated with the given object"""
+        """return nodes associated with the given object"""
         ctype = ContentType.objects.get_for_model(object)
         return HierarchicalNode.objects.filter(linked_objects__content_type=ctype, linked_objects__object_id=object.id).distinct()
     
     @classmethod
     def get_parent_object(cls, object):
-        """get the first parent object of the same type that the given object"""
+        """return the first parent object of the same type that the given object"""
         ctype = ContentType.objects.get_for_model(object)
         node = HierarchicalNode.objects.get(linked_objects__content_type=ctype, linked_objects__object_id=object.id)
         if not node.parent:
@@ -117,7 +117,7 @@ class HierarchicalNode(models.Model):
     
     @classmethod
     def get_children_objects(self, object):
-        """get children objects of the given object assuming that the object is only associated with one node"""
+        """return children objects of the given object assuming that the object is only associated with one node"""
         ctype = ContentType.objects.get_for_model(object)
         node = HierarchicalNode.objects.get(linked_objects__content_type=ctype, linked_objects__object_id=object.id)
         objs = HierarchicalObject.objects.filter(content_type=ctype, node__in=node.children.all()).order_by('hierarchical_hierarchicalnode.order').select_related()
@@ -141,6 +141,7 @@ class HierarchicalObject(models.Model):
         
     @classmethod
     def update_for_object(cls, object, new_nodes):
+        """update association between an object and nodes"""
         ctype = ContentType.objects.get_for_model(object)
         if new_nodes:
             if new_nodes is not list:

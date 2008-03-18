@@ -18,3 +18,10 @@
 <h3>title : {% show_content current_page 'title' %}</h3>
 <p>body : {% show_content current_page 'body' %}</p>
 {% endif %}
+
+<h2>All associated objetcs</h2>
+<ul>
+{% for obj in all_objects %}
+    <li>{{ obj }}</li>
+{% endfor %}
+</ul>

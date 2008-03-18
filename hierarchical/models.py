@@ -82,6 +82,13 @@ class HierarchicalNode(models.Model):
         HierarchicalNode.switch_node(self, brother)
         return True
     
+    def get_objects(self, object=None):
+        """return objects associated with this node. Extra parameter filter by model"""
+        objs = HierarchicalObject.objects.filter(node=self)
+        if object:
+            objs = objs.filter(content_type=ContentType.objects.get_for_model(object))
+        return [obj.object for obj in objs]
+    
     @classmethod
     def get_first_level_objects(cls, model):
         """return objects associated with first level nodes"""
@@ -114,6 +121,16 @@ class HierarchicalNode(models.Model):
             return None
         else:
             return parent[0].object
+    
+    @classmethod
+    def is_parent(cls, object1, object2):
+        """tell if object1 is parent of object2"""
+        p = cls.get_parent_object(object2)
+        while(p):
+            if p == object1:
+                return True
+            p = cls.get_parent_object(p)
+        return False
     
     @classmethod
     def get_children_objects(self, object):

@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from hierarchical.models import HierarchicalNode
+import settings
 
 class Language(models.Model):
     """A simple model to bescribe available languages for pages"""
@@ -70,15 +71,6 @@ class Page(models.Model):
     #class Meta:
     #    ordering = ['order']
 
-    @classmethod
-    def get_status_code(cls, content_type):
-        code = None
-        for ct in Content.CONTENT_TYPE:
-            if ct[1] == content_type:
-                code = ct[0]
-                break
-        return code
-
     def save(self):
         self.slug = slugify(self.slug)
         if self.status == 1 and self.publication_date is None:
@@ -104,7 +96,7 @@ class Page(models.Model):
     
     def get_languages(self):
         """get the list of all existing languages for this page"""
-        contents = Content.objects.filter(page=self, type=1)
+        contents = Content.objects.filter(page=self, type="title")
         languages = []
         for c in contents:
             languages.append(c.language.id)
@@ -121,15 +113,19 @@ class Page(models.Model):
         
     def get_template(self):
         """get the template of this page if defined 
-        or if closer parent if defined or None otherwise"""
+        or if closer parent if defined or DEFAULT_PAGE_TEMPLATE otherwise"""
         p = self
         while p:
             if not p:
-                return None
+                return settings.DEFAULT_PAGE_TEMPLATE
             if p.template:
                 return p.template
-            p = HierarchicalNode.get_parent_object(p)
-
+            try:
+                p = HierarchicalNode.get_parent_object(p)
+            except HierarchicalNode.DoesNotExist:
+                return settings.DEFAULT_PAGE_TEMPLATE
+        return settings.DEFAULT_PAGE_TEMPLATE
+        
     def traductions(self):
         langs = ""
         for lang in self.get_languages():
@@ -147,10 +143,9 @@ class Page(models.Model):
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
-    CONTENT_TYPE = ((0, 'title'),(1,'body'))
     language = models.ForeignKey(Language)
     body = models.TextField()
-    type = models.IntegerField(choices=CONTENT_TYPE, default=0)
+    type = models.CharField(max_length=100, blank=False)
     page = models.ForeignKey(Page)
     
     def __str__(self):

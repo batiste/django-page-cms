@@ -15,8 +15,8 @@
 <h2>Content</h2>
 
 {% if current_page %}
-<h3>title : {% show_content current_page 'title' %}</h3>
-<p>body : {% show_content current_page 'body' %}</p>
+<h3>title : {% placeholder title current_page TextInput %}</h3>
+<p>body : {% placeholder body current_page Textarea %}</p>
 {% endif %}
 
 <h2>All associated objetcs</h2>

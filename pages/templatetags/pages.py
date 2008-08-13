@@ -16,14 +16,33 @@ def show_menu(context, page, url='/'):
         is_parent = HierarchicalNode.is_parent(page, current_page)
     return locals()
 
-@register.inclusion_tag('pages/content.html', takes_context=True)
-def show_content(context, page, content_type):
-    l = Language.get_from_request(context['request'])
-    request = context['request']
-    code = Page.get_status_code(content_type)
-    if code is not None:
-        c = Content.get_content(page, l, code, True)
+def do_placeholder(parser, token):
+    try:
+        # split_contents() knows not to split quoted strings.
+        tag_name, page, name, widget = token.split_contents()
+    except ValueError:
+        msg = '%r tag requires three arguments' % token.contents[0]
+        raise template.TemplateSyntaxError(msg)
+    return PlaceholderNode(page, name, widget)
+
+class PlaceholderNode(template.Node):
+
+    def __init__(self, name, page, widget):
+        self.page = page
+        self.name = name
+        self.widget = widget
+
+    def render(self, context):
+        if('request' in context):
+            l = Language.get_from_request(context['request'])
+        else:
+            return ''
+        request = context['request']
+        c = Content.get_content(context[self.page], l, self.name, True)
         if c:
-            return {'content':c}
-    else:
-        return {'content':''}
+            return c
+        
+    def __repr__(self):
+        return "<Placeholder Node: %s>" % self.name
+
+register.tag('placeholder', do_placeholder)

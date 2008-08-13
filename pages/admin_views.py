@@ -7,9 +7,36 @@ from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
+from django.template import loader, Context
+from django.template.loader_tags import ExtendsNode
+# must be imported like this for isinstance
+from django.templatetags.pages import PlaceholderNode
 
-def index(request):
+class DuplicatePlaceholder(Exception):
     pass
+
+def placeholders(template_name):
+    temp = loader.get_template(template_name)
+    temp.render(Context())
+    list = []
+    placeholders_recursif(temp.nodelist, list)
+    return list
+        
+def placeholders_recursif(nodelist, list):
+    for node in nodelist:
+        if isinstance(node, PlaceholderNode):
+            list.append(node)
+            node.render(Context())
+        for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
+            if hasattr(node, key):
+                try:
+                    placeholders_recursif(getattr(node, key), list)
+                except:
+                    pass
+    for node in nodelist:
+        if isinstance(node, ExtendsNode):
+            placeholders_recursif(node.get_parent(Context()).nodelist, list)
+
 
 def get_form(request, dict=None, current_page=None):
     """get the custom form to create or edit a page in the admin interface"""
@@ -25,8 +52,6 @@ def get_form(request, dict=None, current_page=None):
     
     class PageForm(forms.Form):
         slug = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
-        title = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
-        body = forms.CharField(widget=forms.Textarea(), required=request.POST) # hackish
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
         node = forms.ModelChoiceField(HierarchicalNode.objects.all(), required=False)
@@ -47,10 +72,21 @@ def get_form(request, dict=None, current_page=None):
         if node:
             dict['node'] = node[0].id
         
+    template = "index.html" if current_page is None else current_page.get_template()
+    for placeholder in placeholders(template):
+        if placeholder.widget == 'TextInput':
+            w = forms.TextInput()
+        else:
+            w = forms.Textarea() 
+        required = True if placeholder.name == "title" else False
+        PageForm.base_fields[placeholder.name] = forms.CharField(widget=w, required=required)
+        
     if dict:
-        return PageForm(dict)
+        p = PageForm(dict)
+    else:
+        p = PageForm()
     
-    return PageForm()
+    return p
     
 @staff_member_required
 @auto_render
@@ -66,11 +102,13 @@ def add(request):
             template = form.cleaned_data.get('template', None)
             page = Page(author=request.user, status=status, slug=slug, template=template)
             page.save()
-            #if form.cleaned_data['node']:
             HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             language=Language.objects.get(pk=form.cleaned_data['language'])
-            Content.set_or_create_content(page, language, 0, form.cleaned_data['title'])
-            Content.set_or_create_content(page, language, 1, form.cleaned_data['body'])
+            
+            for placeholder in placeholders(page.get_template()):
+                if placeholder.name in form.cleaned_data:
+                    Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
+            
             msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
@@ -88,18 +126,19 @@ def modify(request, page_id):
     has_absolute_url = True
     page = Page.objects.get(pk=page_id)
     original = page
-    #content_type_id = 
-    #object_id = page.id
     if(request.POST):
         form = get_form(request, request.POST, page)
         if form.is_valid():
             language=Language.objects.get(pk=form.cleaned_data['language'])
-            Content.set_or_create_content(page, language, 0, form.cleaned_data['title'])
-            Content.set_or_create_content(page, language, 1, form.cleaned_data['body'])
             page.status = form.cleaned_data['status']
             page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
             page.save()
+            
+            for placeholder in placeholders(page.get_template()):
+                if placeholder.name in form.cleaned_data:
+                    Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
+            
             HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
@@ -107,7 +146,11 @@ def modify(request, page_id):
     else:
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)
-        form = get_form(request, {'title':Content.get_content(page, l, 0), 'body':Content.get_content(page, l, 1), 'status':page.status, 'slug':page.slug, 'template':page.template}, page)
+        dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
+        for placeholder in placeholders(page.get_template()):
+            dict[placeholder.name] = Content.get_content(page, l, placeholder.name)
+        print dict
+        form = get_form(request, dict, page)
 
     return 'pages/change_form.html', locals()
 
@@ -116,8 +159,9 @@ def modify(request, page_id):
 def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)
     l = Language.objects.get(pk=language_id)
-    title = Content.get_content(page, l, 0, True)
-    if Content.get_content(page, l, 0) !=  title:
-        language_error = True
-    body = Content.get_content(page, l, 1, True)
-    return 'pages/traduction_helper.html', locals()
+    context = {}
+    for placeholder in placeholders(page.get_template()):
+        context[placeholder.name] = Content.get_content(page, l, placeholder.name, True)
+    if Content.get_content(page, l, "title") !=  context['title']:
+        context['language_error'] = True
+    return 'pages/traduction_helper.html', context

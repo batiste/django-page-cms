@@ -9,9 +9,6 @@ class HierarchicalNode(models.Model):
     parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
     order = models.IntegerField(blank=True)
     
-    class Admin:
-        pass
-    
     class Meta:
         ordering = ['order']
    
@@ -146,9 +143,6 @@ class HierarchicalObject(models.Model):
     content_type = models.ForeignKey(ContentType, verbose_name=_('content type'))
     object_id = models.PositiveIntegerField(_('object id'), db_index=True)
     object = generic.GenericForeignKey('content_type', 'object_id')
-    
-    class Admin:
-        pass
     
     class Meta:
         unique_together = (('node', 'content_type', 'object_id'),)

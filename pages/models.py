@@ -56,7 +56,7 @@ class Page(models.Model):
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
     publication_date = models.DateTimeField(editable=False, null=True)
     
-    status = models.IntegerField(choices=STATUSES, radio_admin=True, default=0)
+    status = models.IntegerField(choices=STATUSES, default=0)
     template = models.CharField(max_length=100, null=True, blank=True)
 
     # Managers
@@ -64,8 +64,8 @@ class Page(models.Model):
     published = PagePublishedManager()
     drafts = PageDraftsManager()
 
-    class Admin:
-        list_display = ('slug', 'traductions', 'nodes')
+    #class Admin:
+    #    list_display = ('slug', 'traductions', 'nodes')
     
     #class Meta:
     #    ordering = ['order']
@@ -150,11 +150,8 @@ class Content(models.Model):
     CONTENT_TYPE = ((0, 'title'),(1,'body'))
     language = models.ForeignKey(Language)
     body = models.TextField()
-    type = models.IntegerField(choices=CONTENT_TYPE, radio_admin=True, default=0)
+    type = models.IntegerField(choices=CONTENT_TYPE, default=0)
     page = models.ForeignKey(Page)
-    
-    class Admin:
-        pass
     
     def __str__(self):
         return "%s :: %s" % (self.page.slug, self.body[0:15])

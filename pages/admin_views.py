@@ -8,6 +8,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
 
+def index(request):
+    pass
+
 def get_form(request, dict=None, current_page=None):
     """get the custom form to create or edit a page in the admin interface"""
 

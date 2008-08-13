@@ -85,5 +85,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'pages',
     'hierarchical',
-    #'django.contrib.sites',
+    'django.contrib.sites',
 )

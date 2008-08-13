@@ -1,5 +1,5 @@
 {% load pages %}
-<li><a href="{{ page.get_absolute_url }}">{% placeholder title page %}</a> <span style="color:#999">{% if is_parent %}parent of selected page{% endif %} {% ifequal page current_page %}selected{% endifequal %}</span>
+<li><a href="{{ page.get_absolute_url }}">{% placeholder title page TextInput %}</a> <span style="color:#999">{% if is_parent %}parent of selected page{% endif %} {% ifequal page current_page %}selected{% endifequal %}</span>
     {% if children|length %}
     <ul>
     {% for child in children %}

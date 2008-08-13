@@ -96,11 +96,21 @@
   {{ form.slug }}
 </div>
 
+{% if placeholders %}
+    {% for field in form %}
+        {% for p in placeholders %}
+            {% ifnotequal p.name 'title' %}
+                {% ifequal field.name p.name %}
 <div class="form-row" >
-  {% if form.body.errors %}<ul class="errorlist"><li>{{ form.body.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_body" class="required">Body:</label>
-  {{ form.body }}
+  {% if field.errors %}<ul class="errorlist"><li>{{ field.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_{{ field.name }}">{{ field.name }}:</label>
+  {{ field }}
 </div>
+                {% endifequal %}
+            {% endifnotequal %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
 
 <div class="form-row{% if form.status.errors %} errors{% endif %}" >
   {% if form.status.errors %}<ul class="errorlist"><li>{{ form.status.errors|join:", " }}</li></ul>{% endif %}

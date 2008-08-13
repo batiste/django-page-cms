@@ -11,11 +11,9 @@ from django.template import loader, Context
 from django.template.loader_tags import ExtendsNode
 # must be imported like this for isinstance
 from django.templatetags.pages import PlaceholderNode
+import settings
 
-class DuplicatePlaceholder(Exception):
-    pass
-
-def placeholders(template_name):
+def get_placeholders(template_name):
     temp = loader.get_template(template_name)
     temp.render(Context())
     list = []
@@ -36,7 +34,6 @@ def placeholders_recursif(nodelist, list):
     for node in nodelist:
         if isinstance(node, ExtendsNode):
             placeholders_recursif(node.get_parent(Context()).nodelist, list)
-
 
 def get_form(request, dict=None, current_page=None):
     """get the custom form to create or edit a page in the admin interface"""
@@ -72,8 +69,8 @@ def get_form(request, dict=None, current_page=None):
         if node:
             dict['node'] = node[0].id
         
-    template = "index.html" if current_page is None else current_page.get_template()
-    for placeholder in placeholders(template):
+    template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
+    for placeholder in get_placeholders(template):
         if placeholder.widget == 'TextInput':
             w = forms.TextInput()
         else:
@@ -105,7 +102,7 @@ def add(request):
             HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             language=Language.objects.get(pk=form.cleaned_data['language'])
             
-            for placeholder in placeholders(page.get_template()):
+            for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
@@ -125,6 +122,7 @@ def modify(request, page_id):
     change = True
     has_absolute_url = True
     page = Page.objects.get(pk=page_id)
+    placeholders = get_placeholders(page.get_template())
     original = page
     if(request.POST):
         form = get_form(request, request.POST, page)
@@ -134,8 +132,7 @@ def modify(request, page_id):
             page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
             page.save()
-            
-            for placeholder in placeholders(page.get_template()):
+            for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
@@ -147,9 +144,8 @@ def modify(request, page_id):
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
-        for placeholder in placeholders(page.get_template()):
+        for placeholder in placeholders:
             dict[placeholder.name] = Content.get_content(page, l, placeholder.name)
-        print dict
         form = get_form(request, dict, page)
 
     return 'pages/change_form.html', locals()
@@ -160,7 +156,7 @@ def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)
     l = Language.objects.get(pk=language_id)
     context = {}
-    for placeholder in placeholders(page.get_template()):
+    for placeholder in get_placeholders(page.get_template()):
         context[placeholder.name] = Content.get_content(page, l, placeholder.name, True)
     if Content.get_content(page, l, "title") !=  context['title']:
         context['language_error'] = True

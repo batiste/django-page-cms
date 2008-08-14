@@ -110,6 +110,10 @@
             {% endifnotequal %}
         {% endfor %}
     {% endfor %}
+{% else %}
+<div class="form-row" >
+<p>{% trans "No placeholders found in this page template." %}</p>
+</div>
 {% endif %}
 
 <div class="form-row{% if form.status.errors %} errors{% endif %}" >

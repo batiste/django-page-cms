@@ -1,20 +1,23 @@
-from utils import auto_render
+from hierarchical.utils import auto_render
 from pages.models import Language, Content, Page
 from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
-from django import newforms as forms
+from django import forms
 from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
-from django.template import loader, Context
+from django.template import loader, Context, TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode
 # must be imported like this for isinstance
 from django.templatetags.pages import PlaceholderNode
 import settings
 
 def get_placeholders(template_name):
-    temp = loader.get_template(template_name)
+    try:
+        temp = loader.get_template(template_name)
+    except TemplateDoesNotExist:
+        return []
     temp.render(Context())
     list = []
     placeholders_recursif(temp.nodelist, list)
@@ -49,6 +52,7 @@ def get_form(request, dict=None, current_page=None):
     
     class PageForm(forms.Form):
         slug = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
+        title = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
         node = forms.ModelChoiceField(HierarchicalNode.objects.all(), required=False)
@@ -74,9 +78,9 @@ def get_form(request, dict=None, current_page=None):
         if placeholder.widget == 'TextInput':
             w = forms.TextInput()
         else:
-            w = forms.Textarea() 
-        required = True if placeholder.name == "title" else False
-        PageForm.base_fields[placeholder.name] = forms.CharField(widget=w, required=required)
+            w = forms.Textarea()
+        if placeholder.name != "title":
+            PageForm.base_fields[placeholder.name] = forms.CharField(widget=w, required=False)
         
     if dict:
         p = PageForm(dict)

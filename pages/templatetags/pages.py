@@ -1,6 +1,4 @@
 from django import template
-#import pages.models
-#from pages.models import Language, Content, Page
 from ..pages.models import Language, Content, Page
 from ..hierarchical.models import HierarchicalNode, HierarchicalObject
 register = template.Library()
@@ -15,6 +13,15 @@ def show_menu(context, page, url='/'):
         current_page = context['current_page']
         is_parent = HierarchicalNode.is_parent(page, current_page)
     return locals()
+    
+@register.inclusion_tag('pages/content.html', takes_context=True)
+def show_content(context, page, content_type):
+    l = Language.get_from_request(context['request'])
+    request = context['request']
+    c = Content.get_content(page, l, content_type, True)
+    if c:
+        return {'content':c}
+    return {'content':''}
 
 def do_placeholder(parser, token):
     try:

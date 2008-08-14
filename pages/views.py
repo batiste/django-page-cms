@@ -12,8 +12,10 @@ def details(request, page_id=None):
         current_page = Page.published.get(id=int(page_id))
         template = current_page.get_template()
         nodes = HierarchicalNode.get_nodes_by_object(current_page)
-        node = nodes[0]
-        all_objects = node.get_objects()
+        # it's possible that a page has no node
+        if len(nodes):
+            node = nodes[0]
+            all_objects = node.get_objects()
     
     if not template:
         import settings

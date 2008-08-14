@@ -18,22 +18,6 @@
     }
   },
   {
-    "pk": "680a339b6da0f855a67d30760f4858cd", 
-    "model": "sessions.session", 
-    "fields": {
-      "expire_date": "2008-03-18 11:54:17", 
-      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmQ3MjM3M2EwOGYxMWVjOWI0N2Rh\nNDg2YTk0NDQ5YzMw\n"
-    }
-  }, 
-  {
-    "pk": "0787142bb907e76fcbe241c680893365", 
-    "model": "sessions.session", 
-    "fields": {
-      "expire_date": "2008-03-18 13:28:41", 
-      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmQ3MjM3M2EwOGYxMWVjOWI0N2Rh\nNDg2YTk0NDQ5YzMw\n"
-    }
-  },
-  {
     "pk": 1, 
     "model": "pages.content", 
     "fields": {

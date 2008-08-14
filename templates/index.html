@@ -4,13 +4,25 @@
 
 <h1>{% block title %}A django minimal CMS based on pages{% endblock %}</h1>
 
-<h2>Navigation (as nested list)</h2>
+<h2>Complete navigation (as a nested list)</h2>
+
+<p>This menu is doing way too much SQL requests. I will try to fix it.</p>
 
 <ul>
     {% for page in pages %}
         {% show_menu page %}
     {% endfor %}
 </ul>
+
+<h2>Display the sub menu of the root page (as a nested list)</h2>
+
+<p>This menu is doing way too much SQL requests. I will try to fix it.</p> 
+
+{% if current_page %}
+<ul>
+    {% show_sub_menu current_page %}
+</ul>
+{% endif %}
 
 <h2>Content</h2>
 
@@ -28,3 +40,6 @@
     <li>{{ obj }}</li>
 {% endfor %}
 </ul>
+
+{% include "debug.html" %}
+

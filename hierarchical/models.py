@@ -108,7 +108,7 @@ class HierarchicalNode(models.Model):
     
     @classmethod
     def get_parent_object(cls, object):
-        """return the first parent object of the same type that the given object"""
+        """return the nearest parent object of the same type that the given object"""
         ctype = ContentType.objects.get_for_model(object)
         node = HierarchicalNode.objects.get(linked_objects__content_type=ctype, linked_objects__object_id=object.id)
         if not node.parent:
@@ -117,7 +117,19 @@ class HierarchicalNode(models.Model):
         if len(parent) == 0:
             return None
         else:
+            # assume that there is only one parent
             return parent[0].object
+        
+    @classmethod
+    def get_root_object(cls, object):
+        """return the root parent object of the same type that the given object"""
+        last_valid_object = object
+        parent = cls.get_parent_object(object)
+        while parent:
+            last_valid_object = parent
+            parent = cls.get_parent_object(parent)
+        return last_valid_object
+            
     
     @classmethod
     def is_parent(cls, object1, object2):

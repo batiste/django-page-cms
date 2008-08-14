@@ -5,9 +5,21 @@ register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)
 def show_menu(context, page, url='/'):
+    """TODO: Very inneficient code tag"""
     nodes = HierarchicalNode.get_nodes_by_object(page)
     if len(nodes) > 0:
         children = nodes[0].get_children_objects(page)
+    request = context['request']
+    if 'current_page' in context:
+        current_page = context['current_page']
+        is_parent = HierarchicalNode.is_parent(page, current_page)
+    return locals()
+
+@register.inclusion_tag('sub_menu.html', takes_context=True)
+def show_sub_menu(context, page, url='/'):
+    """TODO: Very inneficient code tag"""
+    root = HierarchicalNode.get_root_object(page)
+    children = HierarchicalNode.get_children_objects(root)
     request = context['request']
     if 'current_page' in context:
         current_page = context['current_page']

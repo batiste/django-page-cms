@@ -64,6 +64,8 @@ def get_form(request, dict=None, current_page=None):
             slug = slugify(self.cleaned_data['slug'])
             if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
                 raise forms.ValidationError('Another page with this slug already exists')
+            if current_page is None and Page.objects.filter(slug=slug):
+                raise forms.ValidationError('Another page with this slug already exists')
             return slug
         
     from django.http import QueryDict

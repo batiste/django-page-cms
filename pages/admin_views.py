@@ -72,7 +72,7 @@ def get_form(request, dict=None, current_page=None):
         node = HierarchicalNode.get_nodes_by_object(current_page)
         if node:
             dict['node'] = node[0].id
-        
+    
     template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
     for placeholder in get_placeholders(template):
         if placeholder.widget == 'TextInput':
@@ -95,6 +95,7 @@ def add(request):
     """create a new page for a particular language"""
     opts = Page._meta
     add = True
+    placeholders = get_placeholders(settings.DEFAULT_PAGE_TEMPLATE)
     if(request.POST):
         form = get_form(request, request.POST)
         if form.is_valid():

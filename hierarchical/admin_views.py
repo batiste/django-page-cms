@@ -1,12 +1,11 @@
 from .utils import auto_render
 from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
-from django import newforms as forms
+from django import forms
 from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
-from django import newforms as forms
 from django.contrib.contenttypes.models import ContentType
 
 @staff_member_required
@@ -30,8 +29,7 @@ def down(request, hnode_id):
     node.down()
     return HttpResponseRedirect("../../")
 
-from django.newforms import ModelForm
-class HierarchicalObjectForm(ModelForm):
+class HierarchicalObjectForm(forms.ModelForm):
     class Meta:
         model = HierarchicalObject
 

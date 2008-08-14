@@ -51,8 +51,8 @@ def get_form(request, dict=None, current_page=None):
         template_choices = False
     
     class PageForm(forms.Form):
-        slug = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
-        title = forms.CharField(widget=forms.TextInput(), required=request.POST) # hackish
+        slug = forms.CharField(widget=forms.TextInput(), required=True)
+        title = forms.CharField(widget=forms.TextInput(), required=True)
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
         node = forms.ModelChoiceField(HierarchicalNode.objects.all(), required=False)
@@ -61,9 +61,10 @@ def get_form(request, dict=None, current_page=None):
         
         def clean_slug(self):
             from django.template.defaultfilters import slugify
-            if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slugify(self.cleaned_data['slug'])):
-                    raise forms.ValidationError('Another page with this slug already exists')
-            return slugify(self.cleaned_data['slug'])
+            slug = slugify(self.cleaned_data['slug'])
+            if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
+                raise forms.ValidationError('Another page with this slug already exists')
+            return slug
         
     from django.http import QueryDict
     

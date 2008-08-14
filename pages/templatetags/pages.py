@@ -33,10 +33,9 @@ class PlaceholderNode(template.Node):
         self.widget = widget
 
     def render(self, context):
-        if('request' in context):
-            l = Language.get_from_request(context['request'])
-        else:
+        if not 'request' in context or not self.page in context:
             return ''
+        l = Language.get_from_request(context['request'])
         request = context['request']
         c = Content.get_content(context[self.page], l, self.name, True)
         if c:

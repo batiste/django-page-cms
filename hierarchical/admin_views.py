@@ -1,4 +1,4 @@
-from utils import auto_render
+from .utils import auto_render
 from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
 from django import newforms as forms

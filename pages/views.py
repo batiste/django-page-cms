@@ -1,7 +1,7 @@
 # Create your views here.
 
 from pages.models import Page, Language, Content
-from utils import auto_render
+from hierarchical.utils import auto_render
 from django.contrib.admin.views.decorators import staff_member_required
 from django import newforms as forms
 from hierarchical.models import HierarchicalNode, HierarchicalObject

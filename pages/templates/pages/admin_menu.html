@@ -5,7 +5,7 @@
 <td>
     {% for lang in page.get_languages %} 
         <a href="{{ url }}{{ page.id }}/?language={{ lang }}">{{ lang }}</a>
-        <span style="font-weight:normal">|</span>
+        <span style="font-weight:normal">{% if not forloop.last %}|{% endif %}</span>
     {% endfor %}
 </td>
 <td>

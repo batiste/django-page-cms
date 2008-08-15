@@ -152,6 +152,18 @@
 </div>
 
 <script type="text/javascript">document.getElementById("id_title").focus();</script>
+{% if add %}
+<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
+<script type="text/javascript">
+    document.getElementById("id_slug").onchange = function() { this._changed = true; };
+    document.getElementById("id_title").onkeyup = function() {
+        var e = document.getElementById("id_slug");
+        if (!e._changed) {
+            e.value = URLify(this.value, 50);
+        }
+    };
+</script>
+{% endif %}
 
 </div>
 </form></div>

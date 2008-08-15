@@ -55,7 +55,6 @@ class Page(models.Model):
     # slugs are the same for each language
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(User)
-    #parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
     publication_date = models.DateTimeField(editable=False, null=True)
@@ -67,12 +66,6 @@ class Page(models.Model):
     objects = models.Manager()
     published = PagePublishedManager()
     drafts = PageDraftsManager()
-
-    #class Admin:
-    #    list_display = ('slug', 'traductions', 'nodes')
-    
-    #class Meta:
-    #    ordering = ['order']
 
     def save(self):
         self.slug = slugify(self.slug)

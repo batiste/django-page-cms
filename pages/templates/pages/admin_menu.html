@@ -1,0 +1,21 @@
+{% load pages %}
+<td {% if level %}style="padding-left:{{level}}em"{% endif %}>
+    <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{% show_content page "title" %}</a>
+</td>
+<td>
+    {% for lang in page.get_languages %} 
+        <a href="{{ url }}{{ page.id }}/?language={{ lang }}">{{ lang }}</a>
+        <span style="font-weight:normal">|</span>
+    {% endfor %}
+</td>
+<td>
+{{ page.template }}
+</td>
+
+{% if children.count %}
+</tr>
+{% for child in children %}
+    <tr>{% show_admin_menu child url level %}</tr>
+{% endfor %}
+<tr>
+{% endif %}

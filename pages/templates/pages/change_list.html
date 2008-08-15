@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
-{% load adminmedia admin_list i18n hierarchical %}
-{% block title %}List of nodes{% endblock %}
+{% load adminmedia admin_list i18n pages %}
+{% block title %}List of pages{% endblock %}
 {% block stylesheet %}{% admin_media_prefix %}css/changelists.css{% endblock %}
 {% block bodyclass %}change-list{% endblock %}
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}</div>{% endblock %}{% endif %}
@@ -9,17 +9,17 @@
 <style>
 .nodes-up {
 background:url({% admin_media_prefix %}img/admin/arrow-up.gif) left center no-repeat;
-padding-left:12px;
+padding-left:16px;
 }
 .nodes-down {
 background:url({% admin_media_prefix %}img/admin/arrow-down.gif) left center no-repeat;
-padding-left:12px;
+padding-left:16px;
 }
 .up-down{
     background:#eee;
 }
 tr{
-    padding-left:1em;
+    padding-left:1.5em;
 }
 </style>
 {% endblock %}
@@ -30,31 +30,30 @@ tr{
 <ul class="object-tools"><li><a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">{% blocktrans with cl.opts.verbose_name|escape as name %}Add {{ name }}{% endblocktrans %}</a></li></ul>
 {% endif %}
 {% endblock %}
-<h1>Select node to change</h1>
+<h1>Select {{ name }} to change</h1>
 
-<ul class="object-tools"><li><a href="add/" class="addlink">Add node</a></li></ul>
+<ul class="object-tools"><li><a href="add/" class="addlink">Add {{ name }}</a></li></ul>
 
 <div class="module" id="changelist">
 
 <table cellspacing="0">
 <thead>
 <tr>
-<th>nodes</th>
-<th>linked objects</th>
+<th>title</th>
+<th>traductions</th>
+<th>template</th>
 </tr>
 </thead>
 <tbody>
 
-{% for node in nodes %}
+{% for page in pages %}
 <tr>
-    {% show_admin_menu node %}
+    {% show_admin_menu page %}
 </tr>
 {% endfor %}
 
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>

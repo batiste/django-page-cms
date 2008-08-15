@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-from hierarchical.models import HierarchicalNode
+#from hierarchical.models import HierarchicalNode
+import mptt
 import settings
 
 class Language(models.Model):
@@ -12,26 +13,27 @@ class Language(models.Model):
     name = models.CharField(max_length=20)
     
     def __str__(self):
-        return self.name.capitalize()
+        return self.name
     
     @classmethod
     def get_from_request(cls, request, current_page=None):
         """Return the most obvious language according the request"""
+        l = None
         if 'language' in request.GET:
-            l=Language.objects.get(pk=request.GET['language'])
+            l = Language.objects.get(pk=request.GET['language'])
         elif 'language' in request.POST:
-            l=Language.objects.get(pk=request.POST['language'])
+            l = Language.objects.get(pk=request.POST['language'])
         else:
             try:
-                l=Language.objects.get(pk=request.LANGUAGE_CODE)
+                l = Language.objects.get(pk=request.LANGUAGE_CODE)
             except Language.DoesNotExist:
                 # in last resort, get the first lanugage available in the page
                 if current_page:
                     languages = current_page.get_languages()
                     if len(languages) > 0:
-                        l=languages[0]
-        if not l:
-            l=Language.objects.latest('id')
+                        l = Language.objects.get(pk=languages[0])
+        if l is None:
+            l = Language.objects.latest('id')
         return l
 
 class PagePublishedManager(models.Manager):
@@ -54,6 +56,7 @@ class Page(models.Model):
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(User)
     #parent = models.ForeignKey('self', related_name="children", blank=True, null=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
     publication_date = models.DateTimeField(editable=False, null=True)
     
@@ -105,16 +108,16 @@ class Page(models.Model):
     def get_url(self):
         """get the url of this page, adding parent's slug"""
         url = "%s-%d/" % (self.slug, self.id)
-        p = HierarchicalNode.get_parent_object(self)
+        """p = HierarchicalNode.get_parent_object(self)
         while p:
             url = p.slug + '/' + url
-            p = HierarchicalNode.get_parent_object(p)
+            p = HierarchicalNode.get_parent_object(p)"""
         return url
         
     def get_template(self):
         """get the template of this page if defined 
         or if closer parent if defined or DEFAULT_PAGE_TEMPLATE otherwise"""
-        p = self
+        """p = self
         while p:
             if not p:
                 return settings.DEFAULT_PAGE_TEMPLATE
@@ -123,7 +126,7 @@ class Page(models.Model):
             try:
                 p = HierarchicalNode.get_parent_object(p)
             except HierarchicalNode.DoesNotExist:
-                return settings.DEFAULT_PAGE_TEMPLATE
+                return settings.DEFAULT_PAGE_TEMPLATE"""
         return settings.DEFAULT_PAGE_TEMPLATE
         
     def traductions(self):
@@ -133,13 +136,16 @@ class Page(models.Model):
         return langs[0:-2]
         
     def nodes(self):
-        nodes = ""
+        return None
+        """nodes = ""
         for node in HierarchicalNode.get_nodes_by_object(self):
             nodes += '%s, ' % node.name
-        return nodes[0:-2]
+        return nodes[0:-2]"""
 
     def __str__(self):
         return "%s" % (self.slug)
+    
+mptt.register(Page, order_insertion_by=['slug'])
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""

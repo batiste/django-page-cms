@@ -1,6 +1,6 @@
 from hierarchical.utils import auto_render
 from pages.models import Language, Content, Page
-from hierarchical.models import HierarchicalNode, HierarchicalObject
+#from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
 from django import forms
 from django.db import models
@@ -12,6 +12,8 @@ from django.template.loader_tags import ExtendsNode
 # must be imported like this for isinstance
 from django.templatetags.pages import PlaceholderNode
 import settings
+from mptt.exceptions import InvalidMove
+from mptt.forms import MoveNodeForm
 
 def get_placeholders(template_name):
     try:
@@ -55,7 +57,7 @@ def get_form(request, dict=None, current_page=None):
         title = forms.CharField(widget=forms.TextInput(), required=True)
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
-        node = forms.ModelChoiceField(HierarchicalNode.objects.all(), required=False)
+        #parent = forms.ModelChoiceField(required=False)
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
         
@@ -72,9 +74,9 @@ def get_form(request, dict=None, current_page=None):
     
     if dict and type(dict) is not QueryDict:
         dict['language'] = l.id
-        node = HierarchicalNode.get_nodes_by_object(current_page)
+        """node = HierarchicalNode.get_nodes_by_object(current_page)
         if node:
-            dict['node'] = node[0].id
+            dict['node'] = node[0].id"""
         
     template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
     for placeholder in get_placeholders(template):
@@ -107,8 +109,8 @@ def add(request):
             template = form.cleaned_data.get('template', None)
             page = Page(author=request.user, status=status, slug=slug, template=template)
             page.save()
-            HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
-            language=Language.objects.get(pk=form.cleaned_data['language'])
+            #HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
+            language = Language.objects.get(pk=form.cleaned_data['language'])
             
             for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
@@ -132,10 +134,12 @@ def modify(request, page_id):
     page = Page.objects.get(pk=page_id)
     placeholders = get_placeholders(page.get_template())
     original = page
+    
     if(request.POST):
+        move_form = MoveNodeForm(page, request.POST)
         form = get_form(request, request.POST, page)
         if form.is_valid():
-            language=Language.objects.get(pk=form.cleaned_data['language'])
+            language = Language.objects.get(pk=form.cleaned_data['language'])
             page.status = form.cleaned_data['status']
             page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
@@ -144,11 +148,14 @@ def modify(request, page_id):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
-            HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
+            if move_form.is_valid():
+                move_form.save()
+            #HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
+        move_form = MoveNodeForm(page)
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
@@ -157,6 +164,15 @@ def modify(request, page_id):
         form = get_form(request, dict, page)
 
     return 'pages/change_form.html', locals()
+
+@staff_member_required
+@auto_render
+def list_pages(request):
+    name = _("Page")
+    opts = Page._meta
+    pages = Page.objects.filter(parent__isnull=True)
+    print pages
+    return 'pages/change_list.html', locals()
 
 #@staff_member_required
 @auto_render

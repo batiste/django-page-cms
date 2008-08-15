@@ -108,25 +108,18 @@ class Page(models.Model):
     def get_url(self):
         """get the url of this page, adding parent's slug"""
         url = "%s-%d/" % (self.slug, self.id)
-        """p = HierarchicalNode.get_parent_object(self)
-        while p:
+        for p in self.get_ancestors():
             url = p.slug + '/' + url
-            p = HierarchicalNode.get_parent_object(p)"""
         return url
         
     def get_template(self):
         """get the template of this page if defined 
         or if closer parent if defined or DEFAULT_PAGE_TEMPLATE otherwise"""
-        """p = self
-        while p:
-            if not p:
-                return settings.DEFAULT_PAGE_TEMPLATE
+        if self.template:
+            return self.template
+        for p in self.get_ancestors(ascending=True):
             if p.template:
                 return p.template
-            try:
-                p = HierarchicalNode.get_parent_object(p)
-            except HierarchicalNode.DoesNotExist:
-                return settings.DEFAULT_PAGE_TEMPLATE"""
         return settings.DEFAULT_PAGE_TEMPLATE
         
     def traductions(self):
@@ -134,13 +127,6 @@ class Page(models.Model):
         for lang in self.get_languages():
             langs += '%s, ' % lang
         return langs[0:-2]
-        
-    def nodes(self):
-        return None
-        """nodes = ""
-        for node in HierarchicalNode.get_nodes_by_object(self):
-            nodes += '%s, ' % node.name
-        return nodes[0:-2]"""
 
     def __str__(self):
         return "%s" % (self.slug)

@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Page, Language
 
 class PageAdmin(admin.ModelAdmin):
-    list_display = ('slug', 'traductions', 'template', 'nodes')
+    pass
 
 class LanguageAdmin(admin.ModelAdmin):
     pass

@@ -1,4 +1,4 @@
-from hierarchical.utils import auto_render
+from pages.utils import auto_render
 from pages.models import Language, Content, Page
 #from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
@@ -54,10 +54,9 @@ def get_form(request, dict=None, current_page=None):
     
     class PageForm(forms.Form):
         slug = forms.CharField(widget=forms.TextInput(), required=True)
-        title = forms.CharField(widget=forms.TextInput(), required=True)
+        title = forms.CharField(widget=forms.TextInput(), required=request.POST)
         language = forms.ChoiceField(choices=language_choices, initial=l.id)
         status = forms.ChoiceField(choices=Page.STATUSES)
-        #parent = forms.ModelChoiceField(required=False)
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
         
@@ -74,9 +73,6 @@ def get_form(request, dict=None, current_page=None):
     
     if dict and type(dict) is not QueryDict:
         dict['language'] = l.id
-        """node = HierarchicalNode.get_nodes_by_object(current_page)
-        if node:
-            dict['node'] = node[0].id"""
         
     template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
     for placeholder in get_placeholders(template):
@@ -109,7 +105,6 @@ def add(request):
             template = form.cleaned_data.get('template', None)
             page = Page(author=request.user, status=status, slug=slug, template=template)
             page.save()
-            #HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             language = Language.objects.get(pk=form.cleaned_data['language'])
             
             for placeholder in get_placeholders(page.get_template()):
@@ -150,7 +145,6 @@ def modify(request, page_id):
             
             if move_form.is_valid():
                 move_form.save()
-            #HierarchicalObject.update_for_object(page, form.cleaned_data['node'])
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
@@ -168,7 +162,7 @@ def modify(request, page_id):
 @staff_member_required
 @auto_render
 def list_pages(request):
-    name = _("Page")
+    name = _("page")
     opts = Page._meta
     pages = Page.objects.filter(parent__isnull=True)
     print pages

@@ -122,15 +122,17 @@
   {{ form.status }}
 </div>
 
-<h3>Position in the tree</h3>
+{% if move_form %}
+    <h3>Position in the tree</h3>
 
-<div class="form-row" >
-  {% comment %}
-  {% if move_form.parent.errors %}<ul class="errorlist"><li>{{ move_form.parent.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_parent">Parent:</label> 
-  {% endcomment %}
-  {{ move_form.as_table }}
-</div>
+    <div class="form-row" >
+    {% comment %}
+    {% if move_form.parent.errors %}<ul class="errorlist"><li>{{ move_form.parent.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_parent">Parent:</label> 
+    {% endcomment %}
+    {{ move_form.as_table }}
+    </div>
+{% endif %}
 
 {% if form.template %}
 <div class="form-row" >

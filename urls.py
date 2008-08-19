@@ -6,7 +6,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^cms/', include('cms.foo.urls')),
     (r'^pages/$', 'pages.views.details'),
-    (r'^pages/.*(?P<page_id>[0-9]+)/$', 'pages.views.details'),
+    (r'^pages/.*?(?P<page_id>[0-9]+)/$', 'pages.views.details'),
     
     # Uncomment this for admin:
     #(r'^admin/pages/page/$', 'pages.admin_views.list_page'),

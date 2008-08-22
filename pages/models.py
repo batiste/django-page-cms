@@ -155,8 +155,10 @@ if settings.PAGE_PERMISSION:
             return id_list
 
 def get_page_valid_targets_queryset(request, page=None):
+    if not settings.PAGE_PERMISSION:
+        return None
     perms = PagePermission.get_page_id_list(request.user)
-    if not settings.PAGE_PERMISSION or perms == "All":
+    if perms == "All":
         return None
     exclude_list = []
     if page:

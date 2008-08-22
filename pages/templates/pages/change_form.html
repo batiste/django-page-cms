@@ -3,7 +3,9 @@
 {% block title %}List of page{% endblock %}
 
 {% block extrahead %}
-<link rel="stylesheet" type="text/css" href="/media/css/forms.css" />
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js" /></script>
 {% endblock %}
 
 {% block content %}
@@ -151,7 +153,12 @@
 <input type="submit" value="Save" class="default" />
 </div>
 
-<script type="text/javascript">document.getElementById("id_title").focus();</script>
+<script type="text/javascript">
+    document.getElementById("id_title").focus();
+    if(window.$ && $.fn.rte)
+        $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+    
+</script>
 {% if add %}
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
 <script type="text/javascript">

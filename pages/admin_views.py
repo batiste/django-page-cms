@@ -78,6 +78,8 @@ def get_form(request, dict=None, current_page=None):
     for placeholder in get_placeholders(template):
         if placeholder.widget == 'TextInput':
             w = forms.TextInput()
+        elif placeholder.widget == 'RichTextarea':
+            w = forms.Textarea({'class':'rte'})
         else:
             w = forms.Textarea()
         if placeholder.name != "title":
@@ -128,6 +130,7 @@ def modify(request, page_id):
     opts = Page._meta
     change = True
     has_absolute_url = True
+    from settings import MEDIA_URL
     page = Page.objects.get(pk=page_id)
     if not has_page_permission(request, page):
         raise Http404

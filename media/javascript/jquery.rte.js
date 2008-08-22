@@ -56,6 +56,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         iframe.frameBorder=0;
         iframe.frameMargin=0;
         iframe.framePadding=0;
+        iframe.height=200;
         if(textarea.attr('class'))
             iframe.className = textarea.attr('class');
         if(textarea.attr('id'))
@@ -95,8 +96,6 @@ jQuery.fn.rte = function(css_url, media_url) {
         if(submit!=true)
             $(iframe).remove();
     }
-    
-    
     
     function toolbar(iframe) {
         
@@ -139,13 +138,22 @@ jQuery.fn.rte = function(css_url, media_url) {
                 formatText(iframe, 'InsertImage', p);
             return false; });
         $('.disable', tb).click(function(){ disableDesignMode(iframe); tb.remove(); return false; });
-        $(iframe).parents('form').submit(function(){ 
+        $(iframe).parents('form').submit(function(){
             disableDesignMode(iframe, true); });
         var iframeDoc = $(iframe.contentWindow.document);
         
         var select = $('select', tb)[0];
-        iframeDoc.mouseup(function(){ setSelectedType(getSelectionElement(iframe), select);return true;});
-        iframeDoc.keyup(function(){ setSelectedType(getSelectionElement(iframe), select);return true;});
+        iframeDoc.mouseup(function(){ 
+            setSelectedType(getSelectionElement(iframe), select);
+            return true;
+        });
+        iframeDoc.keyup(function(){ 
+            setSelectedType(getSelectionElement(iframe), select);
+            var body = $('body', iframeDoc);
+            if(body.scrollTop()>0)
+                iframe.height = parseInt(iframe.height)+50;
+            return true;
+        });
         
         return tb;
     }

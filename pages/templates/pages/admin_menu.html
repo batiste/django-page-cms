@@ -12,6 +12,13 @@
     {% endfor %}
 </td>
 <td>
+{% if page.status %}
+    Published
+{% else %}
+    Draft
+{% endif %}
+</td>
+<td>
 {{ page.get_template }}
 </td>
 </tr>

@@ -135,7 +135,10 @@ def modify(request, page_id):
     original = page
     
     if(request.POST):
-        move_form = MoveNodeForm(page, request.POST)
+        if has_page_move_permission(request, page):
+            move_form = MoveNodeForm(page, request.POST)
+        else:
+            move_form = None
         form = get_form(request, request.POST, page)
         if form.is_valid():
             language = Language.objects.get(pk=form.cleaned_data['language'])
@@ -147,7 +150,7 @@ def modify(request, page_id):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
-            if move_form.is_valid() and has_page_move_permission(request, page):
+            if move_form and move_form.is_valid():
                 move_form.save()
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)

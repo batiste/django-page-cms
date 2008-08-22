@@ -151,7 +151,7 @@ jQuery.fn.rte = function(css_url, media_url) {
             setSelectedType(getSelectionElement(iframe), select);
             var body = $('body', iframeDoc);
             if(body.scrollTop()>0)
-                iframe.height = parseInt(iframe.height)+50;
+                iframe.height = Math.min(350, parseInt(iframe.height)+body.scrollTop());
             return true;
         });
         

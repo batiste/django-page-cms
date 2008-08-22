@@ -1,9 +1,9 @@
 {% load pages %}
 
-{% if page|has_permission:request %}
+{% if has_permission %}
 <tr>
 <td {% if level %}style="padding-left:{{level}}em"{% endif %}>
-    <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{% show_content page "title" %}</a>
+    <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{{ page.slug }}</a>
 </td>
 <td>
     {% for lang in page.get_languages %} 

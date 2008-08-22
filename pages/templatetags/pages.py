@@ -24,12 +24,14 @@ def show_sub_menu(context, page, url='/'):
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
     children = page.get_children()
     request = context['request']
-    if level is None:
-        level = 0
-    else:
-        level = level+2
+    has_permission = has_page_permission(request, page)
+    if has_permission:
+        if level is None:
+            level = 0
+        else:
+            level = level+2
     return locals()
-    
+
 @register.filter
 def has_permission(page, request):
     return has_page_permission(request, page)

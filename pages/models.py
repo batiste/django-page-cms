@@ -154,6 +154,18 @@ if settings.PAGE_PERMISSION:
                             id_list.append(page.id)
             return id_list
 
+def get_page_valid_targets_queryset(request, page=None):
+    perms = PagePermission.get_page_id_list(request.user)
+    if not settings.PAGE_PERMISSION or perms == "All":
+        return None
+    exclude_list = []
+    if page:
+        exclude_list.append(page.id)
+        for p in page.get_descendants():
+            exclude_list.append(p.id)
+        print exclude_list
+    return Page.objects.filter(id__in=perms).exclude(id__in=exclude_list)
+
 def has_page_permission(request, page):
     if not settings.PAGE_PERMISSION:
         return True
@@ -173,9 +185,6 @@ def has_page_add_permission(request, page=None):
         if permission == "All":
             return True
     return False
-    
-def has_page_move_permission(request, page=None):
-    return has_page_add_permission(request, page)
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""

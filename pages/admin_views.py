@@ -1,5 +1,5 @@
 from pages.utils import auto_render
-from pages.models import Language, Content, Page, has_page_permission, has_page_move_permission, has_page_add_permission
+from pages.models import Language, Content, Page, has_page_permission, has_page_add_permission, get_page_valid_targets_queryset
 #from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
 from django import forms
@@ -133,12 +133,14 @@ def modify(request, page_id):
         raise Http404
     placeholders = get_placeholders(page.get_template())
     original = page
+    page_queryset = get_page_valid_targets_queryset(request, page)
     
     if(request.POST):
-        if has_page_move_permission(request, page):
-            move_form = MoveNodeForm(page, request.POST)
+        if page_queryset is not None:
+            move_form = MoveNodeForm(page, request.POST, valid_targets=page_queryset)
         else:
-            move_form = None
+            move_form = MoveNodeForm(page, request.POST)
+            
         form = get_form(request, request.POST, page)
         if form.is_valid():
             language = Language.objects.get(pk=form.cleaned_data['language'])
@@ -150,13 +152,15 @@ def modify(request, page_id):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
-            if move_form and move_form.is_valid():
+            if move_form.is_valid():
                 move_form.save()
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        if has_page_move_permission(request, page):
+        if page_queryset is not None:
+            move_form = MoveNodeForm(page, valid_targets=page_queryset)
+        else:
             move_form = MoveNodeForm(page)
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)

@@ -25,14 +25,12 @@ tr{
 {% endblock %}
 {% block content %}
 <div id="content-main">
-{% block object-tools %}
-{% if has_add_permission %}
-<ul class="object-tools"><li><a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">{% blocktrans with cl.opts.verbose_name|escape as name %}Add {{ name }}{% endblocktrans %}</a></li></ul>
-{% endif %}
-{% endblock %}
+
 <h1>Select {{ name }} to change</h1>
 
+{% if has_add_permission %}
 <ul class="object-tools"><li><a href="add/" class="addlink">Add {{ name }}</a></li></ul>
+{% endif %}
 
 <div class="module" id="changelist">
 
@@ -47,9 +45,7 @@ tr{
 <tbody>
 
 {% for page in pages %}
-<tr>
     {% show_admin_menu page %}
-</tr>
 {% endfor %}
 
 </tbody>

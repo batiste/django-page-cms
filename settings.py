@@ -8,8 +8,10 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
+# django-page-cms settings
 DEFAULT_PAGE_TEMPLATE = 'index.html'
 PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
+PAGE_PERMISSION = True
 
 MANAGERS = ADMINS
 

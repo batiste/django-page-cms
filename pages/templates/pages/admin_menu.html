@@ -1,4 +1,7 @@
 {% load pages %}
+
+{% if page|has_permission:request %}
+<tr>
 <td {% if level %}style="padding-left:{{level}}em"{% endif %}>
     <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{% show_content page "title" %}</a>
 </td>
@@ -11,11 +14,11 @@
 <td>
 {{ page.get_template }}
 </td>
+</tr>
+{% endif %}
 
 {% if children.count %}
-</tr>
 {% for child in children %}
-    <tr>{% show_admin_menu child url level %}</tr>
+    {% show_admin_menu child url level %}
 {% endfor %}
-<tr>
 {% endif %}

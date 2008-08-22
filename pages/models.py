@@ -126,6 +126,57 @@ class Page(models.Model):
     
 mptt.register(Page, order_insertion_by=['slug'])
 
+if settings.PAGE_PERMISSION:
+    class PagePermission(models.Model):
+        
+        TYPES = (
+            (0, _('All')),
+            (1, _('This page only')),
+            (2, _('This page and all childrens')),
+        )
+        
+        page = models.ForeignKey(Page, null=True)
+        user = models.ForeignKey(User)
+        type = models.IntegerField(choices=TYPES, default=0)
+        
+        @classmethod
+        def get_page_id_list(cls, user):
+            id_list = []
+            perms = PagePermission.objects.filter(user=user)
+            for perm in perms:
+                if perm.type == 0:
+                    return "All"
+                if perm.page.id not in id_list:
+                    id_list.append(perm.page.id)
+                if perm.type == 2:
+                    for page in perm.page.get_descendants():
+                        if page.id not in id_list:
+                            id_list.append(page.id)
+            return id_list
+
+def has_page_permission(request, page):
+    if not settings.PAGE_PERMISSION:
+        return True
+    else:
+        permission = PagePermission.get_page_id_list(request.user)
+        if permission == "All":
+            return True
+        if page.id in permission:
+            return True
+        return False
+    
+def has_page_add_permission(request, page=None):
+    if not settings.PAGE_PERMISSION:
+        return True
+    else:
+        permission = PagePermission.get_page_id_list(request.user)
+        if permission == "All":
+            return True
+    return False
+    
+def has_page_move_permission(request, page=None):
+    return has_page_add_permission(request, page)
+
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
     language = models.ForeignKey(Language)

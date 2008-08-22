@@ -1,5 +1,5 @@
 from django import template
-from ..pages.models import Language, Content, Page
+from ..pages.models import Language, Content, Page, has_page_permission, has_page_add_permission
 register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)
@@ -30,6 +30,10 @@ def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
         level = level+2
     return locals()
     
+@register.filter
+def has_permission(page, request):
+    return has_page_permission(request, page)
+
 @register.inclusion_tag('pages/content.html', takes_context=True)
 def show_content(context, page, content_type):
     l = Language.get_from_request(context['request'])

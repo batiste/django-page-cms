@@ -1,10 +1,10 @@
 from pages.utils import auto_render
-from pages.models import Language, Content, Page
+from pages.models import Language, Content, Page, has_page_permission, has_page_move_permission, has_page_add_permission
 #from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
 from django import forms
 from django.db import models
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
 from django.template import loader, Context, TemplateDoesNotExist
@@ -94,6 +94,8 @@ def get_form(request, dict=None, current_page=None):
 @auto_render
 def add(request):
     """create a new page for a particular language"""
+    if not has_page_add_permission(request):
+        raise Http404
     opts = Page._meta
     add = True
     placeholders = get_placeholders(settings.DEFAULT_PAGE_TEMPLATE)
@@ -127,6 +129,8 @@ def modify(request, page_id):
     change = True
     has_absolute_url = True
     page = Page.objects.get(pk=page_id)
+    if not has_page_permission(request, page):
+        raise Http404
     placeholders = get_placeholders(page.get_template())
     original = page
     
@@ -143,13 +147,14 @@ def modify(request, page_id):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
-            if move_form.is_valid():
+            if move_form.is_valid() and has_page_move_permission(request, page):
                 move_form.save()
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        move_form = MoveNodeForm(page)
+        if has_page_move_permission(request, page):
+            move_form = MoveNodeForm(page)
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
@@ -164,8 +169,8 @@ def modify(request, page_id):
 def list_pages(request):
     name = _("page")
     opts = Page._meta
+    has_add_permission = has_page_add_permission(request)
     pages = Page.objects.filter(parent__isnull=True)
-    print pages
     return 'pages/change_list.html', locals()
 
 #@staff_member_required

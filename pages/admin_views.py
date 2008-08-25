@@ -16,6 +16,7 @@ from mptt.exceptions import InvalidMove
 from mptt.forms import MoveNodeForm
 
 def get_placeholders(template_name):
+    """Return a list of PlaceholderNode found in the given template"""
     try:
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
@@ -26,6 +27,7 @@ def get_placeholders(template_name):
     return list
         
 def placeholders_recursif(nodelist, list):
+    """Recursively search into a template node list for PlaceholderNode node"""
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
             list.append(node)
@@ -41,7 +43,7 @@ def placeholders_recursif(nodelist, list):
             placeholders_recursif(node.get_parent(Context()).nodelist, list)
 
 def get_form(request, dict=None, current_page=None):
-    """get the custom form to create or edit a page in the admin interface"""
+    """Dynamicaly create a form to create/modify a page in the admin interface"""
 
     language_choices = [(lang.id, lang.name) for lang in Language.objects.all()]
     l = Language.get_from_request(request, current_page)

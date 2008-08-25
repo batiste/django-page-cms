@@ -128,6 +128,7 @@ mptt.register(Page, order_insertion_by=['slug'])
 
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):
+        """Page permission object"""
         
         TYPES = (
             (0, _('All')),
@@ -155,6 +156,7 @@ if settings.PAGE_PERMISSION:
             return id_list
 
 def get_page_valid_targets_queryset(request, page=None):
+    """Give valid targets to move a page into the tree"""
     if not settings.PAGE_PERMISSION:
         return None
     perms = PagePermission.get_page_id_list(request.user)
@@ -169,6 +171,10 @@ def get_page_valid_targets_queryset(request, page=None):
     return Page.objects.filter(id__in=perms).exclude(id__in=exclude_list)
 
 def has_page_permission(request, page):
+    """
+    Return true if the current user has permission on the page.
+    Return the string 'All' if the user has all rights.
+    """
     if not settings.PAGE_PERMISSION:
         return True
     else:
@@ -180,6 +186,9 @@ def has_page_permission(request, page):
         return False
     
 def has_page_add_permission(request, page=None):
+    """
+    Return true if the current user has permission to add a new page.
+    """
     if not settings.PAGE_PERMISSION:
         return True
     else:

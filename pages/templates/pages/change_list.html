@@ -62,11 +62,14 @@ tr.selected {
     if(window.$) {
         $(document).ready(function() {
             var selected_page = false;
+            var action = false;
             $('#changelist').click(function(e) {
                 var jtarget = $(e.target);
+                
                 if(jtarget.hasClass("move")) {
                     var page_id = e.target.id.split("move-link-")[1];
                     selected_page = page_id;
+                    action = "move";
                     $('tr').removeClass("selected");
                     $('#page-row-'+page_id).addClass("selected");
                     $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
@@ -77,6 +80,18 @@ tr.selected {
                     });
                     return false;
                 }
+                
+                if(jtarget.hasClass("add")) {
+                    var page_id = e.target.id.split("add-link-")[1];
+                    selected_page = page_id;
+                    action = "add";
+                    $('tr').removeClass("selected");
+                    $('#page-row-'+page_id).addClass("selected");
+                    $('.move-target-container').hide();
+                    $('#move-target-'+page_id).show();
+                    return false;
+                }
+                
                 if(jtarget.hasClass("move-target")) {
                     if(jtarget.hasClass("left"))
                         var position = "left";
@@ -85,17 +100,21 @@ tr.selected {
                     if(jtarget.hasClass("first-child"))
                         var position = "first-child";
                     var target_id = e.target.parentNode.id.split("move-target-")[1];
-                    $.post("/admin/pages/page/"+selected_page+"/move_page/", 
-                        {
-                            position:position,
-                            target:target_id
-                        },
-                        function(html) {
-                            $('#changelist').html(html);
-                            $('#page-row-'+selected_page).addClass("selected");
-                        }
-                    );
-                    $('.move-target-container').hide();
+                    if(action=="move") {
+                        $.post("/admin/pages/page/"+selected_page+"/move_page/", {
+                                position:position,
+                                target:target_id
+                            },
+                            function(html) {
+                                $('#changelist').html(html);
+                                $('#page-row-'+selected_page).addClass("selected");
+                            }
+                        );
+                        $('.move-target-container').hide();
+                    }
+                    if(action=="add") {
+                        window.location.href += 'add/?target='+target_id+'&position='+position;
+                    }
                     //selected_page = false;
                     return false;
                 }

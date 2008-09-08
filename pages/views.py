@@ -18,4 +18,3 @@ def details(request, page_id=None):
         template = settings.DEFAULT_PAGE_TEMPLATE
     
     return template, locals()
-    

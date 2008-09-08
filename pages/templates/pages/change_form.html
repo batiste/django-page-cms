@@ -131,18 +131,6 @@
   {{ form.status }}
 </div>
 
-{% if move_form %}
-    <h3>Position in the tree</h3>
-
-    <div class="form-row" >
-    {% comment %}
-    {% if move_form.parent.errors %}<ul class="errorlist"><li>{{ move_form.parent.errors|join:", " }}</li></ul>{% endif %}
-    <label for="id_parent">Parent:</label> 
-    {% endcomment %}
-    {{ move_form.as_table }}
-    </div>
-{% endif %}
-
 </fieldset>
 
 <div class="submit-row" style="overflow:hidden">

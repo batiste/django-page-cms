@@ -114,12 +114,17 @@ def add(request):
             page.save()
             language = Language.objects.get(pk=form.cleaned_data['language'])
             
+            if "target" in request.GET:
+                target = Page.objects.get(pk=int(request.GET["target"]))
+                page.move_to(target, request.GET["position"])
+            
             for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
             msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
+            
             return HttpResponseRedirect("../")
     else:
         form = get_form(request)
@@ -140,14 +145,9 @@ def modify(request, page_id):
         raise Http404
     placeholders = get_placeholders(page.get_template())
     original = page
-    page_queryset = get_page_valid_targets_queryset(request, page)
     
     if(request.POST):
-        if page_queryset is not None:
-            move_form = MoveNodeForm(page, request.POST, valid_targets=page_queryset)
-        else:
-            move_form = MoveNodeForm(page, request.POST)
-            
+        
         form = get_form(request, request.POST, page)
         if form.is_valid():
             language = Language.objects.get(pk=form.cleaned_data['language'])
@@ -159,16 +159,10 @@ def modify(request, page_id):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
-            if move_form.is_valid():
-                move_form.save()
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        if page_queryset is not None:
-            move_form = MoveNodeForm(page, valid_targets=page_queryset)
-        else:
-            move_form = MoveNodeForm(page)
         l=Language.get_from_request(request)
         traduction_language = Language.objects.exclude(pk=l.id)
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template}

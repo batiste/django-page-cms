@@ -11,7 +11,8 @@
     <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{{ page.slug }}</a>
 </td>
 <td>
-    <a href="#" class="move" id="move-link-{{ page.id }}">move</a>
+    <a href="#" class="move" id="move-link-{{ page.id }}">move</a> |
+    <a href="#" class="add" id="add-link-{{ page.id }}">add</a>
 </td>
 <td>
     {% for lang in page.get_languages %} 

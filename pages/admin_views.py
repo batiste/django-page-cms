@@ -26,7 +26,7 @@ def get_placeholders(template_name):
     placeholders_recursif(temp.nodelist, list)
     return list
         
-def placeholders_recursif(nodelist, list):
+def placeholders_recursif(nodelist, list):    
     """Recursively search into a template node list for PlaceholderNode node"""
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
@@ -179,13 +179,29 @@ def modify(request, page_id):
 @staff_member_required
 @auto_render
 def list_pages(request):
+    """List root pages"""
     name = _("page")
+    from settings import MEDIA_URL
     opts = Page._meta
     has_add_permission = has_page_add_permission(request)
     pages = Page.objects.filter(parent__isnull=True)
     return 'pages/change_list.html', locals()
 
-#@staff_member_required
+@staff_member_required
+def valid_targets_list(request, page_id):
+    """A list of valid targets to move a page"""
+    page = Page.objects.get(pk=page_id)
+    query = get_page_valid_targets_queryset(request, page)
+    return HttpResponse(",".join([str(p.id) for p in query]))
+
+@staff_member_required
+def move_page(request, page_id):
+    page = Page.objects.get(pk=int(page_id))
+    target = Page.objects.get(pk=int(request.POST['target']))
+    page.move_to(target, request.POST['position'])
+    return HttpResponse("ok")
+
+@staff_member_required
 @auto_render
 def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)

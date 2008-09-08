@@ -5,5 +5,6 @@ class PagesTestCase(TestCase):
     fixtures = ['tests']
 
     def test_01(self):
-	pass
+        assert(1==1)
+        pass
         

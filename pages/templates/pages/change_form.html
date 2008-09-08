@@ -68,8 +68,7 @@
     </script>
 </div>
 
-
-<div class="form-row" >
+<div class="form-row">
   {% if form.language.errors %}<ul class="errorlist inline"><li>{{ form.language.errors|join:", " }}</li></ul>{% endif %}
   <label for="id_title" class="required">Language:</label>
     {{ form.language }}
@@ -85,6 +84,14 @@
     </script>
     {% endif %}
 </div>
+
+{% if form.template %}
+<div class="form-row" >
+  {% if form.template.errors %}<ul class="errorlist"><li>{{ form.template.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_parent">Template:</label> 
+  {{ form.template }}
+</div>
+{% endif %}
 
 <div class="form-row" >
   {% if form.title.errors %}<ul class="errorlist"><li>{{ form.title.errors|join:", " }}</li></ul>{% endif %}
@@ -136,14 +143,6 @@
     </div>
 {% endif %}
 
-{% if form.template %}
-<div class="form-row" >
-  {% if form.template.errors %}<ul class="errorlist"><li>{{ form.template.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_parent">Template:</label> 
-  {{ form.template }}
-</div>
-{% endif %}
-
 </fieldset>
 
 <div class="submit-row">
@@ -155,9 +154,12 @@
 
 <script type="text/javascript">
     document.getElementById("id_title").focus();
-    if(window.$ && $.fn.rte)
-        $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
-    
+    if(window.$) {
+        $(document).ready(function() {
+            if($.fn.rte)
+                $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+        });
+    }
 </script>
 {% if add %}
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>

@@ -15,7 +15,8 @@ urlpatterns = patterns('',
     (r'^admin/pages/page/(?P<page_id>\d+)/traduction/(?P<language_id>\w+)/$', 'pages.admin_views.traduction'),
     (r'^admin/pages/page/(?P<page_id>\d+)/$', 'pages.admin_views.modify'),
     (r'^admin/pages/page/add/$', 'pages.admin_views.add'),
-    
+    (r'^admin/pages/page/(?P<page_id>\d+)/valid-targets-list/$', 'pages.admin_views.valid_targets_list'),
+    (r'^admin/pages/page/(?P<page_id>\d+)/move_page/$', 'pages.admin_views.move_page'),
     (r'^admin/(.*)', admin.site.root),
 )
 

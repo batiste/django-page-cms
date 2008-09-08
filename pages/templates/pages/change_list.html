@@ -5,19 +5,25 @@
 {% block bodyclass %}change-list{% endblock %}
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}</div>{% endblock %}{% endif %}
 {% block coltype %}flex{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>
+{% endblock %}
 {% block extrastyle %}
 <style>
-.nodes-up {
-background:url({% admin_media_prefix %}img/admin/arrow-up.gif) left center no-repeat;
-padding-left:16px;
+.move-target{
+    padding-left:2em;
 }
-.nodes-down {
-background:url({% admin_media_prefix %}img/admin/arrow-down.gif) left center no-repeat;
-padding-left:16px;
+.move-target a{
+    font-weight:bold;
+    font-size:16px;
+    line-height:9px;
+    padding:0 3px;
 }
-.up-down{
-    background:#eee;
+.move-target a.first-child{
+    font-weight:normal;
 }
+
 tr{
     padding-left:1.5em;
 }
@@ -34,10 +40,11 @@ tr{
 
 <div class="module" id="changelist">
 
-<table cellspacing="0">
+<table cellspacing="0" id="page-list">
 <thead>
 <tr>
-<th>title</th>
+<th style="width:35%">title</th>
+<th>quick actions</th>
 <th>traductions</th>
 <th>status</th>
 <th>template</th>
@@ -54,4 +61,44 @@ tr{
 </div>
 </div>
 </div>
+
+<script type="text/javascript">
+    if(window.$) {
+        $(document).ready(function() {
+            var selected_page = false;
+            $('.move').click(function() {
+                var page_id = this.id.split("move-link-")[1];
+                selected_page = page_id;
+                $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
+                    var ids = html.split(",");
+                    var css = "#move-target-"+ids.join(",#move-target-");
+                    $('.move-target').hide();
+                    $(css).show();
+                });
+                return false;
+            });
+            $('.move-target').click(function(e) {
+                var position = e.target.className;
+                var target_id = this.id.split("move-target-")[1];
+                $.post("/admin/pages/page/"+selected_page+"/move_page/", 
+                    {
+                        position:position,
+                        target:target_id
+                    }, 
+                    function(html) {
+                        if(html=="ok")
+                            window.location.reload(false);
+                        else
+                            alert("An error has occured: page not moved");
+                    }
+                );
+                $('.move-target').hide();
+                selected_page = false;
+            });
+        });
+    }
+</script>
+
+
+
 {% endblock %}

@@ -142,6 +142,8 @@ if settings.PAGE_PERMISSION:
         
         @classmethod
         def get_page_id_list(cls, user):
+            """Give a list of page where the user as rights or the string "All" if 
+            the user has all rights."""
             id_list = []
             perms = PagePermission.objects.filter(user=user)
             for perm in perms:
@@ -158,17 +160,18 @@ if settings.PAGE_PERMISSION:
 def get_page_valid_targets_queryset(request, page=None):
     """Give valid targets to move a page into the tree"""
     if not settings.PAGE_PERMISSION:
-        return None
-    perms = PagePermission.get_page_id_list(request.user)
-    if perms == "All":
-        return None
+        perms = "All"
+    else: 
+        perms = PagePermission.get_page_id_list(request.user)
     exclude_list = []
     if page:
         exclude_list.append(page.id)
         for p in page.get_descendants():
             exclude_list.append(p.id)
-        print exclude_list
-    return Page.objects.filter(id__in=perms).exclude(id__in=exclude_list)
+    if perms != "All":
+        return Page.objects.filter(id__in=perms).exclude(id__in=exclude_list)
+    else:
+        return Page.objects.exclude(id__in=exclude_list)
 
 def has_page_permission(request, page):
     """

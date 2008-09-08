@@ -1,6 +1,6 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_modify adminmedia %}
-{% block title %}List of page{% endblock %}
+{% block title %}Change a page{% endblock %}
 
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
@@ -8,10 +8,10 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js" /></script>
 {% endblock %}
 
+{% block content_title %}<h1>{% if add %}{% trans "Add" %}{% else %}{% trans "Change" %}{% endif %} page</h1>{% endblock %}
+
 {% block content %}
 <!-- Content -->
-
-<h1>{% if add %}Add{% else %}Change{% endif %} page</h1>
 <div id="content-main">
 
 {% block object-tools %}
@@ -145,11 +145,11 @@
 
 </fieldset>
 
-<div class="submit-row">
-<p class="float-left"><a href="delete/" class="deletelink">Delete</a></p>
+<div class="submit-row" style="overflow:hidden">
+<input type="submit" value="{% trans "Save" %}" class="default" />
+<p class="deletelink-box"><a href="delete/" class="deletelink">{% trans "Delete" %}</a></p>
 <!--<input type="submit" value="Save and add another" name="_addanother"  />
 <input type="submit" value="Save and continue editing" name="_continue" />-->
-<input type="submit" value="Save" class="default" />
 </div>
 
 <script type="text/javascript">

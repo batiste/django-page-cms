@@ -101,6 +101,7 @@ def add(request):
     if not has_page_add_permission(request):
         raise Http404
     opts = Page._meta
+    app_label = _('Pages')
     add = True
     placeholders = get_placeholders(settings.DEFAULT_PAGE_TEMPLATE)
     if(request.POST):
@@ -130,6 +131,7 @@ def add(request):
 def modify(request, page_id):
     """modifiy a page in a particular language"""
     opts = Page._meta
+    app_label = _('Pages')
     change = True
     has_absolute_url = True
     from settings import MEDIA_URL
@@ -181,6 +183,7 @@ def modify(request, page_id):
 def list_pages(request):
     """List root pages"""
     name = _("page")
+    app_label = _('Pages')
     from settings import MEDIA_URL
     opts = Page._meta
     has_add_permission = has_page_add_permission(request)

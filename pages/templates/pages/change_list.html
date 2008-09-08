@@ -3,7 +3,14 @@
 {% block title %}List of pages{% endblock %}
 {% block stylesheet %}{% admin_media_prefix %}css/changelists.css{% endblock %}
 {% block bodyclass %}change-list{% endblock %}
-{% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}</div>{% endblock %}{% endif %}
+
+{% if not is_popup %}{% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="../../">{% trans "Home" %}</a> &rsaquo; 
+    <a href="../">{{ app_label|capfirst|escape }}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}
+    </div>
+{% endblock %}{% endif %}
+
 {% block coltype %}flex{% endblock %}
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
@@ -29,13 +36,14 @@ tr{
 }
 </style>
 {% endblock %}
+
+{% block content_title %}<h1>{% trans "Select" %} {{ name }} {% trans "to change" %}</h1>{% endblock %}
+
 {% block content %}
 <div id="content-main">
 
-<h1>Select {{ name }} to change</h1>
-
 {% if has_add_permission %}
-<ul class="object-tools"><li><a href="add/" class="addlink">Add {{ name }}</a></li></ul>
+<ul class="object-tools"><li><a href="add/" class="addlink">{% trans "Add" %} {{ name }}</a></li></ul>
 {% endif %}
 
 <div class="module" id="changelist">
@@ -43,11 +51,11 @@ tr{
 <table cellspacing="0" id="page-list">
 <thead>
 <tr>
-<th style="width:35%">title</th>
-<th>quick actions</th>
-<th>traductions</th>
-<th>status</th>
-<th>template</th>
+<th style="width:35%">{% trans "title" %}</th>
+<th>{% trans "quick actions" %}</th>
+<th>{% trans "traductions" %}</th>
+<th>{% trans "status" %}</th>
+<th>{% trans "template" %}</th>
 </tr>
 </thead>
 <tbody>
@@ -98,7 +106,5 @@ tr{
         });
     }
 </script>
-
-
 
 {% endblock %}

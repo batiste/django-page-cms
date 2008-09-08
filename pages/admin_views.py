@@ -187,7 +187,7 @@ def list_pages(request):
     from settings import MEDIA_URL
     opts = Page._meta
     has_add_permission = has_page_add_permission(request)
-    pages = Page.objects.filter(parent__isnull=True)
+    pages = Page.objects.filter(parent__isnull=True).order_by("tree_id")
     return 'pages/change_list.html', locals()
 
 @staff_member_required

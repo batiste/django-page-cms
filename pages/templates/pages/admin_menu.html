@@ -1,12 +1,12 @@
 {% load pages %}
 
 {% if has_permission %}
-<tr>
+<tr id="page-row-{{ page.id }}">
 <td {% if level %}style="padding-left:{{level}}em"{% endif %}>
-    <span class="move-target" id="move-target-{{ page.id }}" style="display:none;float:right">
-        <a href="#" class="left">↑</a> |  
-        <a href="#" class="right">↓</a> | 
-        <a href="#" class="first-child">↘</a>
+    <span id="move-target-{{ page.id }}" class="move-target-container" style="display:none;float:right">
+        <a href="#" class="move-target left">↑</a> |  
+        <a href="#" class="move-target right">↓</a> | 
+        <a href="#" class="move-target first-child">↘</a>
     </span>
     <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{{ page.slug }}</a>
 </td>

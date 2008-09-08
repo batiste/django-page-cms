@@ -18,21 +18,25 @@
 {% endblock %}
 {% block extrastyle %}
 <style>
-.move-target{
+.move-target-container{
     padding-left:2em;
 }
-.move-target a{
+.move-target-container a{
     font-weight:bold;
     font-size:16px;
     line-height:9px;
     padding:0 3px;
 }
-.move-target a.first-child{
+.move-target-container a.first-child{
     font-weight:normal;
 }
 
 tr{
     padding-left:1.5em;
+}
+
+tr.selected {
+    background:#ffc;
 }
 </style>
 {% endblock %}
@@ -48,24 +52,8 @@ tr{
 
 <div class="module" id="changelist">
 
-<table cellspacing="0" id="page-list">
-<thead>
-<tr>
-<th style="width:35%">{% trans "title" %}</th>
-<th>{% trans "quick actions" %}</th>
-<th>{% trans "traductions" %}</th>
-<th>{% trans "status" %}</th>
-<th>{% trans "template" %}</th>
-</tr>
-</thead>
-<tbody>
+{% include "pages/change_list_table.html" %}
 
-{% for page in pages %}
-    {% show_admin_menu page %}
-{% endfor %}
-
-</tbody>
-</table>
 </div>
 </div>
 </div>
@@ -74,34 +62,43 @@ tr{
     if(window.$) {
         $(document).ready(function() {
             var selected_page = false;
-            $('.move').click(function() {
-                var page_id = this.id.split("move-link-")[1];
-                selected_page = page_id;
-                $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
-                    var ids = html.split(",");
-                    var css = "#move-target-"+ids.join(",#move-target-");
-                    $('.move-target').hide();
-                    $(css).show();
-                });
-                return false;
-            });
-            $('.move-target').click(function(e) {
-                var position = e.target.className;
-                var target_id = this.id.split("move-target-")[1];
-                $.post("/admin/pages/page/"+selected_page+"/move_page/", 
-                    {
-                        position:position,
-                        target:target_id
-                    }, 
-                    function(html) {
-                        if(html=="ok")
-                            window.location.reload(false);
-                        else
-                            alert("An error has occured: page not moved");
-                    }
-                );
-                $('.move-target').hide();
-                selected_page = false;
+            $('#changelist').click(function(e) {
+                var jtarget = $(e.target);
+                if(jtarget.hasClass("move")) {
+                    var page_id = e.target.id.split("move-link-")[1];
+                    selected_page = page_id;
+                    $('tr').removeClass("selected");
+                    $('#page-row-'+page_id).addClass("selected");
+                    $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
+                        var ids = html.split(",");
+                        var css = "#move-target-"+ids.join(",#move-target-");
+                        $('.move-target-container').hide();
+                        $(css).show();
+                    });
+                    return false;
+                }
+                if(jtarget.hasClass("move-target")) {
+                    if(jtarget.hasClass("left"))
+                        var position = "left";
+                    if(jtarget.hasClass("right"))
+                        var position = "right";
+                    if(jtarget.hasClass("first-child"))
+                        var position = "first-child";
+                    var target_id = e.target.parentNode.id.split("move-target-")[1];
+                    $.post("/admin/pages/page/"+selected_page+"/move_page/", 
+                        {
+                            position:position,
+                            target:target_id
+                        }, 
+                        function(html) {
+                            $('#changelist').html(html);
+                            $('#page-row-'+selected_page).addClass("selected");
+                        }
+                    );
+                    $('.move-target-container').hide();
+                    //selected_page = false;
+                    return false;
+                }
             });
         });
     }

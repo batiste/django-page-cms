@@ -6,10 +6,16 @@ def auto_render(func):
     """Decorator that put automaticaly the template path in the context dictionary
     and call the render_to_response shortcut"""
     def _dec(request, *args, **kwargs):
+        t = None
+        if "template_name" in kwargs:
+            t = kwargs['template_name']
+            del kwargs['template_name']
         response = func(request, *args, **kwargs)
         if isinstance(response, HttpResponse) or isinstance(response, HttpResponseRedirect):
             return response
         (template_name, context) = response
-        context['template_name'] = template_name
-        return render_to_response(template_name, context, context_instance=RequestContext(request))
+        if not t:
+            t = template_name
+        context['template_name'] = t
+        return render_to_response(t, context, context_instance=RequestContext(request))
     return _dec

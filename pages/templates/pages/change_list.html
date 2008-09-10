@@ -35,9 +35,18 @@ tr{
     padding-left:1.5em;
 }
 
-tr.selected {
-    background:#ffc;
+.selected tr{
+    background:#ffffd0;
 }
+
+tr.selected {
+    background:#ffb;
+}
+
+tr.target {
+    background:#fff;
+}
+
 </style>
 {% endblock %}
 
@@ -70,18 +79,23 @@ tr.selected {
                     var page_id = e.target.id.split("move-link-")[1];
                     selected_page = page_id;
                     action = "move";
-                    $('tr').removeClass("selected");
+                    $('tr').removeClass("selected").removeClass("target");
                     $('#page-row-'+page_id).addClass("selected");
                     $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
                         var ids = html.split(",");
                         var css = "#move-target-"+ids.join(",#move-target-");
                         $('.move-target-container').hide();
                         $(css).show();
+                        var css = "#page-row-"+ids.join(",#page-row-");
+                        $(css).addClass("target");
+                        $("#changelist table").addClass("selected");
                     });
                     return false;
                 }
                 
                 if(jtarget.hasClass("add")) {
+                    $("tr").removeClass("target");
+                    $("#changelist table").removeClass("selected");
                     var page_id = e.target.id.split("add-link-")[1];
                     selected_page = page_id;
                     action = "add";

@@ -144,6 +144,8 @@ if settings.PAGE_PERMISSION:
         def get_page_id_list(cls, user):
             """Give a list of page where the user as rights or the string "All" if 
             the user has all rights."""
+            if user.is_superuser:
+                return 'All'
             id_list = []
             perms = PagePermission.objects.filter(user=user)
             for perm in perms:

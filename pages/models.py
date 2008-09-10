@@ -136,7 +136,7 @@ if settings.PAGE_PERMISSION:
             (2, _('This page and all childrens')),
         )
         
-        page = models.ForeignKey(Page, null=True)
+        page = models.ForeignKey(Page, null=True, blank=True)
         user = models.ForeignKey(User)
         type = models.IntegerField(choices=TYPES, default=0)
         

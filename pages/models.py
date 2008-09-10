@@ -3,46 +3,49 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-#from hierarchical.models import HierarchicalNode
 import mptt
 import settings
 
-class Language(models.Model):
-    """A simple model to bescribe available languages for pages"""
-    id = models.CharField(primary_key=True, max_length=8)
-    name = models.CharField(max_length=20)
+class Language():
+    """A simple class to hold languages methods"""
     
-    def __str__(self):
-        return self.name
+    @classmethod
+    def get_in_settings(cls, iso):
+        for l in settings.PAGE_LANGUAGES:
+            if l[0] == iso:
+                return l
+        return None
     
     @classmethod
     def get_from_request(cls, request, current_page=None):
         """Return the most obvious language according the request"""
         l = None
         if 'language' in request.GET:
-            l = Language.objects.get(pk=request.GET['language'])
+            l = Language.get_in_settings(request.GET['language'])[0]
         elif 'language' in request.POST:
-            l = Language.objects.get(pk=request.POST['language'])
+            l = Language.get_in_settings(request.POST['language'])[0]
         else:
-            try:
-                l = Language.objects.get(pk=request.LANGUAGE_CODE)
-            except Language.DoesNotExist:
-                # in last resort, get the first lanugage available in the page
+            l = Language.get_in_settings(request.LANGUAGE_CODE)[0]
+            if l is None:
+                # in last resort, get the first language available in the page
                 if current_page:
                     languages = current_page.get_languages()
                     if len(languages) > 0:
-                        l = Language.objects.get(pk=languages[0])
+                        l = languages[0][0]
         if l is None:
-            l = Language.objects.latest('id')
+            l = settings.PAGE_LANGUAGES[0][0]
         return l
+
 
 class PagePublishedManager(models.Manager):
     def get_query_set(self):
         return super(PagePublishedManager, self).get_query_set().filter(status=1)
-    
+
+
 class PageDraftsManager(models.Manager):
     def get_query_set(self):
         return super(PageDraftsManager, self).get_query_set().filter(status=0)
+
 
 class Page(models.Model):
     """A simple hierarchical page model"""
@@ -95,7 +98,7 @@ class Page(models.Model):
         contents = Content.objects.filter(page=self, type="title")
         languages = []
         for c in contents:
-            languages.append(c.language.id)
+            languages.append(c.language)
         return languages
         
     def get_url(self):
@@ -125,6 +128,7 @@ class Page(models.Model):
         return "%s" % (self.slug)
     
 mptt.register(Page, order_insertion_by=['slug'])
+
 
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):
@@ -202,9 +206,10 @@ def has_page_add_permission(request, page=None):
             return True
     return False
 
+
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
-    language = models.ForeignKey(Language)
+    language = models.CharField(max_length=3, blank=False)
     body = models.TextField()
     type = models.CharField(max_length=100, blank=False)
     page = models.ForeignKey(Page)

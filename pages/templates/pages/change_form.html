@@ -33,7 +33,7 @@
     <select id="traduction_helper_select">
     <option value="" selected="selected">------</option>
     {% for lang in traduction_language %}
-    <option value="{{ lang.id }}">{{ lang.name }}</option>
+    <option value="{{ lang.0 }}">{{ lang.1 }}</option>
     {% endfor %}
     </select>
     <div id="traduction_helper_content" style="clear:both;margin-top:1em;background:#ffc;padding:1em;display:none"></div>

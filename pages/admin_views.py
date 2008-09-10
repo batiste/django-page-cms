@@ -45,9 +45,9 @@ def placeholders_recursif(nodelist, list):
 def get_form(request, dict=None, current_page=None):
     """Dynamicaly create a form to create/modify a page in the admin interface"""
 
-    language_choices = [(lang.id, lang.name) for lang in Language.objects.all()]
-    l = Language.get_from_request(request, current_page)
     import settings
+    language_choices = settings.PAGE_LANGUAGES
+    l = Language.get_from_request(request, current_page)
     if hasattr(settings, 'PAGE_TEMPLATES'):
         template_choices = list(settings.PAGE_TEMPLATES)
         template_choices.insert(0,('',_('Inherit')))
@@ -57,7 +57,7 @@ def get_form(request, dict=None, current_page=None):
     class PageForm(forms.Form):
         slug = forms.CharField(widget=forms.TextInput(), required=True)
         title = forms.CharField(widget=forms.TextInput(), required=request.POST)
-        language = forms.ChoiceField(choices=language_choices, initial=l.id)
+        language = forms.ChoiceField(choices=language_choices, initial=l)
         status = forms.ChoiceField(choices=Page.STATUSES)
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
@@ -74,7 +74,7 @@ def get_form(request, dict=None, current_page=None):
     from django.http import QueryDict
     
     if dict and type(dict) is not QueryDict:
-        dict['language'] = l.id
+        dict['language'] = l
         
     template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
     for placeholder in get_placeholders(template):
@@ -93,7 +93,7 @@ def get_form(request, dict=None, current_page=None):
         p = PageForm()
     
     return p
-    
+
 @staff_member_required
 @auto_render
 def add(request):
@@ -112,7 +112,7 @@ def add(request):
             template = form.cleaned_data.get('template', None)
             page = Page(author=request.user, status=status, slug=slug, template=template)
             page.save()
-            language = Language.objects.get(pk=form.cleaned_data['language'])
+            language = form.cleaned_data['language']
             
             if "target" in request.GET:
                 target = Page.objects.get(pk=int(request.GET["target"]))
@@ -150,7 +150,7 @@ def modify(request, page_id):
         
         form = get_form(request, request.POST, page)
         if form.is_valid():
-            language = Language.objects.get(pk=form.cleaned_data['language'])
+            language = form.cleaned_data['language']
             page.status = form.cleaned_data['status']
             page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
@@ -163,8 +163,8 @@ def modify(request, page_id):
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        l=Language.get_from_request(request)
-        traduction_language = Language.objects.exclude(pk=l.id)
+        l = Language.get_from_request(request)
+        traduction_language = settings.PAGE_LANGUAGES
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
         for placeholder in placeholders:
             dict[placeholder.name] = Content.get_content(page, l, placeholder.name)
@@ -202,10 +202,9 @@ def move_page(request, page_id):
 @auto_render
 def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)
-    l = Language.objects.get(pk=language_id)
     context = {}
     for placeholder in get_placeholders(page.get_template()):
-        context[placeholder.name] = Content.get_content(page, l, placeholder.name, True)
-    if Content.get_content(page, l, "title") !=  context['title']:
+        context[placeholder.name] = Content.get_content(page, language_id, placeholder.name, True)
+    if Content.get_content(page, language_id, "title") !=  context['title']:
         context['language_error'] = True
     return 'pages/traduction_helper.html', context

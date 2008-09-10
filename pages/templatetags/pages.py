@@ -12,7 +12,6 @@ def show_menu(context, page, url='/'):
 
 @register.inclusion_tag('sub_menu.html', takes_context=True)
 def show_sub_menu(context, page, url='/'):
-    """TODO: Very inneficient code tag"""
     root = page.get_root()
     children = root.get_children()
     request = context['request']
@@ -53,6 +52,7 @@ def do_placeholder(parser, token):
         msg = '%r tag requires three arguments' % token.contents[0]
         raise template.TemplateSyntaxError(msg)
     return PlaceholderNode(page, name, widget)
+
 
 class PlaceholderNode(template.Node):
 

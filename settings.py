@@ -12,6 +12,11 @@ ADMINS = (
 DEFAULT_PAGE_TEMPLATE = 'index.html'
 PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
 PAGE_PERMISSION = True
+PAGE_LANGUAGES = (
+    ('fr', 'French version'),
+    ('de', 'German Version'),
+    ('en', 'English version'),
+)
 
 MANAGERS = ADMINS
 

@@ -8,12 +8,13 @@
         <a href="#" class="move-target right">↓</a> | 
         <a href="#" class="move-target first-child">↘</a>
     </span>
-    <a href="{{ url }}{{ page.id }}/"  style="margin-right:1em;">{{ page.slug }}</a>
+    <a href="{{ url }}{{ page.id }}/" class="changelink" style="margin-right:1em;">{{ page.slug }}</a>
 </td>
 <td>
     <a href="#" class="move" id="move-link-{{ page.id }}">{% trans "move" %}</a> |
-    <a href="#" class="add" id="add-link-{{ page.id }}">{% trans "add" %}</a> |
-    <a href="{{ page.id }}/delete/" class="delete">{% trans "delete" %}</a>
+    <a href="#" class="add addlink" id="add-link-{{ page.id }}">{% trans "add" %}</a> |
+    <a href="{{ page.get_absolute_url }}" class="golink">{% trans "view" %}</a> |
+    <a href="{{ page.id }}/delete/" class="delete deletelink">{% trans "delete" %}</a>
 </td>
 <td>
     {% for lang in page.get_languages %} 

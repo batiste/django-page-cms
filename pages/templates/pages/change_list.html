@@ -99,6 +99,22 @@ table tr.target {
                     return false;
                 }
                 
+                if(jtarget.hasClass("publish-checkbox")) {
+                    var p = jtarget.attr("name").split("status-")[1];
+                    $.post("/admin/pages/page/"+p+"/change-status/", function(val) {
+                        var img = $('img', jtarget.parent())[0];
+                        if(val=="0") {
+                            jtarget.attr("checked", "");
+                            img.src = img.src.replace("-yes.gif", "-no.gif");
+                        } else {
+                            jtarget.attr("checked", "checked");
+                            img.src = img.src.replace("-no.gif", "-yes.gif");
+                        }
+                        jtarget.attr("value", val);
+                    });
+                    return true;
+                }
+                
                 if(jtarget.hasClass("move-target")) {
                     if(jtarget.hasClass("left"))
                         var position = "left";
@@ -108,13 +124,16 @@ table tr.target {
                         var position = "first-child";
                     var target_id = target.parentNode.id.split("move-target-")[1];
                     if(action=="move") {
-                        $.post("/admin/pages/page/"+selected_page+"/move_page/", {
+                        $.post("/admin/pages/page/"+selected_page+"/move-page/", {
                                 position:position,
-                                target:target_id
+                                target:target_id,
                             },
                             function(html) {
                                 $('#changelist').html(html);
                                 $('#page-row-'+selected_page).addClass("selected");
+                                var msg = $('<span>Successfully moved</span>');
+                                $($('#page-row-'+selected_page+" td")[0]).append(msg);
+                                msg.fadeOut(5000);
                             }
                         );
                         $('.move-target-container').hide();

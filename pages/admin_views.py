@@ -199,6 +199,17 @@ def move_page(request, page_id):
     return list_pages(request, template_name="pages/change_list_table.html")
 
 @staff_member_required
+def change_status(request, page_id):
+    page = Page.objects.get(pk=int(page_id))
+    if page.status == 0:
+        page.status = 1
+        page.save()
+    elif page.status == 1:
+        page.status = 0
+        page.save()
+    return HttpResponse(page.status)
+
+@staff_member_required
 @auto_render
 def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)

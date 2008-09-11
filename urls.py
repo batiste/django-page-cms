@@ -16,7 +16,8 @@ urlpatterns = patterns('',
     (r'^admin/pages/page/(?P<page_id>\d+)/$', 'pages.admin_views.modify'),
     (r'^admin/pages/page/add/$', 'pages.admin_views.add'),
     (r'^admin/pages/page/(?P<page_id>\d+)/valid-targets-list/$', 'pages.admin_views.valid_targets_list'),
-    (r'^admin/pages/page/(?P<page_id>\d+)/move_page/$', 'pages.admin_views.move_page'),
+    (r'^admin/pages/page/(?P<page_id>\d+)/move-page/$', 'pages.admin_views.move_page'),
+    (r'^admin/pages/page/(?P<page_id>\d+)/change-status/$', 'pages.admin_views.change_status'),
     (r'^admin/(.*)', admin.site.root),
 )
 

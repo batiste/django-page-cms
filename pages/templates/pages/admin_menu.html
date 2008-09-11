@@ -24,9 +24,15 @@
 </td>
 <td>
 {% if page.status %}
-    <img alt="True" src="{% admin_media_prefix %}img/admin/icon-yes.gif"/>
+    <label>
+        <img alt="True" src="{% admin_media_prefix %}img/admin/icon-yes.gif"/>
+        <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" checked="checked" value="1" />
+    </label>
 {% else %}
-    <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif"/>
+    <label>
+        <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif" />
+        <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" value="0" />
+    </label>
 {% endif %}
 </td>
 <td>

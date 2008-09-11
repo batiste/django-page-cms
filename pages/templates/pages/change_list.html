@@ -61,7 +61,11 @@ table tr.target {
             var selected_page = false;
             var action = false;
             $('#changelist').click(function(e) {
-                var jtarget = $(e.target);
+                if(e.target.tagName == 'IMG')
+                    var target = e.target.parentNode;
+                else
+                    var target = e.target;
+                var jtarget = $(target);
                 
                 if(jtarget.hasClass("move")) {
                     var page_id = e.target.id.split("move-link-")[1];
@@ -85,7 +89,7 @@ table tr.target {
                 if(jtarget.hasClass("addlink")) {
                     $("tr").removeClass("target");
                     $("#changelist table").removeClass("table-selected");
-                    var page_id = e.target.id.split("add-link-")[1];
+                    var page_id = target.id.split("add-link-")[1];
                     selected_page = page_id;
                     action = "add";
                     $('tr').removeClass("selected");
@@ -102,7 +106,7 @@ table tr.target {
                         var position = "right";
                     if(jtarget.hasClass("first-child"))
                         var position = "first-child";
-                    var target_id = e.target.parentNode.id.split("move-target-")[1];
+                    var target_id = target.parentNode.id.split("move-target-")[1];
                     if(action=="move") {
                         $.post("/admin/pages/page/"+selected_page+"/move_page/", {
                                 position:position,
@@ -121,6 +125,7 @@ table tr.target {
                     //selected_page = false;
                     return false;
                 }
+                return true;
             });
         });
     }

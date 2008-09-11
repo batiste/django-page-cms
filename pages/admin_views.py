@@ -146,7 +146,7 @@ def modify(request, page_id):
     placeholders = get_placeholders(page.get_template())
     original = page
     
-    if(request.POST):
+    if request.POST:
         
         form = get_form(request, request.POST, page)
         if form.is_valid():
@@ -193,6 +193,7 @@ def valid_targets_list(request, page_id):
 
 @staff_member_required
 def move_page(request, page_id):
+    """Move the page to the requested target, at the given position"""
     page = Page.objects.get(pk=int(page_id))
     target = Page.objects.get(pk=int(request.POST['target']))
     page.move_to(target, request.POST['position'])
@@ -200,14 +201,18 @@ def move_page(request, page_id):
 
 @staff_member_required
 def change_status(request, page_id):
-    page = Page.objects.get(pk=int(page_id))
-    if page.status == 0:
-        page.status = 1
-        page.save()
-    elif page.status == 1:
-        page.status = 0
-        page.save()
-    return HttpResponse(page.status)
+    """Switch the status of a page"""
+    if request.POST:
+        page = Page.objects.get(pk=int(page_id))
+        if page.status == 0:
+            page.status = 1
+            page.save()
+        elif page.status == 1:
+            page.status = 0
+            page.save()
+        return HttpResponse(page.status)
+    else:
+        raise Http404
 
 @staff_member_required
 @auto_render

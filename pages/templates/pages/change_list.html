@@ -18,18 +18,6 @@
 {% endblock %}
 {% block extrastyle %}
 <style>
-.move-target-container{
-    padding-left:2em;
-}
-.move-target-container a{
-    font-weight:bold;
-    font-size:16px;
-    line-height:9px;
-    padding:0 3px;
-}
-.move-target-container a.first-child{
-    font-weight:normal;
-}
 
 tr{
     padding-left:1.5em;
@@ -94,7 +82,7 @@ table tr.target {
                     return false;
                 }
                 
-                if(jtarget.hasClass("add")) {
+                if(jtarget.hasClass("addlink")) {
                     $("tr").removeClass("target");
                     $("#changelist table").removeClass("table-selected");
                     var page_id = e.target.id.split("add-link-")[1];

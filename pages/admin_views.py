@@ -58,7 +58,7 @@ def get_form(request, dict=None, current_page=None):
         slug = forms.CharField(widget=forms.TextInput(), required=True)
         title = forms.CharField(widget=forms.TextInput(), required=request.POST)
         language = forms.ChoiceField(choices=language_choices, initial=l)
-        status = forms.ChoiceField(choices=Page.STATUSES)
+        status = forms.ChoiceField(widget=forms.RadioSelect({'class':'radiolist'}), choices=Page.STATUSES)
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
         

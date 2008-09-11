@@ -8,6 +8,21 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js" /></script>
 {% endblock %}
 
+{% block extrastyle %}
+<style>
+#status-row ul li {
+    list-style-type:none;
+}
+#traduction-helper-content {
+    margin-top:1em;
+    background:#ffc;
+    padding:1em;
+    display:none;
+    overflow:hidden;
+}
+</style>
+{% endblock %}
+
 {% block content_title %}<h1>{% if add %}{% trans "Add" %}{% else %}{% trans "Change" %}{% endif %} page</h1>{% endblock %}
 
 {% block content %}
@@ -30,16 +45,18 @@
 
 <div class="form-row" style="float:right;width:45%">
   <label for="id_title" class="required">Language helper:</label>
-    <select id="traduction_helper_select">
+    
+    <select id="traduction-helper-select">
     <option value="" selected="selected">------</option>
     {% for lang in traduction_language %}
     <option value="{{ lang.0 }}">{{ lang.1 }}</option>
     {% endfor %}
     </select>
-    <div id="traduction_helper_content" style="clear:both;margin-top:1em;background:#ffc;padding:1em;display:none"></div>
+    
+    <div id="traduction-helper-content"></div>
     <script>
     var get = function(s){ return document.getElementById(s)};
-    var helper_select = get('traduction_helper_select');
+    var helper_select = get('traduction-helper-select');
     var xmlHttp = false;
     /*@cc_on @*/
     /*@if (@_jscript_version >= 5)
@@ -53,14 +70,14 @@
     helper_select.onchange=function() {
         var index = helper_select.selectedIndex;
         if(index == 0) {
-            get('traduction_helper_content').style['display']='none'; return;
+            get('traduction-helper-content').style['display']='none'; return;
         }
         var array = window.location.href.split('?');
         xmlHttp.open("GET", array[0]+'traduction/'+helper_select.options[index].value+'/' , true);
         xmlHttp.onreadystatechange = function(){
             if (xmlHttp.readyState == 4) {
-                get('traduction_helper_content').innerHTML = xmlHttp.responseText;
-                get('traduction_helper_content').style['display']='block';
+                get('traduction-helper-content').innerHTML = xmlHttp.responseText;
+                get('traduction-helper-content').style['display']='block';
             }
         }
         xmlHttp.send(null);
@@ -72,7 +89,6 @@
   {% if form.language.errors %}<ul class="errorlist inline"><li>{{ form.language.errors|join:", " }}</li></ul>{% endif %}
   <label for="id_title" class="required">Language:</label>
     {{ form.language }}
-    
     {% if not add %}
     <script>
     var lang_select = document.getElementById('id_language');
@@ -82,14 +98,21 @@
         window.location.href=array[0]+'?language='+ lang_select.options[index].value;
         }
     </script>
+    <p class="help"><img alt="Alert" src="{% admin_media_prefix %}img/admin/icon_alert.gif"/> if you change the language the page will be reloaded.</p>
     {% endif %}
 </div>
 
+<div class="form-row" id="status-row">
+    {% if form.status.errors %}<ul class="errorlist"><li>{{ form.status.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_status" class="required">Status:</label> 
+    {{ form.status }}
+</div>
+
 {% if form.template %}
-<div class="form-row" >
-  {% if form.template.errors %}<ul class="errorlist"><li>{{ form.template.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_parent">Template:</label> 
-  {{ form.template }}
+<div class="form-row">
+    {% if form.template.errors %}<ul class="errorlist"><li>{{ form.template.errors|join:", " }}</li></ul>{% endif %}
+    <label for="id_parent">Template:</label> 
+    {{ form.template }}
 </div>
 {% endif %}
 
@@ -124,12 +147,6 @@
 <p>{% trans "No placeholders found in this page template." %}</p>
 </div>
 {% endif %}
-
-<div class="form-row{% if form.status.errors %} errors{% endif %}" >
-  {% if form.status.errors %}<ul class="errorlist"><li>{{ form.status.errors|join:", " }}</li></ul>{% endif %}
-  <label for="id_status" class="required">Status:</label> 
-  {{ form.status }}
-</div>
 
 </fieldset>
 

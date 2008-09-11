@@ -73,6 +73,7 @@ jQuery.fn.rte = function(css_url, media_url) {
             content = '<br>';
         var doc = "<html><head>"+css+"</head><body class='frameBody'>"+content+"</body></html>";
         tryEnableDesignMode(iframe, doc, function() {
+            $("#toolbar-"+iframe.title).remove();
             $(iframe).before(toolbar(iframe));
             textarea.remove();
         });
@@ -95,11 +96,12 @@ jQuery.fn.rte = function(css_url, media_url) {
         $(iframe).before(textarea);
         if(submit!=true)
             $(iframe).remove();
+        return textarea;
     }
     
     function toolbar(iframe) {
         
-        var tb = $("<div class='rte-toolbar'><div>\
+        var tb = $("<div class='rte-toolbar' id='toolbar-"+iframe.title+"'><div>\
             <p>\
                 <select>\
                     <option value=''>Bloc style</option>\
@@ -137,7 +139,16 @@ jQuery.fn.rte = function(css_url, media_url) {
             if(p)
                 formatText(iframe, 'InsertImage', p);
             return false; });
-        $('.disable', tb).click(function(){ disableDesignMode(iframe); tb.remove(); return false; });
+        $('.disable', tb).click(function() {
+            var txt = disableDesignMode(iframe);
+            var edm = $('<a href="#">Enable design mode</a>');
+            tb.empty().append(edm);
+            edm.click(function(){
+                enableDesignMode(txt);
+                return false;
+            });
+            return false; 
+        });
         $(iframe).parents('form').submit(function(){
             disableDesignMode(iframe, true); });
         var iframeDoc = $(iframe.contentWindow.document);

@@ -197,7 +197,6 @@ def move_page(request, page_id):
     page = Page.objects.get(pk=int(page_id))
     target = Page.objects.get(pk=int(request.POST['target']))
     page.move_to(target, request.POST['position'])
-    page.invalidate_children()
     return list_pages(request, template_name="pages/change_list_table.html")
 
 @staff_member_required

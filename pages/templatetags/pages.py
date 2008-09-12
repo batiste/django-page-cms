@@ -1,10 +1,12 @@
 from django import template
+from django.core.cache import cache
 from ..pages.models import Language, Content, Page, has_page_permission, has_page_add_permission
+from django.conf import settings
 register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)
 def show_menu(context, page, url='/'):
-    children = page.get_children_cached()
+    children = page.get_children()
     request = context['request']
     if 'current_page' in context:
         current_page = context['current_page']
@@ -13,7 +15,7 @@ def show_menu(context, page, url='/'):
 @register.inclusion_tag('sub_menu.html', takes_context=True)
 def show_sub_menu(context, page, url='/'):
     root = page.get_root()
-    children = root.get_children_cached()
+    children = root.get_children()
     request = context['request']
     if 'current_page' in context:
         current_page = context['current_page']
@@ -21,7 +23,7 @@ def show_sub_menu(context, page, url='/'):
     
 @register.inclusion_tag('pages/admin_menu.html', takes_context=True)
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
-    children = page.get_children_cached()
+    children = page.get_children()
     request = context['request']
     has_permission = has_page_permission(request, page)
     if has_permission:
@@ -39,7 +41,14 @@ def has_permission(page, request):
 def show_content(context, page, content_type):
     l = Language.get_from_request(context['request'])
     request = context['request']
-    c = Content.get_content(page, l, content_type, True)
+    if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
+        key = 'content_cache_pid:'+str(page.id)+'_l:'+str(l)+'_type:'+str(content_type)
+        c = cache.get(key)
+        if not c:
+            c = Content.get_content(page, l, content_type, True)
+            cache.set(key, c, settings.PAGE_CONTENT_CACHE_DURATION)
+    else:
+        c = Content.get_content(page, l, content_type, True)
     if c:
         return {'content':c}
     return {'content':''}

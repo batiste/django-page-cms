@@ -105,7 +105,8 @@ class Page(models.Model):
     def get_url(self):
         """get the url of this page, adding parent's slug"""
         url = "%s-%d/" % (self.slug, self.id)
-        for p in self.get_ancestors():
+        an = self.get_ancestors()
+        for p in an:
             url = p.slug + '/' + url
         return url
         
@@ -124,18 +125,6 @@ class Page(models.Model):
         for lang in self.get_languages():
             langs += '%s, ' % lang
         return langs[0:-2]
-
-    def get_children_cached(self):
-        """as the most commonly used method, it's worthwhile to cache get_children"""
-        children = cache.get('children_of_page_'+str(self.id))
-        if children:
-            return children
-        children = self.get_children()
-        cache.set('children_of_page_'+str(self.id), children)
-        return children
-    
-    def invalidate_children(self):
-        cache.delete('children_of_page_'+str(self.id))
 
     def __str__(self):
         return "%s" % (self.slug)

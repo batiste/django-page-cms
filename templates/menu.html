@@ -1,7 +1,7 @@
 {% load pages %}
 {% if page.status %}
-<li><a href="{{ page.get_absolute_url }}">{% show_content page "title" %}</a> <span style="color:#999">{% if is_parent %}parent of selected page{% endif %} {% ifequal page current_page %}selected{% endifequal %}</span>
-    {% if children|length %}
+<li><a href="{{ page.get_absolute_url }}">{% show_content page "title" %}</a> <span style="color:#999">{% ifequal page current_page %}selected{% endifequal %}</span>
+    {% if children %}
     <ul>
     {% for child in children %}
         {% show_menu child url %}

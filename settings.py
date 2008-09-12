@@ -17,6 +17,9 @@ PAGE_LANGUAGES = (
     ('de', 'German Version'),
     ('en', 'English version'),
 )
+PAGE_CONTENT_CACHE_DURATION = 10 * 60
+
+CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 

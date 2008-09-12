@@ -17,7 +17,7 @@ PAGE_LANGUAGES = (
     ('de', 'German Version'),
     ('en', 'English version'),
 )
-PAGE_CONTENT_CACHE_DURATION = 10 * 60
+PAGE_CONTENT_CACHE_DURATION = 60 # page content cache, including navigation
 
 CACHE_BACKEND = 'locmem:///'
 

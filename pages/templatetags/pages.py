@@ -8,6 +8,8 @@ register = template.Library()
 def show_menu(context, page, url='/'):
     children = page.get_children()
     request = context['request']
+    PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
+    lang = Language.get_from_request(request)
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()

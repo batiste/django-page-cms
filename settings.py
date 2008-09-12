@@ -4,20 +4,11 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+from pages.pages_settings import *
+
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
-
-# django-page-cms settings
-DEFAULT_PAGE_TEMPLATE = 'index.html'
-PAGE_TEMPLATES = (('nice.html','nice one'), ('cool.html','cool one'))
-PAGE_PERMISSION = True
-PAGE_LANGUAGES = (
-    ('fr', 'French version'),
-    ('de', 'German Version'),
-    ('en', 'English version'),
-)
-PAGE_CONTENT_CACHE_DURATION = 60 # page content cache, including navigation
 
 CACHE_BACKEND = 'locmem:///'
 

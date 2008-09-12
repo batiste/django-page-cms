@@ -4,7 +4,7 @@ register = template.Library()
 
 @register.inclusion_tag('menu.html', takes_context=True)
 def show_menu(context, page, url='/'):
-    children = page.get_children()
+    children = page.get_children_cached()
     request = context['request']
     if 'current_page' in context:
         current_page = context['current_page']
@@ -13,7 +13,7 @@ def show_menu(context, page, url='/'):
 @register.inclusion_tag('sub_menu.html', takes_context=True)
 def show_sub_menu(context, page, url='/'):
     root = page.get_root()
-    children = root.get_children()
+    children = root.get_children_cached()
     request = context['request']
     if 'current_page' in context:
         current_page = context['current_page']
@@ -21,7 +21,7 @@ def show_sub_menu(context, page, url='/'):
     
 @register.inclusion_tag('pages/admin_menu.html', takes_context=True)
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
-    children = page.get_children()
+    children = page.get_children_cached()
     request = context['request']
     has_permission = has_page_permission(request, page)
     if has_permission:

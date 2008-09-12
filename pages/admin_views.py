@@ -197,6 +197,7 @@ def move_page(request, page_id):
     page = Page.objects.get(pk=int(page_id))
     target = Page.objects.get(pk=int(request.POST['target']))
     page.move_to(target, request.POST['position'])
+    page.invalidate_children()
     return list_pages(request, template_name="pages/change_list_table.html")
 
 @staff_member_required
@@ -210,6 +211,7 @@ def change_status(request, page_id):
         elif page.status == 1:
             page.status = 0
             page.save()
+        page.invalidate_children()
         return HttpResponse(page.status)
     else:
         raise Http404

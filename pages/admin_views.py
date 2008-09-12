@@ -210,7 +210,6 @@ def change_status(request, page_id):
         elif page.status == 1:
             page.status = 0
             page.save()
-        page.invalidate_children()
         return HttpResponse(page.status)
     else:
         raise Http404

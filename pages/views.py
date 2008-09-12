@@ -7,14 +7,12 @@ from django import forms
 def details(request, page_id=None):
     template = None
     pages = Page.objects.filter(parent__isnull=True).order_by("tree_id")
-    if page_id:
-        current_page = Page.objects.get(id=int(page_id))
+    if len(pages) > 0:
+        if page_id:
+            current_page = Page.objects.get(id=int(page_id), status=1)
+        else:
+            # get the first root page
+            current_page = pages[0]
         template = current_page.get_template()
-    else:
-        current_page = Page.objects.get(id=int(2))
-    
-    if not template:
-        import settings
-        template = settings.DEFAULT_PAGE_TEMPLATE
     
     return template, locals()

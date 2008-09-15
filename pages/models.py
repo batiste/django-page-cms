@@ -126,7 +126,7 @@ class Page(models.Model):
             langs += '%s, ' % lang
         return langs[0:-2]
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s" % (self.slug)
     
 mptt.register(Page, order_insertion_by=['slug'])
@@ -216,7 +216,7 @@ class Content(models.Model):
     type = models.CharField(max_length=100, blank=False)
     page = models.ForeignKey(Page)
     
-    def __str__(self):
+    def __unicode__(self):
         return "%s :: %s" % (self.page.slug, self.body[0:15])
     
     @classmethod

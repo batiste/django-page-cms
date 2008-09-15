@@ -5,9 +5,6 @@ import settings
 class PageAdmin(admin.ModelAdmin):
     pass
 
-"""class LanguageAdmin(admin.ModelAdmin):
-    pass"""
-
 class PermissionAdmin(admin.ModelAdmin):
     pass
 

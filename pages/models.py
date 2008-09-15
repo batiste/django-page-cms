@@ -146,6 +146,9 @@ if settings.PAGE_PERMISSION:
         user = models.ForeignKey(User)
         type = models.IntegerField(choices=TYPES, default=0)
         
+        def __unicode__(self):
+            return "%s :: %s" % (self.user, unicode(PagePermission.TYPES[self.type][1]))
+        
         @classmethod
         def get_page_id_list(cls, user):
             """Give a list of page where the user as rights or the string "All" if 

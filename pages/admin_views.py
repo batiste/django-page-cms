@@ -219,8 +219,9 @@ def change_status(request, page_id):
 def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)
     context = {}
-    for placeholder in get_placeholders(page.get_template()):
-        context[placeholder.name] = Content.get_content(page, language_id, placeholder.name, True)
-    if Content.get_content(page, language_id, "title") !=  context['title']:
-        context['language_error'] = True
-    return 'pages/traduction_helper.html', context
+    lang = language_id
+    placeholders = get_placeholders(page.get_template())
+    print Content.get_content(page, language_id, "title")
+    if Content.get_content(page, language_id, "title") is None:
+        language_error = True
+    return 'pages/traduction_helper.html', locals()

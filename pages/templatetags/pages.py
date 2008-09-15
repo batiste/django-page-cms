@@ -40,17 +40,18 @@ def has_permission(page, request):
     return has_page_permission(request, page)
 
 @register.inclusion_tag('pages/content.html', takes_context=True)
-def show_content(context, page, content_type):
-    l = Language.get_from_request(context['request'])
+def show_content(context, page, content_type, lang=None):
+    if lang is None:
+        lang = Language.get_from_request(context['request'])
     request = context['request']
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
-        key = 'content_cache_pid:'+str(page.id)+'_l:'+str(l)+'_type:'+str(content_type)
+        key = 'content_cache_pid:'+str(page.id)+'_l:'+str(lang)+'_type:'+str(content_type)
         c = cache.get(key)
         if not c:
-            c = Content.get_content(page, l, content_type, True)
+            c = Content.get_content(page, lang, content_type, True)
             cache.set(key, c, settings.PAGE_CONTENT_CACHE_DURATION)
     else:
-        c = Content.get_content(page, l, content_type, True)
+        c = Content.get_content(page, lang, content_type, True)
     if c:
         return {'content':c}
     return {'content':''}

@@ -43,6 +43,7 @@
 
 <fieldset class="module aligned ()">
 
+{% if not add %}
 <div class="form-row" style="float:right;width:45%">
   <label for="id_title" class="required">Language helper:</label>
     
@@ -54,36 +55,8 @@
     </select>
     
     <div id="traduction-helper-content"></div>
-    <script>
-    var get = function(s){ return document.getElementById(s)};
-    var helper_select = get('traduction-helper-select');
-    var xmlHttp = false;
-    /*@cc_on @*/
-    /*@if (@_jscript_version >= 5)
-    try {xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");} catch (e) {
-        try {xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");} catch (e2) {xmlHttp = false;}
-    }
-    @end @*/
-    if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
-        xmlHttp = new XMLHttpRequest();
-    }
-    helper_select.onchange=function() {
-        var index = helper_select.selectedIndex;
-        if(index == 0) {
-            get('traduction-helper-content').style['display']='none'; return;
-        }
-        var array = window.location.href.split('?');
-        xmlHttp.open("GET", array[0]+'traduction/'+helper_select.options[index].value+'/' , true);
-        xmlHttp.onreadystatechange = function(){
-            if (xmlHttp.readyState == 4) {
-                get('traduction-helper-content').innerHTML = xmlHttp.responseText;
-                get('traduction-helper-content').style['display']='block';
-            }
-        }
-        xmlHttp.send(null);
-    }
-    </script>
 </div>
+{% endif %}
 
 <div class="form-row">
   {% if form.language.errors %}<ul class="errorlist inline"><li>{{ form.language.errors|join:", " }}</li></ul>{% endif %}
@@ -156,7 +129,7 @@
 <!--<input type="submit" value="Save and add another" name="_addanother"  />
 <input type="submit" value="Save and continue editing" name="_continue" />-->
 </div>
-
+{% if add %}<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>{% endif %}
 <script type="text/javascript">
     document.getElementById("id_title").focus();
     if(window.$) {
@@ -165,19 +138,25 @@
                 $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
         });
     }
-</script>
-{% if add %}
-<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
-<script type="text/javascript">
-    document.getElementById("id_slug").onchange = function() { this._changed = true; };
-    document.getElementById("id_title").onkeyup = function() {
-        var e = document.getElementById("id_slug");
+    $("#id_slug").change(function() { this._changed = true; });
+    $("#id_title").keyup(function() {
+        var e = $("#id_slug")[0];
         if (!e._changed) {
             e.value = URLify(this.value, 50);
         }
-    };
+    });
+    $('#traduction-helper-select').change(function() {
+        var index = this.selectedIndex;
+        if(index == 0) {
+            $('#traduction-helper-content').hide(); return;
+        }
+        var array = window.location.href.split('?');
+        $.get(array[0]+'traduction/'+this.options[index].value+'/', function(html) {
+            $('#traduction-helper-content').html(html);
+            $('#traduction-helper-content').show();
+        });
+    });
 </script>
-{% endif %}
 
 </div>
 </form></div>

@@ -1,0 +1,27 @@
+
+.change-list tr{
+    padding-left:1.5em;
+}
+
+.change-list .table-selected tr {
+    background:#ffffd0;
+}
+
+.change-list tr.selected {
+    background:#ffb;
+}
+
+.change-list table tr.target {
+    background:#fff;
+}
+
+#status-row ul li {
+    list-style-type:none;
+}
+#traduction-helper-content {
+    margin-top:1em;
+    background:#ffc;
+    padding:1em;
+    display:none;
+    overflow:hidden;
+}

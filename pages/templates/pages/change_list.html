@@ -16,6 +16,7 @@
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
 <!--<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>-->
 <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/tree_collapse.js" /></script>
 {% endblock %}
 
 
@@ -39,6 +40,9 @@
 <script type="text/javascript">
     if(window.$) {
         $(document).ready(function() {
+
+            bindTreeCollapseEvents();
+
             var selected_page = false;
             var action = false;
             $('#changelist').click(function(e) {
@@ -117,6 +121,7 @@
                                 var msg = $('<span>Successfully moved</span>');
                                 $($('#page-row-'+selected_page+" td")[0]).append(msg);
                                 msg.fadeOut(5000);
+                                bindTreeCollapseEvents();
                             }
                         );
                         $('.move-target-container').hide();

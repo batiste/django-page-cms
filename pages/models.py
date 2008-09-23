@@ -101,7 +101,14 @@ class Page(models.Model):
         for c in contents:
             languages.append(c.language)
         return languages
-        
+
+    def get_ancestors_list(self):
+        l = []
+        for a in self.get_ancestors():
+            l.append(str(a.id))
+        if len(l):
+            return "child-of-"+" child-of-".join(l)
+    
     def get_url(self):
         """get the url of this page, adding parent's slug"""
         url = "%s-%d/" % (self.slug, self.id)

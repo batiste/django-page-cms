@@ -28,11 +28,12 @@ def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
     children = page.get_children()
     request = context['request']
     has_permission = has_page_permission(request, page)
+    # level is used to add a left margin on table row
     if has_permission:
         if level is None:
             level = 0
         else:
-            level = level+2
+            level = level+3
     return locals()
 
 @register.filter

@@ -61,7 +61,8 @@ $(document).ready(function() {
         $('a.collapsed').each(function() {
             col.push(this.id.substring(1));
         });
-        $.cookie('tree_collapsed', col.join(','));
+        // expire in 12 days
+        $.cookie('tree_collapsed', col.join(','), {"expires":12});
     }
 
     function hide_children(id) {

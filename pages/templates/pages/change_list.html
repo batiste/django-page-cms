@@ -16,7 +16,7 @@
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
 <!--<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>-->
 <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/tree_collapse.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/change_list.js" /></script>
 {% endblock %}
 
 
@@ -36,107 +36,5 @@
 </div>
 </div>
 </div>
-
-<script type="text/javascript">
-    if(window.$) {
-        $(document).ready(function() {
-
-            bindTreeCollapseEvents();
-
-            var selected_page = false;
-            var action = false;
-            $('#changelist').click(function(e) {
-                // I want link to check the class
-                if(e.target.tagName == 'IMG')
-                    var target = e.target.parentNode;
-                else
-                    var target = e.target;
-                var jtarget = $(target);
-                
-                if(jtarget.hasClass("move")) {
-                    var page_id = e.target.id.split("move-link-")[1];
-                    selected_page = page_id;
-                    action = "move";
-                    $("#changelist table").removeClass("table-selected");
-                    $('tr').removeClass("selected").removeClass("target");
-                    $('#page-row-'+page_id).addClass("selected");
-                    $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
-                        var ids = html.split(",");
-                        var css = "#move-target-"+ids.join(",#move-target-");
-                        $('.move-target-container').hide();
-                        $(css).show();
-                        var css = "#page-row-"+ids.join(",#page-row-");
-                        $(css).addClass("target");
-                        $("#changelist table").addClass("table-selected");
-                    });
-                    return false;
-                }
-                
-                if(jtarget.hasClass("addlink")) {
-                    $("tr").removeClass("target");
-                    $("#changelist table").removeClass("table-selected");
-                    var page_id = target.id.split("add-link-")[1];
-                    selected_page = page_id;
-                    action = "add";
-                    $('tr').removeClass("selected");
-                    $('#page-row-'+page_id).addClass("selected");
-                    $('.move-target-container').hide();
-                    $('#move-target-'+page_id).show();
-                    return false;
-                }
-                
-                if(jtarget.hasClass("publish-checkbox")) {
-                    var p = jtarget.attr("name").split("status-")[1];
-                    // if I don't put data in the post, django doesn't get it
-                    $.post("/admin/pages/page/"+p+"/change-status/", {1:1}, function(val) {
-                        var img = $('img', jtarget.parent())[0];
-                        if(val=="0") {
-                            jtarget.attr("checked", "");
-                            img.src = img.src.replace("-yes.gif", "-no.gif");
-                        } else {
-                            jtarget.attr("checked", "checked");
-                            img.src = img.src.replace("-no.gif", "-yes.gif");
-                        }
-                        jtarget.attr("value", val);
-                    });
-                    return true;
-                }
-                
-                if(jtarget.hasClass("move-target")) {
-                    if(jtarget.hasClass("left"))
-                        var position = "left";
-                    if(jtarget.hasClass("right"))
-                        var position = "right";
-                    if(jtarget.hasClass("first-child"))
-                        var position = "first-child";
-                    var target_id = target.parentNode.id.split("move-target-")[1];
-                    if(action=="move") {
-                        pushVisibles();
-                        $.post("/admin/pages/page/"+selected_page+"/move-page/", {
-                                position:position,
-                                target:target_id
-                            },
-                            function(html) {
-                                $('#changelist').html(html);
-                                $('#page-row-'+selected_page).addClass("selected");
-                                var msg = $('<span>Successfully moved</span>');
-                                $($('#page-row-'+selected_page+" td")[0]).append(msg);
-                                msg.fadeOut(5000);
-                                bindTreeCollapseEvents();
-                            }
-                        );
-                        $('.move-target-container').hide();
-                    }
-                    if(action=="add") {
-                        window.location.href += 'add/?target='+target_id+'&position='+position;
-                    }
-                    //selected_page = false;
-                    return false;
-                }
-                return true;
-            });
-        });
-    }
-</script>
 
 {% endblock %}

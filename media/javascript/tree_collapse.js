@@ -43,7 +43,7 @@ jQuery.cookie = function(name, value, options) {
 function hide_children(obj, id){
     obj.visibles = new Array();
     $('tr.child-of-' + id + ':visible').each(function(){
-        the_id = this.id.substring(9);
+        var the_id = this.id.substring(9);
         obj.visibles.push(the_id);
         $(this).hide();
     });
@@ -56,32 +56,36 @@ function restore_children(obj, id){
 }
 
 $(window).unload( function (){
-    visibles = new Array();
+    pushVisibles();
+});
+
+function pushVisibles() {
+   var visibles = new Array();
     $('tr:visible').each(function(){
          visibles.push(this.id.substring(9));
     });
     $.cookie('tree_visibles', visibles.join(',').substring(1));
-});
+}
 
 function bindTreeCollapseEvents() {
-    visibles = $.cookie('tree_visibles');
+    var visibles = $.cookie('tree_visibles');
     if(visibles){
         visibles = visibles.split(',');
     }
     for(i in visibles) {
         $('tr#page-row-' + visibles[i]).show();
-        rel = $('tr#page-row-' + visibles[i] + ' a.collapse')[0].rel
+        var rel = $('tr#page-row-' + visibles[i] + ' a.collapse')[0].rel
         if (rel){
             $('a#c' + rel).removeClass('collapsed');
         }
     }
     $("a.collapse").click(function() {
-        the_id = this.id.substring(1);
-        clicked = $(this);
+        var the_id = this.id.substring(1);
+        var clicked = $(this);
         clicked.toggleClass('collapsed');
-        $("a[rel=" + the_id + "]").each(function(){
+        $("a[rel=" + the_id + "]").each(function() {
             id = this.id.substring(1);
-            if (clicked.hasClass('collapsed')){
+            if (clicked.hasClass('collapsed')) {
                 $(this).parent().parent().hide();
                 hide_children(this, id);
             } else {

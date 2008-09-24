@@ -111,6 +111,7 @@
                         var position = "first-child";
                     var target_id = target.parentNode.id.split("move-target-")[1];
                     if(action=="move") {
+                        pushVisibles();
                         $.post("/admin/pages/page/"+selected_page+"/move-page/", {
                                 position:position,
                                 target:target_id

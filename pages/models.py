@@ -6,6 +6,8 @@ from django.utils.safestring import mark_safe
 from django.core.cache import cache
 import mptt
 import settings
+if settings.PAGE_TAGGING:
+    from tagging.models import Tag
 
 class Language():
     """A simple class to hold languages methods"""
@@ -72,8 +74,7 @@ class Page(models.Model):
     drafts = PageDraftsManager()
     
     if settings.PAGE_TAGGING:
-        from tagging.models import Tag
-        
+
         def _get_tags(self):
             return Tag.objects.get_for_object(self)
         

@@ -3,7 +3,8 @@ from pages.utils import auto_render
 from django.contrib.admin.views.decorators import staff_member_required
 from django import forms
 from django.http import Http404
-    
+import settings
+
 @auto_render
 def details(request, page_id=None):
     template = None
@@ -18,5 +19,7 @@ def details(request, page_id=None):
             # get the first root page
             current_page = pages[0]
         template = current_page.get_template()
+    else:
+        template = settings.DEFAULT_PAGE_TEMPLATE
     
     return template, locals()

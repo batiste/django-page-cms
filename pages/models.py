@@ -57,7 +57,7 @@ class Page(models.Model):
     )
     
     # slugs are the same for each language
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField()
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
@@ -70,7 +70,18 @@ class Page(models.Model):
     objects = models.Manager()
     published = PagePublishedManager()
     drafts = PageDraftsManager()
-
+    
+    if settings.PAGE_TAGGING:
+        from tagging.models import Tag
+        
+        def _get_tags(self):
+            return Tag.objects.get_for_object(self)
+        
+        def _set_tags(self, tag_list):
+            Tag.objects.update_tags(self, tag_list)
+        
+        tags = property(_get_tags, _set_tags)
+    
     def save(self):
         self.slug = slugify(self.slug)
         if self.status == 1 and self.publication_date is None:
@@ -78,6 +89,7 @@ class Page(models.Model):
             self.publication_date = datetime.now()
         if not self.status:
             self.status = 0
+        
         super(Page, self).save()
     
     def title(self, lang):
@@ -130,7 +142,6 @@ class Page(models.Model):
         return "%s" % (self.slug)
     
 mptt.register(Page, order_insertion_by=['slug'])
-
 
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):

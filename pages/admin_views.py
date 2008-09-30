@@ -1,6 +1,5 @@
 from pages.utils import auto_render
 from pages.models import Language, Content, Page, has_page_permission, has_page_add_permission, get_page_valid_targets_queryset
-#from hierarchical.models import HierarchicalNode, HierarchicalObject
 from django.contrib.admin.views.decorators import staff_member_required
 from django import forms
 from django.db import models
@@ -45,7 +44,6 @@ def placeholders_recursif(nodelist, list):
 def get_form(request, dict=None, current_page=None):
     """Dynamicaly create a form to create/modify a page in the admin interface"""
 
-    import settings
     language_choices = settings.PAGE_LANGUAGES
     l = Language.get_from_request(request, current_page)
     if hasattr(settings, 'PAGE_TEMPLATES'):
@@ -59,16 +57,22 @@ def get_form(request, dict=None, current_page=None):
         title = forms.CharField(widget=forms.TextInput(), required=request.POST)
         language = forms.ChoiceField(choices=language_choices, initial=l)
         status = forms.ChoiceField(widget=forms.RadioSelect({'class':'radiolist'}), choices=Page.STATUSES)
+        
+        if settings.PAGE_TAGGING:
+            from tagging.forms import TagField
+            tags = TagField(required=False)
+            
         if template_choices:
             template = forms.ChoiceField(choices=template_choices, required=False)
         
         def clean_slug(self):
             from django.template.defaultfilters import slugify
             slug = slugify(self.cleaned_data['slug'])
-            if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
-                raise forms.ValidationError('Another page with this slug already exists')
-            if current_page is None and Page.objects.filter(slug=slug):
-                raise forms.ValidationError('Another page with this slug already exists')
+            if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+                if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
+                    raise forms.ValidationError('Another page with this slug already exists')
+                if current_page is None and Page.objects.filter(slug=slug):
+                    raise forms.ValidationError('Another page with this slug already exists')
             return slug
         
     from django.http import QueryDict
@@ -112,6 +116,9 @@ def add(request):
             template = form.cleaned_data.get('template', None)
             page = Page(author=request.user, status=status, slug=slug, template=template)
             page.save()
+            if settings.PAGE_TAGGING:
+                page.tags = form.cleaned_data['tags']
+            
             language = form.cleaned_data['language']
             
             if "target" in request.GET:
@@ -155,6 +162,9 @@ def modify(request, page_id):
             page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
             page.save()
+            if settings.PAGE_TAGGING:
+                page.tags = form.cleaned_data['tags']
+            
             for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
@@ -165,7 +175,11 @@ def modify(request, page_id):
     else:
         l = Language.get_from_request(request)
         traduction_language = settings.PAGE_LANGUAGES
-        dict = {'status':page.status, 'slug':page.slug, 'template':page.template}
+        if settings.PAGE_TAGGING:
+            tag_list = ", ".join([str(t) for t in page.tags])
+        else:
+            tag_list = None
+        dict = {'status':page.status, 'slug':page.slug, 'template':page.template, 'tags':tag_list}
         for placeholder in placeholders:
             dict[placeholder.name] = Content.get_content(page, l, placeholder.name)
         form = get_form(request, dict, page)

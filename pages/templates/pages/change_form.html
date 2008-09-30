@@ -88,6 +88,13 @@
   {{ form.slug }}
 </div>
 
+
+<div class="form-row" >
+  {% if form.tags.errors %}<ul class="errorlist"><li>{{ form.tags.errors|join:", " }}</li></ul>{% endif %}
+  <label for="id_tags">Tags:</label> 
+  {{ form.tags }}
+</div>
+
 {% if placeholders %}
     {% for field in form %}
         {% for p in placeholders %}

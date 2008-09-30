@@ -46,7 +46,7 @@ def get_form(request, dict=None, current_page=None):
 
     language_choices = settings.PAGE_LANGUAGES
     l = Language.get_from_request(request, current_page)
-    if hasattr(settings, 'PAGE_TEMPLATES'):
+    if hasattr(settings, 'PAGE_TEMPLATES') and settings.PAGE_TEMPLATES:
         template_choices = list(settings.PAGE_TEMPLATES)
         template_choices.insert(0,('',_('Inherit')))
     else:

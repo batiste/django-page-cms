@@ -107,6 +107,7 @@ def add(request):
     opts = Page._meta
     app_label = _('Pages')
     add = True
+    from settings import MEDIA_URL
     placeholders = get_placeholders(settings.DEFAULT_PAGE_TEMPLATE)
     if(request.POST):
         form = get_form(request, request.POST)

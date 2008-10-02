@@ -8,6 +8,7 @@ PAGE_TEMPLATES = (
 PAGE_PERMISSION = True
 PAGE_TAGGING = True
 PAGE_UNIQUE_SLUG_REQUIRED = False
+PAGE_CONTENT_REVISION = True
 PAGE_LANGUAGES = (
     ('fr', 'French version'),
     ('de', 'German Version'),

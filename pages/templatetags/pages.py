@@ -44,7 +44,6 @@ def has_permission(page, request):
 def show_content(context, page, content_type, lang=None):
     if lang is None:
         lang = Language.get_from_request(context['request'])
-    request = context['request']
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
         key = 'content_cache_pid:'+str(page.id)+'_l:'+str(lang)+'_type:'+str(content_type)
         c = cache.get(key)
@@ -56,6 +55,20 @@ def show_content(context, page, content_type, lang=None):
     if c:
         return {'content':c}
     return {'content':''}
+    
+@register.inclusion_tag('pages/revisions.html', takes_context=True)
+def show_revisions(context, page, content_type, lang=None):
+
+    if not settings.PAGE_CONTENT_REVISION:
+        return {'revisions':None}
+        
+    revisions = Content.objects.filter(page=page, language=lang, type=content_type).order_by('-creation_date')
+    
+    if len(revisions) < 2:
+        print "Not enough"
+        return {'revisions':None}
+    
+    return {'revisions':revisions[1:11]}
 
 def do_placeholder(parser, token):
     try:

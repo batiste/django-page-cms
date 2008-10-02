@@ -15,6 +15,20 @@
     background:#fff;
 }
 
+.placeholder-row textarea, .placeholder-row input {
+    float:left;
+}
+
+.placeholder-row .revisions {
+    float:left;
+    margin-left:2em;
+}
+
+.placeholder-row .revisions ul {
+    padding:0;
+    margin-left:0;
+}
+
 #status-row ul li {
     list-style-type:none;
 }

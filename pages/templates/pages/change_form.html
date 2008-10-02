@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_modify adminmedia %}
+{% load i18n admin_modify adminmedia pages %}
 {% block title %}Change a page{% endblock %}
 
 {% block extrahead %}{{ block.super }}
@@ -101,10 +101,12 @@
         {% for p in placeholders %}
             {% ifnotequal p.name 'title' %}
                 {% ifequal field.name p.name %}
-<div class="form-row" >
+<div class="form-row placeholder-row" >
   {% if field.errors %}<ul class="errorlist"><li>{{ field.errors|join:", " }}</li></ul>{% endif %}
   <label for="id_{{ field.name }}">{{ field.name }}:</label>
   {{ field }}
+  
+  {% show_revisions page p.name language %}
 </div>
                 {% endifequal %}
             {% endifnotequal %}
@@ -132,6 +134,7 @@
                 $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
         });
     }
+    {% if add %}
     $("#id_slug").change(function() { this._changed = true; });
     $("#id_title").keyup(function() {
         var e = $("#id_slug")[0];
@@ -139,6 +142,7 @@
             e.value = URLify(this.value, 50);
         }
     });
+    {% endif %}
     $('#traduction-helper-select').change(function() {
         var index = this.selectedIndex;
         if(index == 0) {
@@ -149,6 +153,13 @@
             $('#traduction-helper-content').html(html);
             $('#traduction-helper-content').show();
         });
+    });
+    $('.revisions-list a').click( function() {
+        var l = this;
+        $.get(this.href, function(html) {
+            $('textarea', $(l).parents('.form-row')[0]).attr('value', html);
+        });
+        return false;
     });
 </script>
 

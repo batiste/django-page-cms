@@ -168,13 +168,17 @@ def modify(request, page_id):
             
             for placeholder in get_placeholders(page.get_template()):
                 if placeholder.name in form.cleaned_data:
-                    Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
+                    # we need create a new content if revision is enabled
+                    if settings.PAGE_CONTENT_REVISION:
+                        Content.create_content_if_changed(page, language, placeholder.name, form.cleaned_data[placeholder.name])
+                    else:
+                        Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
             msg = _('The %(name)s "%(obj)s" was changed successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        l = Language.get_from_request(request)
+        language = Language.get_from_request(request)
         traduction_language = settings.PAGE_LANGUAGES
         if settings.PAGE_TAGGING:
             tag_list = ", ".join([str(t) for t in page.tags])
@@ -182,7 +186,7 @@ def modify(request, page_id):
             tag_list = None
         dict = {'status':page.status, 'slug':page.slug, 'template':page.template, 'tags':tag_list}
         for placeholder in placeholders:
-            dict[placeholder.name] = Content.get_content(page, l, placeholder.name)
+            dict[placeholder.name] = Content.get_content(page, language, placeholder.name)
         form = get_form(request, dict, page)
 
     return 'pages/change_form.html', locals()
@@ -240,3 +244,9 @@ def traduction(request, page_id, language_id):
     if Content.get_content(page, language_id, "title") is None:
         language_error = True
     return 'pages/traduction_helper.html', locals()
+    
+@staff_member_required
+@auto_render
+def content(request, page_id, content_id):
+    c = Content.objects.get(pk=content_id)
+    return HttpResponse(c.body)

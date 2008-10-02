@@ -112,7 +112,8 @@ class Page(models.Model):
         contents = Content.objects.filter(page=self, type="title")
         languages = []
         for c in contents:
-            languages.append(c.language)
+            if c.language not in languages:
+                languages.append(c.language)
         return languages
     
     def get_url(self):
@@ -231,6 +232,8 @@ class Content(models.Model):
     type = models.CharField(max_length=100, blank=False)
     page = models.ForeignKey(Page)
     
+    creation_date = models.DateTimeField(editable=False, auto_now_add=True)
+    
     def __unicode__(self):
         return "%s :: %s" % (self.page.slug, self.body[0:15])
     
@@ -238,26 +241,41 @@ class Content(models.Model):
     def set_or_create_content(cls, page, language, type, body):
         """set or create a content for a particular page and language"""
         try:
-            c = Content.objects.get(page=page, language=language, type=type)
+            c = Content.objects.filter(page=page, language=language, type=type).latest('creation_date')
             c.body = body
         except Content.DoesNotExist:
             c = Content(page=page, language=language, body=body, type=type)
         c.save()
+        
         return c
         
     @classmethod
-    def get_content(cls, page, language, type, language_fallback=False):
-        """get a content for a particular page and language. Fallback in another language if wanted"""
+    def create_content_if_changed(cls, page, language, type, body):
+        """set or create a content for a particular page and language"""
         try:
-            c = Content.objects.get(language=language, page=page, type=type)
+            c = Content.objects.filter(page=page, language=language, type=type).latest('creation_date')
+            if c.body == body:
+                return c
+        except Content.DoesNotExist:
+            pass
+        c = Content(page=page, language=language, body=body, type=type)
+        c.save()
+        
+    @classmethod
+    def get_content(cls, page, language, type, language_fallback=False):
+        """get the latest content for a particular page and language. Fallback in another language if wanted"""
+        try:
+            c = Content.objects.filter(language=language, page=page, type=type).latest('creation_date')
             return c.body
         except Content.DoesNotExist:
-            if language_fallback:
-                try:
-                    c = Content.objects.filter(page=page, type=type)
-                    if len(c):
-                        return c[0].body
-                except Content.DoesNotExist:
-                    pass
+            pass
+    
+        if language_fallback:
+            try:
+                c = Content.objects.filter(page=page, type=type).latest('creation_date')
+                return c.body
+            except Content.DoesNotExist:
+                pass
+         
         return None
 

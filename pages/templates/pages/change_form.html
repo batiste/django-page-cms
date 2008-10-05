@@ -106,7 +106,9 @@
   <label for="id_{{ field.name }}">{{ field.name }}:</label>
   {{ field }}
   
-  {% show_revisions page p.name language %}
+  {% if not add %}
+    {% show_revisions page p.name language %}
+  {% endif %}
 </div>
                 {% endifequal %}
             {% endifnotequal %}

@@ -78,7 +78,7 @@ jQuery.fn.rte = function(css_url, media_url) {
             textarea.remove();
         });
     }
-    
+
     function disableDesignMode(iframe, submit) {
         var content = iframe.contentWindow.document.getElementsByTagName("body")[0].innerHTML;
         if(submit==true)
@@ -98,7 +98,7 @@ jQuery.fn.rte = function(css_url, media_url) {
             $(iframe).remove();
         return textarea;
     }
-    
+
     function toolbar(iframe) {
         
         var tb = $("<div class='rte-toolbar' id='toolbar-"+iframe.title+"'><div>\
@@ -126,19 +126,25 @@ jQuery.fn.rte = function(css_url, media_url) {
                 formatText(iframe, "formatblock", '<'+selected+'>');
             }
         });
+
         $('.bold', tb).click(function(){ formatText(iframe, 'bold');return false; });
         $('.italic', tb).click(function(){ formatText(iframe, 'italic');return false; });
         $('.unorderedlist', tb).click(function(){ formatText(iframe, 'insertunorderedlist');return false; });
-        $('.link', tb).click(function(){ 
+
+        $('.link', tb).click(function() {
             var p=prompt("URL:");
             if(p)
                 formatText(iframe, 'CreateLink', p);
-            return false; });
-        $('.image', tb).click(function(){ 
+            return false; 
+        });
+        
+        $('.image', tb).click(function() {
             var p=prompt("image URL:");
             if(p)
                 formatText(iframe, 'InsertImage', p);
-            return false; });
+            return false; 
+        });
+        
         $('.disable', tb).click(function() {
             var txt = disableDesignMode(iframe);
             var edm = $('<a href="#">Enable design mode</a>');
@@ -149,16 +155,19 @@ jQuery.fn.rte = function(css_url, media_url) {
             });
             return false; 
         });
-        $(iframe).parents('form').submit(function(){
-            disableDesignMode(iframe, true); });
+
+        $(iframe).parents('form').submit(function() {
+            disableDesignMode(iframe, true);
+        });
+
         var iframeDoc = $(iframe.contentWindow.document);
         
         var select = $('select', tb)[0];
-        iframeDoc.mouseup(function(){ 
+        iframeDoc.mouseup(function() {
             setSelectedType(getSelectionElement(iframe), select);
             return true;
         });
-        iframeDoc.keyup(function(){ 
+        iframeDoc.keyup(function() {
             setSelectedType(getSelectionElement(iframe), select);
             var body = $('body', iframeDoc);
             if(body.scrollTop()>0)

@@ -157,9 +157,18 @@
         });
     });
     $('.revisions-list a').click( function() {
-        var l = this;
+        var link = this;
+        $('a', $(this).parent().parent()).removeClass('selected');
+        $(this).addClass('selected');
         $.get(this.href, function(html) {
-            $('textarea', $(l).parents('.form-row')[0]).attr('value', html);
+            var form_row = $(link).parents('.form-row')[0];
+            if($('a.disable', form_row).length) {
+                $('a.disable', form_row).click();
+                $('textarea', form_row).attr('value', html);
+                $('textarea', form_row).rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+            } else {
+                $('textarea', form_row).attr('value', html);
+            }
         });
         return false;
     });

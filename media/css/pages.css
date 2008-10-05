@@ -29,9 +29,14 @@
     margin-left:0;
 }
 
+.revisions-list .selected {
+    font-weight:bold;
+}
+
 #status-row ul li {
     list-style-type:none;
 }
+
 #traduction-helper-content {
     margin-top:1em;
     background:#ffc;
@@ -39,15 +44,19 @@
     display:none;
     overflow:hidden;
 }
+
 a.collapse span{
     font-family: monospace;
 }
+
 a.collapse span.collapsed{
     display: none;
 }
+
 a.collapsed span{
     display: none;
 }
+
 a.collapsed span.collapsed{
     display: inline;
 }

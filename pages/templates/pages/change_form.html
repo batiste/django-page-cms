@@ -163,9 +163,7 @@
         $.get(this.href, function(html) {
             var form_row = $(link).parents('.form-row')[0];
             if($('a.disable', form_row).length) {
-                $('a.disable', form_row).click();
-                $('textarea', form_row).attr('value', html);
-                $('textarea', form_row).rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+                $('iframe', form_row)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
             } else {
                 $('textarea', form_row).attr('value', html);
             }

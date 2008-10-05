@@ -68,7 +68,7 @@ def show_revisions(context, page, content_type, lang=None):
         print "Not enough"
         return {'revisions':None}
     
-    return {'revisions':revisions[1:11]}
+    return {'revisions':revisions[0:10]}
 
 def do_placeholder(parser, token):
     try:

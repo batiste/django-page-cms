@@ -158,9 +158,9 @@
     });
     $('.revisions-list a').click( function() {
         var link = this;
-        $('a', $(this).parent().parent()).removeClass('selected');
-        $(this).addClass('selected');
         $.get(this.href, function(html) {
+            $('a', $(link).parent().parent()).removeClass('selected');
+            $(link).addClass('selected');
             var form_row = $(link).parents('.form-row')[0];
             if($('a.disable', form_row).length) {
                 $('iframe', form_row)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;

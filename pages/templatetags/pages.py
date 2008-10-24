@@ -42,6 +42,9 @@ def has_permission(page, request):
 
 @register.inclusion_tag('pages/content.html', takes_context=True)
 def show_content(context, page, content_type, lang=None):
+    request = context.get('request', False)
+    if not request:
+        return {'content':''}
     if lang is None:
         lang = Language.get_from_request(context['request'])
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
@@ -94,7 +97,7 @@ class PlaceholderNode(template.Node):
         request = context['request']
         c = Content.get_content(context[self.page], l, self.name, True)
         if c:
-            return c
+            return '<div id="%s" class="placeholder">%s</div>' % (self.name, c)
         
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name

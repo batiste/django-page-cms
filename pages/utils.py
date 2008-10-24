@@ -7,6 +7,16 @@ def auto_render(func):
     and call the render_to_response shortcut"""
     def _dec(request, *args, **kwargs):
         t = None
+        
+        if kwargs.get('only_context', False):
+            # return only context dictionary
+            del(kwargs['only_context'])
+            response = func(request, *args, **kwargs)
+            if isinstance(response, HttpResponse) or isinstance(response, HttpResponseRedirect):
+                raise Except("cannot return context dictionary because a HttpResponseRedirect as been found")
+            (template_name, context) = response
+            return context
+        
         if "template_name" in kwargs:
             t = kwargs['template_name']
             del kwargs['template_name']

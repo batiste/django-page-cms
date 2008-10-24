@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     (r'^(?P<page_id>\d+)/valid-targets-list/$', 'pages.admin_views.valid_targets_list'),
     (r'^(?P<page_id>\d+)/move-page/$', 'pages.admin_views.move_page'),
     (r'^(?P<page_id>\d+)/change-status/$', 'pages.admin_views.change_status'),
+    (r'^(?P<page_id>\d+)/modify-content/(?P<content_id>[\w-]+)/(?P<language_id>\w+)/$', 'pages.admin_views.modify_content'),
 )

@@ -8,6 +8,7 @@ import settings
 @auto_render
 def details(request, page_id=None):
     template = None
+    lang = Language.get_from_request(request)
     pages = Page.objects.filter(parent__isnull=True).order_by("tree_id")
     if len(pages) > 0:
         if page_id:

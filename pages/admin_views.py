@@ -6,7 +6,7 @@ from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.encoding import force_unicode, smart_str
 from django.utils.translation import ugettext as _
-from django.template import loader, Context, TemplateDoesNotExist
+from django.template import loader, Context, RequestContext, TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode
 # must be imported like this for isinstance
 from django.templatetags.pages import PlaceholderNode
@@ -14,18 +14,20 @@ import settings
 from mptt.exceptions import InvalidMove
 from mptt.forms import MoveNodeForm
 
-def get_placeholders(template_name):
+def get_placeholders(request, template_name):
     """Return a list of PlaceholderNode found in the given template"""
     try:
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
         return []
-    temp.render(Context())
+    from pages.views import details
+    context = details(request, only_context=True)
+    temp.render(RequestContext(request, context))
     list = []
     placeholders_recursif(temp.nodelist, list)
     return list
         
-def placeholders_recursif(nodelist, list):    
+def placeholders_recursif(nodelist, list):
     """Recursively search into a template node list for PlaceholderNode node"""
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
@@ -81,7 +83,7 @@ def get_form(request, dict=None, current_page=None):
         dict['language'] = l
         
     template = settings.DEFAULT_PAGE_TEMPLATE if current_page is None else current_page.get_template()
-    for placeholder in get_placeholders(template):
+    for placeholder in get_placeholders(request, template):
         if placeholder.widget == 'TextInput':
             w = forms.TextInput()
         elif placeholder.widget == 'RichTextarea':
@@ -108,7 +110,7 @@ def add(request):
     app_label = _('Pages')
     add = True
     from settings import MEDIA_URL
-    placeholders = get_placeholders(settings.DEFAULT_PAGE_TEMPLATE)
+    placeholders = get_placeholders(request, settings.DEFAULT_PAGE_TEMPLATE)
     if(request.POST):
         form = get_form(request, request.POST)
         if form.is_valid():
@@ -151,7 +153,7 @@ def modify(request, page_id):
     page = Page.objects.get(pk=page_id)
     if not has_page_permission(request, page):
         raise Http404
-    placeholders = get_placeholders(page.get_template())
+    placeholders = get_placeholders(request, page.get_template())
     original = page
     
     if request.POST:
@@ -166,7 +168,7 @@ def modify(request, page_id):
             if settings.PAGE_TAGGING:
                 page.tags = form.cleaned_data['tags']
             
-            for placeholder in get_placeholders(page.get_template()):
+            for placeholder in get_placeholders(request, page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     # we need create a new content if revision is enabled
                     if settings.PAGE_CONTENT_REVISION:
@@ -250,3 +252,18 @@ def traduction(request, page_id, language_id):
 def content(request, page_id, content_id):
     c = Content.objects.get(pk=content_id)
     return HttpResponse(c.body)
+
+@staff_member_required
+def modify_content(request, page_id, content_id, language_id):
+    if request.POST:
+        content = request.POST.get('content', False)
+        if not content:
+            raise Http404
+        page = Page.objects.get(pk=page_id)
+        if settings.PAGE_CONTENT_REVISION:
+            Content.create_content_if_changed(page, language_id, content_id, content)
+        else:
+            Content.set_or_create_content(page, language_id, content_id, content)
+
+        return HttpResponse(content)
+    raise Http404

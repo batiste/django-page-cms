@@ -262,6 +262,8 @@ def modify_content(request, page_id, content_id, language_id):
         if not content:
             raise Http404
         page = Page.objects.get(pk=page_id)
+        if not has_page_permission(request, page):
+            raise Http404
         if settings.PAGE_CONTENT_REVISION:
             Content.create_content_if_changed(page, language_id, content_id, content)
         else:

@@ -10,6 +10,14 @@
         min-height:1em;
         padding:5px;
         cursor:text;
+        overflow:hidden;
+        height:1%;
+    }
+    
+    .placeholder-editable input {
+        float:right;
+        padding:4px 10px;
+        margin-top:3px;
     }
 
     .placeholder-over, .edit {
@@ -28,11 +36,13 @@
     }
     
     #main {
-        width:900px;
+        width:600px;
         padding:20px;
         margin:0 auto;
         border:1px #999 solid;
         margin-bottom:40px;
+        overflow:hidden;
+        height:1%;
     }
     
     h1, h2 {
@@ -53,7 +63,7 @@
 </p>
 
 
-<h1>{% block title %}A django CMS based on pages{% endblock %}</h1>
+<h1>{% block title %}Django CMS based on page object{% endblock %}</h1>
 
 <h2>Complete navigation (as a nested list)</h2>
 

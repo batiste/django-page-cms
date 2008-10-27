@@ -44,6 +44,15 @@
 
 <div id="main">
 
+<p style="float:right">
+    {% if user.is_authenticated %}
+        <a href="/admin/logout/">log out</a>
+    {% else %}
+        <a href="/admin/">log in</a>
+    {% endif %}
+</p>
+
+
 <h1>{% block title %}A django CMS based on pages{% endblock %}</h1>
 
 <h2>Complete navigation (as a nested list)</h2>

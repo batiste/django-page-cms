@@ -156,10 +156,12 @@ def modify(request, page_id):
         raise Http404
     placeholders = get_placeholders(request, page.get_template())
     original = page
+    language = Language.get_from_request(request)
     
     if request.POST:
         
         form = get_form(request, request.POST, page)
+        
         if form.is_valid():
             language = form.cleaned_data['language']
             page.status = form.cleaned_data['status']

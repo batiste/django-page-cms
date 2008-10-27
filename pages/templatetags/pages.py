@@ -96,8 +96,9 @@ class PlaceholderNode(template.Node):
         l = Language.get_from_request(context['request'])
         request = context['request']
         c = Content.get_content(context[self.page], l, self.name, True)
-        if c:
-            return '<div id="%s" class="placeholder">%s</div>' % (self.name, c)
+        if not c:
+            c = ''
+        return '<div id="%s" class="placeholder">%s</div>' % (self.name, c)
         
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name

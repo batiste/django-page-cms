@@ -4,14 +4,22 @@
 <title>{% show_content current_page "title" %}</title>
 <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
 <style>
-    .placeholder {
-        border:1px #ccc solid;
+    .placeholder-editable {
+        border:1px #bbb solid;
         background:#fff;
+        min-height:1em;
+        padding:5px;
+        cursor:text;
     }
 
-    .placeholder-over {
+    .placeholder-over, .edit {
         border:1px #999 solid;
-        background:#ffd;
+        background:#ffa;
+        cursor:hand;
+    }
+    
+    .edit {
+        padding:5px;
     }
     
     body {
@@ -64,6 +72,7 @@
 <div style="width:70%">
 {% if current_page %}
 <h3>title placeholder {% placeholder title current_page TextInput %}</h3>
+
 <div>body placeholder {% placeholder body current_page RichTextarea %}</div>
 </div>
 {% endif %}
@@ -72,13 +81,16 @@
 
 <script type="text/javascript">
     // quick and dirty edit in place example
-    $('.placeholder').mouseover(function() {
+    {% if user.is_authenticated %}
+        $('.placeholder').addClass('placeholder-editable');
+    {% endif %}
+    $('.placeholder-editable').mouseover(function() {
         $(this).addClass('placeholder-over');
     });
-    $('.placeholder').mouseout(function() {
+    $('.placeholder-editable').mouseout(function() {
         $(this).removeClass('placeholder-over');
     });
-    $('.placeholder').click(function() {
+    $('.placeholder-editable').click(function() {
         var p = $(this);
         if(p.hasClass('edit')) {
             return false;
@@ -93,6 +105,7 @@
                 if(response=="oki") {
                     p.html(content);
                     p.removeClass('edit');
+                    p.removeClass('placeholder-over');
                 } else {
                     alert("You need to authenticate to the admin to edit the content");
                 }

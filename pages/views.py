@@ -21,6 +21,7 @@ def details(request, page_id=None):
             current_page = pages[0]
         template = current_page.get_template()
     else:
+        current_page = None
         template = settings.DEFAULT_PAGE_TEMPLATE
     
     return template, locals()

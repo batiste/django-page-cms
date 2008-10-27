@@ -129,7 +129,7 @@ def add(request):
                 target = Page.objects.get(pk=int(request.GET["target"]))
                 page.move_to(target, request.GET["position"])
             
-            for placeholder in get_placeholders(page.get_template()):
+            for placeholder in get_placeholders(request, page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
             
@@ -183,7 +183,6 @@ def modify(request, page_id):
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect("../")
     else:
-        language = Language.get_from_request(request)
         traduction_language = settings.PAGE_LANGUAGES
         if settings.PAGE_TAGGING:
             tag_list = ", ".join([str(t) for t in page.tags])

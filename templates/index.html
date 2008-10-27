@@ -5,7 +5,7 @@
 <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
 <style>
     .placeholder {
-        border:1px #ddd solid;
+        border:1px #ccc solid;
         background:#fff;
     }
 
@@ -13,11 +13,30 @@
         border:1px #999 solid;
         background:#ffd;
     }
+    
+    body {
+        font-family:sans-serif;
+        font-size:75%;
+    }
+    
+    #main {
+        width:900px;
+        padding:20px;
+        margin:0 auto;
+        border:1px #999 solid;
+        margin-bottom:40px;
+    }
+    
+    h1, h2 {
+        border-bottom:1px #ddd solid;
+    }
 </style>
 </head>
 <body>
 
-<h1>{% block title %}A django minimal CMS based on pages{% endblock %}</h1>
+<div id="main">
+
+<h1>{% block title %}A django CMS based on pages{% endblock %}</h1>
 
 <h2>Complete navigation (as a nested list)</h2>
 
@@ -47,8 +66,9 @@
 <h3>title placeholder {% placeholder title current_page TextInput %}</h3>
 <div>body placeholder {% placeholder body current_page RichTextarea %}</div>
 </div>
-
 {% endif %}
+
+</div>
 
 <script type="text/javascript">
     // quick and dirty edit in place example
@@ -69,9 +89,13 @@
         p.html('<textarea style="width:'+width+'px;height:'+height+'px">'+ this.innerHTML +'</textarea><input type="submit" value="Save" />');
         $('input', p).click( function() {
             var content = $('textarea', p).val();
-            $.post('/admin/pages/page/{{ current_page.id }}/modify-content/'+p.attr('id')+'/{{ lang }}/', {'content':content}, function() {
-                p.html(content);
-                p.removeClass('edit');
+            $.post('/admin/pages/page/{{ current_page.id }}/modify-content/'+p.attr('id')+'/{{ lang }}/', {'content':content}, function(response) {
+                if(response=="oki") {
+                    p.html(content);
+                    p.removeClass('edit');
+                } else {
+                    alert("You need to authenticate to the admin to edit the content");
+                }
             });
             return false;
         });
@@ -81,3 +105,4 @@
 {% include "debug.html" %}
 
 </body>
+</html>

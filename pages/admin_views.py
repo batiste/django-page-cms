@@ -1,6 +1,7 @@
 from pages.utils import auto_render
 from pages.models import Language, Content, Page, has_page_permission, has_page_add_permission, get_page_valid_targets_queryset
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django import forms
 from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -265,5 +266,5 @@ def modify_content(request, page_id, content_id, language_id):
         else:
             Content.set_or_create_content(page, language_id, content_id, content)
 
-        return HttpResponse(content)
+        return HttpResponse("oki")
     raise Http404

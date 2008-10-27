@@ -43,7 +43,7 @@ def has_permission(page, request):
 @register.inclusion_tag('pages/content.html', takes_context=True)
 def show_content(context, page, content_type, lang=None):
     request = context.get('request', False)
-    if not request:
+    if not request or not page:
         return {'content':''}
     if lang is None:
         lang = Language.get_from_request(context['request'])

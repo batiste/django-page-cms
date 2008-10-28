@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Page, Language
+from .models import Page, Language, Content
 import settings
 
 class PageAdmin(admin.ModelAdmin):
@@ -8,7 +8,12 @@ class PageAdmin(admin.ModelAdmin):
 class PermissionAdmin(admin.ModelAdmin):
     pass
 
+class ContentAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Page, PageAdmin)
+#admin.site.register(Content, ContentAdmin)
+
 if settings.PAGE_PERMISSION:
     from .models import PagePermission
     admin.site.register(PagePermission, PermissionAdmin)

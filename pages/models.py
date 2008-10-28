@@ -58,8 +58,6 @@ class Page(models.Model):
         (1, _('Published'))
     )
     
-    # slugs are the same for each language
-    slug = models.SlugField()
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
@@ -84,7 +82,6 @@ class Page(models.Model):
         tags = property(_get_tags, _set_tags)
     
     def save(self):
-        self.slug = slugify(self.slug)
         if self.status == 1 and self.publication_date is None:
             from datetime import datetime
             self.publication_date = datetime.now()
@@ -110,11 +107,14 @@ class Page(models.Model):
     
     def get_url(self):
         """get the url of this page, adding parent's slug"""
-        url = "%s-%d/" % (self.slug, self.id)
+        url = "%s-%d/" % (self.slug(), self.id)
         an = self.get_ancestors()
         for p in an:
-            url = p.slug + '/' + url
+            url = p.slug() + '/' + url
         return url
+        
+    def slug(self, language=settings.PAGE_LANGUAGES[0][0]):
+        return Content.get_content(self, language, 'slug', language_fallback=True)
         
     def get_template(self):
         """get the template of this page if defined 
@@ -133,9 +133,9 @@ class Page(models.Model):
         return langs[0:-2]
 
     def __unicode__(self):
-        return "%s" % (self.slug)
+        return "%s" % (self.slug())
     
-mptt.register(Page, order_insertion_by=['slug'])
+mptt.register(Page)
 
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):
@@ -156,7 +156,7 @@ if settings.PAGE_PERMISSION:
         
         @classmethod
         def get_page_id_list(cls, user):
-            """Give a list of page where the user as rights or the string "All" if 
+            """Give a list of page where the user has rights or the string "All" if 
             the user has all rights."""
             if user.is_superuser:
                 return 'All'
@@ -227,7 +227,7 @@ class Content(models.Model):
     creation_date = models.DateTimeField(editable=False, auto_now_add=True)
     
     def __unicode__(self):
-        return "%s :: %s" % (self.page.slug, self.body[0:15])
+        return "%s :: %s" % (self.page.slug(), self.body[0:15])
     
     @classmethod
     def set_or_create_content(cls, page, language, type, body):

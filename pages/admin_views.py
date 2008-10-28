@@ -71,11 +71,11 @@ def get_form(request, dict=None, current_page=None):
         def clean_slug(self):
             from django.template.defaultfilters import slugify
             slug = slugify(self.cleaned_data['slug'])
-            if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+            """if settings.PAGE_UNIQUE_SLUG_REQUIRED:
                 if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
                     raise forms.ValidationError('Another page with this slug already exists')
                 if current_page is None and Page.objects.filter(slug=slug):
-                    raise forms.ValidationError('Another page with this slug already exists')
+                    raise forms.ValidationError('Another page with this slug already exists')"""
             return slug
         
     from django.http import QueryDict
@@ -91,7 +91,7 @@ def get_form(request, dict=None, current_page=None):
             w = forms.Textarea({'class':'rte'})
         else:
             w = forms.Textarea()
-        if placeholder.name != "title":
+        if placeholder.name not in ['title', 'slug']:
             PageForm.base_fields[placeholder.name] = forms.CharField(widget=w, required=False)
         
     if dict:
@@ -100,6 +100,9 @@ def get_form(request, dict=None, current_page=None):
         p = PageForm()
     
     return p
+
+# these mandatory fields are not versioned
+mandatory_page_fields = ['title', 'slug']
 
 @staff_member_required
 @auto_render
@@ -116,9 +119,9 @@ def add(request):
         form = get_form(request, request.POST)
         if form.is_valid():
             status = form.cleaned_data['status']
-            slug = form.cleaned_data['slug']
+            #slug = form.cleaned_data['slug']
             template = form.cleaned_data.get('template', None)
-            page = Page(author=request.user, status=status, slug=slug, template=template)
+            page = Page(author=request.user, status=status, template=template)
             page.save()
             if settings.PAGE_TAGGING:
                 page.tags = form.cleaned_data['tags']
@@ -129,9 +132,13 @@ def add(request):
                 target = Page.objects.get(pk=int(request.GET["target"]))
                 page.move_to(target, request.GET["position"])
             
+            for m in mandatory_page_fields:
+                Content.set_or_create_content(page, language, m, form.cleaned_data[m])
+            
             for placeholder in get_placeholders(request, page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
+            Content.set_or_create_content(page, language, 'slug', form.cleaned_data['slug'])
             
             msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)
@@ -165,16 +172,20 @@ def modify(request, page_id):
         if form.is_valid():
             language = form.cleaned_data['language']
             page.status = form.cleaned_data['status']
-            page.slug = form.cleaned_data['slug']
             page.template = form.cleaned_data.get('template', None)
             page.save()
             if settings.PAGE_TAGGING:
                 page.tags = form.cleaned_data['tags']
             
+            mandatory = ['title', 'slug']
+            for m in mandatory_page_fields:
+                Content.set_or_create_content(page, language, m, form.cleaned_data[m])
+                
             for placeholder in get_placeholders(request, page.get_template()):
-                if placeholder.name in form.cleaned_data:
+                if placeholder.name in form.cleaned_data and placeholder.name not in mandatory:
                     # we need create a new content if revision is enabled
-                    if settings.PAGE_CONTENT_REVISION:
+                    if settings.PAGE_CONTENT_REVISION and placeholder.name \
+                            not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST:
                         Content.create_content_if_changed(page, language, placeholder.name, form.cleaned_data[placeholder.name])
                     else:
                         Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
@@ -188,7 +199,7 @@ def modify(request, page_id):
             tag_list = ", ".join([str(t) for t in page.tags])
         else:
             tag_list = None
-        dict = {'status':page.status, 'slug':page.slug, 'template':page.template, 'tags':tag_list}
+        dict = {'status':page.status, 'template':page.template, 'tags':tag_list, 'slug':page.slug(language=language)}
         for placeholder in placeholders:
             dict[placeholder.name] = Content.get_content(page, language, placeholder.name)
         form = get_form(request, dict, page)

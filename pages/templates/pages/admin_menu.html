@@ -12,7 +12,7 @@
         <span class="collapsed">+</span>
         <span>-</span>
     </a>
-    <a href="{{ url }}{{ page.id }}/" class="changelink" style="margin-right:1em;">{{ page.slug }}</a>
+    <a href="{{ url }}{{ page.id }}/" class="changelink" style="margin-right:1em;">{% show_content page "slug" %}</a>
 </td>
 <td>
     <a href="#" class="move" id="move-link-{{ page.id }}">{% trans "move" %}</a> |

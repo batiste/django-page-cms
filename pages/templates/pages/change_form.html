@@ -100,6 +100,7 @@
     {% for field in form %}
         {% for p in placeholders %}
             {% ifnotequal p.name 'title' %}
+            {% ifnotequal p.name 'slug' %}
                 {% ifequal field.name p.name %}
 <div class="form-row placeholder-row" >
   {% if field.errors %}<ul class="errorlist"><li>{{ field.errors|join:", " }}</li></ul>{% endif %}
@@ -111,6 +112,7 @@
   {% endif %}
 </div>
                 {% endifequal %}
+            {% endifnotequal %}
             {% endifnotequal %}
         {% endfor %}
     {% endfor %}

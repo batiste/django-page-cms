@@ -93,14 +93,6 @@ class Page(models.Model):
         
         super(Page, self).save()
     
-    def title(self, lang):
-        c = Content.get_content(self, lang, 0, True)
-        return c
-    
-    def body(self, lang):
-        c = Content.get_content(self, lang, 1, True)
-        return c
-    
     def get_admin_url(self):
         return '/admin/pages/page/%d/' % self.id
         

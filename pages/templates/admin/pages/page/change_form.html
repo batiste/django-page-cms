@@ -1,0 +1,149 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_modify adminmedia pages_tags %}
+{% block title %}{% trans "Change a page" %}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
+<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js" /></script>
+{% if add %}<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>{% endif %}
+{% endblock %}
+
+{% block content_title %}<h1>{% if add %}{% trans "Add" %}{% else %}{% trans "Change" %}{% endif %} {% trans "page" %}</h1>{% endblock %}
+
+{% block content %}
+<!-- Content -->
+<div id="content-main">
+
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+  <!--<li><a href="history/" class="historylink">{% trans "History" %}</a></li>-->
+  {% if has_absolute_url %}<li><a href="{{ page.get_absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+
+<form action="" method="post" id="page_form">
+<div>
+
+{% if not add %}
+<fieldset class="module aligned" style="float:right;margin-left:1em;display:block;">
+  <h2>{% trans "Translation helper" %}</h2>
+  <div class="form-row">
+      <label for="traduction-helper-select" class="required">{% trans "Language:" %}</label>
+      <select id="traduction-helper-select">
+      <option value="" selected="selected">------</option>
+      {% for lang in traduction_language %}
+      <option value="{{ lang.0 }}">{{ lang.1 }}</option>
+      {% endfor %}
+      </select>
+      <div id="traduction-helper-content"></div>
+  </div>
+</fieldset>
+{% endif %}
+
+{% for fieldset in adminform %}
+  {% include "admin/pages/page/includes/fieldset.html" %}
+{% endfor %}
+
+{# {% if form.tags %} #}
+{#     <div class="form-row" > #}
+{#     {% if form.tags.errors %}<ul class="errorlist"><li>{{ form.tags.errors|join:", " }}</li></ul>{% endif %} #}
+{#     <label for="id_tags">Tags:</label>  #}
+{#     {{ form.tags }} #}
+{#     </div> #}
+{# {% endif %} #}
+{#  #}
+{# {% if placeholders %} #}
+{#     {% for field in form %} #}
+{#         {% for p in placeholders %} #}
+{#             {% ifnotequal p.name 'title' %} #}
+{#                 {% ifequal field.name p.name %} #}
+{# <div class="form-row placeholder-row" > #}
+{#   {% if field.errors %}<ul class="errorlist"><li>{{ field.errors|join:", " }}</li></ul>{% endif %} #}
+{#   <label for="id_{{ field.name }}">{{ field.name }}:</label> #}
+{#   {{ field }} #}
+{#    #}
+{#   {% if not add %} #}
+{#     {% show_revisions page p.name language %} #}
+{#   {% endif %} #}
+{# </div> #}
+{#                 {% endifequal %} #}
+{#             {% endifnotequal %} #}
+{#         {% endfor %} #}
+{#     {% endfor %} #}
+{# {% else %} #}
+{# <div class="form-row" > #}
+{# <p>{% trans "No placeholders found in this page template." %}</p> #}
+{# </div> #}
+{# {% endif %} #}
+
+</fieldset>
+
+<div class="submit-row" style="overflow:hidden">
+<input type="submit" value="{% trans "Save" %}" class="default" />
+<p class="deletelink-box"><a href="delete/" class="deletelink">{% trans "Delete" %}</a></p>
+<input type="submit" value="{% trans "Save and add another" %}" name="_addanother"  />
+<input type="submit" value="{% trans "Save and continue editing" %}" name="_continue" />
+</div>
+<script type="text/javascript">
+    {% if not add %}
+    $('.language p.help').html('<img alt="Alert" src="{% admin_media_prefix %}img/admin/icon_alert.gif"/> {% trans "If you change the language the page will be reloaded." %}');
+    $('#id_language').change(function() {
+        var index = this.selectedIndex;
+        var array = window.location.href.split('?');
+        window.location.href=array[0]+'?language='+ this.options[index].value;
+    });
+    {% endif %}
+    document.getElementById("id_title").focus();
+    if(window.$) {
+        $(document).ready(function() {
+            if($.fn.rte)
+                $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+        });
+    }
+    {% if add %}
+    $("#id_slug").change(function() { this._changed = true; });
+    $("#id_title").keyup(function() {
+        var e = $("#id_slug")[0];
+        if (!e._changed) {
+            e.value = URLify(this.value, 50);
+        }
+    });
+    {% endif %}
+    $('#traduction-helper-select').change(function() {
+        var index = this.selectedIndex;
+        if(index == 0) {
+            $('#traduction-helper-content').hide(); return;
+        }
+        var array = window.location.href.split('?');
+        $.get(array[0]+'traduction/'+this.options[index].value+'/', function(html) {
+            $('#traduction-helper-content').html(html);
+            $('#traduction-helper-content').show();
+        });
+    });
+    $('.revisions-list a').click( function() {
+        var link = this;
+        $.get(this.href, function(html) {
+            $('a', $(link).parent().parent()).removeClass('selected');
+            $(link).addClass('selected');
+            var form_row = $(link).parents('.form-row')[0];
+            if($('a.disable', form_row).length) {
+                $('iframe', form_row)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
+            } else {
+                $('textarea', form_row).attr('value', html);
+            }
+        });
+        return false;
+    });
+</script>
+
+</div>
+</form></div>
+
+<br class="clear" />
+</div>
+<!-- END Content -->
+{% endblock %}

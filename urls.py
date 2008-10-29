@@ -1,11 +1,11 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
-import settings
+from django.conf import settings
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^pages/', include('pages.urls')),
-    url(r'^admin/pages/page/', include('pages.admin_urls')),
     (r'^admin/(.*)', admin.site.root),
 )
 

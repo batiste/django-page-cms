@@ -1,10 +1,8 @@
 from django.conf.urls.defaults import *
-from django.contrib import admin
-import settings
-admin.autodiscover()
+from pages.views import details
 
 urlpatterns = patterns('',
     # Public pages
-    (r'^$', 'pages.views.details'),
-    (r'^.*?(?P<page_id>[0-9]+)/$', 'pages.views.details'),
+    url(r'^$', details, name='pages-root'),
+    url(r'^.*?(?P<page_id>[0-9]+)/$', details, name='pages-details'),
 )

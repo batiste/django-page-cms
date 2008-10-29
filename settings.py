@@ -4,8 +4,6 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-from pages.pages_settings import *
-
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -59,6 +57,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
+    "django.core.context_processors.media",
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -89,3 +88,15 @@ INSTALLED_APPS = (
     'pages',
     'django.contrib.sites',
 )
+
+gettext_noop = lambda s: s
+LANGUAGES = (
+    ('fr', gettext_noop('French')),
+    ('de', gettext_noop('German')),
+    ('en', gettext_noop('English')),
+)
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

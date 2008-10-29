@@ -4,7 +4,7 @@
         
         <ul class="revisions-list">
         {% for revision in revisions %}
-            <li><a href="./content/{{ revision.id }}/" {% if forloop.first %} class="selected"{% endif %}>{{ revision.creation_date|date:"H:i - d M Y" }}</a></li>
+            <li><a href="./get-content/{{ revision.id }}/" {% if forloop.first %} class="selected"{% endif %}>{{ revision.creation_date|date:"H:i - d M Y" }}</a></li>
         {% endfor %}
         </ul>
     </div>

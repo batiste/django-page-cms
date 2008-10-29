@@ -1,27 +1,20 @@
-from pages.models import Page, Language, Content
-from pages.utils import auto_render
-from django.contrib.admin.views.decorators import staff_member_required
-from django import forms
 from django.http import Http404
-import settings
+from django.shortcuts import get_object_or_404, render_to_response
 
-@auto_render
-def details(request, page_id=None):
-    template = None
+from pages import settings
+from pages.models import Page, Language
+from pages.utils import auto_render
+
+def details(request, page_id=None, template_name=settings.DEFAULT_PAGE_TEMPLATE):
     lang = Language.get_from_request(request)
-    pages = Page.objects.filter(parent__isnull=True).order_by("tree_id")
-    if len(pages) > 0:
+    pages = Page.on_site.root().order_by("tree_id")
+    if pages.count():
         if page_id:
-            try:
-                current_page = Page.objects.get(id=int(page_id), status=1)
-            except Page.DoesNotExist:
-                raise Http404
+            current_page = get_object_or_404(Page.on_site.published(), pk=page_id)
         else:
-            # get the first root page
             current_page = pages[0]
-        template = current_page.get_template()
+        template_name = current_page.get_template()
     else:
         current_page = None
-        template = settings.DEFAULT_PAGE_TEMPLATE
-    
-    return template, locals()
+    return template_name, locals()
+details = auto_render(details)

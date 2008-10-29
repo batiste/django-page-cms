@@ -1,7 +1,11 @@
-{% load cache pages %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load cache pages_tags %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ lang }}" xml:lang="{{ lang }}" >
 <head>
-<title>{% show_content current_page "title" %}</title>
+<title>
+{% if current_page %}
+    {% show_content current_page "title" %}
+{% endif %}
+</title>
 <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
 <style>
     .placeholder-editable {
@@ -13,7 +17,7 @@
         overflow:hidden;
         height:1%;
     }
-    
+
     .placeholder-editable input {
         float:right;
         padding:4px 10px;
@@ -24,20 +28,20 @@
         border:1px #999 solid;
         background:#5c705c;
         color:#fff;
-        cursor:hand;
+        cursor: hand;
     }
-    
+
     .edit {
         padding:5px;
     }
-    
+
     body {
         font-family:sans-serif;
         font-size:75%;
         background:#b5b185;
         color:#333;
     }
-    
+
     #main {
         width:600px;
         padding:20px;
@@ -48,20 +52,20 @@
         height:1%;
         background:#fffdca;
     }
-    
+
     h1, h2 {
         border-bottom:1px #ddd solid;
         color:#a4b854;
     }
-    
-    a { color:#ff7959 }
-    
+
+    a {
+        color:#ff7959
+    }
 </style>
 </head>
 <body>
 
 <div id="main">
-
 <p style="float:right">
     {% if user.is_authenticated %}
         <a href="/admin/logout/">log out</a>
@@ -69,9 +73,7 @@
         <a href="/admin/">log in</a>
     {% endif %}
 </p>
-
-
-<h1>{% block title %}Django CMS based on page object{% endblock %}</h1>
+<h1>{% block title %}Django CMS based on page objects{% endblock %}</h1>
 
 <h2>Complete navigation (as a nested list)</h2>
 
@@ -96,12 +98,10 @@
 {% placeholder right-column current_page Textarea %}
 </div>
 
-<div style="width:70%">
 {% if current_page %}
-
-<h3>title placeholder {% placeholder title current_page TextInput %}</h3>
-
-<div>body placeholder {% placeholder body current_page RichTextarea %}</div>
+<div style="width:70%">
+    <h3>title placeholder {% placeholder title current_page TextInput %}</h3>
+    <div>body placeholder {% placeholder body current_page RichTextarea %}</div>
 </div>
 {% endif %}
 
@@ -130,7 +130,7 @@
         $('input', p).click( function() {
             var content = $('textarea', p).val();
             $.post('/admin/pages/page/{{ current_page.id }}/modify-content/'+p.attr('id')+'/{{ lang }}/', {'content':content}, function(response) {
-                if(response=="oki") {
+                if(response=="ok") {
                     p.html(content);
                     p.removeClass('edit');
                     p.removeClass('placeholder-over');

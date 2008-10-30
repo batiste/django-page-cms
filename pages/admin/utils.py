@@ -6,7 +6,9 @@ from django.templatetags.pages_tags import PlaceholderNode
 from pages.views import details
 
 def get_placeholders(request, template_name):
-    """Return a list of PlaceholderNode found in the given template"""
+    """
+    Return a list of PlaceholderNode found in the given template
+    """
     try:
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
@@ -18,7 +20,9 @@ def get_placeholders(request, template_name):
     return list
 
 def placeholders_recursif(nodelist, list):
-    """Recursively search into a template node list for PlaceholderNode node"""
+    """
+    Recursively search into a template node list for PlaceholderNode node
+    """
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
             list.append(node)

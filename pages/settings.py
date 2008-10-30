@@ -10,8 +10,8 @@ DEFAULT_PAGE_TEMPLATE = getattr(settings, 'DEFAULT_PAGE_TEMPLATE', 'index.html')
 
 # Could be set to None if you don't need multiple templates.
 PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', (
-    ('nice.html','nice one'), 
-    ('cool.html','cool one'),
+    ('nice.html', 'nice one'),
+    ('cool.html', 'cool one'),
 ))
 
 # Whether to enable permissions.

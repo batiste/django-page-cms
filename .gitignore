@@ -1,0 +1,6 @@
+mptt/
+tagging/
+cms.db
+local_settings.py
+*.pyc
+.DS_Store

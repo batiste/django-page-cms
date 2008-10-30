@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.sites.managers import CurrentSiteManager
-import settings
+
+from pages import settings
 
 class PageManager(models.Manager):
     def root(self):

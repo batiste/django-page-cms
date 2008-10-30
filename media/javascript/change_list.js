@@ -100,7 +100,8 @@ $(document).ready(function() {
             $("#changelist table").removeClass("table-selected");
             $('tr').removeClass("selected").removeClass("target");
             $('#page-row-'+page_id).addClass("selected");
-            $.get("/admin/pages/page/"+page_id+"/valid-targets-list/", {}, function(html) {
+            var array = window.location.href.split('?');
+            $.get(array[0]+page_id+"/valid-targets-list/", {}, function(html) {
                 var ids = html.split(",");
                 var css = "#move-target-"+ids.join(",#move-target-");
                 $('.move-target-container').hide();
@@ -167,7 +168,8 @@ $(document).ready(function() {
                 $('.move-target-container').hide();
             }
             if(action=="add") {
-                window.location.href += 'add/?target='+target_id+'&position='+position;
+                var query = $.query.set('target', target_id).set('position', position).toString();
+                window.location.href += 'add/'+query;
             }
             //selected_page = false;
             return false;

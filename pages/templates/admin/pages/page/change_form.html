@@ -5,9 +5,10 @@
 {% block extrahead %}{{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
-<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js" /></script>
-{% if add %}<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>{% endif %}
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.query.js"></script>
+<script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
 {% endblock %}
 
 {% block content_title %}<h1>{% if add %}{% trans "Add" %}{% else %}{% trans "Change" %}{% endif %} {% trans "page" %}</h1>{% endblock %}
@@ -26,10 +27,12 @@
 {% endblock %}
 
 <form action="" method="post" id="page_form">
-<div>
-
+{% for fieldset in adminform %}
+  {% include "admin/pages/page/includes/fieldset.html" %}
+{% endfor %}
+<br class="clear" />
 {% if not add %}
-<fieldset class="module aligned" style="float:right;margin-left:1em;display:block;">
+<div><fieldset class="module aligned ">
   <h2>{% trans "Translation helper" %}</h2>
   <div class="form-row">
       <label for="traduction-helper-select" class="required">{% trans "Language:" %}</label>
@@ -42,61 +45,28 @@
       <div id="traduction-helper-content"></div>
   </div>
 </fieldset>
+</div>
 {% endif %}
 
-{% for fieldset in adminform %}
-  {% include "admin/pages/page/includes/fieldset.html" %}
-{% endfor %}
-
-{# {% if form.tags %} #}
-{#     <div class="form-row" > #}
-{#     {% if form.tags.errors %}<ul class="errorlist"><li>{{ form.tags.errors|join:", " }}</li></ul>{% endif %} #}
-{#     <label for="id_tags">Tags:</label>  #}
-{#     {{ form.tags }} #}
-{#     </div> #}
-{# {% endif %} #}
-{#  #}
-{# {% if placeholders %} #}
-{#     {% for field in form %} #}
-{#         {% for p in placeholders %} #}
-{#             {% ifnotequal p.name 'title' %} #}
-{#                 {% ifequal field.name p.name %} #}
-{# <div class="form-row placeholder-row" > #}
-{#   {% if field.errors %}<ul class="errorlist"><li>{{ field.errors|join:", " }}</li></ul>{% endif %} #}
-{#   <label for="id_{{ field.name }}">{{ field.name }}:</label> #}
-{#   {{ field }} #}
-{#    #}
-{#   {% if not add %} #}
-{#     {% show_revisions page p.name language %} #}
-{#   {% endif %} #}
-{# </div> #}
-{#                 {% endifequal %} #}
-{#             {% endifnotequal %} #}
-{#         {% endfor %} #}
-{#     {% endfor %} #}
-{# {% else %} #}
-{# <div class="form-row" > #}
-{# <p>{% trans "No placeholders found in this page template." %}</p> #}
-{# </div> #}
-{# {% endif %} #}
-
-</fieldset>
 
 <div class="submit-row" style="overflow:hidden">
 <input type="submit" value="{% trans "Save" %}" class="default" />
 <p class="deletelink-box"><a href="delete/" class="deletelink">{% trans "Delete" %}</a></p>
-<input type="submit" value="{% trans "Save and add another" %}" name="_addanother"  />
 <input type="submit" value="{% trans "Save and continue editing" %}" name="_continue" />
 </div>
 <script type="text/javascript">
-    {% if not add %}
-    $('.language p.help').html('<img alt="Alert" src="{% admin_media_prefix %}img/admin/icon_alert.gif"/> {% trans "If you change the language the page will be reloaded." %}');
+    $('#id_template').change(function() {
+        var index = this.selectedIndex;
+        var array = window.location.href.split('?');
+        var query = $.query.set('template', this.options[index].value).toString();
+        window.location.href=array[0]+query;
+    });
     $('#id_language').change(function() {
         var index = this.selectedIndex;
         var array = window.location.href.split('?');
-        window.location.href=array[0]+'?language='+ this.options[index].value;
+        var query = $.query.set('language', this.options[index].value).toString();
+        window.location.href=array[0]+query;
     });
-    {% endif %}
     document.getElementById("id_title").focus();
     if(window.$) {
         $(document).ready(function() {
@@ -104,15 +74,13 @@
                 $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
         });
     }
-    {% if add %}
     $("#id_slug").change(function() { this._changed = true; });
     $("#id_title").keyup(function() {
         var e = $("#id_slug")[0];
         if (!e._changed) {
-            e.value = URLify(this.value, 50);
+            e.value = URLify(this.value, 64);
         }
     });
-    {% endif %}
     $('#traduction-helper-select').change(function() {
         var index = this.selectedIndex;
         if(index == 0) {
@@ -141,9 +109,8 @@
 </script>
 
 </div>
-</form></div>
+</form>
 
 <br class="clear" />
-</div>
 <!-- END Content -->
 {% endblock %}

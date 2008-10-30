@@ -25,15 +25,15 @@ class PageForm(forms.ModelForm):
     class Meta:
         model = Page
 
-    # FIX: make unique slugs possible
-    # def clean_slug(self):
-    #     slug = slugify(self.cleaned_data['slug'])
-    #     if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-    #         if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
-    #             raise forms.ValidationError('Another page with this slug already exists')
-    #         if current_page is None and Page.objects.filter(slug=slug):
-    #             raise forms.ValidationError('Another page with this slug already exists')
-    #     return slug
+    def clean_slug(self):
+        slug = slugify(self.cleaned_data['slug'])
+        # FIX: make unique slugs possible
+        # if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+        #     if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
+        #         raise forms.ValidationError('Another page with this slug already exists')
+        #     if current_page is None and Page.objects.filter(slug=slug):
+        #         raise forms.ValidationError('Another page with this slug already exists')
+        return slug
 
 
 class PageAdmin(admin.ModelAdmin):

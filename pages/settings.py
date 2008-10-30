@@ -37,3 +37,6 @@ SITE_ID = getattr(settings, 'SITE_ID', 1)
 
 # You can exclude some placeholder from revision process
 PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings, 'PAGE_CONTENT_REVISION_EXCLUDE_LIST', ())
+
+# Sanitize the user input with html5lib
+PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', True)

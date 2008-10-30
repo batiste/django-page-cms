@@ -138,7 +138,7 @@ def add(request):
             for placeholder in get_placeholders(request, page.get_template()):
                 if placeholder.name in form.cleaned_data:
                     Content.set_or_create_content(page, language, placeholder.name, form.cleaned_data[placeholder.name])
-            Content.set_or_create_content(page, language, 'slug', form.cleaned_data['slug'])
+            #Content.set_or_create_content(page, language, 'slug', form.cleaned_data['slug'])
             
             msg = _('The %(name)s "%(obj)s" was added successfully.') % {'name': force_unicode(opts.verbose_name), 'obj': force_unicode(page)}
             request.user.message_set.create(message=msg)

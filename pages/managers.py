@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.sites.managers import CurrentSiteManager
+import settings
 
 class PageManager(models.Manager):
     def root(self):
@@ -35,10 +36,22 @@ class SitePageManager(PageManager, CurrentSiteManager):
 
 class ContentManager(models.Manager):
 
+    def sanitize(self, content):
+        """
+        Sanitize the content to avoid XSS and so
+        """
+        import html5lib
+        from html5lib import sanitizer
+        p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
+        # we need to remove <html><head/><body>...</body></html>
+        return p.parse(content).toxml()[19:-14]
+
     def set_or_create_content(self, page, language, type, body):
         """
         set or create a content for a particular page and language
         """
+        if settings.PAGE_SANITIZE_USER_INPUT:
+            body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
                                   type=type).latest('creation_date')
@@ -53,6 +66,8 @@ class ContentManager(models.Manager):
         """
         set or create a content for a particular page and language
         """
+        if settings.PAGE_SANITIZE_USER_INPUT:
+            body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
                                   type=type).latest('creation_date')

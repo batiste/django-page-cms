@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.encoding import force_unicode
 
 from django.db import models
 from django.http import HttpResponseRedirect
@@ -11,16 +12,24 @@ from pages import settings
 from pages.models import Page, PagePermission, Language, Content,\
     has_page_add_permission
 from pages.views import details
-from pages.utils import auto_render
+from pages.utils import auto_render, get_template_from_request
+from pages.admin.widgets import RichTextarea, WYMEditor
 from pages.admin.utils import get_placeholders
 from pages.admin.views import traduction, get_content, valid_targets_list, \
     change_status, modify_content
 
 class PageForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(), required=True)
-    slug = forms.CharField(widget=forms.TextInput(), required=True)
+    title = forms.CharField(widget=forms.TextInput(),
+        help_text=_('The default title'))
+
+    slug = forms.CharField(widget=forms.TextInput(),
+        help_text=_('The part of the title that is used in permalinks'))
+
     language = forms.ChoiceField(choices=settings.PAGE_LANGUAGES,
-        help_text='The language of the content below.')
+        help_text=_('The current language of the content fields.'))
+
+    template = forms.ChoiceField(choices=settings.PAGE_TEMPLATES,
+        help_text=_('The template used to render the content.'), required=False)
 
     class Meta:
         model = Page
@@ -38,21 +47,20 @@ class PageForm(forms.ModelForm):
 
 class PageAdmin(admin.ModelAdmin):
     form = PageForm
-    exclude = ['author', 'parent']
-    fieldsets = (
-        (None, {
-            'fields': (
-                'title',
-                'slug',
-                ('status', 'template'),
-                'tags',
-                'language',
-                'sites'
-            )
-        }),
-    )
+    exclude = ('author', 'parent')
     # these mandatory fields are not versioned
     mandatory_fields = ('title', 'slug')
+    fieldsets = (
+        (_('General'), {
+            'fields': ('title', 'slug', 'status', 'tags', 'sites'),
+            'classes': ('sidebar',),
+        }),
+        (_('Options'), {
+            'fields': ('language', 'template'),
+            'classes': ('sidebar', 'clear'),
+            'description': _('Note: This page reloads if you change the selection'),
+        }),
+    )
 
     def __call__(self, request, url):
         # Delegate to the appropriate method, based on the URL.
@@ -110,7 +118,8 @@ class PageAdmin(admin.ModelAdmin):
                 obj.move_to(target, position)
 
         language = form.cleaned_data['language']
-        placeholders = get_placeholders(request, obj.get_template())
+        template = get_template_from_request(request, obj)
+        placeholders = get_placeholders(request, template)
 
         for mandatory_field in self.mandatory_fields:
             Content.objects.set_or_create_content(obj, language,
@@ -132,43 +141,60 @@ class PageAdmin(admin.ModelAdmin):
                     Content.objects.set_or_create_content(obj, language,
                         placeholder.name, form.cleaned_data[placeholder.name])
 
-    def get_form(self, request, obj=None, current_page=None, **kwargs):
+    def get_fieldsets(self, request, obj=None):
+        """
+        Add fieldsets of placeholders to the list of already existing
+        fieldsets.
+        """
+        template = get_template_from_request(request, obj)
+        placeholder_fieldsets = []
+        for placeholder in get_placeholders(request, template):
+            if placeholder.name not in self.mandatory_fields:
+                placeholder_fieldsets.append(placeholder.name)
+
+        if self.declared_fieldsets:
+            given_fieldsets = list(self.declared_fieldsets)
+        else:
+            form = self.get_form(request, obj)
+            given_fieldsets = [(_('content'), {'fields': form.base_fields.keys()})]
+        return given_fieldsets + [(_('content'), {'fields': placeholder_fieldsets})]
+
+    def get_form(self, request, obj=None, **kwargs):
         """
         Get PageForm for the Page model and modify its fields depending on
         the request.
         """
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
-        if hasattr(settings, 'PAGE_TEMPLATES') and settings.PAGE_TEMPLATES:
-            template_choices = list(settings.PAGE_TEMPLATES)
-            template_choices.insert(0, ('', _('Inherit')))
-            form.base_fields['template'] = forms.ChoiceField(required=False,
-                                                    choices=template_choices)
-        language = Language.get_from_request(request, current_page)
-        form.base_fields['language'].initial = language
+        language = Language.get_from_request(request, obj)
+        form.base_fields['language'].initial = force_unicode(language)
+
+        template_choices = list(settings.PAGE_TEMPLATES)
+        template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE, _('Default template')))
+        form.base_fields['template'].choices = template_choices
+
+        template = get_template_from_request(request, obj)
+        form.base_fields['template'].initial = force_unicode(template)
 
         if obj:
-            form.base_fields['slug'].initial = obj.slug(language=language,
-                                                        fallback=False)
-        if current_page is None:
-            template = settings.DEFAULT_PAGE_TEMPLATE
-        else:
-            template = current_page.get_template()
+            initial_slug = obj.slug(language=language, fallback=False)
+            form.base_fields['slug'].initial = initial_slug
+            obj.template = force_unicode(template)
 
         for placeholder in get_placeholders(request, template):
             if placeholder.widget == 'TextInput':
                 widget = forms.TextInput()
             elif placeholder.widget == 'RichTextarea':
-                widget = forms.Textarea({'class':'rte'})
+                widget = RichTextarea()
+            elif placeholder.widget == 'WYMEditor':
+                widget = WYMEditor(name=placeholder.name, language=language)
             else:
                 widget = forms.Textarea()
-
             if obj:
                 initial = Content.objects.get_content(obj, language,
                                                       placeholder.name)
             else:
                 initial = None
-
             if placeholder.name not in self.mandatory_fields:
                 form.base_fields[placeholder.name] = forms.CharField(
                             widget=widget, required=False, initial=initial)
@@ -188,31 +214,14 @@ class PageAdmin(admin.ModelAdmin):
             # to determine whether a given object exists.
             obj = None
         else:
+            template = get_template_from_request(request, obj)
             extra_context = {
-                'placeholders': get_placeholders(request, obj.get_template()),
+                'placeholders': get_placeholders(request, template),
                 'language': Language.get_from_request(request),
                 'traduction_language': settings.PAGE_LANGUAGES,
                 'page': obj,
             }
         return super(PageAdmin, self).change_view(request, object_id, extra_context)
-
-    def get_fieldsets(self, request, obj=None):
-        """
-        Add fieldsets of placeholders to the list of already existing
-        fieldsets.
-        """
-        template = settings.DEFAULT_PAGE_TEMPLATE
-        placeholder_fieldsets = []
-        for placeholder in get_placeholders(request, template):
-            if placeholder.name not in self.mandatory_fields:
-                placeholder_fieldsets.append(placeholder.name)
-
-        if self.declared_fieldsets:
-            given_fieldsets = list(self.declared_fieldsets)
-        else:
-            form = self.get_form(request, obj)
-            given_fieldsets = [(None, {'fields': form.base_fields.keys()})]
-        return given_fieldsets + [(None, {'fields': placeholder_fieldsets})]
 
     def has_add_permission(self, request):
         """
@@ -265,7 +274,7 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 page.move_to(target, position)
                 return self.list_pages(request,
-                    template_name='pages/change_list_table.html')
+                    template_name='admin/pages/page/change_list_table.html')
         context.update(extra_context or {})
         return HttpResponseRedirect('../../')
 admin.site.register(Page, PageAdmin)

@@ -14,8 +14,8 @@
 {% block extrahead %}{{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
-<!--<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>-->
-<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js" /></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.query.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}javascript/change_list.js" /></script>
 {% endblock %}
 
@@ -31,7 +31,7 @@
 
 <div class="module" id="changelist">
 
-{% include "pages/change_list_table.html" %}
+{% include "admin/pages/page/change_list_table.html" %}
 
 </div>
 </div>

@@ -2,7 +2,8 @@ from django import template
 from django.core.cache import cache
 
 from pages import settings
-from pages.models import Language, Content, Page
+from pages.models import Content, Page
+from pages.utils import get_language_from_request
 
 register = template.Library()
 
@@ -10,7 +11,7 @@ def show_menu(context, page, url='/'):
     children = page.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
-    lang = Language.get_from_request(request)
+    lang = get_language_from_request(request)
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -49,7 +50,7 @@ def show_content(context, page, content_type, lang=None):
     if not request or not page:
         return {'content':''}
     if lang is None:
-        lang = Language.get_from_request(context['request'])
+        lang = get_language_from_request(context['request'])
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
         key = 'content_cache_pid:'+str(page.id)+'_l:'+str(lang)+'_type:'+str(content_type)
         c = cache.get(key)
@@ -97,7 +98,7 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         if not 'request' in context or not self.page in context:
             return ''
-        l = Language.get_from_request(context['request'])
+        l = get_language_from_request(context['request'])
         request = context['request']
         c = Content.objects.get_content(context[self.page], l, self.name, True)
         if not c:

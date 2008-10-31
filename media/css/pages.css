@@ -72,7 +72,7 @@ a.collapsed span.collapsed{
     clear: both;
 }
 
-.left {
+.float-left {
     float: left;
     width: 60%;
 }

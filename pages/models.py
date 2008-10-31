@@ -22,36 +22,6 @@ except ImproperlyConfigured:
 if not settings.PAGE_TAGGING:
     tagging = False
 
-class Language(object):
-    """
-    A simple class to hold languages methods
-    """
-    def get_in_settings(cls, iso):
-        for language in settings.PAGE_LANGUAGES:
-            if language[0] == iso:
-                return iso
-        return None
-    get_in_settings = classmethod(get_in_settings)
-    
-    def get_from_request(cls, request, current_page=None):
-        """
-        Return the most obvious language according the request
-        """
-        language = cls.get_in_settings(request.REQUEST.get('language', None))
-        if language is None:
-            language = getattr(request, 'LANGUAGE_CODE', None)
-        if language is None:
-            # in last resort, get the first language available in the page
-            if current_page:
-                languages = current_page.get_languages()
-                if len(languages) > 0:
-                    language = languages[0]
-        if language is None:
-            language = settings.PAGE_LANGUAGES[0]
-        return language
-    get_from_request = classmethod(get_from_request)
-
-
 class Page(models.Model):
     """
     A simple hierarchical page model
@@ -112,9 +82,8 @@ class Page(models.Model):
         get the url of this page, adding parent's slug
         """
         url = "%s-%d/" % (self.slug(), self.id)
-        an = self.get_ancestors()
-        for p in an:
-            url = p.slug() + '/' + url
+        for ancestor in self.get_ancestors():
+            url = ancestor.slug() + '/' + url
         return url
 
     def slug(self, language=None, fallback=True):
@@ -195,15 +164,3 @@ class Content(models.Model):
 
     def __unicode__(self):
         return "%s :: %s" % (self.page.slug(), self.body[0:15])
-
-def has_page_add_permission(request, page=None):
-    """
-    Return true if the current user has permission to add a new page.
-    """
-    if not settings.PAGE_PERMISSION:
-        return True
-    else:
-        permission = PagePermission.objects.get_page_id_list(request.user)
-        if permission == "All":
-            return True
-    return False

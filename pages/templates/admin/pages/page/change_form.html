@@ -72,6 +72,15 @@
         $(document).ready(function() {
             if($.fn.rte)
                 $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+            var template = $.query.get('template');
+            if(template) {
+                $('#id_template').find("option").each(function() {
+                    console.log(this.value);
+                    this.selected = false;
+                    if (template==this.value)
+                        this.selected = true;
+                })
+            }
         });
     }
     $("#id_slug").change(function() { this._changed = true; });

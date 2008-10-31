@@ -9,10 +9,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.admin.util import unquote
 
 from pages import settings
-from pages.models import Page, PagePermission, Language, Content,\
-    has_page_add_permission
+from pages.models import Page, PagePermission, Content
 from pages.views import details
-from pages.utils import auto_render, get_template_from_request
+from pages.utils import get_template_from_request, has_page_add_permission, \
+    get_language_from_request
+
 from pages.admin.widgets import RichTextarea, WYMEditor
 from pages.admin.utils import get_placeholders
 from pages.admin.views import traduction, get_content, valid_targets_list, \
@@ -21,15 +22,12 @@ from pages.admin.views import traduction, get_content, valid_targets_list, \
 class PageForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(),
         help_text=_('The default title'))
-
     slug = forms.CharField(widget=forms.TextInput(),
         help_text=_('The part of the title that is used in permalinks'))
-
     language = forms.ChoiceField(choices=settings.PAGE_LANGUAGES,
         help_text=_('The current language of the content fields.'))
-
-    template = forms.ChoiceField(choices=settings.PAGE_TEMPLATES,
-        help_text=_('The template used to render the content.'), required=False)
+    template = forms.ChoiceField(choices=settings.PAGE_TEMPLATES, required=False,
+        help_text=_('The template used to render the content.'))
 
     class Meta:
         model = Page
@@ -49,7 +47,7 @@ class PageAdmin(admin.ModelAdmin):
     form = PageForm
     exclude = ('author', 'parent')
     # these mandatory fields are not versioned
-    mandatory_fields = ('title', 'slug')
+    mandatory_fields = ('title', 'slug', 'template')
     fieldsets = (
         (_('General'), {
             'fields': ('title', 'slug', 'status', 'tags', 'sites'),
@@ -65,48 +63,32 @@ class PageAdmin(admin.ModelAdmin):
     def __call__(self, request, url):
         # Delegate to the appropriate method, based on the URL.
         if url is None:
-            # (r'^$', 'pages.admin_views.list_pages'),
             return self.list_pages(request)
-
         elif 'traduction' in url:
-            # (r'^(?P<page_id>\d+)/traduction/(?P<language_id>\w+)/$', 'pages.admin_views.traduction'),
             page_id, action, language_id = url.split('/')
             return traduction(request, unquote(page_id), unquote(language_id))
-
         elif 'get-content' in url:
-            # (r'^(?P<page_id>\d+)/content/(?P<content_id>\w+)/$', 'pages.admin_views.content'),
             page_id, action, content_id = url.split('/')
             return get_content(request, unquote(page_id), unquote(content_id))
-
         elif 'modify-content' in url:
-            # (r'^(?P<page_id>\d+)/modify-content/(?P<content_id>[\w-]+)/(?P<language_id>\w+)/$', 'pages.admin_views.modify_content'),
             page_id, action, content_id, language_id = url.split('/')
             return modify_content(request, unquote(page_id),
-                                  unquote(content_id), unquote(language_id))
-
+                                    unquote(content_id), unquote(language_id))
         elif url.endswith('/valid-targets-list'):
-            # (r'^(?P<page_id>\d+)/valid-targets-list/$', 'pages.admin_views.valid_targets_list'),
             return valid_targets_list(request, unquote(url[:-19]))
-
         elif url.endswith('/move-page'):
-            # (r'^(?P<page_id>\d+)/move-page/$', 'pages.admin_views.move_page'),
             return self.move_page(request, unquote(url[:-10]))
-
         elif url.endswith('/change-status'):
-            # (r'^(?P<page_id>\d+)/change-status/$', 'pages.admin_views.change_status'),
             return change_status(request, unquote(url[:-14]))
-
-        else:
-            return super(PageAdmin, self).__call__(request, url)
+        return super(PageAdmin, self).__call__(request, url)
 
     def save_model(self, request, obj, form, change):
         """
-        Set the author field of the Page instance, move it in the tree if
-        neccesary and save every placeholder Content object.
+        Move the page in the tree if neccesary and save every placeholder
+        Content object.
         """
-        obj.author = request.user
         obj.save()
-
+        language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
         if target is not None and position is not None:
@@ -117,15 +99,11 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 obj.move_to(target, position)
 
-        language = form.cleaned_data['language']
-        template = get_template_from_request(request, obj)
-        placeholders = get_placeholders(request, template)
-
         for mandatory_field in self.mandatory_fields:
             Content.objects.set_or_create_content(obj, language,
                 mandatory_field, form.cleaned_data[mandatory_field])
 
-        for placeholder in placeholders:
+        for placeholder in get_placeholders(request, obj.get_template()):
             if placeholder.name in form.cleaned_data:
                 if change:
                     if placeholder.name not in self.mandatory_fields:
@@ -146,8 +124,8 @@ class PageAdmin(admin.ModelAdmin):
         Add fieldsets of placeholders to the list of already existing
         fieldsets.
         """
-        template = get_template_from_request(request, obj)
         placeholder_fieldsets = []
+        template = get_template_from_request(request, obj)
         for placeholder in get_placeholders(request, template):
             if placeholder.name not in self.mandatory_fields:
                 placeholder_fieldsets.append(placeholder.name)
@@ -159,6 +137,17 @@ class PageAdmin(admin.ModelAdmin):
             given_fieldsets = [(_('content'), {'fields': form.base_fields.keys()})]
         return given_fieldsets + [(_('content'), {'fields': placeholder_fieldsets})]
 
+    def save_form(self, request, form, change):
+        """
+        Given a ModelForm return an unsaved instance. ``change`` is True if
+        the object is being changed, and False if it's being added.
+        """
+        instance = super(PageAdmin, self).save_form(request, form, change)
+        instance.template = form.cleaned_data['template']
+        if not change:
+            instance.author = request.user
+        return instance
+
     def get_form(self, request, obj=None, **kwargs):
         """
         Get PageForm for the Page model and modify its fields depending on
@@ -166,20 +155,17 @@ class PageAdmin(admin.ModelAdmin):
         """
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
-        language = Language.get_from_request(request, obj)
+        language = get_language_from_request(request, obj)
         form.base_fields['language'].initial = force_unicode(language)
+        if obj is not None:
+            initial_slug = obj.slug(language=language, fallback=False)
+            form.base_fields['slug'].initial = initial_slug
 
+        template = get_template_from_request(request, obj)
         template_choices = list(settings.PAGE_TEMPLATES)
         template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE, _('Default template')))
         form.base_fields['template'].choices = template_choices
-
-        template = get_template_from_request(request, obj)
         form.base_fields['template'].initial = force_unicode(template)
-
-        if obj:
-            initial_slug = obj.slug(language=language, fallback=False)
-            form.base_fields['slug'].initial = initial_slug
-            obj.template = force_unicode(template)
 
         for placeholder in get_placeholders(request, template):
             if placeholder.widget == 'TextInput':
@@ -217,7 +203,7 @@ class PageAdmin(admin.ModelAdmin):
             template = get_template_from_request(request, obj)
             extra_context = {
                 'placeholders': get_placeholders(request, template),
-                'language': Language.get_from_request(request),
+                'language': get_language_from_request(request),
                 'traduction_language': settings.PAGE_LANGUAGES,
                 'page': obj,
             }

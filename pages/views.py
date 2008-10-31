@@ -2,11 +2,12 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
 
 from pages import settings
-from pages.models import Page, Language
-from pages.utils import auto_render, get_template_from_request
+from pages.models import Page
+from pages.utils import auto_render, get_template_from_request, \
+                                                    get_language_from_request
 
 def details(request, page_id=None, template_name=settings.DEFAULT_PAGE_TEMPLATE):
-    lang = Language.get_from_request(request)
+    lang = get_language_from_request(request)
     pages = Page.on_site.root().order_by("tree_id")
     if pages.count():
         if page_id:

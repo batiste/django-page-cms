@@ -45,7 +45,7 @@ class PageForm(forms.ModelForm):
 
 class PageAdmin(admin.ModelAdmin):
     form = PageForm
-    exclude = ('author', 'parent')
+    exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_fields = ('title', 'slug', 'template')
     fieldsets = (

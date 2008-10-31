@@ -34,12 +34,11 @@ class PageForm(forms.ModelForm):
 
     def clean_slug(self):
         slug = slugify(self.cleaned_data['slug'])
-        # FIX: make unique slugs possible
-        # if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-        #     if current_page and Page.objects.exclude(pk=current_page.id).filter(slug=slug):
-        #         raise forms.ValidationError('Another page with this slug already exists')
-        #     if current_page is None and Page.objects.filter(slug=slug):
-        #         raise forms.ValidationError('Another page with this slug already exists')
+        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+            if self.is_bound and Content.objects.exclude(pk=self.instance.id).filter(body=slug):
+                raise forms.ValidationError('Another page with this slug already exists')
+            elif Content.objects.filter(body=slug):
+                raise forms.ValidationError('Another page with this slug already exists')
         return slug
 
 

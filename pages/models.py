@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib.sites.models import Site
 
 import mptt

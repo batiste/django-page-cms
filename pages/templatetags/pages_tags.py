@@ -79,18 +79,24 @@ show_revisions = register.inclusion_tag('pages/revisions.html',
                                         takes_context=True)(show_revisions)
 
 def do_placeholder(parser, token):
+    error_string = '%r tag requires three arguments' % token.contents[0]
     try:
         # split_contents() knows not to split quoted strings.
-        tag_name, page, name, widget = token.split_contents()
+        bits = token.split_contents()
     except ValueError:
-        msg = '%r tag requires three arguments' % token.contents[0]
-        raise template.TemplateSyntaxError(msg)
-    return PlaceholderNode(page, name, widget)
-
+        raise template.TemplateSyntaxError(error_string)
+    if len(bits) == 3:
+        #tag_name, page, name
+        return PlaceholderNode(bits[1], bits[2])
+    elif len(bits) == 4:
+        #tag_name, page, name, widget
+        return PlaceholderNode(bits[1], bits[2], bits[3])
+    else:
+        raise template.TemplateSyntaxError(error_string)
 
 class PlaceholderNode(template.Node):
 
-    def __init__(self, name, page, widget):
+    def __init__(self, name, page, widget=None):
         self.page = page
         self.name = name
         self.widget = widget

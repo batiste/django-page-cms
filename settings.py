@@ -37,9 +37,10 @@ SITE_ID = 1
 USE_I18N = True
 
 # Absolute path to the directory that holds media.
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media/')
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'pages/media/')
+print MEDIA_ROOT
 ADMIN_MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '../admin_media/')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/pages/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.

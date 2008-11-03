@@ -28,6 +28,19 @@
 */
 if(!WYMeditor) var WYMeditor = {};
 
+//Wrap the Firebug console in WYMeditor.console
+(function() {
+    if ( !window.console || !console.firebug ) {
+        var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
+        "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
+
+        WYMeditor.console = {};
+        for (var i = 0; i < names.length; ++i)
+            WYMeditor.console[names[i]] = function() {}
+
+    } else WYMeditor.console = window.console;
+})();
+
 jQuery.extend(WYMeditor, {
 
 /*
@@ -724,7 +737,9 @@ WYMeditor.editor.prototype.init = function() {
       this._box = jQuery(this._element).hide().after(this._options.boxHtml).next();
 
       //store the instance index in the wymbox element
-      jQuery(this._box).data(WYMeditor.WYM_INDEX, this._index);
+      //but keep it compatible with jQuery < 1.2.3, see #122
+      if( jQuery.isFunction( jQuery.fn.data ) )
+        jQuery.data(this._box.get(0), WYMeditor.WYM_INDEX, this._index);
       
       var h = WYMeditor.Helper;
 
@@ -913,6 +928,10 @@ WYMeditor.editor.prototype.exec = function(cmd) {
     case WYMeditor.TOGGLE_HTML:
       this.update();
       this.toggleHtml();
+
+      //partially fixes #121 when the user manually inserts an image
+      if(!jQuery(this._box).find(this._options.htmlSelector).is(':visible'))
+        this.listen();
     break;
     
     case WYMeditor.PREVIEW:
@@ -1076,9 +1095,15 @@ WYMeditor.editor.prototype.switchTo = function(node,sType) {
 WYMeditor.editor.prototype.replaceStrings = function(sVal) {
   //check if the language file has already been loaded
   //if not, get it via a synchronous ajax call
-  if(!WYMeditor.STRINGS[this._options.lang])
-    eval(jQuery.ajax({url:this._options.langPath
-      + this._options.lang + '.js', async:false}).responseText);
+  if(!WYMeditor.STRINGS[this._options.lang]) {
+    try {
+      eval(jQuery.ajax({url:this._options.langPath
+        + this._options.lang + '.js', async:false}).responseText);
+    } catch(e) {
+        WYMeditor.console.error("WYMeditor: error while parsing language file.");
+        return sVal;
+    }
+  }
 
   //replace all the strings in sVal and return it
   for (var key in WYMeditor.STRINGS[this._options.lang]) {
@@ -1118,7 +1143,7 @@ WYMeditor.editor.prototype.update = function() {
 /* @name dialog
  * @description Opens a dialog box
  */
-WYMeditor.editor.prototype.dialog = function(sType) {
+WYMeditor.editor.prototype.dialog = function( dialogType, bodyHtml ) {
   
   var wDialog = window.open(
     '',
@@ -1129,7 +1154,7 @@ WYMeditor.editor.prototype.dialog = function(sType) {
 
     var sBodyHtml = "";
     
-    switch(sType) {
+    switch( dialogType ) {
 
       case(WYMeditor.DIALOG_LINK):
         sBodyHtml = this._options.dialogLinkHtml;
@@ -1146,6 +1171,9 @@ WYMeditor.editor.prototype.dialog = function(sType) {
       case(WYMeditor.PREVIEW):
         sBodyHtml = this._options.dialogPreviewHtml;
       break;
+
+      default:
+        sBodyHtml = bodyHtml;
     }
     
     var h = WYMeditor.Helper;
@@ -1157,7 +1185,7 @@ WYMeditor.editor.prototype.dialog = function(sType) {
     dialogHtml = h.replaceAll(dialogHtml, WYMeditor.CSS_PATH, this._options.skinPath + WYMeditor.SKINS_DEFAULT_CSS);
     dialogHtml = h.replaceAll(dialogHtml, WYMeditor.WYM_PATH, this._options.wymPath);
     dialogHtml = h.replaceAll(dialogHtml, WYMeditor.JQUERY_PATH, this._options.jQueryPath);
-    dialogHtml = h.replaceAll(dialogHtml, WYMeditor.DIALOG_TITLE, this.encloseString(sType));
+    dialogHtml = h.replaceAll(dialogHtml, WYMeditor.DIALOG_TITLE, this.encloseString( dialogType ));
     dialogHtml = h.replaceAll(dialogHtml, WYMeditor.DIALOG_BODY, sBodyHtml);
     dialogHtml = h.replaceAll(dialogHtml, WYMeditor.INDEX, this._index);
       
@@ -1217,6 +1245,22 @@ WYMeditor.editor.prototype.insert = function(html) {
     } else {
         // Fall back to the internal paste function if there's no selection
         this.paste(html)
+    }
+};
+
+WYMeditor.editor.prototype.wrap = function(left, right) {
+    // Do we have a selection?
+    if (this._iframe.contentWindow.getSelection().focusNode != null) {
+        // Wrap selection with provided html
+        this._exec( WYMeditor.INSERT_HTML, left + this._iframe.contentWindow.getSelection().toString() + right);
+    }
+};
+
+WYMeditor.editor.prototype.unwrap = function() {
+    // Do we have a selection?
+    if (this._iframe.contentWindow.getSelection().focusNode != null) {
+        // Unwrap selection
+        this._exec( WYMeditor.INSERT_HTML, this._iframe.contentWindow.getSelection().toString() );
     }
 };
 
@@ -3385,7 +3429,7 @@ WYMeditor.XhtmlSaxListener.prototype.joinRepeatedEntities = function(xhtml)
 
 WYMeditor.XhtmlSaxListener.prototype.removeEmptyTags = function(xhtml)
 {
-  return xhtml.replace(new RegExp('<('+this.block_tags.join("|")+')>(<br \/>|&#160;|&nbsp;|\\s)*<\/\\1>' ,'g'),'');
+  return xhtml.replace(new RegExp('<('+this.block_tags.join("|").replace(/\|td/,'')+')>(<br \/>|&#160;|&nbsp;|\\s)*<\/\\1>' ,'g'),'');
 };
 
 WYMeditor.XhtmlSaxListener.prototype.getResult = function()
@@ -3536,7 +3580,7 @@ WYMeditor.WymCssLexer = function(parser, only_wym_blocks)
     this.addExitPattern("/\\\x2a[<\/\\s]*WYMeditor[>\\s]*\\\x2a/", 'WymCss');
   }
 
-  this.addSpecialPattern("\\\x2e[a-z-_0-9]+[\\sa-z]*", 'WymCss', 'WymCssStyleDeclaration');
+  this.addSpecialPattern("\\\x2e[a-z-_0-9]+[\\sa-z1-6]*", 'WymCss', 'WymCssStyleDeclaration');
 
   this.addEntryPattern("/\\\x2a", 'WymCss', 'WymCssComment');
   this.addExitPattern("\\\x2a/", 'WymCssComment');
@@ -3913,6 +3957,36 @@ WYMeditor.WymClassExplorer.prototype.insert = function(html) {
     } else {
         // Fall back to the internal paste function if there's no selection
         this.paste(html);
+    }
+};
+
+WYMeditor.WymClassExplorer.prototype.wrap = function(left, right) {
+
+    // Get the current selection
+    var range = this._doc.selection.createRange();
+
+    // Check if the current selection is inside the editor
+    if ( jQuery(range.parentElement()).parents( this._options.iframeBodySelector ).is('*') ) {
+        try {
+            // Overwrite selection with provided html
+            range.pasteHTML(left + range.text + right);
+        } catch (e) { }
+    }
+};
+
+WYMeditor.WymClassExplorer.prototype.unwrap = function() {
+
+    // Get the current selection
+    var range = this._doc.selection.createRange();
+
+    // Check if the current selection is inside the editor
+    if ( jQuery(range.parentElement()).parents( this._options.iframeBodySelector ).is('*') ) {
+        try {
+            // Unwrap selection
+            var text = range.text;
+            this._exec( 'Cut' );
+            range.pasteHTML( text );
+        } catch (e) { }
     }
 };
 
@@ -4579,6 +4653,11 @@ WYMeditor.WymClassSafari.prototype.openBlockTag = function(tag, attributes)
       var tag = new_tag;
       this._tag_stack.push(new_tag);
       attributes.style = '';
+      
+      //should fix #125 - also removed the xhtml() override
+      if(typeof attributes['class'] == 'string')
+        attributes['class'] = attributes['class'].replace(/apple-style-span/gi, '');
+    
     } else {
       return;
     }
@@ -4595,12 +4674,3 @@ WYMeditor.WymClassSafari.prototype.getTagForStyle = function(style) {
   if(/super/.test(style)) return 'sup';
   return false;
 };
-
-/* @name xhtml
- * @description Cleans up the HTML
- */
-WYMeditor.editor.prototype.xhtml = function() {
-    jQuery('.Apple-style-span', this._doc.body).removeClass('Apple-style-span');
-    return this.parser.parse(this.html());
-};
-

@@ -48,7 +48,7 @@ def get_template_from_request(request, obj=None):
 
 def get_language_in_settings(iso):
     for language in settings.PAGE_LANGUAGES:
-        if language[0] == iso:
+        if language[0][:2] == iso:
             return iso
     return None
 
@@ -67,7 +67,7 @@ def get_language_from_request(request, current_page=None):
                 language = languages[0]
     if language is None:
         language = settings.PAGE_LANGUAGES[0]
-    return language
+    return language[:2]
 
 def has_page_add_permission(request, page=None):
     """

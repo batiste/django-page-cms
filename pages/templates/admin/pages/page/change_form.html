@@ -3,13 +3,7 @@
 {% block title %}{% trans "Change a page" %}{% endblock %}
 
 {% block extrahead %}{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/rte.css" />
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/pages.css" />
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.rte.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/jquery.query.js"></script>
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}javascript/change_form.js"></script>
 {% endblock %}
 
 {% block content_title %}<h1>{% if add %}{% trans "Add" %}{% else %}{% trans "Change" %}{% endif %} {% trans "page" %}</h1>{% endblock %}
@@ -27,7 +21,7 @@
 {% endif %}{% endif %}
 {% endblock %}
 
-<form action="" method="post" id="page_form">
+<form action="?language={{ language }}" method="post" id="page_form">
 {% for fieldset in adminform %}
   {% include "admin/pages/page/includes/fieldset.html" %}
 {% endfor %}

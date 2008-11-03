@@ -47,7 +47,16 @@ $(document).ready(function() {
             if($('a.disable', form_row).length) {
                 $('iframe', form_row)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
             } else {
-                $('textarea', form_row).attr('value', html);
+                var formrow_textarea = $('textarea', form_row);
+                formrow_textarea.attr('value', html);
+                // support for WYMeditor
+                if (WYMeditor) {
+                    $(WYMeditor.INSTANCES).each(function(i, wym) {
+                        if (formrow_textarea.attr('id') === wym._element.attr('id')) {
+                            wym.html(html);
+                        }
+                    });
+                }
             }
         });
         return false;

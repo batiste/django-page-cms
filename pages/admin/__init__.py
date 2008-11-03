@@ -59,6 +59,17 @@ class PageAdmin(admin.ModelAdmin):
         }),
     )
 
+    class Media:
+        css = {
+            'all': ('css/rte.css', 'css/pages.css'),
+        }
+        js = (
+            'javascript/jquery.js',
+            'javascript/jquery.rte.js',
+            'javascript/jquery.query.js',
+            'javascript/change_form.js',
+        )
+
     def __call__(self, request, url):
         # Delegate to the appropriate method, based on the URL.
         if url is None:
@@ -172,7 +183,7 @@ class PageAdmin(admin.ModelAdmin):
             elif placeholder.widget == 'RichTextarea':
                 widget = RichTextarea()
             elif placeholder.widget == 'WYMEditor':
-                widget = WYMEditor(name=placeholder.name, language=language)
+                widget = WYMEditor()
             else:
                 widget = forms.Textarea()
             if obj:
@@ -273,4 +284,3 @@ class ContentAdmin(admin.ModelAdmin):
 
 if settings.PAGE_PERMISSION:
     admin.site.register(PagePermission)
-

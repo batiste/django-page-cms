@@ -8,39 +8,30 @@ class RichTextarea(forms.Textarea):
         super(RichTextarea, self).__init__(attrs)
 
 class WYMEditor(forms.Textarea):
-    def __init__(self, name, stylesheet=None, skin_path=None, language=None, attrs=None):
-        self.options = {
-            'media_url': settings.MEDIA_URL+'javascript/',
-            'name': name,
-            'stylesheet': stylesheet or settings.MEDIA_URL+'css/wymeditor.css',
-            'lang': language or settings.LANGUAGE_CODE,
-        }
-        attrs = {'class': 'wymeditor'}
+    class Media:
+        js = (
+            'javascript/jquery.js',
+            'wymeditor/jquery.wymeditor.js',
+            'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
+        )
+
+    def __init__(self, language=None, attrs=None):
+        self.language = language or settings.LANGUAGE_CODE[:2]
+        self.attrs = {'class': 'wymeditor'}
+        if attrs:
+            self.attrs.update(attrs)
         super(WYMEditor, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
-        return super(WYMEditor, self).render(name, value, attrs) + \
-            mark_safe(u"""
-        <script type="text/javascript"
-            src="%(media_url)swymeditor/jquery.wymeditor.pack.js"></script>
-        <script type="text/javascript"
-            src="%(media_url)swymeditor/plugins/hovertools/jquery.wymeditor.hovertools.js">
-        </script>
-        <script type="text/javascript"
-            src="%(media_url)swymeditor/plugins/resizable/jquery.wymeditor.resizable.js">
-        </script>
-        <script type="text/javascript">
-        jQuery(function() {
-            jQuery('.%(name)s').wymeditor({
-                stylesheet: '%(stylesheet)s',
-                lang: '%(lang)s',
-                skin: 'django',
+        rendered = super(WYMEditor, self).render(name, value, attrs)
+        return rendered + mark_safe(u'''<script type="text/javascript">
+            jQuery('#id_%s').wymeditor({
+                lang: '%s',
+                skin:'django',
+                updateSelector: '.submit-row input[type=submit],',
+                updateEvent: 'click',
                 postInit: function(wym) {
-                    wym.hovertools();
                     wym.resizable({handles: "s", maxHeight: 600});
                 }
             });
-        });
-        jQuery(".revisions").show();
-        </script>
-        """ % self.options)
+            </script>''' % (name, self.language))

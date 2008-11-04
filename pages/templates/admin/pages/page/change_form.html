@@ -53,7 +53,7 @@
     if(window.$) {
         $(document).ready(function() {
             if($.fn.rte)
-                $('.rte').rte('{{ MEDIA_URL }}css/rte.css', '{{ MEDIA_URL }}images/');
+                $('.rte').rte('{{ PAGES_MEDIA_URL }}/css/rte.css', '{{ PAGES_MEDIA_URL }}/images/');
         });
     }
 </script>

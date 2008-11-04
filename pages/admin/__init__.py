@@ -1,3 +1,4 @@
+from os.path import join
 from django import forms
 from django.contrib import admin
 from django.template.defaultfilters import slugify
@@ -61,13 +62,16 @@ class PageAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': ('css/rte.css', 'css/pages.css'),
+            'all': (
+                join(settings.PAGES_MEDIA_URL, 'css/rte.css'),
+                join(settings.PAGES_MEDIA_URL, 'css/pages.css')
+            )
         }
         js = (
-            'javascript/jquery.js',
-            'javascript/jquery.rte.js',
-            'javascript/jquery.query.js',
-            'javascript/change_form.js',
+            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.js'),
+            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.rte.js'),
+            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.query.js'),
+            join(settings.PAGES_MEDIA_URL, 'javascript/change_form.js'),
         )
 
     def __call__(self, request, url):

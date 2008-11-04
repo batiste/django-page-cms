@@ -37,10 +37,9 @@ SITE_ID = 1
 USE_I18N = True
 
 # Absolute path to the directory that holds media.
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'pages/media/')
-print MEDIA_ROOT
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media/')
 ADMIN_MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '../admin_media/')
-MEDIA_URL = '/media/pages/'
+MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
@@ -59,6 +58,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
     "django.core.context_processors.media",
+    "pages.context_processors.media",
 )
 
 INTERNAL_IPS = ('127.0.0.1',)

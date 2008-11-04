@@ -3,6 +3,7 @@ Convenience module for access of custom pages application settings,
 which enforces default settings when the main settings module does not
 contain the appropriate settings.
 """
+from os.path import join
 from django.conf import settings
 
 # Which template should be used.
@@ -40,3 +41,5 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings, 'PAGE_CONTENT_REVISION_EX
 
 # Sanitize the user input with html5lib
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
+
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 'pages'))

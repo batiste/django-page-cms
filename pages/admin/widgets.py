@@ -1,6 +1,9 @@
+from os.path import join
 from django import forms
 from django.conf import settings
 from django.utils.safestring import mark_safe
+
+from pages.settings import PAGES_MEDIA_URL
 
 class RichTextarea(forms.Textarea):
     def __init__(self, attrs=None):
@@ -10,9 +13,10 @@ class RichTextarea(forms.Textarea):
 class WYMEditor(forms.Textarea):
     class Media:
         js = (
-            'javascript/jquery.js',
-            'wymeditor/jquery.wymeditor.js',
-            'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
+            join(PAGES_MEDIA_URL, 'javascript/jquery.js'),
+            join(PAGES_MEDIA_URL, 'wymeditor/jquery.wymeditor.js'),
+            join(PAGES_MEDIA_URL,
+                'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js'),
         )
 
     def __init__(self, language=None, attrs=None):

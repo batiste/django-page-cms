@@ -15,7 +15,7 @@ def show_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
-show_menu = register.inclusion_tag('menu.html', takes_context=True)(show_menu)
+show_menu = register.inclusion_tag('pages/menu.html', takes_context=True)(show_menu)
 
 def show_sub_menu(context, page, url='/'):
     root = page.get_root()
@@ -24,7 +24,7 @@ def show_sub_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
-show_sub_menu = register.inclusion_tag('sub_menu.html',
+show_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                        takes_context=True)(show_sub_menu)
 
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
@@ -38,7 +38,7 @@ def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
         else:
             level = level+3
     return locals()
-show_admin_menu = register.inclusion_tag('pages/admin_menu.html',
+show_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
                                          takes_context=True)(show_admin_menu)
 
 def has_permission(page, request):

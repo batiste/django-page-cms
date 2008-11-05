@@ -14,7 +14,7 @@ class WYMEditor(forms.Textarea):
     class Media:
         js = (
             join(PAGES_MEDIA_URL, 'javascript/jquery.js'),
-            join(PAGES_MEDIA_URL, 'wymeditor/jquery.wymeditor.js'),
+            join(PAGES_MEDIA_URL, 'wymeditor/jquery.wymeditor.pack.js'),
             join(PAGES_MEDIA_URL,
                 'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js'),
         )

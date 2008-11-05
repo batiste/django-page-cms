@@ -97,6 +97,13 @@ LANGUAGES = (
     ('en', gettext_noop('English')),
 )
 
+DEFAULT_PAGE_TEMPLATE = 'index.html'
+
+PAGE_TEMPLATES = (
+    ('nice.html', 'nice one'),
+    ('cool.html', 'cool one'),
+)
+
 try:
     from local_settings import *
 except ImportError:

@@ -5,15 +5,15 @@ contain the appropriate settings.
 """
 from os.path import join
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 # Which template should be used.
-DEFAULT_PAGE_TEMPLATE = getattr(settings, 'DEFAULT_PAGE_TEMPLATE', 'index.html')
+DEFAULT_PAGE_TEMPLATE = getattr(settings, 'DEFAULT_PAGE_TEMPLATE', None)
+if DEFAULT_PAGE_TEMPLATE is None:
+    raise ImproperlyConfigured('Please make sure you specified a DEFAULT_PAGE_TEMPLATE setting.')
 
 # Could be set to None if you don't need multiple templates.
-PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', (
-    ('nice.html', 'nice one'),
-    ('cool.html', 'cool one'),
-))
+PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', ())
 
 # Whether to enable permissions.
 PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)

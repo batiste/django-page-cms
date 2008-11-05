@@ -35,7 +35,7 @@
 
 
 /*WYM_BOX*/
-        .wym_skin_django                { border: 0px; background: #fff; padding: 10px}
+        .wym_skin_django                { border: 0px; background: none; padding: 10px}
 
     /*auto-clear the wym_box*/
         .wym_skin_django:after 	        { content: "."; display: block; height: 0; clear: both; visibility: hidden; }

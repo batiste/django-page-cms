@@ -24,7 +24,7 @@ class PageAdmin(admin.ModelAdmin):
     form = PageForm
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
-    mandatory_fields = ('title', 'slug', 'template')
+    mandatory_placeholders = ('title', 'slug')
     fieldsets = (
         (_('General'), {
             'fields': ('title', 'slug', 'status', 'tags', 'sites'),
@@ -89,14 +89,14 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 obj.move_to(target, position)
 
-        for mandatory_field in self.mandatory_fields:
+        for mandatory_placeholder in self.mandatory_placeholders:
             Content.objects.set_or_create_content(obj, language,
-                mandatory_field, form.cleaned_data[mandatory_field])
+                mandatory_placeholder, form.cleaned_data[mandatory_placeholder])
 
         for placeholder in get_placeholders(request, obj.get_template()):
             if placeholder.name in form.cleaned_data:
                 if change:
-                    if placeholder.name not in self.mandatory_fields:
+                    if placeholder.name not in self.mandatory_placeholders:
                         # we need create a new content if revision is enabled
                         if settings.PAGE_CONTENT_REVISION and placeholder.name \
                                 not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST:
@@ -117,7 +117,7 @@ class PageAdmin(admin.ModelAdmin):
         placeholder_fieldsets = []
         template = get_template_from_request(request, obj)
         for placeholder in get_placeholders(request, template):
-            if placeholder.name not in self.mandatory_fields:
+            if placeholder.name not in self.mandatory_placeholders:
                 placeholder_fieldsets.append(placeholder.name)
 
         if self.declared_fieldsets:
@@ -171,7 +171,7 @@ class PageAdmin(admin.ModelAdmin):
                                                       placeholder.name)
             else:
                 initial = None
-            if placeholder.name not in self.mandatory_fields:
+            if placeholder.name not in self.mandatory_placeholders:
                 form.base_fields[placeholder.name] = CharField(
                             widget=widget, required=False, initial=initial)
             else:

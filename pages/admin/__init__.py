@@ -147,9 +147,11 @@ class PageAdmin(admin.ModelAdmin):
 
         language = get_language_from_request(request, obj)
         form.base_fields['language'].initial = force_unicode(language)
-        if obj is not None:
+        if obj:
             initial_slug = obj.slug(language=language, fallback=False)
+            initial_title = obj.title(language=language, fallback=False)
             form.base_fields['slug'].initial = initial_slug
+            form.base_fields['title'].initial = initial_title
 
         template = get_template_from_request(request, obj)
         template_choices = list(settings.PAGE_TEMPLATES)

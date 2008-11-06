@@ -91,9 +91,18 @@ class Page(models.Model):
         """
         get the slug of the page depending on the given language
         """
-        if language is None:
+        if not language:
             language = settings.PAGE_LANGUAGES[0][0]
         return Content.objects.get_content(self, language, 'slug',
+                                           language_fallback=fallback)
+
+    def title(self, language=None, fallback=True):
+        """
+        get the title of the page depending on the given language
+        """
+        if not language:
+            language = settings.PAGE_LANGUAGES[0][0]
+        return Content.objects.get_content(self, language, 'title',
                                            language_fallback=fallback)
 
     def get_template(self):

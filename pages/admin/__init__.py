@@ -1,7 +1,6 @@
 from os.path import join
-from django import forms
+from django.forms import TextInput, Textarea, CharField
 from django.contrib import admin
-from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
 
@@ -15,38 +14,11 @@ from pages.views import details
 from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
 
+from pages.admin.forms import PageForm
 from pages.admin.widgets import RichTextarea, WYMEditor
 from pages.admin.utils import get_placeholders
 from pages.admin.views import traduction, get_content, valid_targets_list, \
     change_status, modify_content
-
-class PageForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(),
-        help_text=_('The default title'))
-    slug = forms.CharField(widget=forms.TextInput(),
-        help_text=_('The part of the title that is used in permalinks'))
-    language = forms.ChoiceField(choices=settings.PAGE_LANGUAGES,
-        help_text=_('The current language of the content fields.'))
-    template = forms.ChoiceField(choices=settings.PAGE_TEMPLATES, required=False,
-        help_text=_('The template used to render the content.'))
-
-    if tagging:
-        from tagging.forms import TagField
-        from pages.admin.widgets import AutoCompleteTagInput
-        tags = TagField(widget=AutoCompleteTagInput(), required=False)
-
-    class Meta:
-        model = Page
-
-    def clean_slug(self):
-        slug = slugify(self.cleaned_data['slug'])
-        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            if self.is_bound and Content.objects.exclude(pk=self.instance.id).filter(body=slug):
-                raise forms.ValidationError('Another page with this slug already exists')
-            elif Content.objects.filter(body=slug):
-                raise forms.ValidationError('Another page with this slug already exists')
-        return slug
-
 
 class PageAdmin(admin.ModelAdmin):
     form = PageForm
@@ -64,15 +36,14 @@ class PageAdmin(admin.ModelAdmin):
             'description': _('Note: This page reloads if you change the selection'),
         }),
     )
-
     class Media:
         css = {
-            'all': [join(PAGES_MEDIA_URL, path) for path in (
+            'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
                 'css/rte.css',
                 'css/pages.css'
             )]
         }
-        js = [join(PAGES_MEDIA_URL, path) for path in (
+        js = [join(settings.PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'javascript/jquery.rte.js',
             'javascript/jquery.query.js',
@@ -188,20 +159,20 @@ class PageAdmin(admin.ModelAdmin):
 
         for placeholder in get_placeholders(request, template):
             if placeholder.widget == 'TextInput':
-                widget = forms.TextInput()
+                widget = TextInput()
             elif placeholder.widget == 'RichTextarea':
                 widget = RichTextarea()
             elif placeholder.widget == 'WYMEditor':
                 widget = WYMEditor()
             else:
-                widget = forms.Textarea()
+                widget = Textarea()
             if obj:
                 initial = Content.objects.get_content(obj, language,
                                                       placeholder.name)
             else:
                 initial = None
             if placeholder.name not in self.mandatory_fields:
-                form.base_fields[placeholder.name] = forms.CharField(
+                form.base_fields[placeholder.name] = CharField(
                             widget=widget, required=False, initial=initial)
             else:
                 form.base_fields[placeholder.name].initial = initial

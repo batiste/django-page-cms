@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.admin.util import unquote
 
 from pages import settings
-from pages.models import Page, PagePermission, Content
+from pages.models import Page, PagePermission, Content, tagging
 from pages.views import details
 from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
@@ -29,6 +29,11 @@ class PageForm(forms.ModelForm):
         help_text=_('The current language of the content fields.'))
     template = forms.ChoiceField(choices=settings.PAGE_TEMPLATES, required=False,
         help_text=_('The template used to render the content.'))
+
+    if tagging:
+        from tagging.forms import TagField
+        from pages.admin.widgets import AutoCompleteTagInput
+        tags = TagField(widget=AutoCompleteTagInput(), required=False)
 
     class Meta:
         model = Page
@@ -62,17 +67,17 @@ class PageAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': (
-                join(settings.PAGES_MEDIA_URL, 'css/rte.css'),
-                join(settings.PAGES_MEDIA_URL, 'css/pages.css')
-            )
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'css/rte.css',
+                'css/pages.css'
+            )]
         }
-        js = (
-            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.js'),
-            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.rte.js'),
-            join(settings.PAGES_MEDIA_URL, 'javascript/jquery.query.js'),
-            join(settings.PAGES_MEDIA_URL, 'javascript/change_form.js'),
-        )
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'javascript/jquery.rte.js',
+            'javascript/jquery.query.js',
+            'javascript/change_form.js',
+        )]
 
     def __call__(self, request, url):
         # Delegate to the appropriate method, based on the URL.

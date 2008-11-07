@@ -1,5 +1,7 @@
 from os.path import join
-from django.forms import TextInput, Textarea, CharField
+from inspect import isclass, getmembers
+
+from django.forms import Widget, TextInput, Textarea, CharField
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
@@ -14,8 +16,8 @@ from pages.views import details
 from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
 
+from pages.admin import widgets
 from pages.admin.forms import PageForm
-from pages.admin.widgets import RichTextarea, WYMEditor
 from pages.admin.utils import get_placeholders
 from pages.admin.views import traduction, get_content, valid_targets_list, \
     change_status, modify_content
@@ -138,6 +140,16 @@ class PageAdmin(admin.ModelAdmin):
             instance.author = request.user
         return instance
 
+    def get_widget(self, request, name):
+        """
+        Given the request and name of a placeholder return a Widget subclass
+        like Textarea or TextInput.
+        """
+        widget = dict(getmembers(widgets, isclass)).get(name, Textarea)
+        if not isinstance(widget(), Widget):
+            widget = Textarea
+        return widget
+
     def get_form(self, request, obj=None, **kwargs):
         """
         Get PageForm for the Page model and modify its fields depending on
@@ -160,14 +172,7 @@ class PageAdmin(admin.ModelAdmin):
         form.base_fields['template'].initial = force_unicode(template)
 
         for placeholder in get_placeholders(request, template):
-            if placeholder.widget == 'TextInput':
-                widget = TextInput()
-            elif placeholder.widget == 'RichTextarea':
-                widget = RichTextarea()
-            elif placeholder.widget == 'WYMEditor':
-                widget = WYMEditor()
-            else:
-                widget = Textarea()
+            widget = self.get_widget(request, placeholder.widget)()
             if obj:
                 initial = Content.objects.get_content(obj, language,
                                                       placeholder.name)

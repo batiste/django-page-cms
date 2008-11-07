@@ -1,6 +1,6 @@
 from os.path import join
-from django import forms
 from django.conf import settings
+from django.forms import TextInput, Textarea
 from django.utils.safestring import mark_safe
 
 from pages.settings import PAGES_MEDIA_URL
@@ -11,7 +11,7 @@ if tagging:
     from tagging.models import Tag
     from django.utils import simplejson
 
-    class AutoCompleteTagInput(forms.TextInput):
+    class AutoCompleteTagInput(TextInput):
         class Media:
             js = [join(PAGES_MEDIA_URL, path) for path in (
                 'javascript/jquery.js',
@@ -40,12 +40,12 @@ if tagging:
                 </script>''' % (name, tag_list))
 
 
-class RichTextarea(forms.Textarea):
+class RichTextarea(Textarea):
     def __init__(self, attrs=None):
         attrs = {'class': 'rte'}
         super(RichTextarea, self).__init__(attrs)
 
-class WYMEditor(forms.Textarea):
+class WYMEditor(Textarea):
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -73,3 +73,41 @@ class WYMEditor(forms.Textarea):
                 }
             });
             </script>''' % (name, self.language))
+
+class markItUpMarkdown(Textarea):
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'markitup/jquery.markitup.js',
+            'markitup/sets/markdown/set.js',
+        )]
+        css = {
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'markitup/skins/simple/style.css',
+                'markitup/sets/markdown/style.css',
+            )]
+        }
+
+    def render(self, name, value, attrs=None):
+        rendered = super(markItUpMarkdown, self).render(name, value, attrs)
+        return rendered + mark_safe(u'''<script type="text/javascript">
+        $('#id_%s').markItUp(mySettings);</script>''' % name)
+
+class markItUpHTML(Textarea):
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'markitup/jquery.markitup.js',
+            'markitup/sets/default/set.js',
+        )]
+        css = {
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'markitup/skins/simple/style.css',
+                'markitup/sets/default/style.css',
+            )]
+        }
+
+    def render(self, name, value, attrs=None):
+        rendered = super(markItUpHTML, self).render(name, value, attrs)
+        return rendered + mark_safe(u'''<script type="text/javascript">
+        $('#id_%s').markItUp(mySettings);</script>''' % name)

@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.admin.util import unquote
 
 from pages import settings
-from pages.models import Page, PagePermission, Content, tagging
+from pages.models import Page, Content, tagging
 from pages.views import details
 from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
@@ -270,4 +270,5 @@ class ContentAdmin(admin.ModelAdmin):
 #admin.site.register(Content, ContentAdmin)
 
 if settings.PAGE_PERMISSION:
+    from pages.models import PagePermission
     admin.site.register(PagePermission)

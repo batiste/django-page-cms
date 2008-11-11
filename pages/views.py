@@ -1,5 +1,4 @@
 from django.http import Http404
-from django.views.generic.simple import direct_to_template
 from django.shortcuts import get_object_or_404, render_to_response
 
 from pages import settings

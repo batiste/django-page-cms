@@ -88,7 +88,6 @@ INSTALLED_APPS = (
     'tagging',
     'pages',
     'django.contrib.sites',
-    'django_extensions',
 )
 
 gettext_noop = lambda s: s

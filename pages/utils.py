@@ -3,7 +3,6 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 
 from pages import settings
-from pages.models import PagePermission
 
 def auto_render(func):
     """Decorator that put automaticaly the template path in the context dictionary
@@ -76,6 +75,7 @@ def has_page_add_permission(request, page=None):
     if not settings.PAGE_PERMISSION:
         return True
     else:
+        from pages.models import PagePermission
         permission = PagePermission.objects.get_page_id_list(request.user)
         if permission == "All":
             return True

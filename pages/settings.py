@@ -42,5 +42,5 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings, 'PAGE_CONTENT_REVISION_EX
 # Sanitize the user input with html5lib
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
-# TODO: Make a description for this parameter
+# URL that handles pages' media and uses <MEDIA_ROOT>/pages by default.
 PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 'pages/'))

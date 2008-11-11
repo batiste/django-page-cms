@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.admin.views.decorators import staff_member_required
 
 from pages import settings
-from pages.models import Page, PagePermission, Content
+from pages.models import Page, Content
 
 from pages.utils import auto_render
 from pages.admin.utils import get_placeholders
@@ -62,6 +62,7 @@ def valid_targets_list(request, page_id):
     if not settings.PAGE_PERMISSION:
         perms = "All"
     else:
+        from pages.models import PagePermission
         perms = PagePermission.objects.get_page_id_list(request.user)
     query = Page.objects.valid_targets(page_id, request, perms)
     return HttpResponse(",".join([str(p.id) for p in query]))

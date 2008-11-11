@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.sites.managers import CurrentSiteManager
+from django.contrib.sites.models import Site
 
 from pages import settings
 
@@ -96,6 +97,21 @@ class ContentManager(models.Manager):
             except self.model.DoesNotExist:
                 pass
         return None
+
+    def get_page_slug(self, slug, status, latest_by='creation_date'):
+        """
+        Returns the latest slug for the given slug, publishments status
+        (e.g. Page.DRAFT or Page.PUBLISHED) and checks if it's available on
+        the current site.
+        """
+        try:
+            content = self.filter(type='slug', body=slug, page__status=status,
+                page__sites__pk=Site.objects.get_current().pk
+                    ).select_related('page').latest(latest_by)
+        except self.model.DoesNotExist:
+            return None
+        else:
+            return content
 
 class PagePermissionManager(models.Manager):
     

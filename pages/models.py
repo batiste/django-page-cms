@@ -61,9 +61,6 @@ class Page(models.Model):
             self.status = self.DRAFT
         super(Page, self).save()
 
-    def get_admin_url(self):
-        return '/admin/pages/page/%d/' % self.id
-
     def get_absolute_url(self):
         return reverse('pages-root') + self.get_url()
 
@@ -82,9 +79,12 @@ class Page(models.Model):
         """
         get the url of this page, adding parent's slug
         """
-        url = "%s-%d/" % (self.slug(), self.id)
+        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+            url = u'%s/' % self.slug()
+        else:
+            url = u'%s-%d/' % (self.slug(), self.id)
         for ancestor in self.get_ancestors():
-            url = ancestor.slug() + '/' + url
+            url = ancestor.slug() + u'/' + url
         return url
 
     def slug(self, language=None, fallback=True):

@@ -1,3 +1,4 @@
+import operator
 from os.path import join
 from inspect import isclass, getmembers
 

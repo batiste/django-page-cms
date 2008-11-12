@@ -1,5 +1,6 @@
 from django import template
 from django.core.cache import cache
+from django.utils.safestring import SafeUnicode
 
 from pages import settings
 from pages.models import Content, Page
@@ -49,6 +50,13 @@ def show_content(context, page, content_type, lang=None):
     request = context.get('request', False)
     if not request or not page:
         return {'content':''}
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode):
+        c = Content.objects.filter(type='slug', body=page)
+        if len(c):
+            page = c[0].page
+        else:
+            return {'content':''}
     if lang is None:
         lang = get_language_from_request(context['request'])
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):

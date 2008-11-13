@@ -9,6 +9,7 @@ from pages.utils import get_language_from_request
 register = template.Library()
 
 def show_menu(context, page, url='/'):
+    """render a nested list of all children of the pages"""
     children = page.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
@@ -19,6 +20,8 @@ def show_menu(context, page, url='/'):
 show_menu = register.inclusion_tag('pages/menu.html', takes_context=True)(show_menu)
 
 def show_sub_menu(context, page, url='/'):
+    """Get the root page of the current page and 
+    render a nested list of all root's children pages"""
     root = page.get_root()
     children = root.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
@@ -29,6 +32,7 @@ show_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                        takes_context=True)(show_sub_menu)
 
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
+    """Render the admin table of pages"""
     children = page.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
     has_permission = page.has_page_permission(request)
@@ -47,6 +51,19 @@ def has_permission(page, request):
 register.filter(has_permission)
 
 def show_content(context, page, content_type, lang=None):
+    """Display a content type from a page.
+    
+    eg: {% show_content page_object "title" %}
+    
+    You can also use the slug of a page
+    
+    eg: {% show_content "my-page-slug" "title" %}
+    
+    Keyword arguments:
+    page -- the page object
+    args -- content_type used by a placeholder
+    lang -- the wanted language (default None, use the request object to know)
+    """
     request = context.get('request', False)
     if not request or not page:
         return {'content':''}
@@ -74,7 +91,7 @@ show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
 def show_revisions(context, page, content_type, lang=None):
-
+    """Render the last 10 revisions of a page content with a list"""
     if not settings.PAGE_CONTENT_REVISION:
         return {'revisions':None}
     revisions = Content.objects.filter(page=page, language=lang,
@@ -103,7 +120,17 @@ def do_placeholder(parser, token):
         raise template.TemplateSyntaxError(error_string)
 
 class PlaceholderNode(template.Node):
-
+    """This template node is used to output page content and
+    is also used in the admin to dynamicaly generate input fields.
+    
+    eg: {% placeholder content-type-name page-object widget-name %}
+    
+    Keyword arguments:
+    content-type-name -- the content type you want to show/create
+    page-object -- the page object
+    widget-name -- the widget name you want into the admin interface. Take
+        a look into pages.admin.widgets to see which widgets are available.
+    """
     def __init__(self, name, page, widget=None):
         self.page = page
         self.name = name

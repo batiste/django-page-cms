@@ -26,7 +26,7 @@ class PageForm(forms.ModelForm):
     def clean_slug(self):
         slug = slugify(self.cleaned_data['slug'])
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            if self.is_bound:
+            if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(body=slug, type="slug").count():
                     raise forms.ValidationError(ugettext_lazy('Another page with this slug already exists'))
             elif Content.objects.filter(body=slug, type="slug").count():

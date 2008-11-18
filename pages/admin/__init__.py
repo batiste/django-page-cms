@@ -27,9 +27,22 @@ class PageAdmin(admin.ModelAdmin):
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
+    general_fields = ['title', 'slug', 'status', 'tags', 'sites']
+    
+    # Add support for future dating and expiration based on settings.
+    insert_point = general_fields.index('status') + 1
+    if settings.PAGE_SHOW_START_DATE and settings.PAGE_SHOW_END_DATE:
+        general_fields = general_fields[:insert_point] +\
+            ['publication_date', 'publication_end_date'] +\
+            general_fields[insert_point:]
+    elif settings.PAGE_SHOW_START_DATE:
+        general_fields.insert(insert_point, 'publication_date')
+    elif settings.PAGE_SHOW_END_DATE:
+        general_fields.insert(insert_point, 'publication_end_date')
+        
     fieldsets = (
         (_('General'), {
-            'fields': ('title', 'slug', 'status', 'tags', 'sites'),
+            'fields': general_fields,
             'classes': ('sidebar',),
         }),
         (_('Options'), {
@@ -38,6 +51,7 @@ class PageAdmin(admin.ModelAdmin):
             'description': _('Note: This page reloads if you change the selection'),
         }),
     )
+        
     class Media:
         css = {
             'all': [join(settings.PAGES_MEDIA_URL, path) for path in (

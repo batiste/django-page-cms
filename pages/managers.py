@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
+from django.db.models import Q
+from datetime import datetime
 
 from pages import settings
 
@@ -28,11 +30,24 @@ class PageManager(models.Manager):
             return self.exclude(id__in=exclude_list)
     
     def published(self):
-        return self.filter(status=self.model.PUBLISHED)
+        return self.filter(
+            Q(status=self.model.PUBLISHED) &
+            Q(publication_date__lte=datetime.now()) &
+            (
+                 Q(publication_end_date__gt=datetime.now()) |
+                 Q(publication_end_date__isnull=True)
+            )
+        )
 
     def drafts(self):
-        return self.filter(status=self.model.DRAFT)
-
+        return self.filter(
+            Q(status=self.model.DRAFT) |
+            Q(publication_date__gte=datetime.now())
+        )
+    
+    def expired(self):
+        return self.filter(publication_end_date__lte=datetime.now())
+    
 class SitePageManager(PageManager, CurrentSiteManager):
     pass
 
@@ -98,21 +113,20 @@ class ContentManager(models.Manager):
                 pass
         return None
 
-    def get_page_slug(self, slug, status, latest_by='creation_date'):
+    def get_page_slug(self, slug, latest_by='creation_date'):
         """
-        Returns the latest slug for the given slug, publishments status
-        (e.g. Page.DRAFT or Page.PUBLISHED) and checks if it's available on
-        the current site.
+        Returns the latest slug for the given slug and checks if it's available 
+        on the current site.
         """
         try:
-            content = self.filter(type='slug', body=slug, page__status=status,
+            content = self.filter(type='slug', body=slug,
                 page__sites__pk=Site.objects.get_current().pk
                     ).select_related('page').latest(latest_by)
         except self.model.DoesNotExist:
             return None
         else:
             return content
-
+        
 class PagePermissionManager(models.Manager):
     
     def get_page_id_list(self, user):

@@ -44,3 +44,15 @@ PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
 # URL that handles pages' media and uses <MEDIA_ROOT>/pages by default.
 PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 'pages/'))
+
+# Show the publication date field in the admin, allows for future dating
+# Changing this from True to False could cause some weirdness.  If that is required,
+# you should probably save all your pages or update your database to correct any future
+# dated pages
+PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
+
+# Show the publication end date field in the admin, allows for page expiration
+# Changing this from True to False could cause some weirdness.  If that is required,
+# you should probably save all your pages or update your database and null any 
+# pages with publication_end_date set.
+PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)

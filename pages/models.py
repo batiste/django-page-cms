@@ -30,6 +30,7 @@ class Page(models.Model):
     # some class constants to refer to, e.g. Page.DRAFT
     DRAFT = 0
     PUBLISHED = 1
+    EXPIRED = 2
     STATUSES = (
         (DRAFT, _('Draft')),
         (PUBLISHED, _('Published')),
@@ -37,7 +38,8 @@ class Page(models.Model):
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     creation_date = models.DateTimeField(editable=False, default=datetime.now)
-    publication_date = models.DateTimeField(editable=False, null=True)
+    publication_date = models.DateTimeField(null=True, blank=True, help_text=_('When the page should go live. Status must be "Published" for page to go live.'))
+    publication_end_date = models.DateTimeField(null=True, blank=True, help_text=_('When to expire the page. Leave empty to never expire.'))
 
     status = models.IntegerField(choices=STATUSES, default=DRAFT)
     template = models.CharField(max_length=100, null=True, blank=True)
@@ -59,11 +61,32 @@ class Page(models.Model):
             self.publication_date = datetime.now()
         if not self.status:
             self.status = self.DRAFT
+        if not settings.PAGE_SHOW_START_DATE and self.publication_date > datetime.now():
+            self.publication_date = datetime.now()
+        if not settings.PAGE_SHOW_END_DATE and self.publication_end_date is not None:
+            self.publication_end_date = None
         super(Page, self).save()
 
     def get_absolute_url(self):
         return reverse('pages-root') + self.get_url()
 
+    def get_calculated_status(self):
+        """
+        get the calculated status of the page based on published_date,
+        published_end_date, and status
+        """
+        if self.status == self.PUBLISHED:
+            calculated_status = self.PUBLISHED
+            if self.publication_date > datetime.now():
+                calculated_status = self.DRAFT
+            elif self.publication_end_date is not None and\
+                    self.publication_end_date <= datetime.now():
+                calculated_status = self.EXPIRED
+            return calculated_status
+        else:
+            return self.status
+    calculated_status = property(get_calculated_status)
+        
     def get_languages(self):
         """
         get the list of all existing languages for this page
@@ -74,7 +97,7 @@ class Page(models.Model):
             if c.language not in languages:
                 languages.append(c.language)
         return languages
-
+    
     def get_url(self):
         """
         get the url of this page, adding parent's slug

@@ -13,8 +13,8 @@ def details(request, page_id=None, slug=None,
         if page_id:
             current_page = get_object_or_404(Page.on_site.published(), pk=page_id)
         elif slug:
-            content = Content.objects.get_page_slug(slug, Page.PUBLISHED)
-            if content:
+            content = Content.objects.get_page_slug(slug)
+            if content and content.page.calculated_status == Page.PUBLISHED:
                 current_page = content.page
             else:
                 raise Http404

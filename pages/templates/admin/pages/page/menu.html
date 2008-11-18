@@ -42,6 +42,9 @@
 <td>
 {{ page.get_template }}
 </td>
+<td>
+{% firstof page.author.get_full_name page.author.first_name page.author.username %}
+</td>
 </tr>
 {% endif %}
 

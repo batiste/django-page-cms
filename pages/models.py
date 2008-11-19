@@ -61,8 +61,9 @@ class Page(models.Model):
             self.publication_date = datetime.now()
         if not self.status:
             self.status = self.DRAFT
-        if not settings.PAGE_SHOW_START_DATE and self.publication_date > datetime.now():
-            self.publication_date = datetime.now()
+        if self.publication_date:
+            if not settings.PAGE_SHOW_START_DATE and self.publication_date > datetime.now():
+                self.publication_date = datetime.now()
         if not settings.PAGE_SHOW_END_DATE and self.publication_end_date is not None:
             self.publication_end_date = None
         super(Page, self).save()

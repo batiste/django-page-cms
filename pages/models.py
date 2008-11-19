@@ -57,15 +57,12 @@ class Page(models.Model):
         verbose_name_plural = _('pages')
 
     def save(self):
-        if self.status == self.PUBLISHED and self.publication_date is None:
-            self.publication_date = datetime.now()
         if not self.status:
             self.status = self.DRAFT
-        if self.publication_date:
-            if not settings.PAGE_SHOW_START_DATE and self.publication_date > datetime.now():
+        
+        if settings.PAGE_SHOW_START_DATE:
+            if self.publication_date is None:
                 self.publication_date = datetime.now()
-        if not settings.PAGE_SHOW_END_DATE and self.publication_end_date is not None:
-            self.publication_end_date = None
         super(Page, self).save()
 
     def get_absolute_url(self):
@@ -80,7 +77,7 @@ class Page(models.Model):
             if self.publication_date > datetime.now():
                 return self.DRAFT
         
-        if settings.PAGE_SHOW_END_DATE:
+        if settings.PAGE_SHOW_END_DATE and self.publication_end_date:
             if self.publication_end_date < datetime.now():
                 return self.EXPIRED
 

@@ -30,20 +30,24 @@ class PageManager(models.Manager):
             return self.exclude(id__in=exclude_list)
     
     def published(self):
-        return self.filter(
-            Q(status=self.model.PUBLISHED) &
-            Q(publication_date__lte=datetime.now()) &
-            (
-                 Q(publication_end_date__gt=datetime.now()) |
-                 Q(publication_end_date__isnull=True)
+        pub = self.filter(status=self.model.PUBLISHED)
+        
+        if settings.PAGE_SHOW_START_DATE:
+            pub = pub.filter(publication_date__lte=datetime.now())
+            
+        if settings.PAGE_SHOW_END_DATE:
+            pub = pub.filter(
+                Q(publication_end_date__gt=datetime.now()) |
+                Q(publication_end_date__isnull=True)
             )
-        )
+        
+        return pub
 
     def drafts(self):
-        return self.filter(
-            Q(status=self.model.DRAFT) |
-            Q(publication_date__gte=datetime.now())
-        )
+        pub = self.filter(status=self.model.DRAFT)
+        if settings.PAGE_SHOW_START_DATE:
+            pub = pub.filter(publication_date__gte=datetime.now())
+        return pub
     
     def expired(self):
         return self.filter(publication_end_date__lte=datetime.now())

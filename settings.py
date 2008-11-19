@@ -104,6 +104,8 @@ PAGE_TEMPLATES = (
     ('cool.html', 'cool one'),
 )
 
+#PAGE_SHOW_START_DATE = True
+
 try:
     from local_settings import *
 except ImportError:

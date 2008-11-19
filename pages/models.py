@@ -55,14 +55,21 @@ class Page(models.Model):
     class Meta:
         verbose_name = _('page')
         verbose_name_plural = _('pages')
-
+        
     def save(self):
         if not self.status:
             self.status = self.DRAFT
-        
-        if settings.PAGE_SHOW_START_DATE:
-            if self.publication_date is None:
-                self.publication_date = datetime.now()
+            
+        # Published pages should always have a publication date
+        if self.publication_date is None and self.status == self.PUBLISHED:
+            self.publication_date = datetime.now()
+        # Drafts should not, unless they have been set to the future
+        if self.status == self.DRAFT:
+            if settings.PAGE_SHOW_START_DATE:
+                if self.publication_date and self.publication_date <= datetime.now():
+                    self.publication_date = None
+            else:
+                self.publication_date = None
         super(Page, self).save()
 
     def get_absolute_url(self):

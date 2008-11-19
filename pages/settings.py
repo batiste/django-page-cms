@@ -47,12 +47,10 @@ PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 
 
 # Show the publication date field in the admin, allows for future dating
 # Changing this from True to False could cause some weirdness.  If that is required,
-# you should probably save all your pages or update your database to correct any future
-# dated pages
+# you should update your database to correct any future dated pages
 PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
 
 # Show the publication end date field in the admin, allows for page expiration
 # Changing this from True to False could cause some weirdness.  If that is required,
-# you should probably save all your pages or update your database and null any 
-# pages with publication_end_date set.
+# you should update your database and null any pages with publication_end_date set.
 PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)

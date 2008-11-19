@@ -27,19 +27,18 @@ class PageAdmin(admin.ModelAdmin):
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
-    general_fields = ['title', 'slug', 'status', 'tags', 'sites']
+    general_fields = ['title', 'slug', 'status', 'sites']
+    insert_point = general_fields.index('status') + 1
+    
+    if settings.PAGE_TAGGING:
+        general_fields.insert(insert_point, 'tags')
     
     # Add support for future dating and expiration based on settings.
-    insert_point = general_fields.index('status') + 1
-    if settings.PAGE_SHOW_START_DATE and settings.PAGE_SHOW_END_DATE:
-        general_fields = general_fields[:insert_point] +\
-            ['publication_date', 'publication_end_date'] +\
-            general_fields[insert_point:]
-    elif settings.PAGE_SHOW_START_DATE:
-        general_fields.insert(insert_point, 'publication_date')
-    elif settings.PAGE_SHOW_END_DATE:
+    if settings.PAGE_SHOW_END_DATE:
         general_fields.insert(insert_point, 'publication_end_date')
-        
+    if settings.PAGE_SHOW_START_DATE:
+        general_fields.insert(insert_point, 'publication_date')
+
     fieldsets = (
         (_('General'), {
             'fields': general_fields,

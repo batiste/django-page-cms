@@ -76,16 +76,15 @@ class Page(models.Model):
         get the calculated status of the page based on published_date,
         published_end_date, and status
         """
-        if self.status == self.PUBLISHED:
-            calculated_status = self.PUBLISHED
+        if settings.PAGE_SHOW_START_DATE:
             if self.publication_date > datetime.now():
-                calculated_status = self.DRAFT
-            elif self.publication_end_date is not None and\
-                    self.publication_end_date <= datetime.now():
-                calculated_status = self.EXPIRED
-            return calculated_status
-        else:
-            return self.status
+                return self.DRAFT
+        
+        if settings.PAGE_SHOW_END_DATE:
+            if self.publication_end_date < datetime.now():
+                return self.EXPIRED
+
+        return self.status
     calculated_status = property(get_calculated_status)
         
     def get_languages(self):

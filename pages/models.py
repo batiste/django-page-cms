@@ -110,7 +110,7 @@ class Page(models.Model):
             url = u'%s/' % self.slug()
         else:
             url = u'%s-%d/' % (self.slug(), self.id)
-        for ancestor in self.get_ancestors():
+        for ancestor in reversed(self.get_ancestors()):
             url = ancestor.slug() + u'/' + url
         return url
 

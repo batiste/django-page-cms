@@ -1,5 +1,6 @@
 # Django settings for cms project.
 import os
+PROJECT_DIR = os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -37,10 +38,12 @@ SITE_ID = 1
 USE_I18N = True
 
 # Absolute path to the directory that holds media.
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '../pages/media/')
-ADMIN_MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '../admin_media/')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, '../pages/media/')
+ADMIN_MEDIA_ROOT = os.path.join(PROJECT_DIR, '../admin_media/')
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
+
+FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
@@ -78,7 +81,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.path.dirname(__file__), "templates"),
+    os.path.join(PROJECT_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (

@@ -72,7 +72,7 @@ MIDDLEWARE_CLASSES = (
     'pages.middleware.CurrentSiteMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'example.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -86,9 +86,9 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
+    'django.contrib.sites',
     'tagging',
     'pages',
-    'django.contrib.sites',
 )
 
 gettext_noop = lambda s: s

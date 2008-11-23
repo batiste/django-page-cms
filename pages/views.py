@@ -1,5 +1,6 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404
+from django.contrib.sites.models import SITE_CACHE
 
 from pages import settings
 from pages.models import Page, Content
@@ -8,14 +9,16 @@ from pages.utils import auto_render, get_template_from_request, get_language_fro
 def details(request, page_id=None, slug=None, 
         template_name=settings.DEFAULT_PAGE_TEMPLATE):
     lang = get_language_from_request(request)
-    pages = Page.on_site.root().order_by("tree_id")
-    if pages.count():
+    site = request.site
+    pages = Page.objects.root(site).order_by("tree_id")
+    if pages:
         if page_id:
-            current_page = get_object_or_404(Page.on_site.published(), pk=page_id)
+            current_page = get_object_or_404(Page.objects.published(site), pk=page_id)
         elif slug:
-            content = Content.objects.get_page_slug(slug)
-            if content and content.page.calculated_status == Page.PUBLISHED:
-                current_page = content.page
+            slug_content = Content.objects.get_page_slug(slug, site)
+            if slug_content and \
+                    slug_content.page.calculated_status == Page.PUBLISHED:
+                current_page = slug_content.page
             else:
                 raise Http404
         else:

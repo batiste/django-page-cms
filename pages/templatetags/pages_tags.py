@@ -8,10 +8,14 @@ from pages.utils import get_language_from_request
 
 register = template.Library()
 
+def get_page_children_for_site(page, site):
+    return page.get_children().filter(sites__domain=site.domain)
+
 def show_menu(context, page, url='/'):
     """render a nested list of all children of the pages"""
-    children = page.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
+    site = request.site
+    children = get_page_children_for_site(page, site)
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
     lang = get_language_from_request(request)
     if 'current_page' in context:
@@ -23,8 +27,9 @@ def show_sub_menu(context, page, url='/'):
     """Get the root page of the current page and 
     render a nested list of all root's children pages"""
     root = page.get_root()
-    children = root.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
+    site = request.site
+    children = get_page_children_for_site(page, site)
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -33,8 +38,9 @@ show_sub_menu = register.inclusion_tag('pages/sub_menu.html',
 
 def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
-    children = page.get_children().filter(sites=settings.SITE_ID)
     request = context['request']
+    site = request.site
+    children = get_page_children_for_site(page, site)
     has_permission = page.has_page_permission(request)
     # level is used to add a left margin on table row
     if has_permission:

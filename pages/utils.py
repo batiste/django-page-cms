@@ -1,6 +1,8 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.db.models import signals
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.sites.models import Site, RequestSite, SITE_CACHE
 
 from pages import settings
 
@@ -80,3 +82,52 @@ def has_page_add_permission(request, page=None):
         if permission == "All":
             return True
     return False
+
+def get_site_from_request(request, check_subdomain=True):
+    """
+    Returns the ``Site`` which matches the host name retreived from
+    ``request``.
+
+    If no match is found and ``check_subdomain`` is ``True``, the sites are
+    searched again for sub-domain matches.
+
+    If still no match, or if more than one ``Site`` matched the host name, a
+    ``RequestSite`` object is returned.
+
+    The returned ``Site`` or ``RequestSite`` object is cached for the host
+    name retrieved from ``request``.
+    """ 
+    host = request.get_host().lower()
+    if host in SITE_CACHE:
+        # The host name was found in cache, return it. A cache value
+        # of None means that a RequestSite should just be used.
+        return SITE_CACHE[host] or RequestSite(request)
+    matches = Site.objects.filter(domain__iexact=host)
+    # We use len rather than count to save a second query if there was only
+    # one matching Site
+    count = len(matches)
+    if not count and check_subdomain:
+        matches = []
+        for site in Site.objects.all():
+            if host.endswith(site.domain.lower()):
+                matches.append(site)
+        count = len(matches)
+    if count == 1:
+        # Return the single matching Site
+        site = matches[0]
+    else:
+        site = None
+    # Cache the site (caching None means we should use RequestSite).
+    SITE_CACHE[host] = site
+    # Return site, falling back to just using a RequestSite.
+    return site or RequestSite(request)
+
+def clear_site_cache(sender, instance, **kwargs):
+    """
+    Clears site cache in case a Site instance has been created or an existing
+    is deleted. That's required to use RequestSite objects properly.
+    """
+    if instance.domain in SITE_CACHE:
+        del SITE_CACHE[instance.domain]
+signals.pre_delete.connect(clear_site_cache, sender=Site)
+signals.post_save.connect(clear_site_cache, sender=Site)

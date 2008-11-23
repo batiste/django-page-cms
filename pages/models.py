@@ -12,7 +12,7 @@ from django.contrib.sites.models import Site
 
 import mptt
 from pages import settings
-from pages.managers import PageManager, SitePageManager, ContentManager, PagePermissionManager
+from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 try:
     tagging = models.get_app('tagging')
@@ -47,7 +47,6 @@ class Page(models.Model):
 
     # Managers
     objects = PageManager()
-    on_site = SitePageManager('sites')
 
     if tagging:
         tags = TagField()

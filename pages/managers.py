@@ -7,11 +7,16 @@ from datetime import datetime
 from pages import settings
 
 class PageManager(models.Manager):
-    def root(self):
+    def on_site(self, site=None):
+        if hasattr(site, 'domain'):
+            return self.filter(**{'sites__domain__exact': site.domain})
+        return self
+
+    def root(self, site=None):
         """
         Return a queryset with pages that don't have parents, a.k.a. root.
         """
-        return self.filter(parent__isnull=True)
+        return self.on_site(site).filter(parent__isnull=True)
 
     def valid_targets(self, page_id, request, perms, page=None):
         """
@@ -28,32 +33,29 @@ class PageManager(models.Manager):
             return self.filter(id__in=perms).exclude(id__in=exclude_list)
         else:
             return self.exclude(id__in=exclude_list)
-    
-    def published(self):
-        pub = self.filter(status=self.model.PUBLISHED)
-        
+
+    def published(self, site=None):
+        pub = self.on_site(site).filter(status=self.model.PUBLISHED)
+
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__lte=datetime.now())
-            
+
         if settings.PAGE_SHOW_END_DATE:
             pub = pub.filter(
                 Q(publication_end_date__gt=datetime.now()) |
                 Q(publication_end_date__isnull=True)
             )
-        
         return pub
 
-    def drafts(self):
-        pub = self.filter(status=self.model.DRAFT)
+    def drafts(self, site=None):
+        pub = self.on_site(site).filter(status=self.model.DRAFT)
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__gte=datetime.now())
         return pub
-    
-    def expired(self):
-        return self.filter(publication_end_date__lte=datetime.now())
-    
-class SitePageManager(PageManager, CurrentSiteManager):
-    pass
+
+    def expired(self, site=None):
+        return self.on_site(site).filter(
+            publication_end_date__lte=datetime.now())
 
 class ContentManager(models.Manager):
 
@@ -98,7 +100,8 @@ class ContentManager(models.Manager):
             pass
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
-    def get_content(self, page, language, cnttype, language_fallback=False, latest_by='creation_date'):
+    def get_content(self, page, language, cnttype, language_fallback=False,
+            latest_by='creation_date'):
         """
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
@@ -117,20 +120,24 @@ class ContentManager(models.Manager):
                 pass
         return None
 
-    def get_page_slug(self, slug, latest_by='creation_date'):
+    def get_page_slug(self, slug, site=None, latest_by='creation_date'):
         """
         Returns the latest slug for the given slug and checks if it's available 
         on the current site.
         """
+        if not site:
+            site = Site.objects.get_current()
         try:
-            content = self.filter(type='slug', body=slug,
-                page__sites__pk=Site.objects.get_current().pk
-                    ).select_related('page').latest(latest_by)
+            content = self.filter(
+                type='slug',
+                body=slug,
+                page__sites__domain=site.domain,
+            ).select_related('page').latest(latest_by)
         except self.model.DoesNotExist:
             return None
         else:
             return content
-        
+
 class PagePermissionManager(models.Manager):
     
     def get_page_id_list(self, user):

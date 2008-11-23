@@ -55,11 +55,10 @@ class Page(models.Model):
     class Meta:
         verbose_name = _('page')
         verbose_name_plural = _('pages')
-        
+
     def save(self):
         if not self.status:
             self.status = self.DRAFT
-            
         # Published pages should always have a publication date
         if self.publication_date is None and self.status == self.PUBLISHED:
             self.publication_date = datetime.now()
@@ -101,7 +100,7 @@ class Page(models.Model):
             if c.language not in languages:
                 languages.append(c.language)
         return languages
-    
+
     def get_url(self):
         """
         get the url of this page, adding parent's slug
@@ -167,8 +166,12 @@ class Page(models.Model):
 
     def __unicode__(self):
         return self.slug()
-    
-mptt.register(Page)
+
+# Don't register the Page model twice.
+try:
+    mptt.register(Page)
+except mptt.AlreadyRegistered:
+    pass
 
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):

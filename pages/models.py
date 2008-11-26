@@ -43,7 +43,7 @@ class Page(models.Model):
 
     status = models.IntegerField(choices=STATUSES, default=DRAFT)
     template = models.CharField(max_length=100, null=True, blank=True)
-    sites = models.ManyToManyField(Site, null=True, blank=True, default=[settings.SITE_ID], help_text=_('The site(s) the page is accessible at.'))
+    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], help_text=_('The site(s) the page is accessible at.'))
 
     # Managers
     objects = PageManager()

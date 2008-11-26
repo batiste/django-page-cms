@@ -1,7 +1,8 @@
 {% load pages_tags cache %}
 {% cache PAGE_CONTENT_CACHE_DURATION menu page.id lang current_page.id %}
 {% if page.status %}
-<li><a href="{{ page.get_absolute_url }}">{% show_content page "title" %}</a> <span style="color:#999">{% ifequal page current_page %}selected{% endifequal %}</span>
+<li>
+<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a> <span style="color:#999">{% ifequal page current_page %}selected{% endifequal %}</span>
     {% if children %}
     <ul>
     {% for child in children %}

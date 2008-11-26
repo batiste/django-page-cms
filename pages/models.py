@@ -70,9 +70,6 @@ class Page(models.Model):
                 self.publication_date = None
         super(Page, self).save()
 
-    def get_absolute_url(self):
-        return reverse('pages-root') + self.get_url()
-
     def get_calculated_status(self):
         """
         get the calculated status of the page based on published_date,
@@ -100,16 +97,19 @@ class Page(models.Model):
                 languages.append(c.language)
         return languages
 
-    def get_url(self):
+    def get_absolute_url(self, language=None):
+        return reverse('pages-root') + self.get_url(language)
+
+    def get_url(self, language=None):
         """
         get the url of this page, adding parent's slug
         """
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            url = u'%s/' % self.slug()
+            url = u'%s/' % self.slug(language)
         else:
-            url = u'%s-%d/' % (self.slug(), self.id)
+            url = u'%s-%d/' % (self.slug(language), self.id)
         for ancestor in reversed(self.get_ancestors()):
-            url = ancestor.slug() + u'/' + url
+            url = ancestor.slug(language) + u'/' + url
         return url
 
     def slug(self, language=None, fallback=True):

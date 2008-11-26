@@ -96,6 +96,26 @@ def show_content(context, page, content_type, lang=None):
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
+def show_absolute_url(context, page, lang=None):
+    request = context.get('request', False)
+    if not request or not page:
+        return {'content':''}
+    if lang is None:
+        lang = get_language_from_request(context['request'])
+    if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
+        key = 'page_url_pid:'+str(page.id)+'_l:'+str(lang)+'_type:slug'
+        url = cache.get(key)
+        if not url:
+            url = page.get_absolute_url(language=lang)
+            cache.set(key, url, settings.PAGE_CONTENT_CACHE_DURATION)
+    else:
+        url = page.get_absolute_url(language=lang)
+    if url:
+        return {'content':url}
+    return {'content':''}
+show_absolute_url = register.inclusion_tag('pages/content.html',
+                                      takes_context=True)(show_absolute_url)
+
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list"""
     if not settings.PAGE_CONTENT_REVISION:

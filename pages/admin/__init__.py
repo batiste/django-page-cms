@@ -153,7 +153,6 @@ class PageAdmin(admin.ModelAdmin):
         """
         instance = super(PageAdmin, self).save_form(request, form, change)
         instance.template = form.cleaned_data['template']
-        print "TADAA(%s)" % form.cleaned_data['template']
         if not change:
             instance.author = request.user
         return instance

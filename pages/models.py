@@ -164,7 +164,7 @@ class Page(models.Model):
             permission = PagePermission.objects.get_page_id_list(request.user)
             if permission == "All":
                 return True
-            if page.id in permission:
+            if self.id in permission:
                 return True
             return False
 

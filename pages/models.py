@@ -15,11 +15,6 @@ from pages import settings
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 try:
-    reversed
-except NameError:
-    from django.utils.itercompat import reversed     # Python 2.3 fallback
-
-try:
     tagging = models.get_app('tagging')
     from tagging.fields import TagField
 except ImproperlyConfigured:
@@ -113,7 +108,7 @@ class Page(models.Model):
             url = u'%s/' % self.slug(language)
         else:
             url = u'%s-%d/' % (self.slug(language), self.id)
-        for ancestor in reversed(self.get_ancestors()):
+        for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
         return url
 

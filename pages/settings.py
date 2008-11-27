@@ -13,7 +13,9 @@ if DEFAULT_PAGE_TEMPLATE is None:
     raise ImproperlyConfigured('Please make sure you specified a DEFAULT_PAGE_TEMPLATE setting.')
 
 # Could be set to None if you don't need multiple templates.
-PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', ())
+PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
+if PAGE_TEMPLATES is None:
+    PAGE_TEMPLATES = ()
 
 # Whether to enable permissions.
 PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)

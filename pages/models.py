@@ -15,6 +15,11 @@ from pages import settings
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 try:
+    reversed
+except NameError:
+    from django.utils.itercompat import reversed     # Python 2.3 fallback
+
+try:
     tagging = models.get_app('tagging')
     from tagging.fields import TagField
 except ImproperlyConfigured:

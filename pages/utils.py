@@ -37,6 +37,8 @@ def get_template_from_request(request, obj=None):
     Gets a valid template from different sources or falls back to the default
     template.
     """
+    if settings.PAGE_TEMPLATES is None:
+        return settings.DEFAULT_PAGE_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \
             template in dict(settings.PAGE_TEMPLATES).keys():

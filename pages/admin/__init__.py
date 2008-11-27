@@ -39,13 +39,17 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_SHOW_START_DATE:
         general_fields.insert(insert_point, 'publication_date')
 
+    normal_fields = ['language']
+    if settings.PAGE_TEMPLATES:
+        normal_fields.append('template')
+
     fieldsets = (
         (_('General'), {
             'fields': general_fields,
             'classes': ('sidebar',),
         }),
         (_('Options'), {
-            'fields': ('language', 'template'),
+            'fields': normal_fields,
             'classes': ('sidebar', 'clear'),
             'description': _('Note: This page reloads if you change the selection'),
         }),
@@ -179,10 +183,11 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['title'].initial = initial_title
 
         template = get_template_from_request(request, obj)
-        template_choices = list(settings.PAGE_TEMPLATES)
-        template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE, _('Default template')))
-        form.base_fields['template'].choices = template_choices
-        form.base_fields['template'].initial = force_unicode(template)
+        if settings.PAGE_TEMPLATES:
+            template_choices = list(settings.PAGE_TEMPLATES)
+            template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE, _('Default template')))
+            form.base_fields['template'].choices = template_choices
+            form.base_fields['template'].initial = force_unicode(template)
 
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()

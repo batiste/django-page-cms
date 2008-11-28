@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'tagging',
     'pages',
+    'mptt',
 )
 
 gettext_noop = lambda s: s

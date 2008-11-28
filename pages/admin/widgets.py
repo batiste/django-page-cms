@@ -2,12 +2,13 @@ from os.path import join
 from django.conf import settings
 from django.forms import TextInput, Textarea
 from django.utils.safestring import mark_safe
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from pages.settings import PAGES_MEDIA_URL
 from pages.models import Page, tagging
 
 if tagging:
-
     from tagging.models import Tag
     from django.utils import simplejson
 
@@ -62,17 +63,13 @@ class WYMEditor(Textarea):
 
     def render(self, name, value, attrs=None):
         rendered = super(WYMEditor, self).render(name, value, attrs)
-        return rendered + mark_safe(u'''<script type="text/javascript">
-            jQuery('#id_%s').wymeditor({
-                lang: '%s',
-                skin:'django',
-                updateSelector: '.submit-row input[type=submit],',
-                updateEvent: 'click',
-                postInit: function(wym) {
-                    wym.resizable({handles: "s", maxHeight: 600});
-                }
-            });
-            </script>''' % (name, self.language))
+        return rendered + mark_safe(
+            render_to_string('admin/pages/page/widgets/wymeditor.html', {
+                'name': name,
+                'language': self.language,
+                'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+            })
+        )
 
 class markItUpMarkdown(Textarea):
     class Media:

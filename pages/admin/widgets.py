@@ -24,22 +24,12 @@ if tagging:
         def render(self, name, value, attrs=None):
             rendered = super(AutoCompleteTagInput, self).render(name, value, attrs)
             page_tags = Tag.objects.usage_for_model(Page)
-            tag_list = simplejson.dumps([tag.name for tag in page_tags],
-                                        ensure_ascii=False)
-            return rendered + mark_safe(u'''<script type="text/javascript">
-                jQuery("#id_%s").autocomplete(%s, {
-                    width: 150,
-                    max: 10,
-                    highlight: false,
-                    multiple: true,
-                    multipleSeparator: ", ",
-                    scroll: true,
-                    scrollHeight: 300,
-                    matchContains: true,
-                    autoFill: true,
-                });
-                </script>''' % (name, tag_list))
-
+            context = {
+                'name': name,
+                'tags': simplejson.dumps([tag.name for tag in page_tags], ensure_ascii=False),
+            }
+            return rendered + mark_safe(render_to_string(
+                'admin/pages/page/widgets/autocompletetaginput.html', context))
 
 class RichTextarea(Textarea):
     def __init__(self, attrs=None):
@@ -63,13 +53,13 @@ class WYMEditor(Textarea):
 
     def render(self, name, value, attrs=None):
         rendered = super(WYMEditor, self).render(name, value, attrs)
-        return rendered + mark_safe(
-            render_to_string('admin/pages/page/widgets/wymeditor.html', {
-                'name': name,
-                'language': self.language,
-                'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
-            })
-        )
+        context = {
+            'name': name,
+            'language': self.language,
+            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/wymeditor.html', context))
 
 class markItUpMarkdown(Textarea):
     class Media:
@@ -87,8 +77,11 @@ class markItUpMarkdown(Textarea):
 
     def render(self, name, value, attrs=None):
         rendered = super(markItUpMarkdown, self).render(name, value, attrs)
-        return rendered + mark_safe(u'''<script type="text/javascript">
-        $('#id_%s').markItUp(mySettings);</script>''' % name)
+        context = {
+            'name': name,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/markitupmarkdown.html', context))
 
 class markItUpHTML(Textarea):
     class Media:
@@ -106,5 +99,8 @@ class markItUpHTML(Textarea):
 
     def render(self, name, value, attrs=None):
         rendered = super(markItUpHTML, self).render(name, value, attrs)
-        return rendered + mark_safe(u'''<script type="text/javascript">
-        $('#id_%s').markItUp(mySettings);</script>''' % name)
+        context = {
+            'name': name,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/markituphtml.html', context))

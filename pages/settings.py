@@ -32,6 +32,9 @@ PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 # Defines which languages should be offered.
 PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 
+# Defines which language should be used by default and falls back to LANGUAGE_CODE
+PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', settings.LANGUAGE_CODE)[:2]
+
 # Defines how long page content should be cached, including navigation and admin menu.
 PAGE_CONTENT_CACHE_DURATION = getattr(settings, 'PAGE_CONTENT_CACHE_DURATION', 60)
 

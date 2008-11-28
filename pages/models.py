@@ -117,7 +117,7 @@ class Page(models.Model):
         get the slug of the page depending on the given language
         """
         if not language:
-            language = settings.PAGE_LANGUAGES[0][0]
+            language = settings.PAGE_DEFAULT_LANGUAGE
         return Content.objects.get_content(self, language, 'slug',
                                            language_fallback=fallback)
 
@@ -126,7 +126,7 @@ class Page(models.Model):
         get the title of the page depending on the given language
         """
         if not language:
-            language = settings.PAGE_LANGUAGES[0][0]
+            language = settings.PAGE_DEFAULT_LANGUAGE
         return Content.objects.get_content(self, language, 'title',
                                            language_fallback=fallback)
 

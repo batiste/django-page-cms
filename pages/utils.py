@@ -67,7 +67,7 @@ def get_language_from_request(request, current_page=None):
             if len(languages) > 0:
                 language = languages[0]
     if language is None:
-        language = settings.PAGE_LANGUAGES[0]
+        language = settings.PAGE_DEFAULT_LANGUAGE
     return language[:2]
 
 def has_page_add_permission(request, page=None):

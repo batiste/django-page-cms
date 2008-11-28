@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    jQuery("#id_{{ name }}").autocomplete({{ tags }}, {
+    jQuery("#id_{{ name }}").autocomplete({{ tags|safe }}, {
         width: 150,
         max: 10,
         highlight: false,

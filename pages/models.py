@@ -55,7 +55,7 @@ class Page(models.Model):
         verbose_name = _('page')
         verbose_name_plural = _('pages')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.status:
             self.status = self.DRAFT
         # Published pages should always have a publication date
@@ -68,7 +68,7 @@ class Page(models.Model):
                     self.publication_date = None
             else:
                 self.publication_date = None
-        super(Page, self).save()
+        super(Page, self).save(*args, **kwargs)
 
     def get_calculated_status(self):
         """
@@ -164,7 +164,11 @@ class Page(models.Model):
             return False
 
     def __unicode__(self):
-        return self.slug()
+        slug = self.slug()
+        # when created in console mode, page has no slug
+        if slug is None:
+            return "Page %d" % self.id
+        return slug
 
 # Don't register the Page model twice.
 try:

@@ -191,16 +191,21 @@ class PageAdmin(admin.ModelAdmin):
 
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()
+            if placeholder.parsed:
+                help_text = _('Note: This field is evaluated as template code, within the current context.')
+            else:
+                help_text = ""
+            name = placeholder.name
             if obj:
-                initial = Content.objects.get_content(obj, language,
-                                                      placeholder.name)
+                initial = Content.objects.get_content(obj, language, name)
             else:
                 initial = None
-            if placeholder.name not in self.mandatory_placeholders:
-                form.base_fields[placeholder.name] = CharField(
-                            widget=widget, required=False, initial=initial)
+            if name not in self.mandatory_placeholders:
+                form.base_fields[placeholder.name] = CharField(widget=widget,
+                    initial=initial, help_text=help_text, required=False)
             else:
-                form.base_fields[placeholder.name].initial = initial
+                form.base_fields[name].initial = initial
+                form.base_fields[name].help_text = help_text
         return form
 
     def change_view(self, request, object_id, extra_context=None):

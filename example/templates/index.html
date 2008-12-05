@@ -95,16 +95,18 @@
 
 <h2>Content</h2>
 
+{% placeholder right-column parsed as right_column %}
+
 {% block content %}
     <div style="float:right;width:25%">
     <h3>Right column placeholder</h3>
-    {% placeholder right-column current_page Textarea %}
+    <div class="right_column">{{ right_column }}</div>
     </div>
-
+    
     {% if current_page %}
     <div style="width:70%">
-        <h3>title placeholder {% placeholder title current_page TextInput %}</h3>
-        <div>body placeholder {% placeholder body current_page WYMEditor %}</div>
+        <h3>title placeholder {% placeholder title on current_page with TextInput %}</h3>
+        <div>body placeholder {% placeholder body on current_page with WYMEditor parsed  %}</div>
     </div>
     {% endif %}
 {% endblock %}

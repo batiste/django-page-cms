@@ -1,12 +1,17 @@
 from django import template
 from django.core.cache import cache
-from django.utils.safestring import SafeUnicode
+from django.utils.safestring import SafeUnicode, mark_safe
+from django.utils.translation import ugettext_lazy as _
+from django.template import Template, TemplateSyntaxError
+from django.conf import settings as global_settings
 
 from pages import settings
 from pages.models import Content, Page
 from pages.utils import get_language_from_request
 
 register = template.Library()
+
+PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def get_page_children_for_site(page, site):
     return page.get_children().filter(sites__domain=site.domain)
@@ -131,48 +136,166 @@ show_revisions = register.inclusion_tag('pages/revisions.html',
                                         takes_context=True)(show_revisions)
 
 def do_placeholder(parser, token):
-    error_string = '%r tag requires three arguments' % token.contents[0]
-    try:
-        # split_contents() knows not to split quoted strings.
-        bits = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError(error_string)
-    if len(bits) == 3:
-        #tag_name, page, name
-        return PlaceholderNode(bits[1], bits[2])
-    elif len(bits) == 4:
-        #tag_name, page, name, widget
-        return PlaceholderNode(bits[1], bits[2], bits[3])
-    else:
-        raise template.TemplateSyntaxError(error_string)
+    """
+    Syntax::
+
+        {% placeholder [name] %}
+        {% placeholder [name] parsed %}
+
+        {% placeholder [name] on [page]  %}
+        {% placeholder [name] with [widget] %}
+        {% placeholder [name] on [page] with [widget] %}
+
+        {% placeholder [name] on [page] parsed %}
+        {% placeholder [name] with [widget] parsed %}
+        {% placeholder [name] on [page] with [widget] parsed %}
+
+    Example usage::
+
+        {% placeholder about %} 
+        {% placeholder body with TextArea as body_text %}
+        {% placeholder welcome with TextArea parsed as welcome_text %}
+        {% placeholder teaser on next_page with TextArea parsed %}
+    """
+    return PlaceholderNode.handle_token(parser, token)
 
 class PlaceholderNode(template.Node):
     """This template node is used to output page content and
-    is also used in the admin to dynamicaly generate input fields.
-    
-    eg: {% placeholder content-type-name page-object widget-name %}
-    
+    is also used in the admin to dynamically generate input fields.
+
     Keyword arguments:
-    content-type-name -- the content type you want to show/create
-    page-object -- the page object
-    widget-name -- the widget name you want into the admin interface. Take
+    name -- the name of the placeholder you want to show/create
+    page -- The optional page object  
+    widget -- the widget you want to use in the admin interface. Take
         a look into pages.admin.widgets to see which widgets are available.
+    parsed -- If the "parsed" word is given, the content of the
+        placeholder is evaluated as template code, within the current context.
     """
-    def __init__(self, name, page, widget=None):
-        self.page = page
+    def handle_token(cls, parser, token):
+        bits = token.split_contents()
+        count = len(bits)
+        error_string = '%r tag requires at least one argument' % bits[0]
+        if count <= 1:
+            raise template.TemplateSyntaxError(error_string)
+        if count == 2:
+            # {% placeholder [name] %}
+            return cls(bits[1])
+        if bits[2] not in ('as', 'on', 'with', 'parsed'):
+            raise template.TemplateSyntaxError(
+                "%r got wrong arguments" % bits[0])
+        if count in (3, 4, 5):
+            if bits[2] == 'parsed':
+                if count == 3:
+                    # {% placeholder [name] parsed %}
+                    return cls(
+                        bits[1],
+                        parsed=True,
+                    )
+                elif count == 5 and bits[3] == 'as':
+                    # {% placeholder [name] parsed as [varname] %}
+                    return cls(
+                        bits[1],
+                        as_varname=bits[4],
+                        parsed=True,
+                    )
+            elif bits[2] == 'as':
+                # {% placeholder [name] as [varname] %}
+                return cls(
+                    bits[1],
+                    as_varname=bits[3],
+                )
+            elif bits[2] == 'on':
+                # {% placeholder [name] on [page] %}
+                return cls(
+                    bits[1],
+                    page=bits[3],
+                )
+            elif bits[2] == 'with':
+                # {% placeholder [name] with [widget] %}
+                return cls(
+                    bits[1],
+                    widget=bits[3],
+                )
+        elif count in (6, 7):
+            if bits[2] == 'on':
+                if bits[4] == 'with':
+                    # {% placeholder [name] on [page] with [widget] %}
+                    # {% placeholder [name] on [page] with [widget] parsed %}
+                    parsed = bits[-1]=='parsed'
+                    return cls(
+                        bits[1],
+                        page=bits[3],
+                        widget=bits[5],
+                        parsed=parsed,
+                    )
+                elif bits[4] == 'as':
+                    # {% placeholder [name] on [page] as [varname] %}
+                    return cls(
+                        bits[1],
+                        page=bits[3],
+                        as_varname=bits[5],
+                    )
+            elif bits[2] == 'with':
+                # {% placeholder [name] with [widget] as [varname] %}
+                if bits[4] == 'as':
+                    return cls(
+                        bits[1],
+                        widget=bits[3],
+                        as_varname=bits[5],
+                    )
+        elif count == 9:
+            # {% placeholder [name] on [page] with [widget] parsed as [varname] %}
+            return cls(
+                bits[1],
+                page=bits[3],
+                widget=bits[5],
+                as_varname=bits[8],
+                parsed=True,
+            )
+        raise template.TemplateSyntaxError(error_string)
+    handle_token = classmethod(handle_token)
+    
+    def __init__(self, name, page=None, widget=None, parsed=False, as_varname=None):
+        self.page = page or 'current_page'
         self.name = name
         self.widget = widget
+        self.parsed = parsed
+        self.as_varname = as_varname
 
     def render(self, context):
         if not 'request' in context or not self.page in context:
             return ''
-        l = get_language_from_request(context['request'])
+        language = get_language_from_request(context['request'])
         request = context['request']
-        c = Content.objects.get_content(context[self.page], l, self.name, True)
-        if not c:
+        content = Content.objects.get_content(context[self.page], language,
+                                              self.name, True)
+        if not content:
             return ''
-        return '<div id="%s" class="placeholder">%s</div>' % (self.name, c)
-        
+        if self.parsed:
+            try:
+                t = template.Template(content, name=self.name)
+                output = mark_safe(t.render(context))
+                output.name = self.name
+            except template.TemplateSyntaxError, e:
+                if global_settings.DEBUG:
+                    error = PLACEHOLDER_ERROR % {
+                        'name': self.name,
+                        'error': e,
+                    }
+                    if self.as_varname is None:
+                        return error
+                    context[self.as_varname] = error
+                    return ''
+                else:
+                    return ''
+        else:
+            output = '<div id="%s" class="placeholder">%s</div>' % (self.name,
+                                                                    content)
+        if self.as_varname is None:
+            return output
+        context[self.as_varname] = output
+        return ''
+
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name
 

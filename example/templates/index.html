@@ -105,8 +105,12 @@
     
     {% if current_page %}
     <div style="width:70%">
-        <h3>title placeholder {% placeholder title on current_page with TextInput %}</h3>
-        <div>body placeholder {% placeholder body on current_page with WYMEditor parsed  %}</div>
+        <h3>title placeholder 
+            <div id="title" class="placeholder">{% placeholder title on current_page with TextInput %}</div>
+        </h3>
+        <div>body placeholder
+            <div id="body" class="placeholder">{% placeholder body on current_page with WYMEditor parsed  %}</div>
+        </div>
     </div>
     {% endif %}
 {% endblock %}

@@ -4,5 +4,11 @@
 {% block title %}Nice template{% endblock %}
 
 {% block content %}{{ block.super }}
-    {% placeholder fancy-content with markItUpMarkdown %}
+<div style="width:70%">
+    <div>fancy content
+        <div id="fancy-content" class="placeholder">
+            {% placeholder fancy-content with markItUpMarkdown %}
+        </div>
+    </div>
+</div>
 {% endblock %}

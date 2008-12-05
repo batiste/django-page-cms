@@ -274,13 +274,12 @@ class PlaceholderNode(template.Node):
         if self.parsed:
             try:
                 t = template.Template(content, name=self.name)
-                output = mark_safe(t.render(context))
-                output.name = self.name
-            except template.TemplateSyntaxError, e:
+                content = mark_safe(t.render(context))
+            except template.TemplateSyntaxError, error:
                 if global_settings.DEBUG:
                     error = PLACEHOLDER_ERROR % {
                         'name': self.name,
-                        'error': e,
+                        'error': error,
                     }
                     if self.as_varname is None:
                         return error
@@ -288,12 +287,9 @@ class PlaceholderNode(template.Node):
                     return ''
                 else:
                     return ''
-        else:
-            output = '<div id="%s" class="placeholder">%s</div>' % (self.name,
-                                                                    content)
         if self.as_varname is None:
-            return output
-        context[self.as_varname] = output
+            return content
+        context[self.as_varname] = content
         return ''
 
     def __repr__(self):

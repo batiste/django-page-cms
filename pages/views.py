@@ -23,7 +23,7 @@ def details(request, page_id=None, slug=None,
                 raise Http404
         else:
             current_page = pages[0]
-        template_name = get_template_from_request(request, current_page)
+        template_name = current_page.get_template()
     else:
         current_page = None
     return template_name, locals()

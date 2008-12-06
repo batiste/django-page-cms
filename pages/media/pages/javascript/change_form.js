@@ -1,15 +1,22 @@
 $(document).ready(function() {
-    $('#id_template').change(function() {
-        var index = this.selectedIndex;
-        var array = window.location.href.split('?');
-        var query = $.query.set('template', this.options[index].value).toString();
-        window.location.href=array[0]+query;
-    });
-    $('#id_language').change(function() {
-        var index = this.selectedIndex;
-        var array = window.location.href.split('?');
-        var query = $.query.set('language', this.options[index].value).toString();
-        window.location.href=array[0]+query;
+    // Confirm language and template change if page is not saved
+    var selects = ["language", "template"];
+    var original_values = Array()
+    $.each(selects, function(i, name){
+        original_values[i] = $('#id_'+name)[0].selectedIndex;
+        $('#id_'+name).change(function() {
+            var index = this.selectedIndex;
+            if (index != original_values[i]) {
+                var array = window.location.href.split('?');
+                var query = $.query.set(name, this.options[index].value).toString();
+                var answer = confirm(gettext("Are you sure you want to change the "+name+" without saving the page first?"));
+                if (answer) {
+                    window.location.href = array[0]+query;
+                } else {
+                    this.selectedIndex = original_values[i];
+                }
+            }
+        });
     });
     document.getElementById("id_title").focus();
     var template = $.query.get('template');

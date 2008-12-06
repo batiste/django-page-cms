@@ -5,10 +5,9 @@ $(document).ready(function() {
     $.each(selects, function(i, name){
         original_values[i] = $('#id_'+name)[0].selectedIndex;
         $('#id_'+name).change(function() {
-            var index = this.selectedIndex;
-            if (index != original_values[i]) {
+            if (this.selectedIndex != original_values[i]) {
                 var array = window.location.href.split('?');
-                var query = $.query.set(name, this.options[index].value).toString();
+                var query = $.query.set(name, this.options[this.selectedIndex].value).toString();
                 var answer = confirm(gettext("Are you sure you want to change the "+name+" without saving the page first?"));
                 if (answer) {
                     window.location.href = array[0]+query;

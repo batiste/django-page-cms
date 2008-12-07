@@ -243,6 +243,14 @@ class PlaceholderNode(template.Node):
                         widget=bits[3],
                         as_varname=bits[5],
                     )
+                # {% placeholder [name] with [widget] parsed as [varname] %}
+                elif bits[4] == 'parsed':
+                    return cls(
+                        bits[1],
+                        widget=bits[3],
+                        as_varname=bits[6],
+                        parsed=True,
+                    )
         elif count == 9:
             # {% placeholder [name] on [page] with [widget] parsed as [varname] %}
             return cls(

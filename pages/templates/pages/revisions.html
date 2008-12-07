@@ -1,10 +1,11 @@
+{% load i18n %}
 {% if revisions %}
     <div class="revisions">
-        <h4>Revisions</h4>
+        <h4>{% trans "Revisions" %}</h4>
         
         <ul class="revisions-list">
         {% for revision in revisions %}
-            <li><a href="./get-content/{{ revision.id }}/" {% if forloop.first %} class="selected"{% endif %}>{{ revision.creation_date|date:"H:i - d M Y" }}</a></li>
+            <li><a href="./get-content/{{ revision.id }}/" {% if forloop.first %} class="selected"{% endif %}>{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</a></li>
         {% endfor %}
         </ul>
     </div>

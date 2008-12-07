@@ -257,6 +257,7 @@ class PageAdmin(admin.ModelAdmin):
         context = {
             'name': _("page"),
             'pages': Page.objects.root().order_by("tree_id"),
+            'opts': self.model._meta,
         }
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)

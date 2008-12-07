@@ -1,6 +1,6 @@
 from django import forms
 from django.template.defaultfilters import slugify
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
 
 from pages import settings
 from pages.models import Page, Content, tagging
@@ -28,7 +28,7 @@ class PageForm(forms.ModelForm):
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(body=slug, type="slug").count():
-                    raise forms.ValidationError(ugettext_lazy('Another page with this slug already exists'))
+                    raise forms.ValidationError(_('Another page with this slug already exists'))
             elif Content.objects.filter(body=slug, type="slug").count():
-                raise forms.ValidationError(ugettext_lazy('Another page with this slug already exists'))
+                raise forms.ValidationError(_('Another page with this slug already exists'))
         return slug

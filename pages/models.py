@@ -35,15 +35,15 @@ class Page(models.Model):
         (DRAFT, _('Draft')),
         (PUBLISHED, _('Published')),
     )
-    author = models.ForeignKey(User)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
-    creation_date = models.DateTimeField(editable=False, default=datetime.now)
-    publication_date = models.DateTimeField(null=True, blank=True, help_text=_('When the page should go live. Status must be "Published" for page to go live.'))
-    publication_end_date = models.DateTimeField(null=True, blank=True, help_text=_('When to expire the page. Leave empty to never expire.'))
+    author = models.ForeignKey(User, verbose_name=_('author'))
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', verbose_name=_('parent'))
+    creation_date = models.DateTimeField(_('creation date'), editable=False, default=datetime.now)
+    publication_date = models.DateTimeField(_('publication date'), null=True, blank=True, help_text=_('When the page should go live. Status must be "Published" for page to go live.'))
+    publication_end_date = models.DateTimeField(_('publication end date'), null=True, blank=True, help_text=_('When to expire the page. Leave empty to never expire.'))
 
-    status = models.IntegerField(choices=STATUSES, default=DRAFT)
-    template = models.CharField(max_length=100, null=True, blank=True)
-    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], help_text=_('The site(s) the page is accessible at.'))
+    status = models.IntegerField(_('status'), choices=STATUSES, default=DRAFT)
+    template = models.CharField(_('template'), max_length=100, null=True, blank=True)
+    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], help_text=_('The site(s) the page is accessible at.'), verbose_name=_('sites'))
 
     # Managers
     objects = PageManager()
@@ -186,9 +186,9 @@ if settings.PAGE_PERMISSION:
             (1, _('This page only')),
             (2, _('This page and all childrens')),
         )
-        page = models.ForeignKey(Page, null=True, blank=True)
-        user = models.ForeignKey(User)
-        type = models.IntegerField(choices=TYPES, default=0)
+        page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
+        user = models.ForeignKey(User, verbose_name=_('user'))
+        type = models.IntegerField(_('type'), choices=TYPES, default=0)
         
         objects = PagePermissionManager()
         
@@ -197,12 +197,12 @@ if settings.PAGE_PERMISSION:
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
-    language = models.CharField(max_length=3, blank=False)
-    body = models.TextField()
-    type = models.CharField(max_length=100, blank=False)
-    page = models.ForeignKey(Page)
+    language = models.CharField(_('language'), max_length=3, blank=False)
+    body = models.TextField(_('body'))
+    type = models.CharField(_('type'), max_length=100, blank=False)
+    page = models.ForeignKey(Page, verbose_name=_('page'))
 
-    creation_date = models.DateTimeField(editable=False, default=datetime.now)
+    creation_date = models.DateTimeField(_('creation date'), editable=False, default=datetime.now)
     objects = ContentManager()
 
     def __unicode__(self):

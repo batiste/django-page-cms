@@ -192,7 +192,7 @@ class PageAdmin(admin.ModelAdmin):
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()
             if placeholder.parsed:
-                help_text = _('Note: This field is evaluated as template code, within the current context.')
+                help_text = _('Note: This field is evaluated as template code.')
             else:
                 help_text = ""
             name = placeholder.name
@@ -246,6 +246,15 @@ class PageAdmin(admin.ModelAdmin):
         if settings.PAGE_PERMISSION and obj is not None:
             return obj.has_page_permission(request)
         return super(PageAdmin, self).has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        """
+        Return true if the current user has permission on the page.
+        Return the string 'All' if the user has all rights.
+        """
+        if settings.PAGE_PERMISSION and obj is not None:
+            return obj.has_page_permission(request)
+        return super(PageAdmin, self).has_delete_permission(request, obj)
 
     def list_pages(self, request, template_name=None, extra_context=None):
         """

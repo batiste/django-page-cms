@@ -32,9 +32,28 @@ if tagging:
                 'admin/pages/page/widgets/autocompletetaginput.html', context))
 
 class RichTextarea(Textarea):
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+        )]
+        css = {
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'css/rte.css',
+            )]
+        }
+
     def __init__(self, attrs=None):
         attrs = {'class': 'rte'}
         super(RichTextarea, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        rendered = super(RichTextarea, self).render(name, value, attrs)
+        context = {
+            'name': name,
+            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/richtextarea.html', context))
 
 class WYMEditor(Textarea):
     class Media:

@@ -1,18 +1,20 @@
 $(document).ready(function() {
     // Confirm language and template change if page is not saved
-    var selects = ["language", "template"];
-    var original_values = Array()
-    $.each(selects, function(i, name){
-        original_values[i] = $('#id_'+name)[0].selectedIndex;
-        $('#id_'+name).change(function() {
-            if (this.selectedIndex != original_values[i]) {
+    $.each(["language", "template"], function(i, label){
+        var select = $('#id_'+label);
+        var index = select[0].selectedIndex;
+        select.change(function() {
+            if (this.selectedIndex != index) {
                 var array = window.location.href.split('?');
-                var query = $.query.set(name, this.options[this.selectedIndex].value).toString();
-                var answer = confirm(gettext("Are you sure you want to change the "+name+" without saving the page first?"));
+                var query = $.query.set(label, this.options[this.selectedIndex].value).toString();
+                var question = gettext("Are you sure you want to change the %(field_name)s without saving the page first?")
+                var answer = confirm(interpolate(question, {
+                    field_name: select.prev().text().slice(0,-1),
+                }, true));
                 if (answer) {
                     window.location.href = array[0]+query;
                 } else {
-                    this.selectedIndex = original_values[i];
+                    this.selectedIndex = index;
                 }
             }
         });

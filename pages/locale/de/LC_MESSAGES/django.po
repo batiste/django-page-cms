@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: django-page-cms 0.2.pre\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-08 11:41+0100\n"
+"POT-Creation-Date: 2008-12-08 17:34+0100\n"
 "PO-Revision-Date: 2008-12-07 16:24+0100\n"
 "Last-Translator: Jannis Leidel <jannis@leidel.info>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgstr "Autor"
 msgid "parent"
 msgstr "Eltern"
 
-#: models.py:40 models.py:208
+#: models.py:40 models.py:209
 msgid "creation date"
 msgstr "Erstellungsdatum"
 
@@ -56,8 +56,7 @@ msgstr ""
 msgid "status"
 msgstr "Status"
 
-#: models.py:45 admin/forms.py:26
-#: templates/admin/pages/page/change_list_table.html:9
+#: models.py:45 templates/admin/pages/page/change_list_table.html:9
 msgid "template"
 msgstr "Template"
 
@@ -69,7 +68,7 @@ msgstr "Die Webseiten, auf denen diese Seite erreichbar ist."
 msgid "sites"
 msgstr "Webseiten"
 
-#: models.py:55 models.py:188 models.py:206 admin/__init__.py:268
+#: models.py:55 models.py:189 models.py:207 admin/__init__.py:268
 msgid "page"
 msgstr "Seite"
 
@@ -77,47 +76,47 @@ msgstr "Seite"
 msgid "pages"
 msgstr "Seiten"
 
-#: models.py:184
+#: models.py:185
 msgid "All"
 msgstr "Alle"
 
-#: models.py:185
+#: models.py:186
 msgid "This page only"
 msgstr "Nur diese Seite"
 
-#: models.py:186
+#: models.py:187
 msgid "This page and all childrens"
 msgstr "Diese Seite und all ihre Abkömmlinge"
 
-#: models.py:189
+#: models.py:190
 msgid "user"
 msgstr "Benutzer"
 
-#: models.py:190 models.py:205
+#: models.py:191 models.py:206
 msgid "type"
 msgstr "Typ"
 
-#: models.py:195
+#: models.py:196
 msgid "page permission"
 msgstr "Berechtigung"
 
-#: models.py:196
+#: models.py:197
 msgid "page permissions"
 msgstr "Berechtigungen"
 
-#: models.py:203 admin/forms.py:20
+#: models.py:204
 msgid "language"
 msgstr "Sprache"
 
-#: models.py:204
+#: models.py:205
 msgid "body"
 msgstr "Hauptteil"
 
-#: models.py:212 admin/__init__.py:146 admin/__init__.py:147
+#: models.py:213 admin/__init__.py:146 admin/__init__.py:147
 msgid "content"
 msgstr "Inhalt"
 
-#: models.py:213
+#: models.py:214
 msgid "contents"
 msgstr "Inhalte"
 
@@ -134,7 +133,7 @@ msgid "Note: This page reloads if you change the selection"
 msgstr "Achtung: Diese Seite wird neu geladen, sobald Sie die Auswahl ändern"
 
 #: admin/__init__.py:184 admin/forms.py:15
-msgid "slug"
+msgid "Slug"
 msgstr "Kürzel"
 
 #: admin/__init__.py:189
@@ -149,8 +148,8 @@ msgstr "Achtung: Dieses Feld wird als Template-Code evaluaiert."
 msgid "Page could not been moved."
 msgstr "Seite konnte nicht verschoben werden."
 
-#: admin/forms.py:10 templates/admin/pages/page/change_list_table.html:5
-msgid "title"
+#: admin/forms.py:10
+msgid "Title"
 msgstr "Titel"
 
 #: admin/forms.py:12
@@ -161,9 +160,17 @@ msgstr "Standard-Titel"
 msgid "The part of the title that is used in permalinks"
 msgstr "Teil des Titels, der in Permalinks benutzt wird"
 
+#: admin/forms.py:20
+msgid "Language"
+msgstr "Sprache"
+
 #: admin/forms.py:22
 msgid "The current language of the content fields."
 msgstr "Gegenwärtige Sprache der Inhaltsfelder."
+
+#: admin/forms.py:26
+msgid "Template"
+msgstr "Template"
 
 #: admin/forms.py:28
 msgid "The template used to render the content."
@@ -201,6 +208,10 @@ msgstr "Start"
 #, python-format
 msgid "Add %(name)s"
 msgstr "%(name)s hinzufügen"
+
+#: templates/admin/pages/page/change_list_table.html:5
+msgid "title"
+msgstr "Titel"
 
 #: templates/admin/pages/page/change_list_table.html:6
 msgid "quick actions"

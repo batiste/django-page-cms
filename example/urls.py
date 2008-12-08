@@ -5,7 +5,7 @@ from django.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^pages/', include('pages.urls')),
+    (r'^pages/', include('pages.urls')),
     (r'^admin/(.*)', admin.site.root),
 )
 

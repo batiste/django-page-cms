@@ -5,10 +5,9 @@ from django.forms import Widget, TextInput, Textarea, CharField
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
-
+from django.conf import settings as global_settings
 from django.db import models
 from django.http import HttpResponseRedirect
-from django.contrib.admin.util import unquote
 
 from pages import settings
 from pages.models import Page, Content, tagging
@@ -73,6 +72,8 @@ class PageAdmin(admin.ModelAdmin):
         # Delegate to the appropriate method, based on the URL.
         if url is None:
             return self.list_pages(request)
+        elif url == 'jsi18n':
+            return self.i18n_javascript(request)
         elif 'traduction' in url:
             page_id, action, language_id = url.split('/')
             return traduction(request, unquote(page_id), unquote(language_id))
@@ -90,6 +91,19 @@ class PageAdmin(admin.ModelAdmin):
         elif url.endswith('/change-status'):
             return change_status(request, unquote(url[:-14]))
         return super(PageAdmin, self).__call__(request, url)
+
+    def i18n_javascript(self, request):
+        """
+        Displays the i18n JavaScript that the Django admin requires.
+
+        This takes into account the USE_I18N setting. If it's set to False, the
+        generated JavaScript will be leaner and faster.
+        """
+        if global_settings.USE_I18N:
+            from django.views.i18n import javascript_catalog
+        else:
+            from django.views.i18n import null_javascript_catalog as javascript_catalog
+        return javascript_catalog(request, packages='pages')
 
     def save_model(self, request, obj, form, change):
         """
@@ -181,7 +195,7 @@ class PageAdmin(admin.ModelAdmin):
             initial_title = obj.title(language=language, fallback=False)
             form.base_fields['slug'].initial = initial_slug
             form.base_fields['title'].initial = initial_title
-            form.base_fields['slug'].label = _('slug')
+            form.base_fields['slug'].label = _('Slug')
 
         template = get_template_from_request(request, obj)
         if settings.PAGE_TEMPLATES:

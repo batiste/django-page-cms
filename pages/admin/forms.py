@@ -7,23 +7,23 @@ from pages.models import Page, Content, tagging
 
 class PageForm(forms.ModelForm):
     title = forms.CharField(
-        label=_('title'),
+        label=_('Title'),
         widget=forms.TextInput(),
         help_text=_('The default title')
     )
     slug = forms.CharField(
-        label=_('slug'),
+        label=_('Slug'),
         widget=forms.TextInput(),
         help_text=_('The part of the title that is used in permalinks')
     )
     language = forms.ChoiceField(
-        label=_('language'),
+        label=_('Language'),
         choices=settings.PAGE_LANGUAGES,
         help_text=_('The current language of the content fields.'),
     )
     template = forms.ChoiceField(
         required=False,
-        label=_('template'),
+        label=_('Template'),
         choices=settings.PAGE_TEMPLATES,
         help_text=_('The template used to render the content.')
     )

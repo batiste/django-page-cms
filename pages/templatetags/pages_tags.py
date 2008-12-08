@@ -102,8 +102,26 @@ show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
 def show_absolute_url(context, page, lang=None):
-    """Show the url of a page in the right language"""
+    """Show the url of a page in the right language
+    
+    eg: {% show_absolute_url page_object %}
+    
+    You can also use the slug of a page
+    
+    eg: {% show_absolute_url "my-page-slug" %}
+    
+    Keyword arguments:
+    page -- the page object or a slug string
+    lang -- the wanted language (defaults to None, uses request object else)
+    """
     request = context.get('request', False)
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode):
+        c = Content.objects.filter(type='slug', body=page)
+        if len(c):
+            page = c[0].page
+        else:
+            page = None
     if not request or not page:
         return {'content':''}
     if lang is None:
@@ -131,7 +149,6 @@ def show_revisions(context, page, content_type, lang=None):
     if len(revisions) < 2:
         return {'revisions':None}
     return {'revisions':revisions[0:10]}
-
 show_revisions = register.inclusion_tag('pages/revisions.html',
                                         takes_context=True)(show_revisions)
 

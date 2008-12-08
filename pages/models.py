@@ -189,9 +189,13 @@ if settings.PAGE_PERMISSION:
         page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
         user = models.ForeignKey(User, verbose_name=_('user'))
         type = models.IntegerField(_('type'), choices=TYPES, default=0)
-        
+
         objects = PagePermissionManager()
-        
+
+        class Meta:
+            verbose_name = _('page permission')
+            verbose_name_plural = _('page permissions')
+
         def __unicode__(self):
             return "%s :: %s" % (self.user, unicode(PagePermission.TYPES[self.type][1]))
 
@@ -204,6 +208,10 @@ class Content(models.Model):
 
     creation_date = models.DateTimeField(_('creation date'), editable=False, default=datetime.now)
     objects = ContentManager()
+
+    class Meta:
+        verbose_name = _('content')
+        verbose_name_plural = _('contents')
 
     def __unicode__(self):
         return "%s :: %s" % (self.page.slug(), self.body[0:15])

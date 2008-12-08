@@ -181,6 +181,7 @@ class PageAdmin(admin.ModelAdmin):
             initial_title = obj.title(language=language, fallback=False)
             form.base_fields['slug'].initial = initial_slug
             form.base_fields['title'].initial = initial_title
+            form.base_fields['slug'].label = _('slug')
 
         template = get_template_from_request(request, obj)
         if settings.PAGE_TEMPLATES:

@@ -8,6 +8,7 @@ from django.utils.encoding import force_unicode
 from django.conf import settings as global_settings
 from django.db import models
 from django.http import HttpResponseRedirect
+from django.contrib.admin.util import unquote
 
 from pages import settings
 from pages.models import Page, Content, tagging

@@ -26,7 +26,8 @@ def pages_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
-pages_menu = register.inclusion_tag('pages/menu.html', takes_context=True)(pages_menu)
+pages_menu = register.inclusion_tag('pages/menu.html',
+                                    takes_context=True)(pages_menu)
 
 def pages_sub_menu(context, page, url='/'):
     """Get the root page of the current page and 
@@ -38,8 +39,8 @@ def pages_sub_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
-show_sub_menu = register.inclusion_tag('pages/sub_menu.html',
-                                       takes_context=True)(show_sub_menu)
+pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
+                                        takes_context=True)(pages_sub_menu)
 
 def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
@@ -55,7 +56,7 @@ def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
             level = level+3
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
-                                         takes_context=True)(pages_admin_menu)
+                                          takes_context=True)(pages_admin_menu)
 
 def has_permission(page, request):
     return page.has_page_permission(request)

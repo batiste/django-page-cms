@@ -16,7 +16,7 @@ PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 def get_page_children_for_site(page, site):
     return page.get_children().filter(sites__domain=site.domain)
 
-def show_menu(context, page, url='/'):
+def pages_menu(context, page, url='/'):
     """render a nested list of all children of the pages"""
     request = context['request']
     site = request.site
@@ -26,9 +26,9 @@ def show_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
-show_menu = register.inclusion_tag('pages/menu.html', takes_context=True)(show_menu)
+pages_menu = register.inclusion_tag('pages/menu.html', takes_context=True)(pages_menu)
 
-def show_sub_menu(context, page, url='/'):
+def pages_sub_menu(context, page, url='/'):
     """Get the root page of the current page and 
     render a nested list of all root's children pages"""
     root = page.get_root()
@@ -41,7 +41,7 @@ def show_sub_menu(context, page, url='/'):
 show_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                        takes_context=True)(show_sub_menu)
 
-def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
+def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
     request = context['request']
     site = request.site
@@ -54,8 +54,8 @@ def show_admin_menu(context, page, url='/admin/pages/page/', level=None):
         else:
             level = level+3
     return locals()
-show_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
-                                         takes_context=True)(show_admin_menu)
+pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
+                                         takes_context=True)(pages_admin_menu)
 
 def has_permission(page, request):
     return page.has_page_permission(request)

@@ -1,8 +1,10 @@
+import itertools
+from datetime import datetime
+
 from django.db import models
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
-from datetime import datetime
 
 from pages import settings
 
@@ -42,11 +44,10 @@ class PageManager(models.Manager):
         return self.on_site(site).filter(status=self.model.HIDDEN)
 
     def published(self, site=None):
-        print "yeah"
-        from itertools import chain
-        pub = chain(self.on_site(site).filter(status=self.model.PUBLISHED),
-                    self.hidden(site))
-        print list(pub)
+        pub = itertools.chain(
+            self.on_site(site).filter(status=self.model.PUBLISHED),
+            self.hidden(site)
+        )
 
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__lte=datetime.now())

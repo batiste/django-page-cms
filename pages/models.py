@@ -31,9 +31,11 @@ class Page(models.Model):
     DRAFT = 0
     PUBLISHED = 1
     EXPIRED = 2
+    HIDDEN = 3
     STATUSES = (
         (DRAFT, _('Draft')),
         (PUBLISHED, _('Published')),
+        (HIDDEN, _('Hidden')),
     )
     author = models.ForeignKey(User, verbose_name=_('author'))
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', verbose_name=_('parent'))

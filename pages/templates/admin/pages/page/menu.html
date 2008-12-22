@@ -27,7 +27,7 @@
     {% endfor %}
 </td>
 <td>
-{% if page.status %}
+{% ifequal page.status page.PUBLISHED %}
     <label>
         <img alt="True" src="{% admin_media_prefix %}img/admin/icon-yes.gif"/>
         <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" checked="checked" value="1" />
@@ -37,7 +37,7 @@
         <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif" />
         <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" value="0" />
     </label>
-{% endif %}
+{% endifequal %}
 </td>
 <td>
 {{ page.get_template }}

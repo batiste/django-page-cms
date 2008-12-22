@@ -14,7 +14,7 @@ def change_status(request, page_id):
     """
     if request.method == 'POST':
         page = Page.objects.get(pk=page_id)
-        if page.status == Page.DRAFT:
+        if page.status in (Page.DRAFT, Page.HIDDEN):
             page.status = Page.PUBLISHED
             page.save()
         elif page.status == Page.PUBLISHED:

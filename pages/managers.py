@@ -7,6 +7,7 @@ from datetime import datetime
 from pages import settings
 
 class PageManager(models.Manager):
+
     def on_site(self, site=None):
         if hasattr(site, 'domain'):
             return self.filter(**{'sites__domain__exact': site.domain})
@@ -34,8 +35,18 @@ class PageManager(models.Manager):
         else:
             return self.exclude(id__in=exclude_list)
 
+    def navigation(self, site=None):
+        return self.root(site).filter(status=self.model.PUBLISHED)
+
+    def hidden(self, site=None):
+        return self.on_site(site).filter(status=self.model.HIDDEN)
+
     def published(self, site=None):
-        pub = self.on_site(site).filter(status=self.model.PUBLISHED)
+        print "yeah"
+        from itertools import chain
+        pub = chain(self.on_site(site).filter(status=self.model.PUBLISHED),
+                    self.hidden(site))
+        print list(pub)
 
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__lte=datetime.now())

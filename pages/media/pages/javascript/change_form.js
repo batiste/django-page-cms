@@ -1,23 +1,25 @@
 $(document).ready(function() {
     // Confirm language and template change if page is not saved
-    $.each(["language", "template"], function(i, label){
+    $.each(["language", "template"], function(i, label) {
         var select = $('#id_'+label);
-        var index = select[0].selectedIndex;
-        select.change(function() {
-            if (this.selectedIndex != index) {
-                var array = window.location.href.split('?');
-                var query = $.query.set(label, this.options[this.selectedIndex].value).toString();
-                var question = gettext("Are you sure you want to change the %(field_name)s without saving the page first?")
-                var answer = confirm(interpolate(question, {
-                    field_name: select.prev().text().slice(0,-1),
-                }, true));
-                if (answer) {
-                    window.location.href = array[0]+query;
-                } else {
-                    this.selectedIndex = index;
+        if (select.length > 0) {
+            var index = select[0].selectedIndex;
+            select.change(function() {
+                if (this.selectedIndex != index) {
+                    var array = window.location.href.split('?');
+                    var query = $.query.set(label, this.options[this.selectedIndex].value).toString();
+                    var question = gettext("Are you sure you want to change the %(field_name)s without saving the page first?")
+                    var answer = confirm(interpolate(question, {
+                        field_name: select.prev().text().slice(0,-1),
+                    }, true));
+                    if (answer) {
+                        window.location.href = array[0]+query;
+                    } else {
+                        this.selectedIndex = index;
+                    }
                 }
-            }
-        });
+            });
+        }
     });
     document.getElementById("id_title").focus();
     var template = $.query.get('template');

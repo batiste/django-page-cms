@@ -27,6 +27,6 @@ def details(request, page_id=None, slug=None,
             current_page = pages[0]
         template_name = current_page.get_template()
     else:
-        current_page = None
+        raise Http404
     return template_name, locals()
 details = auto_render(details)

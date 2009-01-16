@@ -8,6 +8,11 @@ from pages.utils import auto_render, get_language_from_request
 
 def details(request, page_id=None, slug=None, 
         template_name=settings.DEFAULT_PAGE_TEMPLATE):
+    """
+    Example view that get the root pages for navigation, 
+    and the current page if there is any root page. 
+    All is rendered with the current page's template.
+    """
     lang = get_language_from_request(request)
     site = request.site
     pages = Page.objects.navigation(site).order_by("tree_id")

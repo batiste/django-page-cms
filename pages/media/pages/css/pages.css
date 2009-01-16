@@ -16,6 +16,11 @@
     background:#fff;
 }
 
+.change-list table td input{
+    margin-top:-1px;
+    margin-bottom:1px;
+}
+
 .placeholder-row textarea, .placeholder-row input {
     float:left;
 }

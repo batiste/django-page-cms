@@ -7,19 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ImproperlyConfigured
 from django.contrib.sites.models import Site
 
 import mptt
 from pages import settings
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
-try:
-    tagging = models.get_app('tagging')
-    from tagging.fields import TagField
-except ImproperlyConfigured:
-    tagging = False
-
+tagging = "tagging" in settings.INSTALLED_APPS
 if not settings.PAGE_TAGGING:
     tagging = False
 
@@ -51,6 +45,7 @@ class Page(models.Model):
     objects = PageManager()
 
     if tagging:
+        from tagging.fields import TagField
         tags = TagField()
 
     class Meta:

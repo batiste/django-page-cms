@@ -68,9 +68,13 @@ a.collapsed span.collapsed{
 }
 
 .sidebar {
-    width: 30em;
+    width: 24em;
     float: left;
     margin-right: 1em;
+}
+
+.sidebar div.description {
+    margin: 5px;
 }
 
 .clear {

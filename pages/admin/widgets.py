@@ -5,10 +5,10 @@ from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from pages.settings import PAGES_MEDIA_URL
-from pages.models import Page, tagging
+from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
+from pages.models import Page
 
-if tagging:
+if PAGE_TAGGING:
     from tagging.models import Tag
     from django.utils import simplejson
 

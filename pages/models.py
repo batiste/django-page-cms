@@ -13,10 +13,6 @@ import mptt
 from pages import settings
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
-tagging = "tagging" in settings.INSTALLED_APPS
-if not settings.PAGE_TAGGING:
-    tagging = False
-
 class Page(models.Model):
     """
     A simple hierarchical page model
@@ -44,9 +40,9 @@ class Page(models.Model):
     # Managers
     objects = PageManager()
 
-    if tagging:
-        from tagging.fields import TagField
-        tags = TagField()
+    if settings.PAGE_TAGGING:
+        from tagging import fields
+        tags = fields.TagField()
 
     class Meta:
         verbose_name = _('page')

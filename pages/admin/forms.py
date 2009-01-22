@@ -3,7 +3,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from pages import settings
-from pages.models import Page, Content, tagging
+from pages.models import Page, Content
 
 class PageForm(forms.ModelForm):
     title = forms.CharField(
@@ -27,7 +27,7 @@ class PageForm(forms.ModelForm):
         choices=settings.PAGE_TEMPLATES,
         help_text=_('The template used to render the content.')
     )
-    if tagging:
+    if settings.PAGE_TAGGING:
         from tagging.forms import TagField
         from pages.admin.widgets import AutoCompleteTagInput
         tags = TagField(widget=AutoCompleteTagInput(), required=False)

@@ -32,6 +32,10 @@ def details(request, page_id=None, slug=None,
             current_page = pages[0]
         template_name = current_page.get_template()
     else:
-        raise Http404
+        # Don't raise Http404 here because
+        # pages.admin.utils.get_placeholders need 
+        # to get the context correctly
+        current_page = None
+
     return template_name, locals()
 details = auto_render(details)

@@ -132,10 +132,10 @@ class ContentManager(models.Manager):
                 pass
         return None
 
-    def get_page_slug(self, slug, site=None, latest_by='creation_date'):
+    def get_content_slug_by_slug(self, slug, site=None, latest_by='creation_date'):
         """
-        Returns the latest slug for the given slug and checks if it's available 
-        on the current site.
+        Returns the latest Content slug object that match the given slug for
+        the current site domain.
         """
         if not site:
             site = Site.objects.get_current()

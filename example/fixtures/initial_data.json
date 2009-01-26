@@ -6,5 +6,13 @@
             "domain": "127.0.0.1:8000", 
             "name": "127.0.0.1:8000"
         }
+    },
+    {
+        "pk": 2, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "testserver", 
+            "name": "Test server"
+        }
     }
 ]

@@ -22,7 +22,7 @@ def details(request, page_id=None, slug=None, raise404=True,
             current_page = get_object_or_404(
                 Page.objects.published(site), pk=page_id)
         elif slug:
-            slug_content = Content.objects.get_page_slug(slug, site)
+            slug_content = Content.objects.get_content_slug_by_slug(slug, site)
             if slug_content and \
                 slug_content.page.calculated_status in (
                     Page.PUBLISHED, Page.HIDDEN):

@@ -1,5 +1,6 @@
 from django.template import loader, Context, RequestContext, TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode
+from django.http import Http404
 # must be imported like this for isinstance
 from django.templatetags.pages_tags import PlaceholderNode
 
@@ -13,7 +14,10 @@ def get_placeholders(request, template_name):
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
         return []
-    context = details(request, only_context=True)
+    try:
+        context = details(request, only_context=True)
+    except Http404:
+        context = {}
     temp.render(RequestContext(request, context))
     list = []
     placeholders_recursif(temp.nodelist, list)

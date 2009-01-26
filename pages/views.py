@@ -6,7 +6,7 @@ from pages import settings
 from pages.models import Page, Content
 from pages.utils import auto_render, get_language_from_request
 
-def details(request, page_id=None, slug=None, 
+def details(request, page_id=None, slug=None, raise404=True,
         template_name=settings.DEFAULT_PAGE_TEMPLATE):
     """
     Example view that get the root pages for navigation, 
@@ -16,6 +16,7 @@ def details(request, page_id=None, slug=None,
     lang = get_language_from_request(request)
     site = request.site
     pages = Page.objects.navigation(site).order_by("tree_id")
+    
     if pages:
         if page_id:
             current_page = get_object_or_404(
@@ -32,10 +33,7 @@ def details(request, page_id=None, slug=None,
             current_page = pages[0]
         template_name = current_page.get_template()
     else:
-        # Don't raise Http404 here because
-        # pages.admin.utils.get_placeholders need 
-        # to get the context correctly
-        current_page = None
+        raise Http404
 
     return template_name, locals()
 details = auto_render(details)

@@ -12,7 +12,6 @@ from django.contrib.admin.util import unquote
 
 from pages import settings
 from pages.models import Page, Content
-from pages.views import details
 from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
 

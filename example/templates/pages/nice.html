@@ -1,13 +1,13 @@
-{% extends "index.html" %}
+{% extends "pages/index.html" %}
 {% load pages_tags %}
 
-{% block title %}Cool template{% endblock %}
+{% block title %}Nice template{% endblock %}
 
 {% block content %}{{ block.super }}
 <div style="width:70%">
     <div>fancy content
         <div id="fancy-content" class="placeholder">
-            {% placeholder fancy-content with WYMEditor %}
+            {% placeholder fancy-content with markItUpMarkdown %}
         </div>
     </div>
 </div>

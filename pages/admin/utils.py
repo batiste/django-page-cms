@@ -3,8 +3,10 @@ from django.template.loader_tags import ExtendsNode
 from django.http import Http404
 # must be imported like this for isinstance
 from django.templatetags.pages_tags import PlaceholderNode
+from django.core.urlresolvers import get_mod_func
 
 from pages.views import details
+from pages import settings
 
 def get_placeholders(request, template_name):
     """
@@ -40,3 +42,27 @@ def placeholders_recursif(nodelist, list):
     for node in nodelist:
         if isinstance(node, ExtendsNode):
             placeholders_recursif(node.get_parent(Context()).nodelist, list)
+
+def get_connected_models():
+
+    if not settings.PAGE_CONNECTED_MODELS:
+        return []
+    
+    models = []
+    for capp in settings.PAGE_CONNECTED_MODELS:
+        model = {}
+        mod_name, form_name = get_mod_func(capp['form'])
+        f = getattr(__import__(mod_name, {}, {}, ['']), form_name)
+        #print f.Meta
+        model['form'] = f
+        mod_name, model_name = get_mod_func(capp['model'])
+        model['model_name'] = model_name
+        m = getattr(__import__(mod_name, {}, {}, ['']), model_name)
+        model['model'] = m
+        model['fields'] = []
+        for k, v in f.base_fields.iteritems():
+            if k is not "page":
+                model['fields'].append((model_name.lower() + '_' + k, k, v))
+        models.append(model)
+    
+    return models

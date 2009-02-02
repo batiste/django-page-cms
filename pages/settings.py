@@ -61,3 +61,8 @@ PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
 # Changing this from True to False could cause some weirdness.  If that is required,
 # you should update your database and null any pages with publication_end_date set.
 PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
+
+# You can specify a model and form for this model into your settings to get
+# an automatic form to create and directly link a new instance of this model
+# with your page.
+PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)

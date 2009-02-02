@@ -7,9 +7,9 @@ from django.template import TemplateDoesNotExist
 page_data = {'title':'test page', 'slug':'test-page-1', 'language':'en',
     'sites':[2], 'status':Page.PUBLISHED}
 
+
 class PagesTestCase(TestCase):
     fixtures = ['tests.json']
-
 
     def test_01_add_page(self):
         """
@@ -84,4 +84,20 @@ class PagesTestCase(TestCase):
         
         response = c.get('/pages/')
         assert(response.status_code == 200)
+
+    def test_02_edit_page(self):
+        """
+        Test that a page can edited via the admin
+        """
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.get('/admin/pages/page/1/')
+        assert(response.status_code == 200)
+        page_data['title'] = 'changed title'
+        response = c.post('/admin/pages/page/1/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.get(id=1)
+        assert(page.title() == 'changed title')
+        
 

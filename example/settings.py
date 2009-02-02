@@ -90,10 +90,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
+    'documents',
     'tagging',
     'pages',
     'mptt',
 )
+
+PAGE_CONNECTED_MODELS = [
+    {'model':'documents.models.Document','form':'documents.models.DocumentForm'},
+]
 
 gettext_noop = lambda s: s
 LANGUAGES = (

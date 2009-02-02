@@ -17,18 +17,19 @@ from pages.utils import get_template_from_request, has_page_add_permission, \
 
 from pages.admin import widgets
 from pages.admin.forms import PageForm
-from pages.admin.utils import get_placeholders
+from pages.admin.utils import get_placeholders, get_connected_models
 from pages.admin.views import traduction, get_content, valid_targets_list, \
     change_status, modify_content
 
 class PageAdmin(admin.ModelAdmin):
+
     form = PageForm
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'sites']
     insert_point = general_fields.index('status') + 1
-    
+
     if settings.PAGE_TAGGING:
         general_fields.insert(insert_point, 'tags')
     
@@ -146,19 +147,30 @@ class PageAdmin(admin.ModelAdmin):
         """
         Add fieldsets of placeholders to the list of already existing
         fieldsets.
-        """
+         """
+        additional_fieldsets = []
+
         placeholder_fieldsets = []
         template = get_template_from_request(request, obj)
         for placeholder in get_placeholders(request, template):
             if placeholder.name not in self.mandatory_placeholders:
                 placeholder_fieldsets.append(placeholder.name)
 
-        if self.declared_fieldsets:
-            given_fieldsets = list(self.declared_fieldsets)
-        else:
-            form = self.get_form(request, obj)
-            given_fieldsets = [(_('content'), {'fields': form.base_fields.keys()})]
-        return given_fieldsets + [(_('content'), {'fields': placeholder_fieldsets})]
+        additional_fieldsets.append((_('Content'), {'fields': placeholder_fieldsets}))
+
+        connected_fieldsets = []
+        if obj:
+            for mod in get_connected_models():
+                for field_name, real_field_name, field in mod['fields']:
+                    connected_fieldsets.append(field_name)
+
+                additional_fieldsets.append((_('Create a new linked ' +
+                    mod['model_name']), {'fields': connected_fieldsets}))
+
+        given_fieldsets = list(self.declared_fieldsets)
+        
+        return given_fieldsets + additional_fieldsets
+            
 
     def save_form(self, request, form, change):
         """
@@ -204,6 +216,28 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].choices = template_choices
             form.base_fields['template'].initial = force_unicode(template)
 
+        # handle most of the logic of connected models
+        if obj:
+            for mod in get_connected_models():
+                model = mod['model']
+                attributes = {'page': obj.id}
+                validate_field = True
+            
+                if request.POST:
+                    for field_name, real_field_name, field in mod['fields']:
+                        if field_name in request.POST and request.POST[field_name]:
+                            attributes[real_field_name] = request.POST[field_name]
+                    if len(attributes) > 1:
+                        connected_form = mod['form'](attributes)
+                        if connected_form.is_valid():
+                            connected_form.save()
+                    else:
+                        validate_field = False
+
+                if validate_field:
+                    for field_name, real_field_name, field in mod['fields']:
+                        form.base_fields[field_name] = field
+
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()
             if placeholder.parsed:
@@ -221,6 +255,7 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 form.base_fields[name].initial = initial
                 form.base_fields[name].help_text = help_text
+
         return form
 
     def change_view(self, request, object_id, extra_context=None):

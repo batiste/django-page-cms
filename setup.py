@@ -16,7 +16,7 @@ setup(
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
     url='http://code.google.com/p/django-page-cms/',
-    requires=('html5lib (>=0.10)', 'tagging (>=0.2.1)', 'mptt (>=0.2.1)', ),
+    requires=('html5lib (>=0.10)', 'tagging (>=0.2.1)', 'django_mptt (>=0.2.1)', ),
     packages=[
         'pages',
         'pages.admin',

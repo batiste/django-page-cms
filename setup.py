@@ -1,8 +1,8 @@
 from distutils.core import setup
 import glob
 
-datas = [ "locale/" + l.rsplit('/')[-1]+"/LC_MESSAGES/*.*" for l in glob.glob("pages/locale/*")]
-datas.extend([
+data = [ "locale/" + l.rsplit('/')[-1]+"/LC_MESSAGES/*.*" for l in glob.glob("pages/locale/*")]
+data.extend([
     'templates/admin/pages/page/*.html',
     'templates/pages/*.html',
     'fixtures/*.json'
@@ -16,7 +16,11 @@ setup(
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
     url='http://code.google.com/p/django-page-cms/',
-    requires=('html5lib (>=0.10)', 'tagging (>=0.2.1)', 'django_mptt (>=0.2.1)', ),
+    requires=(
+        'html5lib (>=0.10)', 
+        'tagging (>0.2.1)', # please use the trunk version of tagging
+        'django_mptt (>=0.2.1)', 
+    ),
     packages=[
         'pages',
         'pages.admin',
@@ -24,7 +28,7 @@ setup(
         #'example',
     ],
     package_dir={'pages': 'pages', 'pages.locale': 'locale', 'pages.templates': 'templates'},
-    package_data={'pages': datas},
+    package_data={'pages': data},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

@@ -55,6 +55,29 @@ class RichTextarea(Textarea):
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/richtextarea.html', context))
 
+class TinyMCE(Textarea):
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'tiny_mce/tiny_mce.js',
+        )]
+
+    def __init__(self, language=None, attrs=None):
+        self.language = language or settings.LANGUAGE_CODE[:2]
+        self.attrs = {'class': 'tinymce'}
+        if attrs:
+            self.attrs.update(attrs)
+        super(TinyMCE, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        rendered = super(TinyMCE, self).render(name, value, attrs)
+        context = {
+            'name': name,
+            'language': self.language,
+            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/tinymce.html', context))
+
 class WYMEditor(Textarea):
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (

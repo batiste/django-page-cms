@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Django settings for cms project.
 import os
 PROJECT_DIR = os.path.dirname(__file__)
@@ -83,6 +84,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_DIR, 'templates'),
 )
+
+CACHE_BACKEND = "locmem:///?timeout=300&max_entries=3000"
 
 INSTALLED_APPS = (
     'django.contrib.auth',

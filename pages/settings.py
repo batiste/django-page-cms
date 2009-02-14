@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Convenience module for access of custom pages application settings,
 which enforces default settings when the main settings module does not
@@ -66,3 +67,6 @@ PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 # an automatic form to create and directly link a new instance of this model
 # with your page.
 PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
+
+# provide some informations about SQL requests into a log file
+PAGE_SQL_DEBUGGING = False

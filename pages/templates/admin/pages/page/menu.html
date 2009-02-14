@@ -1,4 +1,4 @@
-{% load pages_tags i18n adminmedia %}
+{% load pages_tags i18n adminmedia cache %}
 
 {% if has_permission %}
 <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent.id }}">
@@ -40,10 +40,14 @@
 {% endifequal %}
 </td>
 <td>
-{{ page.get_template }}
+{% cache 600 page_template page.id %}
+    {{ page.get_template }}
+{% endcache %}
 </td>
 <td>
-{% firstof page.author.get_full_name page.author.first_name page.author.username %}
+{% cache 3600 page_author page.author.id %}
+    {% firstof page.author.get_full_name page.author.first_name page.author.username %}
+{% endcache %}
 </td>
 </tr>
 {% endif %}

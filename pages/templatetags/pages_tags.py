@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import template
 from django.core.cache import cache
 from django.utils.safestring import SafeUnicode, mark_safe

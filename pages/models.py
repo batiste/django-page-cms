@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 
 from django.db import models
@@ -97,12 +98,20 @@ class Page(models.Model):
         """
         get the url of this page, adding parent's slug
         """
+        PAGE_URL_KEY = "page_%d_language_%s_url"
+        url = cache.get(PAGE_URL_KEY % (self.id, language))
+        if url:
+            return url
+        
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             url = u'%s/' % self.slug(language)
         else:
             url = u'%s-%d/' % (self.slug(language), self.id)
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
+        
+        cache.set(PAGE_URL_KEY % (self.id, language), url)
+            
         return url
 
     def slug(self, language=None, fallback=True):

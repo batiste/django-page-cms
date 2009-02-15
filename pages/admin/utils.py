@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.template import loader, Context, RequestContext, TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode
 from django.http import Http404
@@ -21,27 +22,27 @@ def get_placeholders(request, template_name):
     except Http404:
         context = {}
     temp.render(RequestContext(request, context))
-    list = []
-    placeholders_recursif(temp.nodelist, list)
-    return list
+    plist = []
+    placeholders_recursif(temp.nodelist, plist)
+    return plist
 
-def placeholders_recursif(nodelist, list):
+def placeholders_recursif(nodelist, plist):
     """
     Recursively search into a template node list for PlaceholderNode node
     """
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
-            list.append(node)
+            plist.append(node)
             node.render(Context())
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
             if hasattr(node, key):
                 try:
-                    placeholders_recursif(getattr(node, key), list)
+                    placeholders_recursif(getattr(node, key), plist)
                 except:
                     pass
     for node in nodelist:
         if isinstance(node, ExtendsNode):
-            placeholders_recursif(node.get_parent(Context()).nodelist, list)
+            placeholders_recursif(node.get_parent(Context()).nodelist, plist)
 
 def get_connected_models():
 

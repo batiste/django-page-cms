@@ -8,7 +8,7 @@
         <a href="#" class="move-target right" title="{% trans "as right sibling"%}"><img alt="" src="{% admin_media_prefix %}img/admin/arrow-down.gif"/></a></a> |
         <a href="#" class="move-target first-child" title="{% trans "as child"%}">↘</a>
     </span>
-    <a href="#" {% ifequal 0 page.children.all.count %}style="display: none"{% endifequal %} id="c{{ page.id }}" class="collapse">
+    <a href="#" {% ifequal 0 children.count %}style="display: none"{% endifequal %} id="c{{ page.id }}" class="collapse">
         <span class="collapsed">+</span>
         <span>-</span>
     </a>
@@ -40,20 +40,18 @@
 {% endifequal %}
 </td>
 <td>
-{% cache 600 page_template page.id %}
+{% cache 300 page_template page.id %}
     {{ page.get_template }}
 {% endcache %}
 </td>
 <td>
-{% cache 3600 page_author page.author.id %}
+{% cache 10000 page_author page.author_id %}
     {% firstof page.author.get_full_name page.author.first_name page.author.username %}
 {% endcache %}
 </td>
 </tr>
 {% endif %}
 
-{% if children.count %}
 {% for child in children %}
     {% pages_admin_menu child url level %}
 {% endfor %}
-{% endif %}

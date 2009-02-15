@@ -42,7 +42,7 @@
                  + "<label>Page</label>"
                  + "<select class='wym_select_page_link'>"
                  {% for page in pages %}
-                 + "<option value='{{ page.get_absolute_url }}'>{{ page.get_ancestors|tree_path:" > " }}{% if page.get_ancestors %} > {% endif %}{{ page }}</option>"
+                 + "<option value='{{ page.get_absolute_url }}'>{{ page }}</option>"
                  {% endfor %}
                  + "</select>"
                  + "</div>"

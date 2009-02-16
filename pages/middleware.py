@@ -14,13 +14,14 @@ class CurrentSiteMiddleware(object):
         request.__class__.site = LazySite()
         return None
 
-    if settings.PAGE_SQL_DEBUGGING:
+    if settings.SQL_DEBUGGING:
         def process_response(self, request, response):
             from django import db
             import logging
             logging.basicConfig(filename="sql_log.txt", level=logging.DEBUG,)
             logging.debug(request.path + " : " + str(len(db.connection.queries)))
-            a = []
+            a = []  
+            print "SQL requests : %d" % len(db.connection.queries)
             for q in db.connection.queries:
                 a.append(q['sql'])
             a.sort()

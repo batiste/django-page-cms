@@ -40,9 +40,7 @@
 {% endifequal %}
 </td>
 <td>
-{% cache 300 page_template page.id %}
     {{ page.get_template }}
-{% endcache %}
 </td>
 <td>
 {% cache 10000 page_author page.author_id %}

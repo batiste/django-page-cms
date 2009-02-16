@@ -69,4 +69,4 @@ PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 
 # provide some informations about SQL requests into a log file
-PAGE_SQL_DEBUGGING = False
+SQL_DEBUGGING = getattr(settings, 'SQL_DEBUGGING', False)

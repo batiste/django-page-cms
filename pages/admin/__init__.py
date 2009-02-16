@@ -112,6 +112,7 @@ class PageAdmin(admin.ModelAdmin):
         Content object.
         """
         obj.save()
+        obj.invalidate()
         language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)

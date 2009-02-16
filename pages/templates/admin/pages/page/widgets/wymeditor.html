@@ -1,9 +1,4 @@
-{% load mptt_tags cache %}
-{% cache 180 WYMeditorTree %}
-{% comment %}
-    This code is *very* slow... please replace this code with some ajax
-{% endcomment %}
-{% full_tree_for_model pages.Page as pages %}
+{% load mptt_tags %}
 <script type="text/javascript">
     jQuery('#id_{{ name }}').wymeditor({
         lang: '{{ language }}',
@@ -41,8 +36,8 @@
                  + "<div class='row'>"
                  + "<label>Page</label>"
                  + "<select class='wym_select_page_link'>"
-                 {% for page in pages %}
-                 + "<option value='{{ page.get_absolute_url }}'>{{ page }}</option>"
+                 {% for page in page_list %}
+                 + "<option value='{{ page.get_absolute_url }}'>{{ page.with_level }}</option>"
                  {% endfor %}
                  + "</select>"
                  + "</div>"
@@ -80,4 +75,3 @@
         }
     });
     </script>
-{% endcache %}

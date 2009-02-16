@@ -56,6 +56,7 @@ class RichTextarea(Textarea):
             'admin/pages/page/widgets/richtextarea.html', context))
 
 class TinyMCE(Textarea):
+
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'tiny_mce/tiny_mce.js',
@@ -79,6 +80,7 @@ class TinyMCE(Textarea):
             'admin/pages/page/widgets/tinymce.html', context))
 
 class WYMEditor(Textarea):
+
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -96,6 +98,7 @@ class WYMEditor(Textarea):
     def render(self, name, value, attrs=None):
         rendered = super(WYMEditor, self).render(name, value, attrs)
         context = {
+            'page_list':Page.objects.all().order_by('tree_id'),
             'name': name,
             'language': self.language,
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,

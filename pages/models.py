@@ -236,6 +236,13 @@ class Page(models.Model):
                 return True
             return False
 
+    def with_level(self):
+        level = ''
+        if self.level:
+            for n in range(0, self.level):
+                level += '&nbsp;&nbsp;&nbsp;'  
+        return mark_safe(level + self.__unicode__())
+
     def __unicode__(self):
         slug = self.slug()
         # when created in console mode, page has no slug

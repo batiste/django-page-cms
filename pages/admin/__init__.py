@@ -112,7 +112,6 @@ class PageAdmin(admin.ModelAdmin):
         Content object.
         """
         obj.save()
-        obj.invalidate()
         language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
@@ -123,6 +122,8 @@ class PageAdmin(admin.ModelAdmin):
                 pass
             else:
                 obj.move_to(target, position)
+
+        obj.invalidate()
 
         for mandatory_placeholder in self.mandatory_placeholders:
             Content.objects.set_or_create_content(obj, language,

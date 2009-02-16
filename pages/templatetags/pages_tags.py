@@ -14,6 +14,7 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
+# TODO: move that into the model
 def get_page_children_for_site(page, site):
     return page.get_children().filter(sites__domain=site.domain)
 
@@ -36,7 +37,12 @@ def pages_sub_menu(context, page, url='/'):
     root = page.get_root()
     request = context['request']
     site = request.site
-    children = get_page_children_for_site(page, site)
+
+    children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
+    if children is None:
+        children = get_page_children_for_site(page, site)
+        cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
+
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -47,7 +53,12 @@ def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
     request = context['request']
     site = request.site
-    children = get_page_children_for_site(page, site)
+
+    children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
+    if children is None:
+        children = get_page_children_for_site(page, site)
+        cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
+    
     has_permission = page.has_page_permission(request)
     # level is used to add a left margin on table row
     if has_permission:
@@ -77,6 +88,7 @@ def show_content(context, page, content_type, lang=None):
     args -- content_type used by a placeholder
     lang -- the wanted language (default None, use the request object to know)
     """
+
     request = context.get('request', False)
     if not request or not page:
         return {'content':''}
@@ -87,13 +99,17 @@ def show_content(context, page, content_type, lang=None):
             page = c[0].page
         else:
             return {'content':''}
+
     if lang is None:
         lang = get_language_from_request(context['request'])
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
-        key = 'content_cache_pid:'+str(page.id)+'_l:'+str(lang)+'_type:'+str(content_type)
+        key = Page.PAGE_CONTENT_KEY % (page.id, lang, content_type)
         c = cache.get(key)
-        if not c:
+        if c is None:
             c = Content.objects.get_content(page, lang, content_type, True)
+            # Storing None force SQL requests
+            if c is None:
+                c = " "
             cache.set(key, c, settings.PAGE_CONTENT_CACHE_DURATION)
     else:
         c = Content.objects.get_content(page, lang, content_type, True)

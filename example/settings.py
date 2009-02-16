@@ -85,7 +85,9 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
 
-CACHE_BACKEND = "locmem:///?timeout=300&max_entries=3000"
+CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
+
+PAGE_CONTENT_CACHE_DURATION = 300
 
 INSTALLED_APPS = (
     'django.contrib.auth',

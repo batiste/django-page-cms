@@ -35,6 +35,8 @@ class Page(models.Model):
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_language_%s_url"
     PAGE_TEMPLATE_KEY = "page_%d_template"
+    PAGE_CHILDREN_KEY = "page_children_%d_%d"
+    PAGE_CONTENT_KEY = "page_content_%d_%s_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
     parent = models.ForeignKey('self', null=True, blank=True, 
@@ -50,7 +52,8 @@ class Page(models.Model):
 
     status = models.IntegerField(_('status'), choices=STATUSES, default=DRAFT)
     template = models.CharField(_('template'), max_length=100, null=True, blank=True)
-    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], help_text=_('The site(s) the page is accessible at.'), verbose_name=_('sites'))
+    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
+            help_text=_('The site(s) the page is accessible at.'), verbose_name=_('sites'))
 
     # Managers
     objects = PageManager()
@@ -102,6 +105,14 @@ class Page(models.Model):
 
         for desc in self.get_descendants():
             desc.invalidate_if_parent_changed()
+        
+        for site in self.sites.all():
+            if self.parent:
+                cache.delete(self.PAGE_CHILDREN_KEY % (self.parent.id, site.id))
+
+        from page.admin.utils import get_placeholders
+
+        #TODO: invalidate the content cache of the page
 
     def invalidate_if_parent_changed(self):
         """Invalidate cache depending of a parent"""

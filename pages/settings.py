@@ -39,7 +39,7 @@ PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', settings.LANGUAGE_CODE)[:2]
 
 # Defines how long page content should be cached, including navigation and admin menu.
-PAGE_CONTENT_CACHE_DURATION = getattr(settings, 'PAGE_CONTENT_CACHE_DURATION', 60)
+PAGE_CONTENT_CACHE_DURATION = getattr(settings, 'PAGE_CONTENT_CACHE_DURATION', False)
 
 # The id of default Site instance to be used for multisite purposes.
 SITE_ID = getattr(settings, 'SITE_ID', 1)

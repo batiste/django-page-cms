@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os.path import join
 from inspect import isclass, getmembers
 
@@ -115,6 +116,8 @@ class PageAdmin(admin.ModelAdmin):
         language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
+        obj.invalidate()
+        
         if target is not None and position is not None:
             try:
                 target = self.model.objects.get(pk=target)
@@ -122,8 +125,7 @@ class PageAdmin(admin.ModelAdmin):
                 pass
             else:
                 obj.move_to(target, position)
-
-        obj.invalidate()
+                target.invalidate()
 
         for mandatory_placeholder in self.mandatory_placeholders:
             Content.objects.set_or_create_content(obj, language,
@@ -340,6 +342,8 @@ class PageAdmin(admin.ModelAdmin):
             except self.model.DoesNotExist:
                 context.update({'error': _('Page could not been moved.')})
             else:
+                page.invalidate()
+                target.invalidate()
                 page.move_to(target, position)
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')

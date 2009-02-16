@@ -116,6 +116,7 @@ class PageAdmin(admin.ModelAdmin):
         language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
+        
         obj.invalidate()
         
         if target is not None and position is not None:
@@ -124,8 +125,8 @@ class PageAdmin(admin.ModelAdmin):
             except self.model.DoesNotExist:
                 pass
             else:
-                obj.move_to(target, position)
                 target.invalidate()
+                obj.move_to(target, position)
 
         for mandatory_placeholder in self.mandatory_placeholders:
             Content.objects.set_or_create_content(obj, language,
@@ -331,7 +332,6 @@ class PageAdmin(admin.ModelAdmin):
         """
         Move the page to the requested target, at the given position
         """
-        context = {}
         page = Page.objects.get(pk=page_id)
 
         target = request.POST.get('target', None)
@@ -340,14 +340,16 @@ class PageAdmin(admin.ModelAdmin):
             try:
                 target = self.model.objects.get(pk=target)
             except self.model.DoesNotExist:
-                context.update({'error': _('Page could not been moved.')})
+                pass
+                # TODO: should use the django message system 
+                # to display this message
+                # _('Page could not been moved.')
             else:
                 page.invalidate()
                 target.invalidate()
                 page.move_to(target, position)
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')
-        context.update(extra_context or {})
         return HttpResponseRedirect('../../')
 admin.site.register(Page, PageAdmin)
 

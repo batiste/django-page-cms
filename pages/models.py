@@ -106,9 +106,12 @@ class Page(models.Model):
         for desc in self.get_descendants():
             desc.invalidate_if_parent_changed()
         
-        for site in self.sites.all():
-            if self.parent:
+        if self.parent:
+            for site in self.parent.sites.all():
                 cache.delete(self.PAGE_CHILDREN_KEY % (self.parent.id, site.id))
+
+        for site in self.sites.all():
+            cache.delete(self.PAGE_CHILDREN_KEY % (self.id, site.id))
 
         #TODO: invalidate the content cache of the page
 

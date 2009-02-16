@@ -110,8 +110,6 @@ class Page(models.Model):
             if self.parent:
                 cache.delete(self.PAGE_CHILDREN_KEY % (self.parent.id, site.id))
 
-        from page.admin.utils import get_placeholders
-
         #TODO: invalidate the content cache of the page
 
     def invalidate_if_parent_changed(self):

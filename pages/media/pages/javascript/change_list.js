@@ -45,12 +45,14 @@ jQuery.cookie = function(name, value, options) {
 $(document).ready(function() {
     
     function initTreeCollapsing() {
+        // TODO: this method for collapsing is too slow
         var col = $.cookie('tree_collapsed');
         if(col){
             col = col.split(',');
         }
         for(i in col) {
-            $('tr#page-row-' + col[i] + ' a.collapse').addClass('collapsed');
+            // please keep that as fast as possible
+            $('#c' + col[i]).addClass('collapsed');
             hide_children(col[i]);
         }
     }
@@ -66,15 +68,23 @@ $(document).ready(function() {
     }
 
     function hide_children(id) {
-        $('.child-of-' + id + ':visible').each(function() {
-            $(this).hide();
+        $('.child-of-' + id).each(function() {
+            this.style.display = 'none';
             hide_children(this.id.substring(9));
         });
     }
     
+    function get_children(id, list) {
+        $('.child-of-' + id).each(function() {
+            list.push(this);
+            get_children(this.id.substring(9), list);
+            return list
+        });
+    }
+    
     function show_children(id) {
-        $('.child-of-' + id + ':hidden').each(function() {
-            $(this).show();
+        $('.child-of-' + id).each(function() {
+            this.style.display = 'block';
             if(!$('a.collapsed', this).length) {
                 show_children(this.id.substring(9));
             }
@@ -100,16 +110,12 @@ $(document).ready(function() {
             $("#changelist table").removeClass("table-selected");
             $('tr').removeClass("selected").removeClass("target");
             $('#page-row-'+page_id).addClass("selected");
-            var array = window.location.href.split('?');
-            $.get(array[0]+page_id+"/valid-targets-list/", {}, function(html) {
-                var ids = html.split(",");
-                var css = "#move-target-"+ids.join(",#move-target-");
-                $('.move-target-container').hide();
-                $(css).show();
-                var css = "#page-row-"+ids.join(",#page-row-");
-                $(css).addClass("target");
-                $("#changelist table").addClass("table-selected");
-            });
+            var children = []
+            get_children(page_id, children);
+            for(var i=0; i < children.length; i++) {
+                $(children[i]).addClass("selected");
+            }
+            $("#changelist table").addClass("table-selected");
             return false;
         }
         
@@ -152,6 +158,8 @@ $(document).ready(function() {
                 var position = "first-child";
             var target_id = target.parentNode.id.split("move-target-")[1];
             if(action=="move") {
+                var msg = $('<span>Please wait...</span>');
+                $($('#page-row-'+selected_page+" td")[0]).append(msg);
                 $.post("/admin/pages/page/"+selected_page+"/move-page/", {
                         position:position,
                         target:target_id

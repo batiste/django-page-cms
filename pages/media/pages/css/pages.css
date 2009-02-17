@@ -4,8 +4,17 @@
     padding-left:1.5em;
 }
 
-.change-list .table-selected tr {
-    background:#ffffd0;
+.change-list .move-target-container{
+    display:none;
+    float:right;
+}
+
+.change-list .table-selected .move-target-container{
+    display:block;
+}
+
+.change-list .table-selected .selected .move-target-container{
+    display:none;
 }
 
 .change-list tr.selected {

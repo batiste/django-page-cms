@@ -103,8 +103,11 @@ class Page(models.Model):
         self.invalidate_if_parent_changed()
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
 
+        cache.delete("page_row_admin:%d" % (self.id))
+
         for desc in self.get_descendants():
-            desc.invalidate_if_parent_changed()
+            cache.delete("page_row_admin:%d" % (desc.id))
+            #desc.invalidate_if_parent_changed()
         
         if self.parent:
             for site in self.parent.sites.all():

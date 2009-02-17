@@ -1,9 +1,10 @@
 {% load pages_tags i18n adminmedia cache %}
 
 {% if has_permission %}
-<tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent.id }}">
+{% cache 10000 page_row_admin page.id %}
+<tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }}">
 <td {% if level %}style="padding-left:{{level}}em"{% endif %}>
-    <span id="move-target-{{ page.id }}" class="move-target-container" style="display:none;float:right">
+    <span id="move-target-{{ page.id }}" class="move-target-container">
         <a href="#" class="move-target left" title="{% trans "as left sibling"%}"><img alt="" src="{% admin_media_prefix %}img/admin/arrow-up.gif"/></a> |
         <a href="#" class="move-target right" title="{% trans "as right sibling"%}"><img alt="" src="{% admin_media_prefix %}img/admin/arrow-down.gif"/></a></a> |
         <a href="#" class="move-target first-child" title="{% trans "as child"%}">↘</a>
@@ -48,6 +49,7 @@
 {% endcache %}
 </td>
 </tr>
+{% endcache %}
 {% endif %}
 
 {% for child in children %}

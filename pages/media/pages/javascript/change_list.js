@@ -84,7 +84,7 @@ $(document).ready(function() {
     
     function show_children(id) {
         $('.child-of-' + id).each(function() {
-            this.style.display = 'block';
+            this.style.display='';
             if(!$('a.collapsed', this).length) {
                 show_children(this.id.substring(9));
             }

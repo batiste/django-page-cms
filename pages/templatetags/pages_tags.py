@@ -5,6 +5,7 @@ from django.utils.safestring import SafeUnicode, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, TemplateSyntaxError
 from django.conf import settings as global_settings
+import urllib
 
 from pages import settings
 from pages.models import Content, Page
@@ -54,26 +55,15 @@ def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     request = context['request']
     site = request.site
     
-    import urllib
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
             ids = [int(id) for id in urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
             if page.id in ids:
                 expanded = True
-
-    children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
-    if children is None:
-        children = get_page_children_for_site(page, site)
-        cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
     
     has_permission = page.has_page_permission(request)
-    # level is used to add a left margin on table row
-    if has_permission:
-        if level is None:
-            level = 0
-        else:
-            level = level+3
+
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
                                           takes_context=True)(pages_admin_menu)

@@ -53,7 +53,7 @@
 {% endif %}
 
 {% if expanded %}
-    {% for child in children %}
+    {% for child in page.children.all %}
         {% pages_admin_menu child url level %}
     {% endfor %}
 {% endif %}

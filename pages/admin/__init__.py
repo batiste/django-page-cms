@@ -117,8 +117,6 @@ class PageAdmin(admin.ModelAdmin):
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
         
-        obj.invalidate()
-        
         if target is not None and position is not None:
             try:
                 target = self.model.objects.get(pk=target)
@@ -147,6 +145,8 @@ class PageAdmin(admin.ModelAdmin):
                 else:
                     Content.objects.set_or_create_content(obj, language,
                         placeholder.name, form.cleaned_data[placeholder.name])
+                        
+        obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):
         """

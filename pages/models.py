@@ -99,24 +99,8 @@ class Page(models.Model):
 
     def invalidate(self):
         """Invalidate a page and it's descendants"""
-
         self.invalidate_if_parent_changed()
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
-
-        cache.delete("page_row_admin:%d" % (self.id))
-
-        for desc in self.get_descendants():
-            cache.delete("page_row_admin:%d" % (desc.id))
-            #desc.invalidate_if_parent_changed()
-        
-        if self.parent:
-            for site in self.parent.sites.all():
-                cache.delete(self.PAGE_CHILDREN_KEY % (self.parent.id, site.id))
-
-        for site in self.sites.all():
-            cache.delete(self.PAGE_CHILDREN_KEY % (self.id, site.id))
-
-        #TODO: invalidate the content cache of the page
 
     def invalidate_if_parent_changed(self):
         """Invalidate cache depending of a parent"""
@@ -126,6 +110,8 @@ class Page(models.Model):
         for lang in settings.PAGE_LANGUAGES:
             cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))
             cache.delete(self.PAGE_SLUG_KEY % (self.id, lang[0]))
+            cache.delete(self.PAGE_CONTENT_KEY % (self.id, lang[0], 'title'))
+            cache.delete(self.PAGE_CONTENT_KEY % (self.id, lang[0], 'slug'))
             
     def get_languages(self):
         """

@@ -246,6 +246,9 @@ class Page(models.Model):
             for n in range(0, self.level):
                 level += '&nbsp;&nbsp;&nbsp;'  
         return mark_safe(level + self.__unicode__())
+        
+    def margin_level(self):
+        return self.level * 4 + 1
 
     def __unicode__(self):
         slug = self.slug()

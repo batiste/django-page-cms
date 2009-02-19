@@ -44,33 +44,19 @@ jQuery.cookie = function(name, value, options) {
 
 $(document).ready(function() {
     
-    function initTreeCollapsing() {
-        // TODO: this method for collapsing is too slow
-        var col = $.cookie('tree_collapsed');
-        if(col){
-            col = col.split(',');
-        }
-        for(i in col) {
-            // please keep that as fast as possible
-            $('#c' + col[i]).addClass('collapsed');
-            hide_children(col[i]);
-        }
-    }
-    initTreeCollapsing();
-    
-    function save_collapsed() {
+    function save_expanded() {
         var col = [];
-        $('a.collapsed').each(function() {
+        $('a.expanded').each(function() {
             col.push(this.id.substring(1));
         });
         // expire in 12 days
-        $.cookie('tree_collapsed', col.join(','), {"expires":12});
+        $.cookie('tree_expanded', col.join(','), {"expires":12});
     }
-
-    function hide_children(id) {
+    
+    function remove_children(id) {
         $('.child-of-' + id).each(function() {
-            this.style.display = 'none';
-            hide_children(this.id.substring(9));
+            remove_children(this.id.substring(9));
+            $(this).remove();
         });
     }
     
@@ -79,15 +65,6 @@ $(document).ready(function() {
             list.push(this);
             get_children(this.id.substring(9), list);
             return list
-        });
-    }
-    
-    function show_children(id) {
-        $('.child-of-' + id).each(function() {
-            this.style.display='';
-            if(!$('a.collapsed', this).length) {
-                show_children(this.id.substring(9));
-            }
         });
     }
     
@@ -166,10 +143,12 @@ $(document).ready(function() {
                     },
                     function(html) {
                         $('#changelist').html(html);
-                        initTreeCollapsing();
-                        $('#page-row-'+selected_page).addClass("selected");
                         var msg = $('<span>Successfully moved</span>');
-                        $($('#page-row-'+selected_page+" td")[0]).append(msg);
+                        var message_target = '#page-row-'+selected_page
+                        if(!$(message_target).length)
+                            message_target = '#page-row-'+target_id
+                        $(message_target).addClass("selected");
+                        $($(message_target+" td")[0]).append(msg);
                         msg.fadeOut(5000);
                     }
                 );
@@ -179,19 +158,22 @@ $(document).ready(function() {
                 var query = $.query.set('target', target_id).set('position', position).toString();
                 window.location.href += 'add/'+query;
             }
-            //selected_page = false;
             return false;
         }
         
-        if(jtarget.hasClass("collapse")) {
+        if(jtarget.hasClass("expand-collapse")) {
             var the_id = jtarget.attr('id').substring(1);
-            jtarget.toggleClass('collapsed');
-            if(jtarget.hasClass('collapsed')) {
-                hide_children(the_id);
+            jtarget.toggleClass('expanded');
+            if(jtarget.hasClass('expanded')) {
+                $.get("/admin/pages/page/"+the_id+"/sub-menu/",
+                    function(html) {
+                        $('#page-row-'+the_id).after(html);
+                    }
+                );
             } else {
-                show_children(the_id);
+                remove_children(the_id);
             }
-            save_collapsed();
+            save_expanded();
             return false;
         };
         

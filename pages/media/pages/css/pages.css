@@ -60,20 +60,26 @@
     overflow:hidden;
 }
 
-a.collapse span{
+.expand-collapse span{
     font-family: monospace;
+    font-size:16px;
+    margin:2px 4px;
 }
 
-a.collapse span.collapsed{
+.expand-collapse .collapse {
     display: none;
 }
 
-a.collapsed span{
-    display: none;
-}
-
-a.collapsed span.collapsed{
+.expand-collapse .expand {
     display: inline;
+}
+
+.expanded .collapse {
+    display: inline;
+}
+
+.expanded .expand {
+    display: none;
 }
 
 .sidebar {

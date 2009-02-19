@@ -19,7 +19,7 @@ from pages.utils import get_template_from_request, has_page_add_permission, \
 from pages.admin import widgets
 from pages.admin.forms import PageForm
 from pages.admin.utils import get_placeholders, get_connected_models
-from pages.admin.views import traduction, get_content, valid_targets_list, \
+from pages.admin.views import traduction, get_content, sub_menu, \
     change_status, modify_content
 
 class PageAdmin(admin.ModelAdmin):
@@ -86,8 +86,8 @@ class PageAdmin(admin.ModelAdmin):
             page_id, action, content_id, language_id = url.split('/')
             return modify_content(request, unquote(page_id),
                                     unquote(content_id), unquote(language_id))
-        elif url.endswith('/valid-targets-list'):
-            return valid_targets_list(request, unquote(url[:-19]))
+        elif url.endswith('/sub-menu'):
+            return sub_menu(request, unquote(url[:-9]))
         elif url.endswith('/move-page'):
             return self.move_page(request, unquote(url[:-10]))
         elif url.endswith('/change-status'):
@@ -163,14 +163,15 @@ class PageAdmin(admin.ModelAdmin):
 
         additional_fieldsets.append((_('Content'), {'fields': placeholder_fieldsets}))
 
-        connected_fieldsets = []
+        # deactived for now, create bugs with page with same slug title
+        """connected_fieldsets = []
         if obj:
             for mod in get_connected_models():
                 for field_name, real_field_name, field in mod['fields']:
                     connected_fieldsets.append(field_name)
 
                 additional_fieldsets.append((_('Create a new linked ' +
-                    mod['model_name']), {'fields': connected_fieldsets}))
+                    mod['model_name']), {'fields': connected_fieldsets}))"""
 
         given_fieldsets = list(self.declared_fieldsets)
         
@@ -222,7 +223,7 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         # handle most of the logic of connected models
-        if obj:
+        """if obj:
             for mod in get_connected_models():
                 model = mod['model']
                 attributes = {'page': obj.id}
@@ -241,7 +242,7 @@ class PageAdmin(admin.ModelAdmin):
 
                 if validate_field:
                     for field_name, real_field_name, field in mod['fields']:
-                        form.base_fields[field_name] = field
+                        form.base_fields[field_name] = field"""
 
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()

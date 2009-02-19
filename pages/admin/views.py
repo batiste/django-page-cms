@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.admin.views.decorators import staff_member_required
@@ -67,3 +68,13 @@ def valid_targets_list(request, page_id):
     query = Page.objects.valid_targets(page_id, request, perms)
     return HttpResponse(",".join([str(p.id) for p in query]))
 valid_targets_list = staff_member_required(valid_targets_list)
+
+def sub_menu(request, page_id):
+    """Render the children of the requested page"""
+    page = Page.objects.get(id=page_id)
+    pages = page.children.all()
+    has_permission = page.has_page_permission(request)
+    return "admin/pages/page/sub_menu.html", locals()
+    
+sub_menu = staff_member_required(sub_menu)
+sub_menu = auto_render(sub_menu)

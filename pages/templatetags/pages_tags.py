@@ -53,6 +53,14 @@ def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
     request = context['request']
     site = request.site
+    
+    import urllib
+    if "tree_expanded" in request.COOKIES:
+        cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
+        if cookie_string:
+            ids = [int(id) for id in urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
+            if page.id in ids:
+                expanded = True
 
     children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
     if children is None:

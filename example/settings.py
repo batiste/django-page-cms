@@ -112,7 +112,7 @@ LANGUAGES = (
     ('en', gettext_noop('English')),
 )
 
-SQL_DEBUGGING = True
+SQL_DEBUGGING = False
 
 DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
 

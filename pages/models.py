@@ -121,11 +121,13 @@ class Page(models.Model):
         if languages:
             return languages
 
-        contents = Content.objects.filter(page=self, type="title")
         languages = []
-        for c in contents:
-            if c.language not in languages:
-                languages.append(c.language)
+        for lang in settings.PAGE_LANGUAGES:
+            try:
+                if Content.objects.filter(page=self, type="slug", language=lang[0]).count() > 0:
+                    languages.append(lang[0])
+            except Content.DoesNotExist:
+                pass
 
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
 

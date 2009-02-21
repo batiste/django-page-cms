@@ -39,10 +39,11 @@ def pages_sub_menu(context, page, url='/'):
     request = context['request']
     site = request.site
 
-    children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
-    if children is None:
-        children = get_page_children_for_site(page, site)
-        cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
+    # TODO: is it worthwhile to have this cached?
+    #children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
+    #if children is None:
+    children = get_page_children_for_site(page, site)
+    #cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
 
     if 'current_page' in context:
         current_page = context['current_page']

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import itertools
 from datetime import datetime
 
@@ -124,12 +125,16 @@ class ContentManager(models.Manager):
             return content.body
         except self.model.DoesNotExist:
             pass
+        # requested language not found. Try other languages on after
+        # the other
         if language_fallback:
-            try:
-                content = self.filter(page=page, type=cnttype).latest(latest_by)
-                return content.body
-            except self.model.DoesNotExist:
-                pass
+            for lang in settings.PAGE_LANGUAGES:
+                try:
+                    content = self.filter(language=lang[0], page=page, 
+                        type=cnttype).latest(latest_by)
+                    return content.body
+                except self.model.DoesNotExist:
+                    pass
         return None
 
     def get_content_slug_by_slug(self, slug, site=None, latest_by='creation_date'):

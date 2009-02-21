@@ -35,7 +35,7 @@ class Page(models.Model):
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_language_%s_url"
     PAGE_TEMPLATE_KEY = "page_%d_template"
-    PAGE_CHILDREN_KEY = "page_children_%d_%d"
+    #PAGE_CHILDREN_KEY = "page_children_%d_%d"
     PAGE_CONTENT_KEY = "page_content_%d_%s_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
@@ -123,11 +123,9 @@ class Page(models.Model):
 
         languages = []
         for lang in settings.PAGE_LANGUAGES:
-            try:
-                if Content.objects.filter(page=self, type="slug", language=lang[0]).count() > 0:
-                    languages.append(lang[0])
-            except Content.DoesNotExist:
-                pass
+            # one request by language to avoid to get huge revisions
+            if Content.objects.filter(language=lang[0], page=self, type="slug").latest.count() > 0:
+           	languages.append(lang[0])
 
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
 

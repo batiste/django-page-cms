@@ -40,7 +40,6 @@ def pages_sub_menu(context, page, url='/'):
     render a nested list of all root's children pages"""
     root = page.get_root()
     request = context['request']
-    site = request.site
 
     children = get_page_children(page)
 
@@ -53,7 +52,6 @@ pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
 def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
     """Render the admin table of pages"""
     request = context['request']
-    site = request.site
     
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])

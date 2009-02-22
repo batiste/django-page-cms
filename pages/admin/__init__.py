@@ -169,14 +169,14 @@ class PageAdmin(admin.ModelAdmin):
         additional_fieldsets.append((_('Content'), {'fields': placeholder_fieldsets}))
 
         # deactived for now, create bugs with page with same slug title
-        """connected_fieldsets = []
+        connected_fieldsets = []
         if obj:
             for mod in get_connected_models():
                 for field_name, real_field_name, field in mod['fields']:
                     connected_fieldsets.append(field_name)
 
                 additional_fieldsets.append((_('Create a new linked ' +
-                    mod['model_name']), {'fields': connected_fieldsets}))"""
+                    mod['model_name']), {'fields': connected_fieldsets}))
 
         given_fieldsets = list(self.declared_fieldsets)
         
@@ -228,7 +228,7 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         # handle most of the logic of connected models
-        """if obj:
+        if obj:
             for mod in get_connected_models():
                 model = mod['model']
                 attributes = {'page': obj.id}
@@ -247,7 +247,7 @@ class PageAdmin(admin.ModelAdmin):
 
                 if validate_field:
                     for field_name, real_field_name, field in mod['fields']:
-                        form.base_fields[field_name] = field"""
+                        form.base_fields[field_name] = field
 
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()

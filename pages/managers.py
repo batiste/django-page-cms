@@ -10,17 +10,19 @@ from django.db.models import Q
 from pages import settings
 
 class PageManager(models.Manager):
-
-    def on_site(self, site=None):
-        if hasattr(site, 'domain'):
-            return self.filter(**{'sites__domain__exact': site.domain})
+    
+    def on_site(self, site_id=None):
+        if settings.PAGE_USE_SITE_ID:
+            if not site_id:
+                site_id = settings.SITE_ID
+            return self.filter(sites=site_id)
         return self
 
-    def root(self, site=None):
+    def root(self):
         """
         Return a queryset with pages that don't have parents, a.k.a. root.
         """
-        return self.on_site(site).filter(parent__isnull=True)
+        return self.filter(parent__isnull=True)
 
     def valid_targets(self, page_id, request, perms, page=None):
         """
@@ -38,16 +40,16 @@ class PageManager(models.Manager):
         else:
             return self.exclude(id__in=exclude_list)
 
-    def navigation(self, site=None):
-        return self.root(site).filter(status=self.model.PUBLISHED)
+    def navigation(self):
+        return self.on_site().filter(status=self.model.PUBLISHED).filter(parent__isnull=True)
 
-    def hidden(self, site=None):
-        return self.on_site(site).filter(status=self.model.HIDDEN)
+    def hidden(self):
+        return self.on_site().filter(status=self.model.HIDDEN)
 
-    def published(self, site=None):
+    def published(self):
         pub = itertools.chain(
-            self.on_site(site).filter(status=self.model.PUBLISHED),
-            self.hidden(site)
+            self.on_site().filter(status=self.model.PUBLISHED),
+            self.hidden()
         )
 
         if settings.PAGE_SHOW_START_DATE:
@@ -60,14 +62,14 @@ class PageManager(models.Manager):
             )
         return pub
 
-    def drafts(self, site=None):
-        pub = self.on_site(site).filter(status=self.model.DRAFT)
+    def drafts(self):
+        pub = self.on_site().filter(status=self.model.DRAFT)
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__gte=datetime.now())
         return pub
 
-    def expired(self, site=None):
-        return self.on_site(site).filter(
+    def expired(self):
+        return self.on_site().filter(
             publication_end_date__lte=datetime.now())
 
 class ContentManager(models.Manager):
@@ -137,19 +139,23 @@ class ContentManager(models.Manager):
                     pass
         return None
 
-    def get_content_slug_by_slug(self, slug, site=None, latest_by='creation_date'):
+    def get_content_slug_by_slug(self, slug, site_id=None, latest_by='creation_date'):
         """
         Returns the latest Content slug object that match the given slug for
         the current site domain.
         """
-        if not site:
-            site = Site.objects.get_current()
         try:
-            content = self.filter(
-                type='slug',
-                body=slug,
-                page__sites__domain=site.domain,
-            ).select_related('page').latest(latest_by)
+            if settings.PAGE_USE_SITE_ID:
+                content = self.filter(
+                    type='slug',
+                    body=slug,
+                    page__sites__id=settings.SITE_ID,
+                ).select_related('page').latest(latest_by)
+            else:
+                content = self.filter(
+                    type='slug',
+                    body=slug,
+                ).select_related('page').latest(latest_by)
         except self.model.DoesNotExist:
             return None
         else:

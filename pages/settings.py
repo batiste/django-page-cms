@@ -44,6 +44,9 @@ PAGE_CONTENT_CACHE_DURATION = getattr(settings, 'PAGE_CONTENT_CACHE_DURATION', F
 # The id of default Site instance to be used for multisite purposes.
 SITE_ID = getattr(settings, 'SITE_ID', 1)
 
+# You can say if you don't want to use the site framework by default
+PAGE_USE_SITE_ID = getattr(settings, 'PAGE_USE_SITE_ID', True)
+
 # You can exclude some placeholder from the revision process
 PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings, 'PAGE_CONTENT_REVISION_EXCLUDE_LIST', ())
 

@@ -12,7 +12,15 @@
         "model": "sites.site", 
         "fields": {
             "domain": "testserver", 
-            "name": "Test server"
+            "name": "Test server 1"
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "testserver2", 
+            "name": "Test server 2"
         }
     }
 ]

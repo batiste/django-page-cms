@@ -15,15 +15,18 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
-# TODO: move that into the model
-def get_page_children_for_site(page, site):
-    return page.get_children().filter(sites__domain=site.domain)
+# TODO: move that into the manager
+def get_page_children(page):
+    children = page.get_children()
+    if settings.PAGE_USE_SITE_ID:
+        children = children.filter(sites=settings.SITE_ID)
+    return children
 
 def pages_menu(context, page, url='/'):
     """render a nested list of all children of the pages"""
     request = context['request']
-    site = request.site
-    children = get_page_children_for_site(page, site)
+    site_id = None
+    children = get_page_children(page)
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
     lang = get_language_from_request(request)
     if 'current_page' in context:
@@ -39,11 +42,7 @@ def pages_sub_menu(context, page, url='/'):
     request = context['request']
     site = request.site
 
-    # TODO: is it worthwhile to have this cached?
-    #children = cache.get(Page.PAGE_CHILDREN_KEY % (page.id, site.id))
-    #if children is None:
-    children = get_page_children_for_site(page, site)
-    #cache.set(Page.PAGE_CHILDREN_KEY % (page.id, site.id), children)
+    children = get_page_children(page)
 
     if 'current_page' in context:
         current_page = context['current_page']

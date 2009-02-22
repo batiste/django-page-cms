@@ -15,15 +15,19 @@ def details(request, page_id=None, slug=None, raise404=True,
     All is rendered with the current page's template.
     """
     lang = get_language_from_request(request)
-    site = request.site
-    pages = Page.objects.navigation(site).order_by("tree_id")
+    site_id = None
+    """if request.site:
+        print request.site.name
+        print request.site.id"""
+        
+    pages = Page.objects.navigation().order_by("tree_id")
     
     if pages:
         if page_id:
             current_page = get_object_or_404(
-                Page.objects.published(site), pk=page_id)
+                Page.objects.published(), pk=page_id)
         elif slug:
-            slug_content = Content.objects.get_content_slug_by_slug(slug, site)
+            slug_content = Content.objects.get_content_slug_by_slug(slug)
             if slug_content and \
                 slug_content.page.calculated_status in (
                     Page.PUBLISHED, Page.HIDDEN):

@@ -28,7 +28,11 @@ class PageAdmin(admin.ModelAdmin):
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
-    general_fields = ['title', 'slug', 'status', 'sites']
+    general_fields = ['title', 'slug', 'status']
+
+    # TODO: find solution to do this dynamically
+    #if getattr(settings, 'PAGE_USE_SITE_ID'):
+    general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
 
     if settings.PAGE_TAGGING:
@@ -113,6 +117,7 @@ class PageAdmin(admin.ModelAdmin):
         Content object.
         """
         obj.save()
+        
         language = form.cleaned_data['language']
         target = request.GET.get('target', None)
         position = request.GET.get('position', None)
@@ -352,6 +357,7 @@ class PageAdmin(admin.ModelAdmin):
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')
+
 admin.site.register(Page, PageAdmin)
 
 class ContentAdmin(admin.ModelAdmin):

@@ -15,7 +15,6 @@ from pages import settings
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 
-
 class Page(models.Model):
     """
     A simple hierarchical page model
@@ -62,7 +61,7 @@ class Page(models.Model):
 
     if settings.PAGE_TAGGING:
         from tagging import fields
-        tags = fields.TagField()
+        tags = fields.TagField(null=True)
 
     class Meta:
         verbose_name = _('page')

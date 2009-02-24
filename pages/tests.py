@@ -5,10 +5,6 @@ from pages.models import *
 from django.test.client import Client
 from django.template import TemplateDoesNotExist
 
-
-
-
-
 class PagesTestCase(TestCase):
     fixtures = ['tests.json']
     counter = 1

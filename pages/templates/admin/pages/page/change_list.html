@@ -24,7 +24,7 @@
 <div id="content-main">
 
 {% if has_add_permission %}
-<ul class="object-tools"><li><a href="add/" class="addlink">{% blocktrans %}Add {{ name }}{% endblocktrans %}</a></li></ul>
+<ul class="object-tools"><li><a href="add/" class="addlink">{% blocktrans with name as name %}Add {{ name }}{% endblocktrans %}</a></li></ul>
 {% endif %}
 
 <div class="module" id="changelist">

@@ -125,7 +125,7 @@ class Page(models.Model):
         languages = []
         for lang in settings.PAGE_LANGUAGES:
             # one request by language to avoid to get huge revisions
-            if Content.objects.filter(language=lang[0], page=self, type="slug").latest.count() > 0:
+            if Content.objects.filter(language=lang[0], page=self, type="slug").count() > 0:
            	languages.append(lang[0])
 
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
@@ -275,7 +275,9 @@ if settings.PAGE_PERMISSION:
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
-    language = models.CharField(_('language'), max_length=3, blank=False)
+    
+    # languages could have five characters : Brazilian Portuguese is pt-br
+    language = models.CharField(_('language'), max_length=5, blank=False)
     body = models.TextField(_('body'))
     type = models.CharField(_('type'), max_length=100, blank=False)
     page = models.ForeignKey(Page, verbose_name=_('page'))

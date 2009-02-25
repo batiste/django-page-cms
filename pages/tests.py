@@ -170,5 +170,33 @@ class PagesTestCase(TestCase):
         self.test_05_edit_page()
         self.test_04_details_view()
 
+    def test_07_languages(self):
+        """
+        Test post a page with different languages
+        and test that the default view works correctly
+        """
+        c = Client()
+        user = c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data["title"] = 'english title'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page_data["language"] = 'fr'
+        page_data["title"] = 'french title'
+        response = c.post('/admin/pages/page/1/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.get(id=1)
+        
+        c = Client()
+        c.cookies["django_language"] = 'en'
+        response = c.get('/pages/')
+        self.assertContains(response, 'english title')
+        self.assertNotContains(response, 'french title')
+        
+        c = Client()
+        c.cookies["django_language"] = 'fr'
+        response = c.get('/pages/')
+        self.assertContains(response, 'french title')
+        self.assertContains(response, 'lang="fr"')
+        self.assertNotContains(response, 'english title')
         
 

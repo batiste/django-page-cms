@@ -106,6 +106,8 @@ PAGE_CONNECTED_MODELS = [
 ]
 
 gettext_noop = lambda s: s
+# language can be 5 characters long but  only the 2 first characters will be used 
+# see page.utils.get_language_from_request
 LANGUAGES = (
     ('fr', gettext_noop('French')),
     ('de', gettext_noop('German')),

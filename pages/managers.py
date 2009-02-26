@@ -121,22 +121,16 @@ class ContentManager(models.Manager):
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
         """
-        try:
-            content = self.filter(language=language, page=page,
-                                        type=cnttype).latest(latest_by)
-            return content.body
-        except self.model.DoesNotExist:
-            pass
+        content = reversed(self.filter(page=page, type=cnttype).order_by(latest_by).values('language', 'body'))
+        content_dict = dict([(c['language'], c['body']) for c in content])
+        if language in content_dict:
+            return content_dict[language]
         # requested language not found. Try other languages on after
         # the other
-        if language_fallback:
+        elif language_fallback:
             for lang in settings.PAGE_LANGUAGES:
-                try:
-                    content = self.filter(language=lang[0], page=page, 
-                        type=cnttype).latest(latest_by)
-                    return content.body
-                except self.model.DoesNotExist:
-                    pass
+                if lang[0] in content_dict:
+                    return content_dict[lang[0]]
         return None
 
     def get_content_slug_by_slug(self, slug, site_id=None, latest_by='creation_date'):

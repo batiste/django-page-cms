@@ -122,14 +122,10 @@ class Page(models.Model):
         if languages:
             return languages
 
-        languages = []
-        for lang in settings.PAGE_LANGUAGES:
-            # one request by language to avoid to get huge revisions
-            if Content.objects.filter(language=lang[0], page=self, type="slug").count() > 0:
-           	languages.append(lang[0])
-
+        languages = [c['language'] for c in Content.objects.filter(page=self, type="slug").values('language')]
+        languages = list(set(languages)) # remove duplicates
+        languages.sort()
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
-
         return languages
 
     def get_absolute_url(self, language=None):

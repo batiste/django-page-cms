@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from copy import copy
 from django.template import loader, Context, RequestContext, TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode
 from django.http import Http404
@@ -22,9 +21,7 @@ def get_placeholders(request, template_name):
         context = details(request, only_context=True)
     except Http404:
         context = {}
-    r = copy(request)
-    r.method = 'GET'
-    temp.render(RequestContext(r, context))
+    temp.render(RequestContext(request, context))
     plist = []
     placeholders_recursif(temp.nodelist, plist)
     return plist

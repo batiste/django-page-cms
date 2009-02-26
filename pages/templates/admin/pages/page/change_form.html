@@ -19,7 +19,7 @@
 {% endif %}{% endif %}
 {% endblock %}
 
-<form action="?language={{ language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post" id="page_form">
+<form action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post" id="page_form">
 {% for fieldset in adminform %}
   {% include "admin/pages/page/includes/fieldset.html" %}
 {% endfor %}

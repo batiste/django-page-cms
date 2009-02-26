@@ -52,7 +52,11 @@ def get_language_from_request(request, current_page=None):
     """
     Return the most obvious language according the request
     """
-    language = request.LANGUAGE_CODE[:2]
+    # first try the GET parameter
+    if request.GET.has_key('language'):
+        language = request.GET['language']
+    else:
+        language = request.LANGUAGE_CODE[:2]
     # if client language is not available
     if language is None and current_page:
         # in last resort, get the first language available in the page

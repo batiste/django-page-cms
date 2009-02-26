@@ -41,6 +41,7 @@ jQuery.cookie = function(name, value, options) {
     }
 };
 
+var submenu_cache = new Array();
 
 $(document).ready(function() {
     
@@ -165,11 +166,17 @@ $(document).ready(function() {
             var the_id = jtarget.attr('id').substring(1);
             jtarget.toggleClass('expanded');
             if(jtarget.hasClass('expanded')) {
-                $.get("/admin/pages/page/"+the_id+"/sub-menu/",
-                    function(html) {
-                        $('#page-row-'+the_id).after(html);
-                    }
-                );
+                if (submenu_cache[the_id]){
+                    $('#page-row-'+the_id).after(submenu_cache[the_id]);
+                } else {
+                    $.get("/admin/pages/page/"+the_id+"/sub-menu/",
+                        function(html) {
+                            $('#page-row-'+the_id).after(html);
+                            submenu_cache[the_id] = html;
+                            /* TODO: recursively re-expand submenus according to cookie */
+                        }
+                    );
+                }
             } else {
                 remove_children(the_id);
             }

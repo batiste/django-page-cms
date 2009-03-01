@@ -121,7 +121,7 @@ class ContentManager(models.Manager):
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
         """
-        content = reversed(self.filter(page=page, type=cnttype).order_by(latest_by).values('language', 'body'))
+        content = self.filter(page=page, type=cnttype).order_by(latest_by).values('language', 'body')
         content_dict = dict([(c['language'], c['body']) for c in content])
         if language in content_dict:
             return content_dict[language]

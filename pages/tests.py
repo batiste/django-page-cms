@@ -107,10 +107,13 @@ class PagesTestCase(TestCase):
         response = c.get('/admin/pages/page/1/')
         self.assertEqual(response.status_code, 200)
         page_data['title'] = 'changed title'
+        page_data['body'] = 'changed body'
         response = c.post('/admin/pages/page/1/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         page = Page.objects.get(id=1)
-        assert(page.title() == 'changed title')
+        self.assertEqual(page.title(), 'changed title')
+        body = Content.objects.get_content(page, 'en', 'body')
+        self.assertEqual(body, 'changed body')
         
     def test_06_site_framework(self):
         """
@@ -165,10 +168,6 @@ class PagesTestCase(TestCase):
         
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)
-        
-        self.test_02_create_page()
-        self.test_05_edit_page()
-        self.test_04_details_view()
 
     def test_07_languages(self):
         """
@@ -184,7 +183,6 @@ class PagesTestCase(TestCase):
         page_data["title"] = 'french title'
         response = c.post('/admin/pages/page/1/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        page = Page.objects.get(id=1)
         
         c = Client()
         c.cookies["django_language"] = 'en'

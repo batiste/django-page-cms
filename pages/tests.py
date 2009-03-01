@@ -176,6 +176,16 @@ class PagesTestCase(TestCase):
         """
         c = Client()
         user = c.login(username= 'batiste', password='b')
+        
+        # test that the default language setting is used add page admin
+        # and not accept-language in HTTP requests.
+        setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'de')
+        response = c.get('/admin/pages/page/add/')
+        self.assertContains(response, 'value="de" selected="selected"')
+        setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'fr')
+        response = c.get('/admin/pages/page/add/')
+        self.assertContains(response, 'value="fr" selected="selected"')
+        
         page_data = self.get_new_page_data()
         page_data["title"] = 'english title'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -184,6 +194,9 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/1/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         
+        # test that the frontend view use the good parameters
+        # I cannot find a way of setting the accept-language HTTP 
+        # header so I used django_language cookie instead
         c = Client()
         c.cookies["django_language"] = 'en'
         response = c.get('/pages/')

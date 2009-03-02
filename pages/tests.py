@@ -122,6 +122,7 @@ class PagesTestCase(TestCase):
         """
         setattr(settings, "SITE_ID", 2)
         setattr(settings, "PAGE_USE_SITE_ID", True)
+        
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -137,8 +138,11 @@ class PagesTestCase(TestCase):
         page_data["sites"] = [3]
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
+
+        # we cannot get a slug that doesn't exist
+        content = Content.objects.get_content_slug_by_slug("this doesn't exist")
         
-        # we cannot get the data posted on another site (why not after all?)
+        # we cannot get the data posted on another site
         content = Content.objects.get_content_slug_by_slug(page_data['slug'])
         self.assertEqual(content, None)
         

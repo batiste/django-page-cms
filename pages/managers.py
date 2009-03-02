@@ -125,7 +125,7 @@ class ContentManager(models.Manager):
         content_dict = dict([(c['language'], c['body']) for c in content])
         if language in content_dict:
             return content_dict[language]
-        # requested language not found. Try other languages on after
+        # requested language not found. Try other languages one after
         # the other
         elif language_fallback:
             for lang in settings.PAGE_LANGUAGES:
@@ -138,18 +138,11 @@ class ContentManager(models.Manager):
         Returns the latest Content slug object that match the given slug for
         the current site domain.
         """
+        content = self.filter(type='slug', body=slug)
+        if settings.PAGE_USE_SITE_ID:
+            content = content.filter(page__sites__id=settings.SITE_ID)
         try:
-            if settings.PAGE_USE_SITE_ID:
-                content = self.filter(
-                    type='slug',
-                    body=slug,
-                    page__sites__id=settings.SITE_ID,
-                ).select_related('page').latest(latest_by)
-            else:
-                content = self.filter(
-                    type='slug',
-                    body=slug,
-                ).select_related('page').latest(latest_by)
+           content = content.latest(latest_by)
         except self.model.DoesNotExist:
             return None
         else:

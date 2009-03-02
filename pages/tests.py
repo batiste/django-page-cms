@@ -197,11 +197,14 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         # this test only works in version superior of 1.0.2
-        major, middle, minor = [int(v) for v in django.get_version().rsplit()[0].split('.')]
+        django_version =  django.get_version().rsplit()[0].split('.')
+        if len(django_version) > 2:
+            major, middle, minor = [int(v) for v in django_version]
+        else:
+            major, middle = [int(v) for v in django_version]
         if major >=1 and middle > 0:
             response = c.get('/admin/pages/page/1/?language=de')
-            self.assertContains(response, 'value="de" selected="selected"')
-        
+            self.assertContains(response, 'value="de" selected="selected"')        
         page_data["language"] = 'fr'
         page_data["title"] = 'french title'
         response = c.post('/admin/pages/page/1/', page_data)

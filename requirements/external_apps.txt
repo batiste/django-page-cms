@@ -1,0 +1,4 @@
+django-mptt>=0.2.1
+html5lib>=0.10
+django-page-cms
+-e svn+http://django-tagging.googlecode.com/svn/trunk@154#egg=django-tagging

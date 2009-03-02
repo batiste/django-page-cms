@@ -212,7 +212,7 @@ class PageAdmin(admin.ModelAdmin):
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
         language = get_language_from_request(request, obj)
-        form.base_fields['language'].initial = language or settings.PAGE_DEFAULT_LANGUAGE
+        form.base_fields['language'].initial = language
         if obj:
             initial_slug = obj.slug(language=language, fallback=False)
             initial_title = obj.title(language=language, fallback=False)

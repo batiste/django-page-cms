@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import django
 from django.test import TestCase
 import settings
 from pages.models import *
@@ -185,10 +186,18 @@ class PagesTestCase(TestCase):
         setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'fr')
         response = c.get('/admin/pages/page/add/')
         self.assertContains(response, 'value="fr" selected="selected"')
-        
+
         page_data = self.get_new_page_data()
         page_data["title"] = 'english title'
         response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        # this test only works in version superior of 1.0.2
+        major, middle, minor = [int(v) for v in django.get_version().rsplit()[0].split('.')]
+        if major >=1 and middle > 0:
+            response = c.get('/admin/pages/page/1/?language=de')
+            self.assertContains(response, 'value="de" selected="selected"')
+        
         page_data["language"] = 'fr'
         page_data["title"] = 'french title'
         response = c.post('/admin/pages/page/1/', page_data)
@@ -209,5 +218,6 @@ class PagesTestCase(TestCase):
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr"')
         self.assertNotContains(response, 'english title')
+        
         
 

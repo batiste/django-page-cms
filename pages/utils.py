@@ -53,20 +53,25 @@ def get_language_from_request(request, current_page=None):
     Return the most obvious language according the request
     """
     # first try the GET parameter
-    if request.GET.has_key('language'):
-        language = request.GET['language']
-    else:
-        language = request.LANGUAGE_CODE[:2]
-    # if client language is not available
-    if language is None and current_page:
-        # in last resort, get the first language available in the page
+    language = request.GET.get('language', None)
+    if language:
+        return language
+    
+    client_language = str(request.LANGUAGE_CODE[:2])
+    # then try to get the right one for the page
+    if current_page:
+        # try to get the language that match the client language
         languages = current_page.get_languages()
-        if len(languages) > 0:
-            language = languages[0]
-    # if everything fails, use this :
-    if language is None:
-        language = settings.PAGE_DEFAULT_LANGUAGE
-    return language
+        for lang in languages:
+            if client_language == lang[:2]:
+                return client_language
+        # try to get the language that match default language
+        for lang in languages:
+            if settings.PAGE_DEFAULT_LANGUAGE == lang[:2]:
+                return settings.PAGE_DEFAULT_LANGUAGE
+     
+    # last resort
+    return settings.PAGE_DEFAULT_LANGUAGE
 
 def has_page_add_permission(request, page=None):
     """

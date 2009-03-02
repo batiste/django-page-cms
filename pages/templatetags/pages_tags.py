@@ -28,7 +28,7 @@ def pages_menu(context, page, url='/'):
     site_id = None
     children = get_page_children(page)
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
-    lang = get_language_from_request(request)
+    lang = get_language_from_request(request, page)
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -97,7 +97,7 @@ def show_content(context, page, content_type, lang=None):
             return {'content':''}
 
     if lang is None:
-        lang = get_language_from_request(context['request'])
+        lang = get_language_from_request(context['request'], page)
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
         key = Page.PAGE_CONTENT_KEY % (page.id, lang, content_type)
         c = cache.get(key)
@@ -139,7 +139,7 @@ def show_absolute_url(context, page, lang=None):
     if not request or not page:
         return {'content':''}
     if lang is None:
-        lang = get_language_from_request(context['request'])
+        lang = get_language_from_request(context['request'], page)
     if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
         key = 'page_url_pid:'+str(page.id)+'_l:'+str(lang)+'_type:absolute_url'
         url = cache.get(key)
@@ -304,7 +304,7 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         if not 'request' in context or not self.page in context:
             return ''
-        language = get_language_from_request(context['request'])
+        language = get_language_from_request(context['request'], context[self.page])
         request = context['request']
         content = Content.objects.get_content(context[self.page], language,
                                               self.name, True)

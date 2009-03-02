@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import itertools
 from datetime import datetime
-
-from django.db import models
+from django.db import models, connection
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
@@ -115,14 +114,19 @@ class ContentManager(models.Manager):
             pass
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
-    def get_content(self, page, language, cnttype, language_fallback=False,
-            latest_by='creation_date'):
+    def get_content(self, page, language, cnttype, language_fallback=False):
         """
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
         """
-        content = self.filter(page=page, type=cnttype).order_by(latest_by).values('language', 'body')
-        content_dict = dict([(c['language'], c['body']) for c in content])
+        # used for the DISTINCT on the language. Should be nicer with a lot of revision
+        sql = '''SELECT DISTINCT(pages_content.language), pages_content.body
+            FROM pages_content WHERE (pages_content.type = %s
+            AND pages_content.page_id = %s )
+            ORDER BY pages_content.creation_date ASC'''
+        cursor = connection.cursor()
+        cursor.execute(sql, (cnttype, page.id))
+        content_dict = dict([(c[0], c[1]) for c in cursor.fetchall()])
         if language in content_dict:
             return content_dict[language]
         # requested language not found. Try other languages one after
@@ -133,7 +137,7 @@ class ContentManager(models.Manager):
                     return content_dict[lang[0]]
         return None
 
-    def get_content_slug_by_slug(self, slug, site_id=None, latest_by='creation_date'):
+    def get_content_slug_by_slug(self, slug):
         """
         Returns the latest Content slug object that match the given slug for
         the current site domain.
@@ -142,7 +146,7 @@ class ContentManager(models.Manager):
         if settings.PAGE_USE_SITE_ID:
             content = content.filter(page__sites__id=settings.SITE_ID)
         try:
-           content = content.latest(latest_by)
+           content = content.latest('creation_date')
         except self.model.DoesNotExist:
             return None
         else:

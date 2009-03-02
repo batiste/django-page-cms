@@ -226,5 +226,25 @@ class PagesTestCase(TestCase):
         self.assertContains(response, 'lang="fr"')
         self.assertNotContains(response, 'english title')
         
+    def test_08_revision(self):
+        """
+        Test that a page can edited several times
+        """
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        response = c.post('/admin/pages/page/add/', page_data)
+        page = Page.objects.get(id=1)
         
+        page_data['body'] = 'changed body'
+        response = c.post('/admin/pages/page/1/', page_data)
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'), 'changed body')
+
+        page_data['body'] = 'changed body 2'
+        response = c.post('/admin/pages/page/1/', page_data)
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'), 'changed body 2')
+
+        setattr(settings, "PAGE_CONTENT_REVISION", False)
+        
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'), 'changed body 2')
 

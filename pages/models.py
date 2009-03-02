@@ -98,6 +98,13 @@ class Page(models.Model):
         return self.status
     calculated_status = property(get_calculated_status)
 
+    def get_children_for_frontend(self):
+        """Return children of the page for the frontend """
+        children = self.get_children()
+        if settings.PAGE_USE_SITE_ID:
+            children = children.filter(sites=settings.SITE_ID)
+        return children
+
     def invalidate(self):
         """Invalidate a page and it's descendants"""
         self.invalidate_if_parent_changed()

@@ -15,20 +15,12 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
-# TODO: move that into the manager
-def get_page_children(page):
-    children = page.get_children()
-    if settings.PAGE_USE_SITE_ID:
-        children = children.filter(sites=settings.SITE_ID)
-    return children
-
 def pages_menu(context, page, url='/'):
     """render a nested list of all children of the pages"""
     request = context['request']
     site_id = None
-    children = get_page_children(page)
+    children = page.get_children_for_frontend()
     PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
-    lang = get_language_from_request(request, page)
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -40,9 +32,7 @@ def pages_sub_menu(context, page, url='/'):
     render a nested list of all root's children pages"""
     root = page.get_root()
     request = context['request']
-
-    children = get_page_children(page)
-
+    children = page.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -103,7 +93,7 @@ def show_content(context, page, content_type, lang=None):
         c = cache.get(key)
         if c is None:
             c = Content.objects.get_content(page, lang, content_type, True)
-            # Storing None force SQL requests
+            # Storing None force SQL requests every time
             if c is None:
                 c = " "
             cache.set(key, c, settings.PAGE_CONTENT_CACHE_DURATION)
@@ -304,6 +294,7 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         if not 'request' in context or not self.page in context:
             return ''
+        
         language = get_language_from_request(context['request'], context[self.page])
         request = context['request']
         content = Content.objects.get_content(context[self.page], language,

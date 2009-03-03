@@ -120,13 +120,13 @@ class ContentManager(models.Manager):
         to another language if wanted.
         """
         # used for the DISTINCT on the language. Should be nicer with a lot of revision
-        sql = '''SELECT DISTINCT(pages_content.language), pages_content.body
+        sql = '''SELECT DISTINCT(pages_content.language), pages_content.creation_date, pages_content.body
             FROM pages_content WHERE (pages_content.type = %s
             AND pages_content.page_id = %s )
             ORDER BY pages_content.creation_date ASC'''
         cursor = connection.cursor()
         cursor.execute(sql, (cnttype, page.id))
-        content_dict = dict([(c[0], c[1]) for c in cursor.fetchall()])
+        content_dict = dict([(c[0], c[2]) for c in cursor.fetchall()])
         if language in content_dict:
             return content_dict[language]
         # requested language not found. Try other languages one after

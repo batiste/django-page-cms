@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from distutils.core import setup
 import glob
 
@@ -19,7 +20,7 @@ setup(
     requires=(
         'html5lib (>=0.10)', 
         'tagging (>0.2.1)', # please use the trunk version of tagging
-        'django_mptt (>=0.2.1)', 
+        'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
     packages=[
         'pages',

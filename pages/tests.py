@@ -24,7 +24,7 @@ class PagesTestCase(TestCase):
         c = Client()
         c.login(username= 'batiste', password='b')
         response = c.get('/admin/pages/page/add/')
-        assert(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
 
 
     def test_02_create_page(self):
@@ -40,8 +40,8 @@ class PagesTestCase(TestCase):
         slug_content = Content.objects.get_content_slug_by_slug(page_data['slug'])
         assert(slug_content is not None)
         page = slug_content.page
-        assert(page.title() == page_data['title'])
-        assert(page.slug() == page_data['slug'])
+        self.assertEqual(page.title(), page_data['title'])
+        self.assertEqual(page.slug(), page_data['slug'])
 
     def test_03_slug_collision(self):
         """
@@ -248,3 +248,18 @@ class PagesTestCase(TestCase):
         
         self.assertEqual(Content.objects.get_content(page, 'en', 'body'), 'changed body 2')
 
+    def test_09_placeholder(self):
+        """
+        Test that the placeholder is correctly displayed in
+        the admin
+        """
+        setattr(settings, "SITE_ID", 2)
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['template'] = 'pages/nice.html'
+        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.get('/admin/pages/page/1/')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, 'name="right-column"', 1)

@@ -32,7 +32,12 @@ def placeholders_recursif(nodelist, plist):
     """
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
-            plist.append(node)
+            already_in_plist = False
+            for p in plist:
+                if p.name == node.name:
+                    already_in_plist = True
+            if not already_in_plist:
+                plist.append(node)
             node.render(Context())
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
             if hasattr(node, key):

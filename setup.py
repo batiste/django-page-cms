@@ -1,14 +1,4 @@
-# -*- coding: utf-8 -*-
-from distutils.core import setup
-import glob
-
-data = [ "locale/" + l.rsplit('/')[-1]+"/LC_MESSAGES/*.*" for l in glob.glob("pages/locale/*")]
-data.extend([
-    'templates/admin/pages/page/*.html',
-    'templates/pages/*.html',
-    'fixtures/*.json'
-    ]
-)
+from setuptools import setup, find_packages
 
 setup(
     name='django-page-cms',
@@ -22,14 +12,9 @@ setup(
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
-    packages=[
-        'pages',
-        'pages.admin',
-        'pages.templatetags',
-        #'example',
-    ],
-    package_dir={'pages': 'pages', 'pages.locale': 'locale', 'pages.templates': 'templates'},
-    package_data={'pages': data},
+    packages=find_packages(exclude=['example', 'example.*']),
+    include_package_data=True, # include package data under svn source control
+    zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
@@ -41,5 +26,5 @@ setup(
         'Programming Language :: Python :: 2.3',
         'Programming Language :: JavaScript',
         'Topic :: Internet :: WWW/HTTP :: Site Management',
-    ]
+    ],
 )

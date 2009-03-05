@@ -2,6 +2,7 @@ include INSTALL
 include LICENSE
 include MANIFEST.in
 recursive-include docs *
+recursive-include pages/locale *
 recursive-include pages/media *
 recursive-include pages/templates *
 recursive-include example/fixtures *

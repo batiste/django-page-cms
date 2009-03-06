@@ -240,7 +240,7 @@ class PagesTestCase(TestCase):
         self.assertContains(response, 'lang="fr-ch"')
 
         
-    '''def test_08_revision(self):
+    def test_08_revision(self):
         """
         Test that a page can edited several times
         """
@@ -276,4 +276,4 @@ class PagesTestCase(TestCase):
         response = c.get('/admin/pages/page/1/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertContains(response, 'name="right-column"', 1)'''
+        self.assertContains(response, 'name="right-column"', 1)

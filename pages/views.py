@@ -13,7 +13,6 @@ def details(request, page_id=None, slug=None):
     and the current page if there is any root page. 
     All is rendered with the current page's template.
     """
-    lang = get_language_from_request(request)
     pages = Page.objects.navigation().order_by("tree_id")
     
     if pages:
@@ -34,6 +33,7 @@ def details(request, page_id=None, slug=None):
     else:
         raise Http404
 
+    lang = get_language_from_request(request, current_page)
     template_name = current_page.get_template()
     return template_name, locals()
 details = auto_render(details)

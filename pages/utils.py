@@ -57,19 +57,16 @@ def get_language_from_request(request, current_page=None):
     if language:
         return language
     
-    client_language = str(request.LANGUAGE_CODE[:2])
+    client_language = settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+
     # then try to get the right one for the page
     if current_page:
         # try to get the language that match the client language
         languages = current_page.get_languages()
         for lang in languages:
-            if client_language == lang[:2]:
+            if client_language == str(lang):
                 return client_language
-        # try to get the language that match default language
-        for lang in languages:
-            if settings.PAGE_DEFAULT_LANGUAGE == lang[:2]:
-                return settings.PAGE_DEFAULT_LANGUAGE
-     
+
     # last resort
     return settings.PAGE_DEFAULT_LANGUAGE
 

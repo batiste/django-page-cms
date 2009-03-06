@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os.path import join
 from django.conf import settings
 from django.forms import TextInput, Textarea

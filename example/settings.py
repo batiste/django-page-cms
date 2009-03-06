@@ -28,10 +28,6 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -104,16 +100,33 @@ PAGE_CONNECTED_MODELS = [
     {'model':'documents.models.Document','form':'documents.models.DocumentForm'},
 ]
 
+# Default language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en-us'
+
 gettext_noop = lambda s: s
-# language can be 5 characters long but  only the 2 first characters will be used 
-# see page.utils.get_language_from_request
-LANGUAGES = (
-    ('fr', gettext_noop('French')),
+# language you want to into the CMS
+PAGE_LANGUAGES = (
     ('de', gettext_noop('German')),
-    ('en', gettext_noop('English')),
+    ('fr-ch', gettext_noop('Swiss french')),
+    ('en-us', gettext_noop('US English')),
 )
 
-SQL_DEBUGGING = False
+# You should add here all language you want to accept as valid client language
+languages = list(PAGE_LANGUAGES)
+languages.append(('fr-fr', gettext_noop('French')))
+languages.append(('fr-be', gettext_noop('Belgium french')))
+LANGUAGES = languages
+
+# This enable you to map a language(s) to another one, these languages should
+# be in the LANGUAGES config
+def language_mapping(lang):
+    if lang.startswith('fr'):
+        # serve swiss french for everyone
+        return 'fr-ch'
+    return lang
+
+PAGE_LANGUAGE_MAPPING = language_mapping
 
 DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
 

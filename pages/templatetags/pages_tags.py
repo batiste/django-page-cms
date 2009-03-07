@@ -130,14 +130,7 @@ def show_absolute_url(context, page, lang=None):
         return {'content':''}
     if lang is None:
         lang = get_language_from_request(context['request'], page)
-    if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
-        key = 'page_url_pid:'+str(page.id)+'_l:'+str(lang)+'_type:absolute_url'
-        url = cache.get(key)
-        if not url:
-            url = page.get_absolute_url(language=lang)
-            cache.set(key, url, settings.PAGE_CONTENT_CACHE_DURATION)
-    else:
-        url = page.get_absolute_url(language=lang)
+    url = page.get_absolute_url(language=lang)
     if url:
         return {'content':url}
     return {'content':''}

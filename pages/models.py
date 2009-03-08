@@ -100,10 +100,7 @@ class Page(models.Model):
 
     def get_children_for_frontend(self):
         """Return children of the page for the frontend """
-        children = self.get_children().filter(status=self.PUBLISHED)
-        if settings.PAGE_USE_SITE_ID:
-            children = children.filter(sites=settings.SITE_ID)
-        return children
+        return Page.objects.filter_published(self.get_children())
 
     def invalidate(self):
         """Invalidate a page and it's descendants"""

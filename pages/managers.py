@@ -5,7 +5,6 @@ from django.db import models, connection
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
-
 from pages import settings
 
 class PageManager(models.Manager):
@@ -45,21 +44,25 @@ class PageManager(models.Manager):
     def hidden(self):
         return self.on_site().filter(status=self.model.HIDDEN)
 
-    def published(self):
-        pub = itertools.chain(
-            self.on_site().filter(status=self.model.PUBLISHED),
-            self.hidden()
-        )
+    def filter_published(self, queryset):
+        """Resuable filter for published page"""
+        if settings.PAGE_USE_SITE_ID:
+            queryset = queryset.filter(sites=settings.SITE_ID)
+
+        queryset = queryset.filter(status=self.model.PUBLISHED)
 
         if settings.PAGE_SHOW_START_DATE:
-            pub = pub.filter(publication_date__lte=datetime.now())
+            queryset = queryset.filter(publication_date__lte=datetime.now())
 
         if settings.PAGE_SHOW_END_DATE:
-            pub = pub.filter(
+            queryset = queryset.filter(
                 Q(publication_end_date__gt=datetime.now()) |
                 Q(publication_end_date__isnull=True)
             )
-        return pub
+        return queryset
+
+    def published(self):
+        return self.filter_published(self)
 
     def drafts(self):
         pub = self.on_site().filter(status=self.model.DRAFT)

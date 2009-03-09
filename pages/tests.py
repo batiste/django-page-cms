@@ -47,7 +47,7 @@ class PagesTestCase(TestCase):
         """
         Test a slug collision
         """
-        setattr(settings, "SITE_ID", 2)
+        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
 
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -92,9 +92,9 @@ class PagesTestCase(TestCase):
         page_data['status'] = Page.PUBLISHED
         page_data['slug'] = 'test-page-2'
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/admin/pages/page/')
+        self.assertRedirects(response, '/admin/pages/page/')
 
-        response = c.get('/pages/')
+        response = c.get('/pages/test-page-2/')
         self.assertEqual(response.status_code, 200)
 
     def test_05_edit_page(self):
@@ -258,6 +258,9 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/1/', page_data)
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
 
+        response = c.get('/pages/')
+        self.assertContains(response, 'changed body 2', 1)
+        
         setattr(settings, "PAGE_CONTENT_REVISION", False)
         
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
@@ -277,3 +280,39 @@ class PagesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, 'name="right-column"', 1)
+
+    def test_10_directory_slug(self):
+        """
+        Test diretory slugs
+        """
+        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        c = Client()
+        c.login(username= 'batiste', password='b')
+
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'parent title'
+        response = c.post('/admin/pages/page/add/', page_data)
+        # the redirect tell that the page has been create correctly
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        response = c.post('/admin/pages/page/add/', page_data)
+        # we cannot create 2 root page with the same slug
+        # this assert test that the creation fail as attended
+        self.assertEqual(response.status_code, 200)
+
+        response = c.get('/pages/test-page-1/')
+
+        page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+        self.assertEqual(page1.id, 1)
+
+        page_data['title'] = 'children title'
+        # raise a bug with django 1.0.2
+        response = c.post('/admin/pages/page/add/?target=1&position=first-child', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        # finaly test that we can get every page according the path
+        response = c.get('/pages/test-page/')
+        self.assertContains(response, "parent title", status_code == 200)
+
+        response = c.get('/pages/test-page-1/test-page-1/')
+        self.assertContains(response, "children title", status_code == 200)

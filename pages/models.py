@@ -143,10 +143,7 @@ class Page(models.Model):
         if url:
             return url
         
-        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            url = u'%s/' % self.slug(language)
-        else:
-            url = u'%s-%d/' % (self.slug(language), self.id)
+        url = u'%s/' % self.slug(language)
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
         

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -43,4 +44,7 @@ class PageForm(forms.ModelForm):
                     raise forms.ValidationError(_('Another page with this slug already exists'))
             elif Content.objects.filter(body=slug, type="slug").count():
                 raise forms.ValidationError(_('Another page with this slug already exists'))
+        elif self.instance.id:
+            if slug in [sibling.slug() for sibling in self.instance.get_siblings()]:
+                raise forms.ValidationError(_('A sbiling with this slug already exists'))
         return slug

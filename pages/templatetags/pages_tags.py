@@ -121,11 +121,7 @@ def show_absolute_url(context, page, lang=None):
     request = context.get('request', False)
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode):
-        c = Content.objects.filter(type='slug', body=page)
-        if len(c):
-            page = c[0].page
-        else:
-            page = None
+        page = get_page_from_slug(slug, request)
     if not request or not page:
         return {'content':''}
     if lang is None:

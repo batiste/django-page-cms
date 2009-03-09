@@ -4,8 +4,8 @@ from django.template import RequestContext
 from django.db.models import signals
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.sites.models import Site, RequestSite, SITE_CACHE
-
 from pages import settings
+from pages.models import Content, Page
 
 def auto_render(func):
     """Decorator that put automaticaly the template path in the context dictionary
@@ -82,3 +82,18 @@ def has_page_add_permission(request, page=None):
         if permission == "All":
             return True
     return False
+
+from django.core.urlresolvers import reverse
+def get_page_from_slug(slug, request):
+    lang = get_language_from_request(request)
+    relative_url = request.path.replace(reverse('pages-root'), '')
+    page_ids = Content.objects.get_page_ids_by_slug(slug)
+    pages_list = Page.objects.filter(id__in=page_ids)
+    current_page = None
+    if len(pages_list) == 1:
+        return pages_list[0]
+    if len(pages_list) > 1:
+        for page in pages_list:
+            if page.get_url(lang) == relative_url:
+                return page
+    return None

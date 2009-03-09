@@ -228,16 +228,18 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         # handle most of the logic of connected models
+        
         if obj:
             for mod in get_connected_models():
                 model = mod['model']
                 attributes = {'page': obj.id}
                 validate_field = True
-            
+                
                 if request.POST:
                     for field_name, real_field_name, field in mod['fields']:
                         if field_name in request.POST and request.POST[field_name]:
                             attributes[real_field_name] = request.POST[field_name]
+
                     if len(attributes) > 1:
                         connected_form = mod['form'](attributes)
                         if connected_form.is_valid():
@@ -245,9 +247,10 @@ class PageAdmin(admin.ModelAdmin):
                     else:
                         validate_field = False
 
-                if validate_field:
-                    for field_name, real_field_name, field in mod['fields']:
-                        form.base_fields[field_name] = field
+                for field_name, real_field_name, field in mod['fields']:
+                    form.base_fields[field_name] = field
+                    if not validate_field:
+                        form.base_fields[field_name].required = False
 
         for placeholder in get_placeholders(request, template):
             widget = self.get_widget(request, placeholder.widget)()

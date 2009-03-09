@@ -123,13 +123,14 @@ class ContentManager(models.Manager):
         to another language if wanted.
         """
         # used for the DISTINCT on the language. Should be nicer with a lot of revision
-        sql = '''SELECT DISTINCT(pages_content.language), pages_content.creation_date, pages_content.body
+        sql = '''SELECT pages_content.language, pages_content.body
             FROM pages_content WHERE (pages_content.type = %s
             AND pages_content.page_id = %s )
-            ORDER BY pages_content.creation_date ASC'''
+            GROUP BY pages_content.language
+            ORDER BY pages_content.creation_date DESC'''
         cursor = connection.cursor()
         cursor.execute(sql, (cnttype, page.id))
-        content_dict = dict([(c[0], c[2]) for c in cursor.fetchall()])
+        content_dict = dict([(c[0], c[1]) for c in cursor.fetchall()])
         if language in content_dict:
             return content_dict[language]
         # requested language not found. Try other languages one after
@@ -154,6 +155,18 @@ class ContentManager(models.Manager):
             return None
         else:
             return content
+
+    def get_page_ids_by_slug(self, slug):
+        """
+        Return all the page id according to a slug
+        """
+        sql = '''SELECT pages_content.page_id, pages_content.language
+            FROM pages_content WHERE (pages_content.type = %s AND pages_content.body =%s)
+            GROUP BY pages_content.language, pages_content.page_id
+            ORDER BY pages_content.creation_date DESC'''
+        cursor = connection.cursor()
+        cursor.execute(sql, ('slug', slug, ))
+        return [c[0] for c in cursor.fetchall()]
 
 class PagePermissionManager(models.Manager):
     

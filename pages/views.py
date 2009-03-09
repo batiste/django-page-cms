@@ -2,35 +2,29 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
-
 from pages import settings
 from pages.models import Page, Content
-from pages.utils import auto_render, get_language_from_request
+from pages.utils import auto_render, get_language_from_request, get_page_from_slug
 
-def details(request, page_id=None, slug=None):
+def details(request, slug=None):
     """
-    Example view that get the root pages for navigation, 
-    and the current page if there is any root page. 
+    Example view that get the root pages for navigation,
+    and the current page if there is any root page.
     All is rendered with the current page's template.
     """
     pages = Page.objects.navigation().order_by("tree_id")
-    
+    current_page = False
+
     if pages:
-        if page_id:
-            current_page = get_object_or_404(
-                Page.objects.published(), pk=page_id)
-        elif slug:
-            slug_content = Content.objects.get_content_slug_by_slug(slug)
-            if slug_content and \
-                slug_content.page.calculated_status in (
-                    Page.PUBLISHED, Page.HIDDEN):
-                current_page = slug_content.page
-            else:
-                raise Http404
+        if slug:
+            current_page = get_page_from_slug(slug, request)
         else:
             current_page = pages[0]
-        
-    else:
+
+    if not current_page:
+        raise Http404
+
+    if not current_page.calculated_status in (Page.PUBLISHED, Page.HIDDEN):
         raise Http404
 
     lang = get_language_from_request(request, current_page)

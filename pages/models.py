@@ -146,7 +146,7 @@ class Page(models.Model):
         url = u'%s/' % self.slug(language)
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
-        
+
         cache.set(self.PAGE_URL_KEY % (self.id, language), url)
             
         return url
@@ -159,13 +159,14 @@ class Page(models.Model):
         if slug:
             return slug
 
-        if not language:
-            language = settings.PAGE_DEFAULT_LANGUAGE
-
         slug = Content.objects.get_content(self, language, 'slug',
                                            language_fallback=fallback)
 
-        cache.set(self.PAGE_URL_KEY % (self.id, language), slug)
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+
+        # Seems to trigger errors with the new slug dup
+        #cache.set(self.PAGE_URL_KEY % (self.id, language), slug)
 
         return slug
 

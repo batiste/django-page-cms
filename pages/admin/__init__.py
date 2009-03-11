@@ -28,7 +28,7 @@ class PageAdmin(admin.ModelAdmin):
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
-    general_fields = ['title', 'slug', 'status']
+    general_fields = ['title', 'slug', 'status', 'target', 'position']
 
     # TODO: find solution to do this dynamically
     #if getattr(settings, 'PAGE_USE_SITE_ID'):
@@ -113,16 +113,16 @@ class PageAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        Move the page in the tree if neccesary and save every placeholder
+        Move the page in the tree if necessary and save every placeholder
         Content object.
         """
-        obj.save()
         
         language = form.cleaned_data['language']
-        target = request.GET.get('target', None)
-        position = request.GET.get('position', None)
-        
-        if target is not None and position is not None:
+        target = form.data.get('target', None)
+        position = form.data.get('position', None)
+        obj.save()
+
+        if target and position:
             try:
                 target = self.model.objects.get(pk=target)
             except self.model.DoesNotExist:
@@ -150,7 +150,7 @@ class PageAdmin(admin.ModelAdmin):
                 else:
                     Content.objects.set_or_create_content(obj, language,
                         placeholder.name, form.cleaned_data[placeholder.name])
-                        
+        
         obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):

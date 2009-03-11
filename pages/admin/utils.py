@@ -59,7 +59,6 @@ def get_connected_models():
         model = {}
         mod_name, form_name = get_mod_func(capp['form'])
         f = getattr(__import__(mod_name, {}, {}, ['']), form_name)
-        #print f.Meta
         model['form'] = f
         mod_name, model_name = get_mod_func(capp['model'])
         model['model_name'] = model_name

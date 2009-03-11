@@ -55,12 +55,14 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
-        page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
-
+        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertEqual(response.status_code, 200)
 
-        settings.PAGE_UNIQUE_SLUG_REQUIRED = False
+        page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+        page_data['position'] = 'first-child'
+        page_data['target'] = page1.id
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         page2 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
@@ -291,6 +293,7 @@ class PagesTestCase(TestCase):
 
         page_data = self.get_new_page_data()
         page_data['title'] = 'parent title'
+        page_data['slug'] = 'same-slug'
         response = c.post('/admin/pages/page/add/', page_data)
         # the redirect tell that the page has been create correctly
         self.assertRedirects(response, '/admin/pages/page/')
@@ -300,19 +303,20 @@ class PagesTestCase(TestCase):
         # this assert test that the creation fail as attended
         self.assertEqual(response.status_code, 200)
 
-        response = c.get('/pages/test-page-1/')
+        response = c.get('/pages/same-slug/')
 
         page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertEqual(page1.id, 1)
 
         page_data['title'] = 'children title'
-        # raise a bug with django 1.0.2
-        response = c.post('/admin/pages/page/add/?target=1&position=first-child', page_data)
+        page_data['target'] = 1
+        page_data['position'] = 'first-child'
+        response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
         # finaly test that we can get every page according the path
-        response = c.get('/pages/test-page/')
-        self.assertContains(response, "parent title", status_code == 200)
+        response = c.get('/pages/same-slug/')
+        self.assertContains(response, "parent title", 2)
 
-        response = c.get('/pages/test-page-1/test-page-1/')
-        self.assertContains(response, "children title", status_code == 200)
+        response = c.get('/pages/same-slug/same-slug/')
+        self.assertContains(response, "children title", 2)

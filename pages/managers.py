@@ -117,29 +117,28 @@ class ContentManager(models.Manager):
             pass
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
-    def get_content(self, page, language, cnttype, language_fallback=False):
+    def get_content(self, page, language, type, language_fallback=False):
         """
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
         """
-        # used for the DISTINCT on the language. Should be nicer with a lot of revision
-        sql = '''SELECT pages_content.language, pages_content.body
-            FROM pages_content WHERE (pages_content.type = %s
-            AND pages_content.page_id = %s )
-            GROUP BY pages_content.language
-            ORDER BY pages_content.creation_date DESC'''
-        cursor = connection.cursor()
-        cursor.execute(sql, (cnttype, page.id))
-        content_dict = dict([(c[0], c[1]) for c in cursor.fetchall()])
-        if language in content_dict:
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+        content_dict = {}
+        for lang in settings.PAGE_LANGUAGES:
+            try:
+                content = self.filter(language=lang[0], type=type, page=page).latest()
+                content_dict[lang[0]] = content.body
+            except self.model.DoesNotExist:
+                content_dict[lang[0]] = ''
+        if content_dict[language]:
             return content_dict[language]
-        # requested language not found. Try other languages one after
-        # the other
-        elif language_fallback:
+
+        if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
-                if lang[0] in content_dict:
+                if content_dict[lang[0]]:
                     return content_dict[lang[0]]
-        return None
+        return ''
 
     def get_content_slug_by_slug(self, slug):
         """
@@ -160,10 +159,10 @@ class ContentManager(models.Manager):
         """
         Return all the page id according to a slug
         """
-        sql = '''SELECT pages_content.page_id, pages_content.language
+        sql = '''SELECT pages_content.page_id, MAX(pages_content.creation_date)
             FROM pages_content WHERE (pages_content.type = %s AND pages_content.body =%s)
-            GROUP BY pages_content.language, pages_content.page_id
-            ORDER BY pages_content.creation_date DESC'''
+            GROUP BY pages_content.page_id'''
+            
         cursor = connection.cursor()
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]

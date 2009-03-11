@@ -107,13 +107,15 @@ class PagesTestCase(TestCase):
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/admin/pages/page/1/')
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.all()[0]
+        response = c.get('/admin/pages/page/%d/' % page.id)
         self.assertEqual(response.status_code, 200)
         page_data['title'] = 'changed title'
         page_data['body'] = 'changed body'
-        response = c.post('/admin/pages/page/1/', page_data)
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        page = Page.objects.get(id=1)
+        page = Page.objects.get(id=page.id)
         self.assertEqual(page.title(), 'changed title')
         body = Content.objects.get_content(page, 'en-us', 'body')
         self.assertEqual(body, 'changed body')
@@ -198,6 +200,8 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
+        page = Page.objects.all()[0]
+
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
         if len(django_version) > 2:
@@ -205,13 +209,13 @@ class PagesTestCase(TestCase):
         else:
             major, middle = [int(v) for v in django_version]
         if major >=1 and middle > 0:
-            response = c.get('/admin/pages/page/1/?language=de')
+            response = c.get('/admin/pages/page/%d/?language=de' % page.id)
             self.assertContains(response, 'value="de" selected="selected"')
 
         # add a french version of the same page
         page_data["language"] = 'fr-ch'
         page_data["title"] = 'french title'
-        response = c.post('/admin/pages/page/1/', page_data)
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
         setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'en-us')
@@ -250,14 +254,14 @@ class PagesTestCase(TestCase):
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
-        page = Page.objects.get(id=1)
+        page = Page.objects.all()[0]
         
         page_data['body'] = 'changed body'
-        response = c.post('/admin/pages/page/1/', page_data)
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body')
 
         page_data['body'] = 'changed body 2'
-        response = c.post('/admin/pages/page/1/', page_data)
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
 
         response = c.get('/pages/')
@@ -278,7 +282,8 @@ class PagesTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['template'] = 'pages/nice.html'
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/admin/pages/page/1/')
+        page = Page.objects.all()[0]
+        response = c.get('/admin/pages/page/%d/' % page.id)
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, 'name="right-column"', 1)
@@ -298,6 +303,8 @@ class PagesTestCase(TestCase):
         # the redirect tell that the page has been create correctly
         self.assertRedirects(response, '/admin/pages/page/')
 
+        page = Page.objects.all()[0]
+
         response = c.post('/admin/pages/page/add/', page_data)
         # we cannot create 2 root page with the same slug
         # this assert test that the creation fail as attended
@@ -306,10 +313,10 @@ class PagesTestCase(TestCase):
         response = c.get('/pages/same-slug/')
 
         page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
-        self.assertEqual(page1.id, 1)
+        self.assertEqual(page1.id, page.id)
 
         page_data['title'] = 'children title'
-        page_data['target'] = 1
+        page_data['target'] = page1.id
         page_data['position'] = 'first-child'
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')

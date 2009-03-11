@@ -284,6 +284,7 @@ class Content(models.Model):
     objects = ContentManager()
 
     class Meta:
+        get_latest_by = 'creation_date'
         verbose_name = _('content')
         verbose_name_plural = _('contents')
 

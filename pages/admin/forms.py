@@ -60,7 +60,7 @@ class PageForm(forms.ModelForm):
             if target and position:
                 try:
                     target = Page.objects.get(pk=target)
-                except self.model.DoesNotExist:
+                except Page.DoesNotExist:
                     if slug in [sibling.slug() for sibling in Page.objects.root()]:
                         raise forms.ValidationError(_('A sibiling with this slug already exists at the root level'))
                 else:

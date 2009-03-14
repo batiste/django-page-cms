@@ -12,6 +12,7 @@ from django.contrib.sites.models import Site
 
 import mptt
 from pages import settings
+from pages.utils import get_placeholders
 from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 
@@ -30,12 +31,11 @@ class Page(models.Model):
         (HIDDEN, _('Hidden')),
     )
 
-    PAGE_SLUG_KEY = "page_%d_language_%s_slug"
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_language_%s_url"
     PAGE_TEMPLATE_KEY = "page_%d_template"
     #PAGE_CHILDREN_KEY = "page_children_%d_%d"
-    PAGE_CONTENT_KEY = "page_content_%d_%s_%s"
+    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
     parent = models.ForeignKey('self', null=True, blank=True, 
@@ -104,20 +104,22 @@ class Page(models.Model):
 
     def invalidate(self):
         """Invalidate a page and it's descendants"""
-        self.invalidate_if_parent_changed()
-        cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
 
-    def invalidate_if_parent_changed(self):
-        """Invalidate cache depending of a parent"""
-        
+        cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
+
+        p_names = [p.name for p in get_placeholders(self.get_template())]
+        if 'slug' not in p_names:
+            p_names.append('slug')
+        if 'title' not in p_names:
+            p_names.append('title')
+        for name in p_names:
+            cache.delete(self.PAGE_CONTENT_DICT_KEY % (self.id, name))
 
         for lang in settings.PAGE_LANGUAGES:
             cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))
-            cache.delete(self.PAGE_SLUG_KEY % (self.id, lang[0]))
-            cache.delete(self.PAGE_CONTENT_KEY % (self.id, lang[0], 'title'))
-            cache.delete(self.PAGE_CONTENT_KEY % (self.id, lang[0], 'slug'))
-            
+
+
     def get_languages(self):
         """
         get the list of all existing languages for this page
@@ -155,18 +157,9 @@ class Page(models.Model):
         """
         get the slug of the page depending on the given language
         """
-        slug = cache.get(self.PAGE_SLUG_KEY % (self.id, language))
-        if slug:
-            return slug
-
+        
         slug = Content.objects.get_content(self, language, 'slug',
                                            language_fallback=fallback)
-
-        if not language:
-            language = settings.PAGE_DEFAULT_LANGUAGE
-
-        # Seems to trigger errors with the new slug dup
-        #cache.set(self.PAGE_URL_KEY % (self.id, language), slug)
 
         return slug
 
@@ -176,6 +169,7 @@ class Page(models.Model):
         """
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
+            
         return Content.objects.get_content(self, language, 'title',
                                            language_fallback=fallback)
 

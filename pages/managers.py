@@ -5,6 +5,7 @@ from django.db import models, connection
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
+from django.core.cache import cache
 from pages import settings
 
 class PageManager(models.Manager):
@@ -117,20 +118,28 @@ class ContentManager(models.Manager):
             pass
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
-    def get_content(self, page, language, type, language_fallback=False):
+    def get_content(self, page, language, ctype, language_fallback=False):
         """
         Gets the latest content for a particular page and language. Falls back
         to another language if wanted.
         """
+        PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        content_dict = {}
-        for lang in settings.PAGE_LANGUAGES:
-            try:
-                content = self.filter(language=lang[0], type=type, page=page).latest()
-                content_dict[lang[0]] = content.body
-            except self.model.DoesNotExist:
-                content_dict[lang[0]] = ''
+
+        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (page.id, ctype))
+        #content_dict = None
+
+        if not content_dict:
+            content_dict = {}
+            for lang in settings.PAGE_LANGUAGES:
+                try:
+                    content = self.filter(language=lang[0], type=ctype, page=page).latest()
+                    content_dict[lang[0]] = content.body
+                except self.model.DoesNotExist:
+                    content_dict[lang[0]] = ''
+            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype), content_dict)
+        
         if content_dict[language]:
             return content_dict[language]
 

@@ -17,8 +17,9 @@ from pages.utils import get_template_from_request, has_page_add_permission, \
     get_language_from_request
 
 from pages.admin import widgets
+from pages.utils import get_placeholders
 from pages.admin.forms import PageForm
-from pages.admin.utils import get_placeholders, get_connected_models
+from pages.admin.utils import get_connected_models
 from pages.admin.views import traduction, get_content, sub_menu, \
     change_status, modify_content
 
@@ -135,7 +136,7 @@ class PageAdmin(admin.ModelAdmin):
             Content.objects.set_or_create_content(obj, language,
                 mandatory_placeholder, form.cleaned_data[mandatory_placeholder])
 
-        for placeholder in get_placeholders(request, obj.get_template()):
+        for placeholder in get_placeholders(obj.get_template()):
             if placeholder.name in form.cleaned_data:
                 if change:
                     if placeholder.name not in self.mandatory_placeholders:
@@ -162,7 +163,7 @@ class PageAdmin(admin.ModelAdmin):
 
         placeholder_fieldsets = []
         template = get_template_from_request(request, obj)
-        for placeholder in get_placeholders(request, template):
+        for placeholder in get_placeholders(template):
             if placeholder.name not in self.mandatory_placeholders:
                 placeholder_fieldsets.append(placeholder.name)
 
@@ -252,7 +253,7 @@ class PageAdmin(admin.ModelAdmin):
                     if not validate_field:
                         form.base_fields[field_name].required = False
 
-        for placeholder in get_placeholders(request, template):
+        for placeholder in get_placeholders(template):
             widget = self.get_widget(request, placeholder.widget)()
             if placeholder.parsed:
                 help_text = _('Note: This field is evaluated as template code.')
@@ -286,7 +287,7 @@ class PageAdmin(admin.ModelAdmin):
         else:
             template = get_template_from_request(request, obj)
             extra_context = {
-                'placeholders': get_placeholders(request, template),
+                'placeholders': get_placeholders(template),
                 'language': get_language_from_request(request),
                 'traduction_language': settings.PAGE_LANGUAGES,
                 'page': obj,

@@ -52,9 +52,6 @@ class PageForm(forms.ModelForm):
                     raise forms.ValidationError(_('Another page with this slug already exists'))
             elif Content.objects.filter(body=slug, type="slug").count():
                 raise forms.ValidationError(_('Another page with this slug already exists'))
-        elif self.instance.id:
-            if slug in [sibling.slug() for sibling in self.instance.get_siblings().exclude(id=self.instance.id)]:
-                raise forms.ValidationError(_('A sibiling with this slug already exists'))
 
         if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if target and position:
@@ -72,8 +69,8 @@ class PageForm(forms.ModelForm):
                             raise forms.ValidationError(_('A children with this slug already exists at the targeted position'))
             else:
                 if self.instance.id:
-                    if slug in [sibling.slug() for sibling in Page.objects.root().exclude(id=self.instance.id)]:
-                        raise forms.ValidationError(_('A sibiling with this slug already exists at the root level'))
+                    if slug in [sibling.slug() for sibling in self.instance.get_siblings().exclude(id=self.instance.id)]:
+                        raise forms.ValidationError(_('A sibiling with this slug already exists'))
                 else:
                     if slug in [sibling.slug() for sibling in Page.objects.root()]:
                         raise forms.ValidationError(_('A sibiling with this slug already exists at the root level'))

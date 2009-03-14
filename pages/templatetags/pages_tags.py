@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django import template
-from django.core.cache import cache
 from django.utils.safestring import SafeUnicode, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, TemplateSyntaxError
@@ -88,17 +87,7 @@ def show_content(context, page, content_type, lang=None):
 
     if lang is None:
         lang = get_language_from_request(context['request'], page)
-    if hasattr(settings, 'PAGE_CONTENT_CACHE_DURATION'):
-        key = Page.PAGE_CONTENT_KEY % (page.id, lang, content_type)
-        c = cache.get(key)
-        if c is None:
-            c = Content.objects.get_content(page, lang, content_type, True)
-            # Storing None force SQL requests every time
-            if c is None:
-                c = " "
-            cache.set(key, c, settings.PAGE_CONTENT_CACHE_DURATION)
-    else:
-        c = Content.objects.get_content(page, lang, content_type, True)
+    c = Content.objects.get_content(page, lang, content_type, True)
     if c:
         return {'content':c}
     return {'content':''}

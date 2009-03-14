@@ -304,10 +304,11 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         page = Page.objects.all()[0]
+        page.invalidate()
 
         response = c.post('/admin/pages/page/add/', page_data)
         # we cannot create 2 root page with the same slug
-        # this assert test that the creation fail as attended
+        # this assert test that the creation fails as wanted
         self.assertEqual(response.status_code, 200)
 
         response = c.get('/pages/same-slug/')

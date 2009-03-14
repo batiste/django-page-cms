@@ -304,7 +304,6 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         page = Page.objects.all()[0]
-        page.invalidate()
 
         response = c.post('/admin/pages/page/add/', page_data)
         # we cannot create 2 root page with the same slug

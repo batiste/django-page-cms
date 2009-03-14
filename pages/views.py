@@ -6,7 +6,7 @@ from pages import settings
 from pages.models import Page, Content
 from pages.utils import auto_render, get_language_from_request, get_page_from_slug
 
-def details(request, slug=None):
+def details(request, slug=None, lang=None):
     """
     Example view that get the root pages for navigation,
     and the current page if there is any root page.
@@ -17,7 +17,7 @@ def details(request, slug=None):
 
     if pages:
         if slug:
-            current_page = get_page_from_slug(slug, request)
+            current_page = get_page_from_slug(slug, request, lang)
         else:
             current_page = pages[0]
 
@@ -27,7 +27,9 @@ def details(request, slug=None):
     if not current_page.calculated_status in (Page.PUBLISHED, Page.HIDDEN):
         raise Http404
 
-    lang = get_language_from_request(request, current_page)
+    if not lang:
+        lang = get_language_from_request(request, current_page)
+
     template_name = current_page.get_template()
     return template_name, locals()
 details = auto_render(details)

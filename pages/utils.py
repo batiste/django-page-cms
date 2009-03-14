@@ -138,7 +138,7 @@ def has_page_add_permission(request, page=None):
     return False
 
 # TODO: move this in the manager
-def get_page_from_slug(slug, request):
+def get_page_from_slug(slug, request, lang=None):
     from pages.models import Content, Page
     from django.core.urlresolvers import reverse
     lang = get_language_from_request(request)

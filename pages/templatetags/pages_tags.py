@@ -86,7 +86,10 @@ def show_content(context, page, content_type, lang=None):
             return {'content':''}
 
     if lang is None:
-        lang = get_language_from_request(context['request'], page)
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], page)
     c = Content.objects.get_content(page, lang, content_type, True)
     if c:
         return {'content':c}
@@ -114,7 +117,10 @@ def show_absolute_url(context, page, lang=None):
     if not request or not page:
         return {'content':''}
     if lang is None:
-        lang = get_language_from_request(context['request'], page)
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], page)
     url = page.get_absolute_url(language=lang)
     if url:
         return {'content':url}
@@ -272,10 +278,13 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         if not 'request' in context or not self.page in context:
             return ''
-        
-        language = get_language_from_request(context['request'], context[self.page])
+
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], context[self.page])
         request = context['request']
-        content = Content.objects.get_content(context[self.page], language,
+        content = Content.objects.get_content(context[self.page], lang,
                                               self.name, True)
         if not content:
             return ''

@@ -20,6 +20,7 @@ def get_placeholders(template_name):
         return []
     
     request = WSGIRequest({'REQUEST_METHOD': 'GET'})
+    request.session = {}
     
     try:
         # to avoid circular import

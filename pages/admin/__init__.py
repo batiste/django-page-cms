@@ -38,7 +38,7 @@ class PageAdmin(admin.ModelAdmin):
 
     if settings.PAGE_TAGGING:
         general_fields.insert(insert_point, 'tags')
-    
+
     # Add support for future dating and expiration based on settings.
     if settings.PAGE_SHOW_END_DATE:
         general_fields.insert(insert_point, 'publication_end_date')
@@ -60,7 +60,7 @@ class PageAdmin(admin.ModelAdmin):
             'description': _('Note: This page reloads if you change the selection'),
         }),
     )
-        
+
     class Media:
         css = {
             'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
@@ -117,7 +117,7 @@ class PageAdmin(admin.ModelAdmin):
         Move the page in the tree if necessary and save every placeholder
         Content object.
         """
-        
+
         language = form.cleaned_data['language']
         target = form.data.get('target', None)
         position = form.data.get('position', None)
@@ -151,7 +151,7 @@ class PageAdmin(admin.ModelAdmin):
                 else:
                     Content.objects.set_or_create_content(obj, language,
                         placeholder.name, form.cleaned_data[placeholder.name])
-        
+
         obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):
@@ -180,9 +180,8 @@ class PageAdmin(admin.ModelAdmin):
                     mod['model_name']), {'fields': connected_fieldsets}))
 
         given_fieldsets = list(self.declared_fieldsets)
-        
+
         return given_fieldsets + additional_fieldsets
-            
 
     def save_form(self, request, form, change):
         """
@@ -195,14 +194,19 @@ class PageAdmin(admin.ModelAdmin):
             instance.author = request.user
         return instance
 
-    def get_widget(self, request, name):
+    def get_widget(self, request, name, fallback=Textarea):
         """
         Given the request and name of a placeholder return a Widget subclass
         like Textarea or TextInput.
         """
-        widget = dict(getmembers(widgets, isclass)).get(name, Textarea)
+        if '.' in name:
+            module_name, class_name = name.rsplit('.', 1)
+            module = __import__(module_name, {}, {}, [class_name])
+            widget = getattr(module, class_name, fallback)
+        else:
+            widget = dict(getmembers(widgets, isclass)).get(name, fallback)
         if not isinstance(widget(), Widget):
-            widget = Textarea
+            widget = fallback
         return widget
 
     def get_form(self, request, obj=None, **kwargs):
@@ -229,13 +233,13 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         # handle most of the logic of connected models
-        
+
         if obj:
             for mod in get_connected_models():
                 model = mod['model']
                 attributes = {'page': obj.id}
                 validate_field = True
-                
+
                 if request.POST:
                     for field_name, real_field_name, field in mod['fields']:
                         if field_name in request.POST and request.POST[field_name]:
@@ -351,7 +355,7 @@ class PageAdmin(admin.ModelAdmin):
                 target = self.model.objects.get(pk=target)
             except self.model.DoesNotExist:
                 pass
-                # TODO: should use the django message system 
+                # TODO: should use the django message system
                 # to display this message
                 # _('Page could not been moved.')
             else:

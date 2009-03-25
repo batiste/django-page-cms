@@ -59,6 +59,28 @@ def has_permission(page, request):
     return page.has_page_permission(request)
 register.filter(has_permission)
 
+def get_content(context, page, content_type, lang):
+    request = context.get('request', False)
+    if not request or not page:
+        return ''
+    if lang is None:
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], page)
+
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode):
+        c = Content.objects.filter(type='slug', lang=lang, body=page)
+        if len(c):
+            page = c[0].page
+        else:
+            ''
+    c = Content.objects.get_content(page, lang, content_type, True)
+    if c:
+        return c
+    return ''
+
 def show_content(context, page, content_type, lang=None):
     """Display a content type from a page.
     
@@ -73,29 +95,58 @@ def show_content(context, page, content_type, lang=None):
     args -- content_type used by a placeholder
     lang -- the wanted language (default None, use the request object to know)
     """
-
-    request = context.get('request', False)
-    if not request or not page:
-        return {'content':''}
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode):
-        c = Content.objects.filter(type='slug', body=page)
-        if len(c):
-            page = c[0].page
-        else:
-            return {'content':''}
-
-    if lang is None:
-        if 'lang' in context:
-            lang = context['lang']
-        else:
-            lang = get_language_from_request(context['request'], page)
-    c = Content.objects.get_content(page, lang, content_type, True)
-    if c:
-        return {'content':c}
-    return {'content':''}
+    return {'content':get_content(context, page, content_type, lang)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
+
+class GetContentNode(template.Node):
+    def __init__(self, page, content_type, varname, lang):
+        self.page = page
+        self.content_type = content_type
+        self.varname = varname
+        self.lang = lang
+    def render(self, context):
+        if self.lang is None:
+            lang = None
+        else:
+            lang = self.lang.resolve(context)
+        context[self.varname] = get_content(context,
+            self.page.resolve(context),
+            self.content_type.resolve(context),
+            lang)
+        return ''
+
+def do_get_content(parser, token):
+    """Store a content type from a page into a context variable.
+
+    eg: {% get_content page_object "title" as content %}
+
+    You can also use the slug of a page
+
+    eg: {% get_content "my-page-slug" "title" as content %}
+
+    Syntax: {% get_content page type [lang] as name %}
+    Arguments:
+    page -- the page object
+    type -- content_type used by a placeholder
+    name -- name of the context variable to store the content in
+    lang -- the wanted language (default None, use the request object to know)
+    """
+    bits = token.split_contents()
+    if not 5 <= len(bits) <= 6:
+        raise TemplateSyntaxError('%r expects 4 or 5 arguments' % bits[0])
+    if bits[-2] != 'as':
+        raise TemplateSyntaxError(
+            '%r expects "as" as the second last argument' % bits[0])
+    page = parser.compile_filter(bits[1])
+    content_type = parser.compile_filter(bits[2])
+    varname = bits[-1]
+    lang = None
+    if len(bits) == 6:
+        lang = parser.compile_filter(bits[3])
+    return GetContentNode(page, content_type, varname, lang)
+do_get_content = register.tag('get_content', do_get_content)
+ 
 
 def show_absolute_url(context, page, lang=None):
     """Show the url of a page in the right language

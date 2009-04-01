@@ -39,7 +39,7 @@ def placeholders_recursif(nodelist, plist):
     """
     # to avoid circular import
     # must be imported like this for isinstance
-    from django.templatetags.pages_tags import PlaceholderNode
+    from pages.templatetags.pages_tags import PlaceholderNode
     for node in nodelist:
         if isinstance(node, PlaceholderNode):
             already_in_plist = False

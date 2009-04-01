@@ -7,21 +7,27 @@
         <div class="form-row{% if line.errors %} errors{% endif %} {% for field in line %}{{ field.field.name }} {% endfor %} ">
         {{ line.errors }}
         {% for field in line %}
-            <div{% if not line.fields|length_is:"1" %} class="field-box"{% endif %}>
-                {% if field.is_checkbox %}
-                    {{ field.field }}{{ field.label_tag }}
-                {% else %}
-                    {{ field.label_tag }}{{ field.field }}
-                {% endif %}
-                {% if field.field.field.help_text %}<p class="help">{{ field.field.field.help_text|safe }}</p>{% endif %}
-          {% for p in placeholders %}
-            {% ifequal p.name field.field.name %}
-                {% if not add %}
-                  {% show_revisions page p.name language %}
-                {% endif %}
-            {% endifequal %}
-          {% endfor %}
-            </div>
+            {% if field.field.is_hidden %}
+                {{ field.field }}
+            {% else %}
+                <div{% if not line.fields|length_is:"1" %} class="field-box"{% endif %}>
+                    {% if field.is_checkbox %}
+                        {{ field.field }}{{ field.label_tag }}
+                    {% else %}
+                        {{ field.label_tag }}{{ field.field }}
+                    {% endif %}
+                    {% if field.field.field.help_text %}
+                        <p class="help">{{ field.field.field.help_text|safe }}</p>
+                    {% endif %}
+                    {% for p in placeholders %}
+                        {% ifequal p.name field.field.name %}
+                            {% if not add %}
+                                {% show_revisions page p.name language %}
+                            {% endif %}
+                        {% endifequal %}
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endfor %}
         </div>
     {% endfor %}

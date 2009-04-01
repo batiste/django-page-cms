@@ -29,8 +29,8 @@ class PageForm(forms.ModelForm):
         help_text=_('The template used to render the content.')
     )
     
-    target = forms.IntegerField(required=False)
-    position = forms.CharField(required=False)
+    target = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    position = forms.CharField(required=False, widget=forms.HiddenInput)
     
     if settings.PAGE_TAGGING:
         from tagging.forms import TagField

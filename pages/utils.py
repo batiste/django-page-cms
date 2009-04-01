@@ -37,11 +37,9 @@ def placeholders_recursif(nodelist, plist):
     """
     Recursively search into a template node list for PlaceholderNode node
     """
-    # to avoid circular import
-    # must be imported like this for isinstance
-    from pages.templatetags.pages_tags import PlaceholderNode
     for node in nodelist:
-        if isinstance(node, PlaceholderNode):
+        # I don't have found a better way to do it now. isinstance fail quickly.
+        if str(node.__class__).find("PlaceholderNode") >=0:
             already_in_plist = False
             for p in plist:
                 if p.name == node.name:

@@ -72,6 +72,11 @@
                     wym.insert('<a href="' + href + '" title="' + title + '">' + title + '</a>');
                     wdw.close();
                 });
+            
+            if ({{ filebrowser }}) {
+                // Filebrowser callback
+                wymeditor_filebrowser(wym, wdw);
+            }
         }
     });
     </script>

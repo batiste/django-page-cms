@@ -79,6 +79,10 @@ class WYMEditor(Textarea):
             'wymeditor/jquery.wymeditor.js',
             'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
         )]
+        
+        if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
+            js.append(join(PAGES_MEDIA_URL, 'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
+        
 
     def __init__(self, language=None, attrs=None):
         self.language = language or settings.LANGUAGE_CODE[:2]
@@ -95,6 +99,11 @@ class WYMEditor(Textarea):
             'language': self.language,
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
+        
+        context['filebrowser'] = 0
+        if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
+            context['filebrowser'] = 1
+            
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/wymeditor.html', context))
 

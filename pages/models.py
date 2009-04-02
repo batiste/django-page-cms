@@ -55,7 +55,9 @@ class Page(models.Model):
     # Disable could make site tests fail
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
             help_text=_('The site(s) the page is accessible at.'), verbose_name=_('sites'))
-
+            
+    redirect_to = models.ForeignKey('self', null=True, blank=True, related_name='redirected_pages')
+    
     # Managers
     objects = PageManager()
 

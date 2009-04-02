@@ -26,6 +26,11 @@ PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', True)
 if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
     raise ImproperlyConfigured("django-tagging could not be found.\nPlease make sure you've installed it correctly or disable the tagging feature by setting PAGE_TAGGING to False.")
 
+# Whether to enable tinymce. 
+PAGE_TINYMCE = getattr(settings, 'PAGE_TINYMCE', False)
+if PAGE_TINYMCE and "tinymce" not in getattr(settings, 'INSTALLED_APPS', []):
+    raise ImproperlyConfigured("django-tinymce could not be found.\nPlease make sure you've installed it correctly or disable the tinymce feature by setting PAGE_TINYMCE to False.")
+
 # Whether to only allow unique slugs.
 PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED', False)
 

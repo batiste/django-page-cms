@@ -48,7 +48,7 @@ class PageAdmin(admin.ModelAdmin):
     normal_fields = ['language']
     if settings.PAGE_TEMPLATES:
         normal_fields.append('template')
-
+    normal_fields.append('redirect_to')
     fieldsets = (
         (_('General'), {
             'fields': general_fields,

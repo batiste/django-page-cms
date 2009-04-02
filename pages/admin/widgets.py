@@ -5,8 +5,7 @@ from django.forms import TextInput, Textarea
 from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.loader import render_to_string
-
-from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
+from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE
 from pages.models import Page
 
 if PAGE_TAGGING:
@@ -56,29 +55,21 @@ class RichTextarea(Textarea):
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/richtextarea.html', context))
 
-class TinyMCE(Textarea):
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'tiny_mce/tiny_mce.js',
-        )]
-
-    def __init__(self, language=None, attrs=None):
-        self.language = language or settings.LANGUAGE_CODE[:2]
-        self.attrs = {'class': 'tinymce'}
-        if attrs:
-            self.attrs.update(attrs)
-        super(TinyMCE, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None):
-        rendered = super(TinyMCE, self).render(name, value, attrs)
-        context = {
-            'name': name,
-            'language': self.language,
-            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
-        }
-        return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/tinymce.html', context))
+if PAGE_TINYMCE:
+    from tinymce import widgets as tinymce_widgets
+    
+    class TinyMCE(tinymce_widgets.TinyMCE):
+        def __init__(self, content_language=None, attrs=None, mce_attrs={}):
+            self.mce_attrs = mce_attrs
+            self.mce_attrs.update({
+                'mode': "exact",
+                'theme': "advanced",
+                'width': 640,
+                'height': 400,
+                'theme_advanced_toolbar_location': "top",
+                'theme_advanced_toolbar_align': "left"
+            })
+            super(TinyMCE, self).__init__(content_language, attrs, mce_attrs)
 
 class WYMEditor(Textarea):
 

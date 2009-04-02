@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.http import Http404
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
 from pages import settings
 from pages.models import Page, Content
 from pages.utils import auto_render, get_language_from_request, get_page_from_slug
+
 
 def details(request, slug=None, lang=None):
     """
@@ -26,10 +27,13 @@ def details(request, slug=None, lang=None):
 
     if not current_page.calculated_status in (Page.PUBLISHED, Page.HIDDEN):
         raise Http404
-
+    
     if not lang:
         lang = get_language_from_request(request, current_page)
-
+    
+    if current_page.redirect_to:
+        http_redirect = HttpResponsePermanentRedirect(current_page.redirect_to.get_absolute_url(lang))
+        
     template_name = current_page.get_template()
     return template_name, locals()
 details = auto_render(details)

@@ -59,32 +59,27 @@ def placeholders_recursif(nodelist, plist):
             placeholders_recursif(node.get_parent(Context()).nodelist, plist)
 
 def auto_render(func):
-    """Decorator that put automaticaly the template path in the context dictionary
-    and call the render_to_response shortcut"""
+    """
+    A decorator which automatically inserts the template path into the context
+    and calls the render_to_response shortcut
+    """
     def _dec(request, *args, **kwargs):
-        t = None
-        if kwargs.get('only_context', False):
+        template_override = kwargs.pop('template_name', None)
+        only_context = kwargs.pop('only_context', False)
+        if only_context:
             # return only context dictionary
-            del(kwargs['only_context'])
             response = func(request, *args, **kwargs)
-            if isinstance(response, HttpResponse) or isinstance(response, HttpResponseRedirect) or isinstance(response, HttpResponsePermanentRedirect):
-                raise Except("cannot return context dictionary because a HttpResponseRedirect as been found")
+            if isinstance(response, HttpResponse):
+                raise Exception("cannot return context dictionary because a "
+                                "view returned an HTTP response when a "
+                                "(template_name, context) tuple was expected")
             (template_name, context) = response
             return context
-        if "template_name" in kwargs:
-            t = kwargs['template_name']
-            del kwargs['template_name']
         response = func(request, *args, **kwargs)
-        if isinstance(response, HttpResponse) or isinstance(response, HttpResponseRedirect) or isinstance(response, HttpResponsePermanentRedirect):
+        if isinstance(response, HttpResponse):
             return response
-        
-        if response[1].get('http_redirect', False):
-            return response[1].get('http_redirect')
-        
         (template_name, context) = response
-        if not t:
-            t = template_name
-        context['template_name'] = t
+        t = context['template_name'] = template_override or template_name
         return render_to_response(t, context, context_instance=RequestContext(request))
     return _dec
 

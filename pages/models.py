@@ -252,7 +252,7 @@ if settings.PAGE_PERMISSION:
         TYPES = (
             (0, _('All')),
             (1, _('This page only')),
-            (2, _('This page and all childrens')),
+            (2, _('This page and all children')),
         )
         page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
         user = models.ForeignKey(User, verbose_name=_('user'))

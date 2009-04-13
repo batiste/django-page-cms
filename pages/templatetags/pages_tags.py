@@ -38,7 +38,7 @@ def pages_sub_menu(context, page, url='/'):
 pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
-def pages_admin_menu(context, page, url='/admin/pages/page/', level=None):
+def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages"""
     request = context['request']
     

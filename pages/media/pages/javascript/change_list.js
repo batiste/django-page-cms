@@ -88,7 +88,7 @@ $(document).ready(function() {
             $("#changelist table").removeClass("table-selected");
             $('tr').removeClass("selected").removeClass("target");
             $('#page-row-'+page_id).addClass("selected");
-            var children = []
+            var children = [];
             get_children(page_id, children);
             for(var i=0; i < children.length; i++) {
                 $(children[i]).addClass("selected");
@@ -113,7 +113,7 @@ $(document).ready(function() {
         if(jtarget.hasClass("publish-checkbox")) {
             var p = jtarget.attr("name").split("status-")[1];
             // if I don't put data in the post, django doesn't get it
-            $.post("/admin/pages/page/"+p+"/change-status/", {1:1}, function(val) {
+            $.post(p+"/change-status/", {1:1}, function(val) {
                 var img = $('img', jtarget.parent())[0];
                 if(val=="0") {
                     jtarget.attr("checked", "");
@@ -138,7 +138,7 @@ $(document).ready(function() {
             if(action=="move") {
                 var msg = $('<span>Please wait...</span>');
                 $($('#page-row-'+selected_page+" td")[0]).append(msg);
-                $.post("/admin/pages/page/"+selected_page+"/move-page/", {
+                $.post(selected_page+"/move-page/", {
                         position:position,
                         target:target_id
                     },
@@ -169,7 +169,7 @@ $(document).ready(function() {
                 if (submenu_cache[the_id]){
                     $('#page-row-'+the_id).after(submenu_cache[the_id]);
                 } else {
-                    $.get("/admin/pages/page/"+the_id+"/sub-menu/",
+                    $.get(the_id+"/sub-menu/",
                         function(html) {
                             $('#page-row-'+the_id).after(html);
                             submenu_cache[the_id] = html;

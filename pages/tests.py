@@ -466,6 +466,11 @@ class PagesTestCase(TestCase):
                          "[('MyResponse', <class 'pages.tests.MyResponse'>), "
                          "('args', ()), ('kwargs', {}), ('request', None)]")
 
+    def test_17_request_mockup(self):
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        self.assertEqual(hasattr(request, 'session'), True)
+
     def assertOnlyContextException(self, view):
         """
         If an @auto_render-decorated view returns an HttpResponse and is called
@@ -475,7 +480,7 @@ class PagesTestCase(TestCase):
             view(None, only_context=True)
         except Exception, e:
             self.assertEqual(e.__class__, Exception)
-            self.assertEqual(e.message,
+            self.assertEqual(e[0],
                              "cannot return context dictionary because a view "
                              "returned an HTTP response when a "
                              "(template_name, context) tuple was expected")

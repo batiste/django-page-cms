@@ -12,15 +12,7 @@ from django.core.handlers.base import BaseHandler
 from pages import settings
 from exceptions import Exception as Except
 
-def get_placeholders(template_name):
-    """
-    Return a list of PlaceholderNode found in the given template
-    """
-    try:
-        temp = loader.get_template(template_name)
-    except TemplateDoesNotExist:
-        return []
-
+def get_request_mock():
     bh = BaseHandler()
     bh.load_middleware()
     request = WSGIRequest({
@@ -31,6 +23,19 @@ def get_placeholders(template_name):
     # Apply request middleware
     for middleware_method in bh._request_middleware:
         response = middleware_method(request)
+    return request
+
+def get_placeholders(template_name):
+    """
+    Return a list of PlaceholderNode found in the given template
+    """
+    try:
+        temp = loader.get_template(template_name)
+    except TemplateDoesNotExist:
+        return []
+
+    request = get_request_mock()
+    
     try:
         # to avoid circular import
         from pages.views import details

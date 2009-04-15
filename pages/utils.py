@@ -8,6 +8,7 @@ from django.db.models import signals
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.sites.models import Site, RequestSite, SITE_CACHE
+from django.core.handlers.base import BaseHandler
 from pages import settings
 from exceptions import Exception as Except
 
@@ -19,10 +20,17 @@ def get_placeholders(template_name):
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
         return []
-    
-    request = WSGIRequest({'REQUEST_METHOD': 'GET'})
-    request.session = {}
-    
+
+    bh = BaseHandler()
+    bh.load_middleware()
+    request = WSGIRequest({
+        'REQUEST_METHOD': 'GET',
+        'SERVER_NAME': 'test',
+        'SERVER_PORT': '8000',
+    })
+    # Apply request middleware
+    for middleware_method in bh._request_middleware:
+        response = middleware_method(request)
     try:
         # to avoid circular import
         from pages.views import details

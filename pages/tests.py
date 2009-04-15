@@ -44,6 +44,7 @@ class PagesTestCase(TestCase):
         page = slug_content.page
         self.assertEqual(page.title(), page_data['title'])
         self.assertEqual(page.slug(), page_data['slug'])
+        self.assertNotEqual(page.last_modification_date, None)
 
     def test_03_slug_collision(self):
         """

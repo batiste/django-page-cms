@@ -49,6 +49,8 @@ class Page(models.Model):
             null=True, blank=True, help_text=_('''When to expire the page. Leave
                     empty to never expire.'''))
 
+    last_modification_date = models.DateTimeField(_('last modification date'))
+
     status = models.IntegerField(_('status'), choices=STATUSES, default=DRAFT)
     template = models.CharField(_('template'), max_length=100, null=True, blank=True)
     
@@ -82,6 +84,7 @@ class Page(models.Model):
                     self.publication_date = None
             else:
                 self.publication_date = None
+        self.last_modification_date = datetime.now()
         super(Page, self).save(*args, **kwargs)
 
     def get_calculated_status(self):

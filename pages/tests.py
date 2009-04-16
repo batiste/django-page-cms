@@ -471,6 +471,40 @@ class PagesTestCase(TestCase):
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
 
+    def test_18_tree_ordering(self):
+
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'root'
+
+        response = c.post('/admin/pages/page/add/', page_data)
+        
+        root_page = Content.objects.get_content_slug_by_slug('root').page
+        page_data['position'] = 'first-child'
+        page_data['target'] = root_page.id
+        page_data['slug'] = 'child-1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        
+        child_1 = Content.objects.get_content_slug_by_slug('child-1').page
+        
+        page_data['slug'] = 'child-2'
+        response = c.post('/admin/pages/page/add/', page_data)
+
+        child_2 = Content.objects.get_content_slug_by_slug('child-2').page
+
+        self.assertEqual(str(Page.objects.all()), "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+        response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
+            {'position':'first-child', 'target':root_page.id})
+
+        self.assertEqual(str(Page.objects.all()), "[<Page: root>, <Page: child-1>, <Page: child-2>]")
+        
+        response = c.post('/admin/pages/page/%d/move-page/' % child_2.id,
+            {'position':'left', 'target':child_1.id})
+        
+        self.assertEqual(str(Page.objects.all()), "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+
+
     def assertOnlyContextException(self, view):
         """
         If an @auto_render-decorated view returns an HttpResponse and is called

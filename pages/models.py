@@ -68,6 +68,7 @@ class Page(models.Model):
         tags = fields.TagField(null=True)
 
     class Meta:
+        ordering = ['tree_id', 'lft']
         verbose_name = _('page')
         verbose_name_plural = _('pages')
 

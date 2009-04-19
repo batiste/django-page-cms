@@ -471,9 +471,10 @@ class PagesTestCase(TestCase):
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
 
-    def test_18_tree_ordering(self):
+    def test_18_tree_admin_interface(self):
         """
         Test that moving page in the tree is working properly
+        using the admin interface
         """
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -509,6 +510,54 @@ class PagesTestCase(TestCase):
         self.assertEqual(str(Page.objects.all()),
             "[<Page: root>, <Page: child-2>, <Page: child-1>]")
 
+
+    def test_19_tree(self):
+        """
+        Test that the navigation tree works properly with mptt
+        """
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page_data['slug'] = 'page2'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page_data['slug'] = 'page3'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(str(Page.objects.navigation()),
+            "[<Page: page1>, <Page: page2>, <Page: page3>]")
+
+        p1 = Content.objects.get_content_slug_by_slug('page1').page
+        p2 = Content.objects.get_content_slug_by_slug('page2').page
+        p3 = Content.objects.get_content_slug_by_slug('page3').page
+        
+        p2.move_to(p1, 'left')
+        p2.save()
+
+        self.assertEqual(str(Page.objects.navigation()),
+            "[<Page: page2>, <Page: page1>, <Page: page3>]")
+
+        p3.move_to(p2, 'left')
+        p3.save()
+
+        self.assertEqual(str(Page.objects.navigation()),
+            "[<Page: page3>, <Page: page2>, <Page: page1>]")
+
+        p1 = Content.objects.get_content_slug_by_slug('page1').page
+        p2 = Content.objects.get_content_slug_by_slug('page2').page
+        p3 = Content.objects.get_content_slug_by_slug('page3').page
+
+        p3.move_to(p1, 'first-child')
+        p2.move_to(p1, 'first-child')
+
+        self.assertEqual(str(Page.objects.navigation()),
+            "[<Page: page1>]")
+
+        p3 = Content.objects.get_content_slug_by_slug('page3').page
+        p3.move_to(p1, 'left')
+        
+        self.assertEqual(str(Page.objects.navigation()),
+            "[<Page: page3>, <Page: page1>]")
 
     def assertOnlyContextException(self, view):
         """

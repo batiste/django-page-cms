@@ -19,7 +19,6 @@ def pages_menu(context, page, url='/'):
     request = context['request']
     site_id = None
     children = page.get_children_for_frontend()
-    PAGE_CONTENT_CACHE_DURATION = settings.PAGE_CONTENT_CACHE_DURATION
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()

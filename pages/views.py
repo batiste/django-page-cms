@@ -16,24 +16,27 @@ def details(request, slug=None, lang=None):
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
 
-    if pages:
-        if slug:
-            current_page = get_page_from_slug(slug, request, lang)
-        else:
-            current_page = pages[0]
+    if slug:
+        current_page = get_page_from_slug(slug, request, lang)
+    elif pages:
+        current_page = pages[0]
 
     if not current_page:
         raise Http404
 
-    if not current_page.calculated_status in (Page.PUBLISHED, Page.HIDDEN):
+    if not (request.user.is_authenticated() and request.user.is_staff) and \
+        current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
         raise Http404
     
     if not lang:
         lang = get_language_from_request(request, current_page)
     
     if current_page.redirect_to:
-        http_redirect = HttpResponsePermanentRedirect(current_page.redirect_to.get_absolute_url(lang))
+        # return this object if you want to active redirections
+        http_redirect = HttpResponsePermanentRedirect(
+            current_page.redirect_to.get_absolute_url(lang))
         
     template_name = current_page.get_template()
     return template_name, locals()
+    
 details = auto_render(details)

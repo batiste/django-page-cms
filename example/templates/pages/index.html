@@ -95,6 +95,11 @@
 
 <h2>Content</h2>
 
+{% if current_page %}
+<p>Page absolute url : {% show_absolute_url current_page %}</p>
+<p>Page absolute url using the page slug : {% show_absolute_url current_page.slug %}</p>
+{% endif %}
+
 {% placeholder right-column with RichTextarea parsed as right_column %}
 
 {% block content %}

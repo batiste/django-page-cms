@@ -8,7 +8,7 @@ import urllib
 
 from pages import settings
 from pages.models import Content, Page
-from pages.utils import get_language_from_request
+from pages.utils import get_language_from_request, get_page_from_slug
 
 register = template.Library()
 
@@ -162,8 +162,8 @@ def show_absolute_url(context, page, lang=None):
     """
     request = context.get('request', False)
     # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode):
-        page = get_page_from_slug(slug, request)
+    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
+        page = get_page_from_slug(page, request)
     if not request or not page:
         return {'content':''}
     if lang is None:

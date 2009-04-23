@@ -110,23 +110,6 @@ $(document).ready(function() {
             return false;
         }
         
-        if(jtarget.hasClass("publish-checkbox")) {
-            var p = jtarget.attr("name").split("status-")[1];
-            // if I don't put data in the post, django doesn't get it
-            $.post(p+"/change-status/", {1:1}, function(val) {
-                var img = $('img', jtarget.parent())[0];
-                if(val=="0") {
-                    jtarget.attr("checked", "");
-                    img.src = img.src.replace("-yes.gif", "-no.gif");
-                } else {
-                    jtarget.attr("checked", "checked");
-                    img.src = img.src.replace("-no.gif", "-yes.gif");
-                }
-                jtarget.attr("value", val);
-            });
-            return true;
-        }
-        
         if(jtarget.hasClass("move-target")) {
             if(jtarget.hasClass("left"))
                 var position = "left";
@@ -184,6 +167,38 @@ $(document).ready(function() {
             return false;
         };
         
+        return true;
+    });
+    $('#changelist').change(function(e) {
+        var target = e.target;
+        var jtarget = $(target);
+        if(jtarget.hasClass("publish-select")) {
+            var p = jtarget.attr("name").split("status-")[1];
+            var img = $('img', jtarget.parent())[0];
+            img.src = img.src.replace("-yes.gif", "-unknown.gif");
+            img.src = img.src.replace("-no.gif", "-unknown.gif");
+            img.alt = "Busy";
+            index = target.selectedIndex;
+
+            if (index == 0)
+                statusopt = "draft";
+            else if (index == 1)
+                statusopt = "published";
+            else if (index == 2)
+                statusopt = "hidden";
+
+            // if I don't put data in the post, django doesn't get it
+            $.post(p+"/change-status-"+statusopt+"/", {1:1}, function(val) {
+                // the first option is Draft
+                if(index==0) {
+                    img.src = img.src.replace("-unknown.gif", "-no.gif");
+                } else {
+                    img.src = img.src.replace("-unknown.gif", "-yes.gif");
+                }
+            });
+            return true;
+        }
+
         return true;
     });
 });

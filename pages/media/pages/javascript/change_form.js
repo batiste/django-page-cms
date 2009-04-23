@@ -21,7 +21,9 @@ $(document).ready(function() {
             });
         }
     });
-    document.getElementById("id_title").focus();
+    titleelem = document.getElementById("id_title")
+    if (titleelem)
+    	titleelem.focus();
     var template = $.query.get('template');
     if(template) {
         $('#id_template').find("option").each(function() {

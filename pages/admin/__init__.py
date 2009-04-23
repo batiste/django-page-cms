@@ -95,8 +95,12 @@ class PageAdmin(admin.ModelAdmin):
             return sub_menu(request, unquote(url[:-9]))
         elif url.endswith('/move-page'):
             return self.move_page(request, unquote(url[:-10]))
-        elif url.endswith('/change-status'):
-            return change_status(request, unquote(url[:-14]))
+        elif url.endswith('/change-status-draft'):
+            return change_status(request, unquote(url[:-20]), Page.DRAFT)
+        elif url.endswith('/change-status-published'):
+            return change_status(request, unquote(url[:-24]), Page.PUBLISHED)
+        elif url.endswith('/change-status-hidden'):
+            return change_status(request, unquote(url[:-21]), Page.HIDDEN)
         return super(PageAdmin, self).__call__(request, url)
 
     def i18n_javascript(self, request):

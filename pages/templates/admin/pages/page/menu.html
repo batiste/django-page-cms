@@ -2,7 +2,7 @@
 
 {% if has_permission %}
 <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }}">
-<td style="padding-left:{{ page.margin_level }}em">
+<td style="text-align:left;padding-left:{{ page.margin_level }}em">
     <span id="move-target-{{ page.id }}" class="move-target-container">
         <a href="#" class="move-target left" title="{% trans "as left sibling"%}"><img alt="" src="{% admin_media_prefix %}img/admin/arrow-up.gif"/></a> |
         <a href="#" class="move-target right" title="{% trans "as right sibling"%}"><img alt="" src="{% admin_media_prefix %}img/admin/arrow-down.gif"/></a></a> |
@@ -29,17 +29,19 @@
     {% endfor %}
 </td>
 <td>
-{% ifequal page.status page.PUBLISHED %}
-    <label>
-        <img alt="True" src="{% admin_media_prefix %}img/admin/icon-yes.gif"/>
-        <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" checked="checked" value="1" />
-    </label>
+
+{% ifequal page.status page.DRAFT %}
+    <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif" />
 {% else %}
-    <label>
-        <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif" />
-        <input type="checkbox" class="publish-checkbox" name="status-{{ page.id }}" value="0" />
-    </label>
+    <img alt="True" src="{% admin_media_prefix %}img/admin/icon-yes.gif"/>
 {% endifequal %}
+    &nbsp;
+    <select class="publish-select" name="select-status-{{ page.id }}">
+        <option {% ifequal page.status page.DRAFT %}selected="selected"{% endifequal %}>{% trans "Draft" %}</option>
+        <option {% ifequal page.status page.PUBLISHED %}selected="selected"{% endifequal %}>{% trans "In navigation" %}</option>
+        <option {% ifequal page.status page.HIDDEN %}selected="selected"{% endifequal %}>{% trans "Hidden" %}</option>
+    </select>
+
 </td>
 <td>
     {{ page.get_template }}

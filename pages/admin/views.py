@@ -8,18 +8,14 @@ from pages.models import Page, Content
 
 from pages.utils import get_placeholders, auto_render
 
-def change_status(request, page_id):
+def change_status(request, page_id, status):
     """
     Switch the status of a page
     """
     if request.method == 'POST':
         page = Page.objects.get(pk=page_id)
-        if page.status in (Page.DRAFT, Page.HIDDEN):
-            page.status = Page.PUBLISHED
-            page.save()
-        elif page.status == Page.PUBLISHED:
-            page.status = Page.DRAFT
-            page.save()
+        page.status = status
+        page.save()
         return HttpResponse(unicode(page.status))
     raise Http404
 change_status = staff_member_required(change_status)

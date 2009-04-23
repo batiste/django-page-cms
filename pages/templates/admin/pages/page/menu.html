@@ -28,7 +28,7 @@
         <span style="font-weight:normal">{% if not forloop.last %}|{% endif %}</span>
     {% endfor %}
 </td>
-<td>
+<td class="publish-cell">
 
 {% ifequal page.status page.DRAFT %}
     <img alt="False" src="{% admin_media_prefix %}img/admin/icon-no.gif" />

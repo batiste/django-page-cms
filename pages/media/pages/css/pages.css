@@ -30,6 +30,16 @@
     margin-bottom:1px;
 }
 
+.change-list .publish-select {
+    margin:2px;
+    padding:1px;
+}
+
+.change-list .publish-cell {
+    padding:0 5px;
+}
+
+
 .placeholder-row textarea, .placeholder-row input {
     float:left;
 }

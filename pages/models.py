@@ -124,6 +124,7 @@ class Page(models.Model):
 
         for lang in settings.PAGE_LANGUAGES:
             cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))
+        cache.delete(self.PAGE_URL_KEY % (self.id, "None"))
 
 
     def get_languages(self):

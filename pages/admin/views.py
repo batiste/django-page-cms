@@ -41,7 +41,7 @@ def traduction(request, page_id, language_id):
     page = Page.objects.get(pk=page_id)
     context = {}
     lang = language_id
-    placeholders = get_placeholders(request, page.get_template())
+    placeholders = get_placeholders(page.get_template())
     if Content.objects.get_content(page, language_id, "title") is None:
         language_error = True
     return 'pages/traduction_helper.html', locals()

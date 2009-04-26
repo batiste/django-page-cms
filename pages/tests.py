@@ -3,7 +3,7 @@ import django
 from django.test import TestCase
 import settings
 from pages.models import *
-from pages.utils import auto_render
+from pages.utils import auto_render, AutoRenderHttpError
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
@@ -567,10 +567,6 @@ class PagesTestCase(TestCase):
         try:
             view(None, only_context=True)
         except Exception, e:
-            self.assertEqual(e.__class__, Exception)
-            self.assertEqual(e[0],
-                             "cannot return context dictionary because a view "
-                             "returned an HTTP response when a "
-                             "(template_name, context) tuple was expected")
+            self.assertTrue(isinstance(e, AutoRenderHttpError))
         else:
             assert False, 'Exception expected'

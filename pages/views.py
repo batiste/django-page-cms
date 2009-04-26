@@ -9,9 +9,24 @@ from pages.utils import auto_render, get_language_from_request, get_page_from_sl
 
 def details(request, slug=None, lang=None):
     """
-    Example view that get the root pages for navigation,
-    and the current page if there is any root page.
+    This example view get the root pages for navigation
+    and the current page to display if there is any.
+
     All is rendered with the current page's template.
+
+    This view use the auto_render decorator. It means
+    that you can use the only_context extra parameter to get
+    only the local variables of this view without rendering
+    the template.
+
+    >>> from pages.views import details
+    >>> from pages.utils import get_request_mock
+    >>> request = get_request_mock()
+    >>> context = details(request, only_context=True)
+
+    This can be usefull if you want to write your own
+    view and reuse the following code without having to
+    copy and paste it.
     """
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
@@ -32,7 +47,7 @@ def details(request, slug=None, lang=None):
         lang = get_language_from_request(request, current_page)
     
     if current_page.redirect_to:
-        # return this object if you want to active redirections
+        # return this object if you want to activate redirections
         http_redirect = HttpResponsePermanentRedirect(
             current_page.redirect_to.get_absolute_url(lang))
         

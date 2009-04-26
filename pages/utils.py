@@ -71,6 +71,11 @@ def placeholders_recursif(nodelist, plist):
         if isinstance(node, ExtendsNode):
             placeholders_recursif(node.get_parent(Context()).nodelist, plist)
 
+class AutoRenderHttpError(Exception):
+    """cannot return context dictionary because a view returned an HTTP
+    response when a (template_name, context) tuple was expected"""
+    pass
+
 def auto_render(func):
     """
     A decorator which automatically inserts the template path into the context
@@ -83,9 +88,7 @@ def auto_render(func):
             # return only context dictionary
             response = func(request, *args, **kwargs)
             if isinstance(response, HttpResponse):
-                raise Exception("cannot return context dictionary because a "
-                                "view returned an HTTP response when a "
-                                "(template_name, context) tuple was expected")
+                raise AutoRenderHttpError
             (template_name, context) = response
             return context
         response = func(request, *args, **kwargs)

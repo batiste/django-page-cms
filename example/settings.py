@@ -104,7 +104,10 @@ PAGE_CONNECTED_MODELS = [
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+# This is defined here as a do-nothing function because we can't import
+# django.utils.translation -- that module depends on the settings.
 gettext_noop = lambda s: s
+
 # language you want to into the CMS
 PAGE_LANGUAGES = (
     ('de', gettext_noop('German')),

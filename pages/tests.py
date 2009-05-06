@@ -558,7 +558,66 @@ class PagesTestCase(TestCase):
         
         self.assertEqual(str(Page.objects.navigation()),
             "[<Page: page3>, <Page: page1>]")
+            
+    
+    def test_20_ajax_language(self):
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        # Activate a language other thant settings.LANGUAGE_CODE
+        response = c.post('/i18n/setlang/', {'language':'fr-ch' })
+        self.assertEqual(c.session.get('django_language', False), 'fr-ch')
+        
+        # Make sure we're in french
+        response = c.get('/admin/pages/page/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Auteur' in response.content)
+        
+        # Create some pages (taken from test_18_tree_admin_interface)
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'root'
 
+        response = c.post('/admin/pages/page/add/', page_data)
+        
+        root_page = Content.objects.get_content_slug_by_slug('root').page
+        page_data['position'] = 'first-child'
+        page_data['target'] = root_page.id
+        page_data['slug'] = 'child-1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        
+        child_1 = Content.objects.get_content_slug_by_slug('child-1').page
+        
+        page_data['slug'] = 'child-2'
+        response = c.post('/admin/pages/page/add/', page_data)
+
+        child_2 = Content.objects.get_content_slug_by_slug('child-2').page
+
+        self.assertEqual(str(Page.objects.all()),
+            "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+            
+        """
+        The relevant bit, fixed by rev 501: the response issued by a move
+        command returns content localized in settings.LANGUAGE_CODE (i.e. 'en´)
+        even though the original AJAX request passed in a the correct 
+        session ID localizing this client as fr-ch
+        
+        This is probably because the LocaleMiddleware gets instantiated
+        with a couple request_mocks which have no real connection to the 
+        AJAX request *but* django.utils.translation caches the active
+        language on a per thread basis.
+        
+        This means that the first "bogus" call to LocaleMiddleware.process_request
+        will "kill" the localization data for the AJAX request.
+        
+        Rev. 501 fixes this by passing in the language code from the original request.
+        
+        """
+        response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
+            {'position':'first-child', 'target':root_page.id})
+            
+        # Make sure the content response we got was in french
+        self.assertTrue('Auteur' in response.content)
+        
+        
     def assertOnlyContextException(self, view):
         """
         If an @auto_render-decorated view returns an HttpResponse and is called

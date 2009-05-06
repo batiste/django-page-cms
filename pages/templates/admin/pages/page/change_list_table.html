@@ -1,20 +1,17 @@
 {% load i18n pages_tags %}
 <table cellspacing="0" id="page-list">
-<thead>
-<tr>
-<th style="text-align:left;width:35%">{% trans "title" %}</th>
-<th>{% trans "quick actions" %}</th>
-<th>{% trans "translations" %}</th>
-<th>{% trans "published" %}</th>
-<th>{% trans "template" %}</th>
-<th>{% trans "creator" %}</th>
-</tr>
-</thead>
-<tbody>
-
-{% for page in pages %}
-    {% pages_admin_menu page %}
-{% endfor %}
-
-</tbody>
+    <thead>
+        <tr>
+            <th class="title-cell">{% trans "title" %}</th>
+            <th class="language-cell">{% trans "languages" %}</th>
+            <th class="publish-cell">{% trans "published" %}</th>
+            <th class="template-cell">{% trans "template" %}</th>
+            <th class="author-cell">{% trans "author" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for page in pages %}
+            {% pages_admin_menu page %}
+        {% endfor %}
+    </tbody>
 </table>

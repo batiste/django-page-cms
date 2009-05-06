@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.template import loader, Context, RequestContext, TemplateDoesNotExist
-from django.template.loader_tags import ExtendsNode
-from django.http import Http404
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.db.models import signals
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
-from django.core.handlers.wsgi import WSGIRequest
+from django.conf import settings as django_settings
 from django.contrib.sites.models import Site, RequestSite, SITE_CACHE
 from django.core.handlers.base import BaseHandler
+from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import signals
+from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.template import loader, Context, RequestContext, TemplateDoesNotExist
+from django.template.loader_tags import ExtendsNode, ConstantIncludeNode
 from pages import settings
-from exceptions import Exception as Except
 
 def get_request_mock():
     bh = BaseHandler()
@@ -20,9 +20,13 @@ def get_request_mock():
         'SERVER_NAME': 'test',
         'SERVER_PORT': '8000',
     })
+        
     # Apply request middleware
     for middleware_method in bh._request_middleware:
-        response = middleware_method(request)
+        # LocaleMiddleware should never be applied a second time because
+        # it would broke the current real request
+        if 'LocaleMiddleware' not in str(middleware_method.im_class):
+            response = middleware_method(request)
     return request
 
 def get_placeholders(template_name):
@@ -33,8 +37,9 @@ def get_placeholders(template_name):
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
         return []
-
+        
     request = get_request_mock()
+    
     
     try:
         # to avoid circular import
@@ -70,6 +75,9 @@ def placeholders_recursif(nodelist, plist):
     for node in nodelist:
         if isinstance(node, ExtendsNode):
             placeholders_recursif(node.get_parent(Context()).nodelist, plist)
+        elif isinstance(node, ConstantIncludeNode):
+            placeholders_recursif(node.template.nodelist, plist)
+
 
 class AutoRenderHttpError(Exception):
     """cannot return context dictionary because a view returned an HTTP
@@ -169,3 +177,12 @@ def get_page_from_slug(slug, request, lang=None):
             if page.get_url(lang) == relative_url:
                 return page
     return None
+
+def break_here():
+    """ your friendly pdf debug prompt """
+    if django_settings.DEBUG:
+        try:
+            import ipdb as pdb
+        except ImportError:
+            import pdb;
+        pdb.set_trace()

@@ -66,7 +66,7 @@ msgstr " Quand la page doit expirer. Laissez\n"
 
 #: models.py:52
 msgid "status"
-msgstr "Status"
+msgstr "Statut"
 
 #: models.py:53 templates/admin/pages/page/change_list_table.html:9
 msgid "template"
@@ -118,7 +118,7 @@ msgstr "Permissions de page"
 
 #: models.py:274
 msgid "language"
-msgstr "Langage"
+msgstr "langue"
 
 #: models.py:275
 msgid "body"
@@ -178,7 +178,7 @@ msgstr "La partie du titre qui sera utilisé dans les permalinks."
 
 #: admin/forms.py:21
 msgid "Language"
-msgstr "Langage"
+msgstr "Langue"
 
 #: admin/forms.py:23
 msgid "The current language of the content fields."
@@ -226,7 +226,7 @@ msgstr "Aide de traduction"
 
 #: templates/admin/pages/page/change_form.html:31
 msgid "Language:"
-msgstr "Langage:"
+msgstr "Langue:"
 
 #: templates/admin/pages/page/change_list.html:3
 msgid "List of pages"
@@ -295,7 +295,7 @@ msgstr "Révisions"
 
 #: templates/pages/revisions.html:8
 msgid "DATETIME_FORMAT"
-msgstr "%d %m %Y"
+msgstr "d.m.Y"
 
 #: templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."

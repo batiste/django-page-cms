@@ -13,15 +13,13 @@ from django.contrib.admin.util import unquote
 
 from pages import settings
 from pages.models import Page, Content
-from pages.utils import get_template_from_request, has_page_add_permission, \
-    get_language_from_request
+from pages.utils import get_template_from_request, has_page_add_permission, get_language_from_request, break_here
 
 from pages.admin import widgets
 from pages.utils import get_placeholders
 from pages.admin.forms import PageForm
 from pages.admin.utils import get_connected_models
-from pages.admin.views import traduction, get_content, sub_menu, \
-    change_status, modify_content
+from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content
 
 class PageAdmin(admin.ModelAdmin):
 
@@ -30,7 +28,7 @@ class PageAdmin(admin.ModelAdmin):
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target', 'position']
-
+    
     # TODO: find solution to do this dynamically
     #if getattr(settings, 'PAGE_USE_SITE_ID'):
     general_fields.append('sites')
@@ -52,12 +50,11 @@ class PageAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('General'), {
             'fields': general_fields,
-            'classes': ('sidebar',),
+            'classes': ('module-general',),
         }),
         (_('Options'), {
             'fields': normal_fields,
-            'classes': ('sidebar', 'clear'),
-            'description': _('Note: This page reloads if you change the selection'),
+            'classes': ('module-options',),
         }),
     )
 
@@ -72,10 +69,12 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/jquery.js',
             'javascript/jquery.rte.js',
             'javascript/jquery.query.js',
-            'javascript/change_form.js',
+            'javascript/pages.js',
+            'javascript/pages_form.js',
         )]
 
     def __call__(self, request, url):
+        
         # Delegate to the appropriate method, based on the URL.
         if url is None:
             return self.list_pages(request)
@@ -101,7 +100,22 @@ class PageAdmin(admin.ModelAdmin):
             return change_status(request, unquote(url[:-24]), Page.PUBLISHED)
         elif url.endswith('/change-status-hidden'):
             return change_status(request, unquote(url[:-21]), Page.HIDDEN)
-        return super(PageAdmin, self).__call__(request, url)
+        ret = super(PageAdmin, self).__call__(request, url)
+        
+        
+        """
+        Persist the language and template GET arguments, both on "save and keep 
+        editing" and when switching language and template (which also submits)
+        """
+        if HttpResponseRedirect == type(ret) and (request.GET.get('new_language', False) or request.GET.get('new_template', False) or request.GET.get('language', False) or request.GET.get('template', False)):
+            for item in ret.items():
+                if 'Location' == item[0]:
+                    new_uri = item[1] + \
+                        '?language=' + request.GET.get('new_language', request.GET.get('language', '')) + \
+                        '&template=' + request.GET.get('new_template', request.GET.get('template', ''))
+                    ret = HttpResponseRedirect(new_uri)
+                    break
+        return ret
 
     def i18n_javascript(self, request):
         """
@@ -171,7 +185,10 @@ class PageAdmin(admin.ModelAdmin):
             if placeholder.name not in self.mandatory_placeholders:
                 placeholder_fieldsets.append(placeholder.name)
 
-        additional_fieldsets.append((_('Content'), {'fields': placeholder_fieldsets}))
+        additional_fieldsets.append((_('Content'), {
+            'fields': placeholder_fieldsets,
+            'classes': ('module-content',),
+        }))
 
         # deactived for now, create bugs with page with same slug title
         connected_fieldsets = []
@@ -297,7 +314,9 @@ class PageAdmin(admin.ModelAdmin):
             extra_context = {
                 'placeholders': get_placeholders(template),
                 'language': get_language_from_request(request),
-                'traduction_language': settings.PAGE_LANGUAGES,
+                'page_languages': settings.PAGE_LANGUAGES,
+                'traduction_languages': [l for l in settings.PAGE_LANGUAGES if
+                            Content.objects.get_content(obj, l[0], "title")],
                 'page': obj,
             }
         return super(PageAdmin, self).change_view(request, object_id, extra_context)
@@ -339,7 +358,7 @@ class PageAdmin(admin.ModelAdmin):
         context = {
             'name': _("page"),
             'pages': Page.objects.root().order_by("tree_id"),
-            'opts': self.model._meta,
+            'opts': self.model._meta
         }
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)

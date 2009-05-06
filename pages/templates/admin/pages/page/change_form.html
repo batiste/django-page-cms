@@ -1,6 +1,7 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_modify adminmedia pages_tags %}
-{% block title %}{% trans "Change a page" %}{% endblock %}
+
+{% block title %}{% trans "Edit" %}{% endblock %}
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
@@ -10,41 +11,52 @@
 {% block content %}
 <!-- Content -->
 <div id="content-main">
-
-{% block object-tools %}
-{% if change %}{% if not is_popup %}
-  <ul class="object-tools">
-  {% if has_absolute_url %}<li><a href="{{ page.get_absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
-  </ul>
-{% endif %}{% endif %}
-{% endblock %}
-
-<form action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post" id="page_form">
-{% for fieldset in adminform %}
-  {% include "admin/pages/page/includes/fieldset.html" %}
-{% endfor %}
-<br class="clear" />
-{% if not add %}
-<div><fieldset class="module aligned ">
-  <h2>{% trans "Translation helper" %}</h2>
-  <div class="form-row">
-      <label for="traduction-helper-select" class="required">{% trans "Language:" %}</label>
-      <select id="traduction-helper-select">
-      <option value="" selected="selected">------</option>
-      {% for lang in traduction_language %}
-      <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-      {% endfor %}
-      </select>
-      <div id="traduction-helper-content"></div>
-  </div>
-</fieldset>
+    {% block object-tools %}
+        {% if change and not is_popup %}
+            <ul class="object-tools">
+                {% if has_absolute_url %}<li><a href="{{ page.get_absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
+            </ul>
+        {% endif %}
+    {% endblock %}
+    
+    <form id="page_form" action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
+        <div class="sidebar">
+        {% for fieldset in adminform %}
+            {% include "admin/pages/page/includes/fieldset.html" %}
+            
+            {% if forloop.first and not add %}
+                <fieldset class="module module-translation-helper aligned">
+                    <h2>{% trans "Translation helper" %}</h2>
+                    <div class="form-row">
+                        <label for="translation-helper-select" class="required">{% trans "Language:" %}</label>
+                        <select id="translation-helper-select">
+                            <option value="" selected="selected">---------</option>
+                            {% for lang in traduction_languages %}
+                                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        <div id="translation-helper-content"></div>
+                    </div>
+                </fieldset>
+                
+                </div><div class="content">
+            {% endif %}
+        {% endfor %}
+        </div>
+        
+        {% submit_row %}
+    </form>
 </div>
-{% endif %}
-
-{% submit_row %}
-</div>
-</form>
-
-<br class="clear" />
+<script type="text/javascript" charset="utf-8">
+<!--
+(function() {
+    /* Hide the Sites options if not needed */
+    {% if not PAGE_USE_SITE_ID %}
+        $('.form-row.sites').hide();
+        $('#id_sites')[0].selectedIndex = 0;
+    {% endif %}
+})();
+-->
+</script>
 <!-- END Content -->
 {% endblock %}

@@ -5,6 +5,7 @@ from django.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^pages/', include('pages.urls')),
     (r'^admin/(.*)', admin.site.root),
 )

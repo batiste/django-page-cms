@@ -7,7 +7,7 @@ from pages.models import Page, Content
 from pages.utils import auto_render, get_language_from_request, get_page_from_slug
 
 
-def details(request, slug=None, lang=None):
+def details(request, slug=None, lang=None, ajax=False):
     """
     This example view get the root pages for navigation
     and the current page to display if there is any.
@@ -50,8 +50,13 @@ def details(request, slug=None, lang=None):
         # return this object if you want to activate redirections
         http_redirect = HttpResponsePermanentRedirect(
             current_page.redirect_to.get_absolute_url(lang))
-        
+    
     template_name = current_page.get_template()
+    
+    if ajax:
+        new_template_name = "body_%s" % template_name
+        return new_template_name, locals()
+    
     return template_name, locals()
     
 details = auto_render(details)

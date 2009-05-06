@@ -4,8 +4,7 @@
     <strong>{% trans "Wanted language has not been translated yet." %}</strong></p>
 {% else %}
     {% for p in placeholders %}
-        <h4>{{ p.name }}</h4>
-        <div style="clear:both">{% show_content page p.name lang %}</div>
-        <br />
+        <h4 class="translation-helper-title">{{ p.name }}</h4>
+        <div class="translation-helper-placeholder">{% show_content page p.name lang 0 %}</div>
     {% endfor %}
 {% endif %}

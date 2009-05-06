@@ -13,10 +13,13 @@ def change_status(request, page_id, status):
     Switch the status of a page
     """
     if request.method == 'POST':
-        page = Page.objects.get(pk=page_id)
-        page.status = status
-        page.save()
-        return HttpResponse(unicode(page.status))
+        try:
+            page = Page.objects.get(pk=page_id)
+            page.status = status
+            page.save()
+            return HttpResponse(unicode(page.status))
+        except:
+            return HttpResponse(unicode(status))
     raise Http404
 change_status = staff_member_required(change_status)
 
@@ -70,6 +73,7 @@ def sub_menu(request, page_id):
     page = Page.objects.get(id=page_id)
     pages = page.children.all()
     has_permission = page.has_page_permission(request)
+    page_languages = settings.PAGE_LANGUAGES
     return "admin/pages/page/sub_menu.html", locals()
     
 sub_menu = staff_member_required(sub_menu)

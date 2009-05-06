@@ -10,23 +10,20 @@ class PageForm(forms.ModelForm):
     title = forms.CharField(
         label=_('Title'),
         widget=forms.TextInput(),
-        help_text=_('The default title')
     )
     slug = forms.CharField(
         label=_('Slug'),
         widget=forms.TextInput(),
-        help_text=_('The part of the title that is used in permalinks')
+        help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
     )
     language = forms.ChoiceField(
         label=_('Language'),
         choices=settings.PAGE_LANGUAGES,
-        help_text=_('The current language of the content fields.'),
     )
     template = forms.ChoiceField(
         required=False,
         label=_('Template'),
         choices=settings.PAGE_TEMPLATES,
-        help_text=_('The template used to render the content.')
     )
     
     target = forms.IntegerField(required=False, widget=forms.HiddenInput)
@@ -66,7 +63,7 @@ class PageForm(forms.ModelForm):
                             raise forms.ValidationError(_('A sibiling with this slug already exists at the targeted position'))
                     if position == 'first-child':
                         if slug in [sibling.slug() for sibling in target.get_children()]:
-                            raise forms.ValidationError(_('A children with this slug already exists at the targeted position'))
+                            raise forms.ValidationError(_('A child with this slug already exists at the targeted position'))
             else:
                 if self.instance.id:
                     if slug in [sibling.slug() for sibling in self.instance.get_siblings().exclude(id=self.instance.id)]:

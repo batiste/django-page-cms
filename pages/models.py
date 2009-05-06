@@ -26,9 +26,9 @@ class Page(models.Model):
     EXPIRED = 2
     HIDDEN = 3
     STATUSES = (
-        (DRAFT, _('Draft')),
         (PUBLISHED, _('Published')),
         (HIDDEN, _('Hidden')),
+        (DRAFT, _('Draft')),
     )
 
     PAGE_LANGUAGES_KEY = "page_%d_languages"
@@ -108,7 +108,7 @@ class Page(models.Model):
         """Return children of the page for the frontend """
         return Page.objects.filter_published(self.get_children())
 
-    def invalidate(self):
+    def invalidate(self, language_code=None):
         """Invalidate a page and it's descendants"""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
@@ -205,6 +205,14 @@ class Page(models.Model):
 
         return template
 
+    def get_template_name(self):
+        template = self.get_template()
+        for  t in settings.PAGE_TEMPLATES:
+            if t[0] == template:
+                return t[1]
+        return template
+        
+        
     def traductions(self):
         langs = ""
         for lang in self.get_languages():
@@ -230,11 +238,11 @@ class Page(models.Model):
         level = ''
         if self.level:
             for n in range(0, self.level):
-                level += '&nbsp;&nbsp;&nbsp;'  
+                level += '&nbsp;&nbsp;&nbsp;'
         return mark_safe(level + self.__unicode__())
         
     def margin_level(self):
-        return self.level * 4 + 1
+        return self.level * 2
 
     def __unicode__(self):
         slug = self.slug()

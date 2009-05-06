@@ -1,6 +1,8 @@
 {% extends "admin/change_list.html" %}
 {% load adminmedia admin_list i18n pages_tags %}
+
 {% block title %}{% trans "List of pages" %}{% endblock %}
+
 {% block bodyclass %}change-list{% endblock %}
 
 {% if not is_popup %}{% block breadcrumbs %}
@@ -11,14 +13,15 @@
 {% endblock %}{% endif %}
 
 {% block coltype %}flex{% endblock %}
+
 {% block extrahead %}{{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ PAGES_MEDIA_URL }}css/rte.css" />
 <link rel="stylesheet" type="text/css" href="{{ PAGES_MEDIA_URL }}css/pages.css" />
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.js"></script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.query.js"></script>
-<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/change_list.js"></script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages.js"></script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages_list.js"></script>
 {% endblock %}
-
 
 {% block content %}
 <div id="content-main">

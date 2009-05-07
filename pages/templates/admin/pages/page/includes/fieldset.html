@@ -22,7 +22,7 @@
                                 <ul class="clearfix">
                                 {% for lang in page_languages %}
                                     {% ifequal language lang.0 %}
-                                        <li><span class="current">{{ lang.0 }}</li>
+                                        <li><span class="current">{{ lang.0 }}</span></li>
                                     {% else %}
                                         {% if page|has_content_in:lang.0 %}
                                             <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>

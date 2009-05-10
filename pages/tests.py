@@ -654,6 +654,28 @@ class PagesTestCase(TestCase):
         page1.save()
 
         page1.get_calculated_status()
+        setattr(settings, "PAGE_SHOW_START_DATE", False)
+
+    def test_23_slug_bug(self):
+        """
+        Test the issue 97
+        http://code.google.com/p/django-page-cms/issues/detail?id=97
+        """
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        # create a page for the example otherwise you will get a Http404 error
+        response = c.post('/admin/pages/page/add/', page_data)
+
+        response = c.get('/pages/page1/')
+        self.assertEqual(response.status_code, 200)
+
+        try:
+            response = c.get('/pages/toto/page1/')
+        except TemplateDoesNotExist, e:
+            if e.args != ('404.html',):
+                raise
 
     def assertOnlyContextException(self, view):
         """

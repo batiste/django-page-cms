@@ -31,6 +31,8 @@ def details(request, slug=None, lang=None, ajax=False):
 
     if slug:
         current_page = get_page_from_slug(slug, request, lang)
+        """if request.META['PATH_INFO'] != current_page.get_absolute_url():
+            raise Http404"""
     elif pages:
         current_page = pages[0]
 

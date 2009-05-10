@@ -616,8 +616,45 @@ class PagesTestCase(TestCase):
             
         # Make sure the content response we got was in french
         self.assertTrue('Auteur' in response.content)
+
+    def test_21_view_context(self):
+        """
+        Test that the default view can only return the context
+        """
         
-        
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        # create a page for the example otherwise you will get a Http404 error
+        response = c.post('/admin/pages/page/add/', page_data)
+        page1 = Content.objects.get_content_slug_by_slug('page1').page
+
+        from pages.views import details
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        context = details(request, only_context=True)
+        self.assertEqual(context['current_page'], page1)
+
+    def test_22_calculated_status_bug(self):
+        """
+        Test the issue 100
+        http://code.google.com/p/django-page-cms/issues/detail?id=100
+        """
+        setattr(settings, "PAGE_SHOW_START_DATE", True)
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        # create a page for the example otherwise you will get a Http404 error
+        response = c.post('/admin/pages/page/add/', page_data)
+        page1 = Content.objects.get_content_slug_by_slug('page1').page
+
+        page1.status = Page.DRAFT
+        page1.save()
+
+        page1.get_calculated_status()
+
     def assertOnlyContextException(self, view):
         """
         If an @auto_render-decorated view returns an HttpResponse and is called

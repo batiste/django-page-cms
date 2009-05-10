@@ -20,11 +20,10 @@ def get_request_mock():
         'SERVER_NAME': 'test',
         'SERVER_PORT': '8000',
     })
-        
     # Apply request middleware
     for middleware_method in bh._request_middleware:
         # LocaleMiddleware should never be applied a second time because
-        # it would broke the current real request
+        # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.im_class):
             response = middleware_method(request)
     return request
@@ -39,8 +38,7 @@ def get_placeholders(template_name):
         return []
         
     request = get_request_mock()
-    
-    
+
     try:
         # to avoid circular import
         from pages.views import details

@@ -93,7 +93,7 @@ class Page(models.Model):
         get the calculated status of the page based on published_date,
         published_end_date, and status
         """
-        if settings.PAGE_SHOW_START_DATE:
+        if settings.PAGE_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT
         

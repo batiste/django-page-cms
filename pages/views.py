@@ -9,7 +9,7 @@ from pages.utils import auto_render, get_language_from_request, get_page_from_sl
 
 def details(request, slug=None, lang=None, ajax=False):
     """
-    This example view get the root pages for navigation
+    This view get the root pages for navigation
     and the current page to display if there is any.
 
     All is rendered with the current page's template.
@@ -20,12 +20,10 @@ def details(request, slug=None, lang=None, ajax=False):
     the template.
 
     >>> from pages.views import details
-    >>> from pages.utils import get_request_mock
-    >>> request = get_request_mock()
     >>> context = details(request, only_context=True)
 
     This can be usefull if you want to write your own
-    view and reuse the following code without having to
+    view. You can reuse the following code without having to
     copy and paste it.
     """
     pages = Page.objects.navigation().order_by("tree_id")
@@ -57,6 +55,11 @@ def details(request, slug=None, lang=None, ajax=False):
         new_template_name = "body_%s" % template_name
         return new_template_name, locals()
     
-    return template_name, locals()
+    return template_name, {
+        'pages': pages,
+        'current_page': current_page,
+        'lang': lang,
+        'request': request,
+    }
     
 details = auto_render(details)

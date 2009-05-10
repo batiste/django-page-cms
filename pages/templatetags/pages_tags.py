@@ -14,6 +14,44 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
+def get_content(context, page, content_type, lang, fallback=True):
+    """Helper function used by placeholder nodes"""
+    request = context.get('request', False)
+    if not request or not page:
+        return ''
+    if lang is None:
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], page)
+
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode):
+        c = Content.objects.filter(type='slug', lang=lang, body=page)
+        if len(c):
+            page = c[0].page
+        else:
+            ''
+    c = Content.objects.get_content(page, lang, content_type, fallback)
+    if c:
+        return c
+    return ''
+
+"""Fitlers"""
+
+def has_content_in(page, language):
+    """Tell if the page has any content in a particular language"""
+    return Content.objects.filter(page=page, language=language).count() > 0
+register.filter(has_content_in)
+
+def has_permission(page, request):
+    """Tell if a user has permissions on the page according to the request
+       object"""
+    return page.has_page_permission(request)
+register.filter(has_permission)
+
+"""Inclusion tags"""
+
 def pages_menu(context, page, url='/'):
     """render a nested list of all children of the pages"""
     request = context['request']
@@ -55,33 +93,6 @@ def pages_admin_menu(context, page, url='', level=None):
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
                                           takes_context=True)(pages_admin_menu)
 
-def has_permission(page, request):
-    return page.has_page_permission(request)
-register.filter(has_permission)
-
-    
-    
-def get_content(context, page, content_type, lang, fallback=True):
-    request = context.get('request', False)
-    if not request or not page:
-        return ''
-    if lang is None:
-        if 'lang' in context:
-            lang = context['lang']
-        else:
-            lang = get_language_from_request(context['request'], page)
-
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode):
-        c = Content.objects.filter(type='slug', lang=lang, body=page)
-        if len(c):
-            page = c[0].page
-        else:
-            ''
-    c = Content.objects.get_content(page, lang, content_type, fallback)
-    if c:
-        return c
-    return ''
 
 def show_content(context, page, content_type, lang=None, fallback=True):
     """Display a content type from a page.
@@ -101,6 +112,52 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     return {'content':get_content(context, page, content_type, lang, fallback)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
+
+def show_absolute_url(context, page, lang=None):
+    """Show the url of a page in the right language
+
+    eg: {% show_absolute_url page_object %}
+
+    You can also use the slug of a page
+
+    eg: {% show_absolute_url "my-page-slug" %}
+
+    Keyword arguments:
+    page -- the page object or a slug string
+    lang -- the wanted language (defaults to None, uses request object else)
+    """
+    request = context.get('request', False)
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
+        page = get_page_from_slug(page, request)
+    if not request or not page:
+        return {'content':''}
+    if lang is None:
+        if 'lang' in context:
+            lang = context['lang']
+        else:
+            lang = get_language_from_request(context['request'], page)
+    url = page.get_absolute_url(language=lang)
+    if url:
+        return {'content':url}
+    return {'content':''}
+show_absolute_url = register.inclusion_tag('pages/content.html',
+                                      takes_context=True)(show_absolute_url)
+
+def show_revisions(context, page, content_type, lang=None):
+    """Render the last 10 revisions of a page content with a list using
+        the pages/revisions.html template"""
+    if not settings.PAGE_CONTENT_REVISION:
+        return {'revisions':None}
+    revisions = Content.objects.filter(page=page, language=lang,
+                                type=content_type).order_by('-creation_date')
+    if len(revisions) < 2:
+        return {'revisions':None}
+    return {'revisions':revisions[0:10]}
+show_revisions = register.inclusion_tag('pages/revisions.html',
+                                        takes_context=True)(show_revisions)
+
+"""Tags"""
 
 class GetContentNode(template.Node):
     def __init__(self, page, content_type, varname, lang):
@@ -149,80 +206,29 @@ def do_get_content(parser, token):
         lang = parser.compile_filter(bits[3])
     return GetContentNode(page, content_type, varname, lang)
 do_get_content = register.tag('get_content', do_get_content)
- 
 
 
-def show_absolute_url(context, page, lang=None):
-    """Show the url of a page in the right language
-    
-    eg: {% show_absolute_url page_object %}
-    
-    You can also use the slug of a page
-    
-    eg: {% show_absolute_url "my-page-slug" %}
-    
-    Keyword arguments:
-    page -- the page object or a slug string
-    lang -- the wanted language (defaults to None, uses request object else)
+class LoadPagesNode(template.Node):
+    def render(self, context):
+        if (not context.has_key('pages')):
+            context['pages'] = Page.objects.navigation()
+        return ''
+
+def do_load_pages(parser, token):
+    """Load the navigation pages into the current context
+
+    eg:
+    <ul>
+        {% load_pages %}
+        {% for page in pages %}
+            {% pages_menu page %}
+        {% endfor %}
+    </ul>
+
     """
-    request = context.get('request', False)
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        page = get_page_from_slug(page, request)
-    if not request or not page:
-        return {'content':''}
-    if lang is None:
-        if 'lang' in context:
-            lang = context['lang']
-        else:
-            lang = get_language_from_request(context['request'], page)
-    url = page.get_absolute_url(language=lang)
-    if url:
-        return {'content':url}
-    return {'content':''}
-show_absolute_url = register.inclusion_tag('pages/content.html',
-                                      takes_context=True)(show_absolute_url)
+    return LoadPagesNode()
+do_load_pages = register.tag('load_pages', do_load_pages)
 
-def show_revisions(context, page, content_type, lang=None):
-    """Render the last 10 revisions of a page content with a list"""
-    if not settings.PAGE_CONTENT_REVISION:
-        return {'revisions':None}
-    revisions = Content.objects.filter(page=page, language=lang,
-                                type=content_type).order_by('-creation_date')
-    if len(revisions) < 2:
-        return {'revisions':None}
-    return {'revisions':revisions[0:10]}
-show_revisions = register.inclusion_tag('pages/revisions.html',
-                                        takes_context=True)(show_revisions)
-
-
-def has_content_in(page,language):
-    return Content.objects.filter(page=page,language=language).count() > 0
-register.filter(has_content_in)
-
-def do_placeholder(parser, token):
-    """
-    Syntax::
-
-        {% placeholder [name] %}
-        {% placeholder [name] parsed %}
-
-        {% placeholder [name] on [page]  %}
-        {% placeholder [name] with [widget] %}
-        {% placeholder [name] on [page] with [widget] %}
-
-        {% placeholder [name] on [page] parsed %}
-        {% placeholder [name] with [widget] parsed %}
-        {% placeholder [name] on [page] with [widget] parsed %}
-
-    Example usage::
-
-        {% placeholder about %} 
-        {% placeholder body with TextArea as body_text %}
-        {% placeholder welcome with TextArea parsed as welcome_text %}
-        {% placeholder teaser on next_page with TextArea parsed %}
-    """
-    return PlaceholderNode.handle_token(parser, token)
 
 class PlaceholderNode(template.Node):
     """This template node is used to output page content and
@@ -371,5 +377,29 @@ class PlaceholderNode(template.Node):
 
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name
+
+def do_placeholder(parser, token):
+    """
+    Syntax::
+
+        {% placeholder [name] %}
+        {% placeholder [name] parsed %}
+
+        {% placeholder [name] on [page]  %}
+        {% placeholder [name] with [widget] %}
+        {% placeholder [name] on [page] with [widget] %}
+
+        {% placeholder [name] on [page] parsed %}
+        {% placeholder [name] with [widget] parsed %}
+        {% placeholder [name] on [page] with [widget] parsed %}
+
+    Example usage::
+
+        {% placeholder about %}
+        {% placeholder body with TextArea as body_text %}
+        {% placeholder welcome with TextArea parsed as welcome_text %}
+        {% placeholder teaser on next_page with TextArea parsed %}
+    """
+    return PlaceholderNode.handle_token(parser, token)
 
 register.tag('placeholder', do_placeholder)

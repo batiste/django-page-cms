@@ -302,6 +302,10 @@ class PageAdmin(admin.ModelAdmin):
         """
         The 'change' admin view for the Page model.
         """
+        extra_context = {
+            'language': get_language_from_request(request),
+            'page_languages': settings.PAGE_LANGUAGES,
+        }
         try:
             obj = self.model.objects.get(pk=object_id)
         except self.model.DoesNotExist:
@@ -311,15 +315,13 @@ class PageAdmin(admin.ModelAdmin):
             obj = None
         else:
             template = get_template_from_request(request, obj)
-            extra_context = {
-                'placeholders': get_placeholders(template),
-                'language': get_language_from_request(request),
-                'page_languages': settings.PAGE_LANGUAGES,
-                'traduction_languages': [l for l in settings.PAGE_LANGUAGES if
-                            Content.objects.get_content(obj, l[0], "title")],
-                'page': obj,
-            }
-        return super(PageAdmin, self).change_view(request, object_id, extra_context)
+            extra_context['placeholders'] = get_placeholders(template)
+            extra_context['traduction_languages'] = [l for l in
+                settings.PAGE_LANGUAGES if Content.objects.get_content(obj,
+                                                            l[0], "title")]
+        extra_context['page'] = obj
+        return super(PageAdmin, self).change_view(request, object_id,
+                                                        extra_context)
 
     def has_add_permission(self, request):
         """

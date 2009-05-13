@@ -27,7 +27,7 @@ def get_content(context, page, content_type, lang, fallback=True):
 
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode):
-        c = Content.objects.filter(type='slug', lang=lang, body=page)
+        c = Content.objects.filter(type='slug', language=lang, body=page)
         if len(c):
             page = c[0].page
         else:

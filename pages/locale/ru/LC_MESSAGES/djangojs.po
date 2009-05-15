@@ -1,0 +1,18 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: django-page-cms 1.0.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-23 23:00+0300\n"
+"PO-Revision-Date: 2009-02-23 23:00+0300\n"
+"Last-Translator: Michail Sychev <m.sychev@axion-rti.ru>\n"
+"Language-Team: AXION-RTI localization group <m.sychev@axion-rti.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: media/pages/javascript/change_form.js:10
+msgid ""
+"Are you sure you want to change the %(field_name)s without saving the page "
+"first?"
+msgstr "Вы точно хотите изменить %(field_name)s не сохранив перед этим страницу?"

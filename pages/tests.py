@@ -346,10 +346,10 @@ class PagesTestCase(TestCase):
         context = RequestContext(request, {'page': page})
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" "en-us" %}')
-        self.assertEqual(template.render(context), page_data['title'] + '\n')
+        self.assertEqual(template.render(context), page_data['title'])
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" %}')
-        self.assertEqual(template.render(context), page_data['title'] + '\n')
+        self.assertEqual(template.render(context), page_data['title'])
 
     def test_12_get_content_tag(self):
         """

@@ -86,6 +86,7 @@ def pages_admin_menu(context, page, url='', level=None):
     
     page_languages = settings.PAGE_LANGUAGES
     has_permission = page.has_page_permission(request)
+    PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
 
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',

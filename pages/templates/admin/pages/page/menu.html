@@ -8,7 +8,7 @@
                     <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                         <span class="expand">+</span>
                         <span class="collapse">-</span>
-                        <img class="expand-loading" src="/media/pages/images/loading.gif" alt="loading" />
+                        <img class="expand-loading" src="{{ PAGES_MEDIA_URL }}images/loading.gif" alt="loading" />
                     </a>
                 {% endif %} 
                 <a href="{{ url }}{{ page.id }}/" class="title changelink">{% show_content page "slug" %}</a>
@@ -45,11 +45,11 @@
         </td>
         <td class="publish-cell">
             {% ifequal page.status page.DRAFT %}
-                <img src="/media/pages/images/icons/draft.gif" alt="draft" />
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
             {% else %}{% ifequal page.status page.PUBLISHED %}
-                <img src="/media/pages/images/icons/published.gif" alt="published" />
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/published.gif" alt="published" />
             {% else %}
-                <img src="/media/pages/images/icons/hidden.gif" alt="hidden"/>
+                <img src="{{ PAGES_MEDIA_URL }}icons/hidden.gif" alt="hidden"/>
             {% endifequal %}{% endifequal %}
             &nbsp;
             <select class="publish-select" name="select-status-{{ page.id }}">

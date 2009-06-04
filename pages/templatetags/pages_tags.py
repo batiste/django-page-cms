@@ -62,11 +62,11 @@ pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
 
 def pages_sub_menu(context, page, url='/'):
-    """Get the root page of the current page and 
+    """Get the root page of the current page and
     render a nested list of all root's children pages"""
-    root = page.get_root()
     request = context['request']
-    children = page.get_children_for_frontend()
+    root = page.get_root()
+    children = root.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()

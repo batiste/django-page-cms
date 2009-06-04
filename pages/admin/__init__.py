@@ -221,6 +221,7 @@ class PageAdmin(admin.ModelAdmin):
         like Textarea or TextInput.
         """
         if name and '.' in name:
+            name = str(name)
             module_name, class_name = name.rsplit('.', 1)
             module = __import__(module_name, {}, {}, [class_name])
             widget = getattr(module, class_name, fallback)

@@ -55,8 +55,9 @@ def placeholders_recursif(nodelist, plist):
     Recursively search into a template node list for PlaceholderNode node
     """
     for node in nodelist:
-        # I don't have found a better way to do it now. isinstance fail quickly.
-        if str(node.__class__).find("PlaceholderNode") >=0:
+        # Using isinstance is always a bad idea and never works properly.
+        if hasattr(node, 'page') and hasattr(node, 'parsed') and \
+                hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False
             for p in plist:
                 if p.name == node.name:

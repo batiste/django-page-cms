@@ -48,8 +48,7 @@ def details(request, slug=None, lang=None, ajax=False):
         lang = get_language_from_request(request, current_page)
     
     if current_page.redirect_to:
-        # return this object if you want to activate redirections
-        http_redirect = HttpResponsePermanentRedirect(
+        return HttpResponsePermanentRedirect(
             current_page.redirect_to.get_absolute_url(lang))
     
     template_name = current_page.get_template()

@@ -19,20 +19,26 @@ def get_content(context, page, content_type, lang, fallback=True):
     request = context.get('request', False)
     if not request or not page:
         return ''
-    if lang is None:
-        if 'lang' in context:
-            lang = context['lang']
-        else:
-            lang = get_language_from_request(context['request'], page)
 
-    c = ''
+    absolute_lang = None
+    if lang:
+        absolute_lang = lang
+    elif 'lang' in context:
+        absolute_lang = context['lang']
+
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        c = Content.objects.filter(type='slug', language=lang, body=page)
-        if len(c):
-            page = c[0].page
-    else:
-        c = Content.objects.get_content(page, lang, content_type, fallback)
+        page = get_page_from_slug(page, context['request'], absolute_lang)
+
+    if not page:
+        return ''
+    
+    # now that we are sure to have a page object, we can found the content's
+    # language more accuratly
+    if not absolute_lang:
+        absolute_lang = get_language_from_request(context['request'], page)
+
+    c = Content.objects.get_content(page, absolute_lang, content_type, fallback)
     return c
 
 """Fitlers"""

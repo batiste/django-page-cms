@@ -117,6 +117,9 @@
         <div>body placeholder
             <div id="body" class="placeholder">{% placeholder body on current_page with WYMEditor parsed  %}</div>
         </div>
+        <div>
+            {% placeholder custom_widget_example on current_page with example.widgets.CustomTextarea parsed  %}
+        </div>
     </div>
     {% endif %}
 {% endblock %}

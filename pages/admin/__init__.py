@@ -215,9 +215,9 @@ class PageAdmin(admin.ModelAdmin):
             instance.author = request.user
         return instance
 
-    def get_widget(self, request, name, fallback=Textarea):
+    def get_widget(self, name, fallback=Textarea):
         """
-        Given the request and name of a placeholder return a Widget subclass
+        Given the name of a placeholder return a Widget subclass
         like Textarea or TextInput.
         """
         if name and '.' in name:
@@ -280,7 +280,7 @@ class PageAdmin(admin.ModelAdmin):
                         form.base_fields[field_name].required = False
 
         for placeholder in get_placeholders(template):
-            widget = self.get_widget(request, placeholder.widget)()
+            widget = self.get_widget(placeholder.widget)()
             if placeholder.parsed:
                 help_text = _('Note: This field is evaluated as template code.')
             else:

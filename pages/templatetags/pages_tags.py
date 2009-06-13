@@ -248,95 +248,36 @@ class PlaceholderNode(template.Node):
         placeholder is evaluated as template code, within the current context.
     """
     def handle_token(cls, parser, token):
+        # {% placeholder <name> [on <page>] [with <widget>] [parsed] [as
+        # <varname>] %}
         bits = token.split_contents()
         count = len(bits)
         error_string = '%r tag requires at least one argument' % bits[0]
         if count <= 1:
             raise template.TemplateSyntaxError(error_string)
-        if count == 2:
-            # {% placeholder [name] %}
-            return cls(bits[1])
-        if bits[2] not in ('as', 'on', 'with', 'parsed'):
-            raise template.TemplateSyntaxError(
-                "%r got wrong arguments" % bits[0])
-        if count in (3, 4, 5):
-            if bits[2] == 'parsed':
-                if count == 3:
-                    # {% placeholder [name] parsed %}
-                    return cls(
-                        bits[1],
-                        parsed=True,
-                    )
-                elif count == 5 and bits[3] == 'as':
-                    # {% placeholder [name] parsed as [varname] %}
-                    return cls(
-                        bits[1],
-                        as_varname=bits[4],
-                        parsed=True,
-                    )
-            elif bits[2] == 'as':
-                # {% placeholder [name] as [varname] %}
-                return cls(
-                    bits[1],
-                    as_varname=bits[3],
-                )
-            elif bits[2] == 'on':
-                # {% placeholder [name] on [page] %}
-                return cls(
-                    bits[1],
-                    page=bits[3],
-                )
-            elif bits[2] == 'with':
-                # {% placeholder [name] with [widget] %}
-                return cls(
-                    bits[1],
-                    widget=bits[3],
-                )
-        elif count in (6, 7):
-            if bits[2] == 'on':
-                if bits[4] == 'with':
-                    # {% placeholder [name] on [page] with [widget] %}
-                    # {% placeholder [name] on [page] with [widget] parsed %}
-                    parsed = bits[-1]=='parsed'
-                    return cls(
-                        bits[1],
-                        page=bits[3],
-                        widget=bits[5],
-                        parsed=parsed,
-                    )
-                elif bits[4] == 'as':
-                    # {% placeholder [name] on [page] as [varname] %}
-                    return cls(
-                        bits[1],
-                        page=bits[3],
-                        as_varname=bits[5],
-                    )
-            elif bits[2] == 'with':
-                # {% placeholder [name] with [widget] as [varname] %}
-                if bits[4] == 'as':
-                    return cls(
-                        bits[1],
-                        widget=bits[3],
-                        as_varname=bits[5],
-                    )
-                # {% placeholder [name] with [widget] parsed as [varname] %}
-                elif bits[4] == 'parsed':
-                    return cls(
-                        bits[1],
-                        widget=bits[3],
-                        as_varname=bits[6],
-                        parsed=True,
-                    )
-        elif count == 9:
-            # {% placeholder [name] on [page] with [widget] parsed as [varname] %}
-            return cls(
-                bits[1],
-                page=bits[3],
-                widget=bits[5],
-                as_varname=bits[8],
-                parsed=True,
-            )
-        raise template.TemplateSyntaxError(error_string)
+        name = bits[1]
+        remaining = bits[2:]
+        params = {}
+        while remaining:
+            bit = remaining[0]
+            if bit not in ('as', 'on', 'with', 'parsed'):
+                raise template.TemplateSyntaxError(
+                    "%r is not an correct option for a placeholder" % bit)
+            if bit in ('as', 'on', 'with'):
+                if len(remaining) < 2:
+                    raise template.TemplateSyntaxError(
+                    "Placeholder option '%s' need a parameter" % bit)
+                if bit == 'as':
+                    params['as_varname'] = remaining[1]
+                if bit == 'with':
+                    params['widget'] = remaining[1]
+                if bit == 'on':
+                    params['page'] = remaining[1]
+                remaining = remaining[2:]
+            else:
+                params['parsed'] = True
+                remaining = remaining[1:]
+        return cls(name, **params)
     handle_token = classmethod(handle_token)
     
     def __init__(self, name, page=None, widget=None, parsed=False, as_varname=None):

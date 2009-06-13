@@ -178,7 +178,7 @@ def get_page_from_slug(slug, request, lang=None):
     return None
 
 def break_here():
-    """ your friendly pdf debug prompt """
+    """Friendly pdb debug prompt"""
     if django_settings.DEBUG:
         try:
             import ipdb as pdb

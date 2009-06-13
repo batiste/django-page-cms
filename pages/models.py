@@ -185,12 +185,12 @@ class Page(models.Model):
         get the template of this page if defined or if closer parent if
         defined or DEFAULT_PAGE_TEMPLATE otherwise
         """
+        if self.template:
+            template = self.template
+        
         template = cache.get(self.PAGE_TEMPLATE_KEY % (self.id))
         if template:
             return template
-
-        if self.template:
-            template = self.template
 
         if not template:
             for p in self.get_ancestors(ascending=True):

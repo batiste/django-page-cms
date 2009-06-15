@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
 from pages import settings
 from pages.models import Page, Content
-from pages.utils import auto_render, get_language_from_request, get_page_from_slug
+from pages.http import auto_render, get_language_from_request
+from pages.utils import get_page_from_slug
 
 
 def details(request, slug=None, lang=None, ajax=False):

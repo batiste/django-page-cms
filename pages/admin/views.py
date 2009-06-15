@@ -6,7 +6,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from pages import settings
 from pages.models import Page, Content
 
-from pages.utils import get_placeholders, auto_render
+from pages.utils import get_placeholders
+from pages.http import auto_render
 
 def change_status(request, page_id, status):
     """

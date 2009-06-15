@@ -13,7 +13,8 @@ from django.contrib.admin.util import unquote
 
 from pages import settings
 from pages.models import Page, Content
-from pages.utils import get_template_from_request, has_page_add_permission, get_language_from_request, break_here
+from pages.utils import has_page_add_permission
+from pages.http import get_language_from_request, get_template_from_request
 
 from pages.admin import widgets
 from pages.utils import get_placeholders

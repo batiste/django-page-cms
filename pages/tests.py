@@ -3,7 +3,7 @@ import django
 from django.test import TestCase
 import settings
 from pages.models import *
-from pages.utils import auto_render, AutoRenderHttpError
+from pages.http import auto_render, AutoRenderHttpError
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect

@@ -8,7 +8,8 @@ import urllib
 
 from pages import settings
 from pages.models import Content, Page
-from pages.utils import get_language_from_request, get_page_from_slug
+from pages.utils import get_page_from_slug
+from pages.http import get_language_from_request
 
 register = template.Library()
 

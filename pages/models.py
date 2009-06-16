@@ -105,7 +105,7 @@ class Page(models.Model):
     calculated_status = property(get_calculated_status)
 
     def get_children_for_frontend(self):
-        """Return children of the page for the frontend """
+        """Return the published children of the page for the frontend """
         return Page.objects.filter_published(self.get_children())
 
     def invalidate(self, language_code=None):
@@ -186,7 +186,7 @@ class Page(models.Model):
         defined or DEFAULT_PAGE_TEMPLATE otherwise
         """
         if self.template:
-            template = self.template
+            return self.template
         
         template = cache.get(self.PAGE_TEMPLATE_KEY % (self.id))
         if template:
@@ -211,7 +211,6 @@ class Page(models.Model):
             if t[0] == template:
                 return t[1]
         return template
-        
         
     def traductions(self):
         langs = ""

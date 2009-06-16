@@ -287,6 +287,7 @@ class PlaceholderNode(template.Node):
         self.widget = widget
         self.parsed = parsed
         self.as_varname = as_varname
+        self.found_in_block = None
 
     def render(self, context):
         if not 'request' in context or not self.page in context:

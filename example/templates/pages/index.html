@@ -118,12 +118,15 @@
             <div id="body" class="placeholder">{% placeholder body on current_page with WYMEditor parsed  %}</div>
         </div>
         <div>
-            {% placeholder custom_widget_example on current_page with example.widgets.CustomTextarea parsed  %}
         </div>
     </div>
     {% endif %}
 {% endblock %}
 
+{% block override %}
+    <!-- nice.html overrideing this block to make custom-widget-example disapear form the admin -->
+    {% placeholder custom-widget-example on current_page with example.widgets.CustomTextarea parsed  %}
+{% endblock %}
 </div>
 
 <script type="text/javascript">

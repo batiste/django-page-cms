@@ -2,6 +2,7 @@
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode, ConstantIncludeNode
+from django.template.loader_tags import BlockNode
 from django.template import loader, Context, RequestContext
 from django.http import Http404
 
@@ -26,16 +27,26 @@ def get_placeholders(template_name):
     except Http404:
         context = {}
     temp.render(RequestContext(request, context))
-    plist = []
-    placeholders_recursif(temp.nodelist, plist)
+    plist, blist = [], []
+    placeholders_recursif(temp.nodelist, plist, blist)
     return plist
 
-def placeholders_recursif(nodelist, plist):
+def placeholders_recursif(nodelist, plist, blist):
     """
     Recursively search into a template node list for PlaceholderNode node
     """
+    
     for node in nodelist:
-        # Using isinstance is always a bad idea and never works properly.
+
+        # extends node
+        if hasattr(node, 'parent_name'):
+            placeholders_recursif(node.get_parent(Context()).nodelist,
+                                                        plist, blist)
+        # include node
+        elif hasattr(node, 'template'):
+            placeholders_recursif(node.template.nodelist, plist, blist)
+
+        # It's a placeholder
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
                 hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False
@@ -43,19 +54,29 @@ def placeholders_recursif(nodelist, plist):
                 if p.name == node.name:
                     already_in_plist = True
             if not already_in_plist:
+                if len(blist):
+                    node.found_in_block = blist[len(blist)-1]
                 plist.append(node)
             node.render(Context())
+
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
+            if isinstance(node, BlockNode):
+                # delete placeholders found in a block of the same name
+                for index, p in enumerate(plist):
+                    if p.found_in_block and \
+                            p.found_in_block.name == node.name \
+                            and p.found_in_block != node:
+                        del plist[index]
+                blist.append(node)
+            
             if hasattr(node, key):
                 try:
-                    placeholders_recursif(getattr(node, key), plist)
+                    placeholders_recursif(getattr(node, key), plist, blist)
                 except:
                     pass
-    for node in nodelist:
-        if isinstance(node, ExtendsNode):
-            placeholders_recursif(node.get_parent(Context()).nodelist, plist)
-        elif isinstance(node, ConstantIncludeNode):
-            placeholders_recursif(node.template.nodelist, plist)
+            if isinstance(node, BlockNode):
+                blist.pop()
+
 
 def has_page_add_permission(request, page=None):
     """

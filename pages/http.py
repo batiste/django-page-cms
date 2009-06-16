@@ -60,7 +60,8 @@ def get_template_from_request(request, obj=None):
         return settings.DEFAULT_PAGE_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \
-            template in dict(settings.PAGE_TEMPLATES).keys():
+            (template in dict(settings.PAGE_TEMPLATES).keys() or
+            template == settings.DEFAULT_PAGE_TEMPLATE):
         return template
     if obj is not None:
         return obj.get_template()

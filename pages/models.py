@@ -33,7 +33,7 @@ class Page(models.Model):
 
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_language_%s_url"
-    PAGE_TEMPLATE_KEY = "page_%d_template"
+    #PAGE_TEMPLATE_KEY = "page_%d_template"
     #PAGE_CHILDREN_KEY = "page_children_%d_%d"
     PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
 
@@ -112,7 +112,7 @@ class Page(models.Model):
         """Invalidate a page and it's descendants"""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
-        cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
+        #cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
 
         p_names = [p.name for p in get_placeholders(self.get_template())]
         if 'slug' not in p_names:
@@ -187,21 +187,15 @@ class Page(models.Model):
         """
         if self.template:
             return self.template
-        
-        template = cache.get(self.PAGE_TEMPLATE_KEY % (self.id))
-        if template:
-            return template
 
-        if not template:
-            for p in self.get_ancestors(ascending=True):
-                if p.template:
-                    template = p.template
-                    break
+        template = None
+        for p in self.get_ancestors(ascending=True):
+            if p.template:
+                template = p.template
+                break
 
         if not template:
             template = settings.DEFAULT_PAGE_TEMPLATE
-
-        cache.set(self.PAGE_TEMPLATE_KEY % (self.id), template)
 
         return template
 

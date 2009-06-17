@@ -101,9 +101,8 @@
 <p>Test show_content and get_content template tag : {% show_content current_page.slug "slug" %} {% get_content current_page.slug "slug" as content %}</p>
 {% endif %}
 
-{% placeholder right-column with RichTextarea parsed as right_column %}
-
 {% block content %}
+    {% placeholder right-column with RichTextarea parsed as right_column %}
     <div style="float:right;width:25%">
     <h3>Right column placeholder</h3>
     <div class="right_column">{{ right_column }}</div>

@@ -1,0 +1,14 @@
+{% extends "pages/index.html" %}
+{% load pages_tags %}
+
+{% block title %}Cool template{% endblock %}
+
+{% block content %}{{ block.super }}
+<div style="width:70%">
+    <div>HTML Content editor
+        <div id="fancy-content" class="placeholder">
+            {% placeholder html-content with EditArea parsed %}
+        </div>
+    </div>
+</div>
+{% endblock %}

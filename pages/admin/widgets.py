@@ -150,3 +150,28 @@ class markItUpHTML(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/markituphtml.html', context))
+
+class EditArea(Textarea):
+    "EditArea is a html syntax coloured widget"
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'edit_area/edit_area_full.js',
+        )]
+    
+        
+    def __init__(self, language=None, attrs=None):
+        self.language = language or settings.LANGUAGE_CODE[:2]
+        self.attrs = {'class': 'editarea',}
+        if attrs:
+            self.attrs.update(attrs)
+        super(EditArea, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        rendered = super(EditArea, self).render(name, value, attrs)
+        context = {
+            'name': name,
+            'language': self.language,
+            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/editarea.html', context))

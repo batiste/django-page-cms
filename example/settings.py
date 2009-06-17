@@ -136,6 +136,7 @@ DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
 PAGE_TEMPLATES = (
     ('pages/nice.html', 'nice one'),
     ('pages/cool.html', 'cool one'),
+    ('pages/editor.html', 'raw editor'),
 )
 
 try:

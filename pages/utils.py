@@ -96,7 +96,10 @@ def get_page_from_slug(slug, request, lang=None):
     from pages.models import Content, Page
     from django.core.urlresolvers import reverse
     lang = get_language_from_request(request)
-    relative_url = request.path.replace(reverse('pages-root'), '')
+    relative_url = request.path
+    root = reverse('pages-root')
+    if request.path.startswith(root):
+        relative_url = relative_url[len(root):]
     page_ids = Content.objects.get_page_ids_by_slug(slug)
     pages_list = Page.objects.filter(id__in=page_ids)
     current_page = None

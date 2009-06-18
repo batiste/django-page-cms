@@ -43,22 +43,25 @@ class Page(models.Model):
     creation_date = models.DateTimeField(_('creation date'), editable=False, 
             default=datetime.now)
     publication_date = models.DateTimeField(_('publication date'), 
-            null=True, blank=True, help_text=_('''When the page should go live. 
-                    Status must be "Published" for page to go live.'''))
+            null=True, blank=True, help_text=_('''When the page should go live.
+            Status must be "Published" for page to go live.'''))
     publication_end_date = models.DateTimeField(_('publication end date'), 
-            null=True, blank=True, help_text=_('''When to expire the page. Leave
-                    empty to never expire.'''))
+            null=True, blank=True, help_text=_('''When to expire the page.
+            Leave empty to never expire.'''))
 
     last_modification_date = models.DateTimeField(_('last modification date'))
 
     status = models.IntegerField(_('status'), choices=STATUSES, default=DRAFT)
-    template = models.CharField(_('template'), max_length=100, null=True, blank=True)
+    template = models.CharField(_('template'), max_length=100, null=True,
+            blank=True)
     
     # Disable could make site tests fail
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
-            help_text=_('The site(s) the page is accessible at.'), verbose_name=_('sites'))
+            help_text=_('The site(s) the page is accessible at.'),
+            verbose_name=_('sites'))
             
-    redirect_to = models.ForeignKey('self', null=True, blank=True, related_name='redirected_pages')
+    redirect_to = models.ForeignKey('self', null=True, blank=True,
+            related_name='redirected_pages')
     
     # Managers
     objects = PageManager()
@@ -135,7 +138,9 @@ class Page(models.Model):
         if languages:
             return languages
 
-        languages = [c['language'] for c in Content.objects.filter(page=self, type="slug").values('language')]
+        languages = [c['language'] for
+                            c in Content.objects.filter(page=self,
+                            type="slug").values('language')]
         languages = list(set(languages)) # remove duplicates
         languages.sort()
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
@@ -260,7 +265,8 @@ if settings.PAGE_PERMISSION:
             (1, _('This page only')),
             (2, _('This page and all children')),
         )
-        page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
+        page = models.ForeignKey(Page, null=True, blank=True,
+                verbose_name=_('page'))
         user = models.ForeignKey(User, verbose_name=_('user'))
         type = models.IntegerField(_('type'), choices=TYPES, default=0)
 
@@ -271,7 +277,8 @@ if settings.PAGE_PERMISSION:
             verbose_name_plural = _('page permissions')
 
         def __unicode__(self):
-            return "%s :: %s" % (self.user, unicode(PagePermission.TYPES[self.type][1]))
+            return "%s :: %s" % (self.user,
+                    unicode(PagePermission.TYPES[self.type][1]))
 
 class Content(models.Model):
     """A block of content, tied to a page, for a particular language"""
@@ -282,7 +289,8 @@ class Content(models.Model):
     type = models.CharField(_('type'), max_length=100, blank=False)
     page = models.ForeignKey(Page, verbose_name=_('page'))
 
-    creation_date = models.DateTimeField(_('creation date'), editable=False, default=datetime.now)
+    creation_date = models.DateTimeField(_('creation date'), editable=False,
+            default=datetime.now)
     objects = ContentManager()
 
     class Meta:

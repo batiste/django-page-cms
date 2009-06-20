@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Page CMS page_tags template tags"""
 from django import template
 from django.utils.safestring import SafeUnicode, mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -166,6 +167,7 @@ show_revisions = register.inclusion_tag('pages/revisions.html',
 """Tags"""
 
 class GetContentNode(template.Node):
+    """Get content node"""
     def __init__(self, page, content_type, varname, lang):
         self.page = page
         self.content_type = content_type
@@ -215,6 +217,7 @@ do_get_content = register.tag('get_content', do_get_content)
 
 
 class LoadPagesNode(template.Node):
+    """Load page+ node"""
     def render(self, context):
         if (not context.has_key('pages')):
             context['pages'] = Page.objects.navigation()

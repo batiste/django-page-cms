@@ -1,3 +1,4 @@
+"""Page CMS functions related to the request object"""
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
@@ -6,6 +7,7 @@ from django.template import loader, Context, RequestContext
 from pages import settings
 
 def get_request_mock():
+    """Build a request mock that can be used for testing."""
     bh = BaseHandler()
     bh.load_middleware()
     request = WSGIRequest({
@@ -27,9 +29,8 @@ class AutoRenderHttpError(Exception):
     pass
 
 def auto_render(func):
-    """
-    A decorator which automatically inserts the template path into the context
-    and calls the render_to_response shortcut
+    """A decorator which automatically inserts the template path into the
+    context and calls the render_to_response shortcut
     """
     def _dec(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
@@ -52,9 +53,8 @@ context_instance=RequestContext(request))
 
 
 def get_template_from_request(request, obj=None):
-    """
-    Gets a valid template from different sources or falls back to the default
-    template.
+    """Gets a valid template from different sources or falls back to the
+    default template.
     """
     if settings.PAGE_TEMPLATES is None:
         return settings.DEFAULT_PAGE_TEMPLATE
@@ -68,9 +68,7 @@ def get_template_from_request(request, obj=None):
     return settings.DEFAULT_PAGE_TEMPLATE
 
 def get_language_from_request(request, current_page=None):
-    """
-    Return the most obvious language according the request
-    """
+    """Return the most obvious language according the request."""
     # first try the GET parameter
     language = request.GET.get('language', None)
     if language:

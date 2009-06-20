@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Convenience module that provides access to custom settings for the ``pages`` 
+"""Convenience module that provides access to custom settings for the
+``pages`` 
 application.  Provides default settings for the ``pages`` application when the
-project ``settings`` module does not contain the appropriate settings.
-
-"""
+project ``settings`` module does not contain the appropriate settings."""
 from os.path import join
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured

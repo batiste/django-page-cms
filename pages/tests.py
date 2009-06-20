@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Django page CMS test suite module"""
 import django
 from django.test import TestCase
 import settings
@@ -9,10 +10,12 @@ from django.template import Template, RequestContext, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 
 class PagesTestCase(TestCase):
+    """Django page CMS test suite class"""
     fixtures = ['tests.json']
     counter = 1
 
     def get_new_page_data(self):
+        """Helper method for creating page datas"""
         page_data = {'title':'test page %d' % self.counter, 
             'slug':'test-page-%d' % self.counter, 'language':'en-us',
             'sites':[2], 'status':Page.PUBLISHED}
@@ -20,9 +23,8 @@ class PagesTestCase(TestCase):
         return page_data
 
     def test_01_add_page(self):
-        """
-        Test that the add admin page could be displayed via the admin
-        """
+        """Test that the add admin page could be displayed via the
+        admin"""
         c = Client()
         c.login(username= 'batiste', password='b')
         response = c.get('/admin/pages/page/add/')
@@ -30,9 +32,7 @@ class PagesTestCase(TestCase):
 
 
     def test_02_create_page(self):
-        """
-        Test that a page can be created via the admin
-        """
+        """Test that a page can be created via the admin."""
         setattr(settings, "SITE_ID", 2)
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -47,9 +47,7 @@ class PagesTestCase(TestCase):
         self.assertNotEqual(page.last_modification_date, None)
 
     def test_03_slug_collision(self):
-        """
-        Test a slug collision
-        """
+        """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
 
         c = Client()
@@ -72,9 +70,7 @@ class PagesTestCase(TestCase):
         self.assertNotEqual(page1.id, page2.id)
 
     def test_04_details_view(self):
-        """
-        Test the details view
-        """
+        """Test the details view"""
 
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -103,9 +99,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_05_edit_page(self):
-        """
-        Test that a page can edited via the admin
-        """
+        """Test that a page can edited via the admin"""
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -124,9 +118,8 @@ class PagesTestCase(TestCase):
         self.assertEqual(body, 'changed body')
 
     def test_06_site_framework(self):
-        """
-        Test the site framework, and test if it's possible to disable it
-        """
+        """Test the site framework, and test if it's possible to
+        disable it"""
         setattr(settings, "SITE_ID", 2)
         setattr(settings, "PAGE_USE_SITE_ID", True)
 
@@ -182,10 +175,8 @@ class PagesTestCase(TestCase):
         self.assertEqual(Page.objects.on_site().count(), 3)
 
     def test_07_languages(self):
-        """
-        Test post a page with different languages
-        and test that the default view works correctly
-        """
+        """Test post a page with different languages
+        and test that the default view works correctly."""
         c = Client()
         user = c.login(username= 'batiste', password='b')
         
@@ -211,7 +202,7 @@ class PagesTestCase(TestCase):
             major, middle, minor = [int(v) for v in django_version]
         else:
             major, middle = [int(v) for v in django_version]
-        if major >=1 and middle > 0:
+        if major >= 1 and middle > 0:
             response = c.get('/admin/pages/page/%d/?language=de' % page.id)
             self.assertContains(response, 'value="de" selected="selected"')
 
@@ -250,9 +241,7 @@ class PagesTestCase(TestCase):
 
         
     def test_08_revision(self):
-        """
-        Test that a page can edited several times
-        """
+        """Test that a page can edited several times."""
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()

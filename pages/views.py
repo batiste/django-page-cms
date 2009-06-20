@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Default example views"""
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
@@ -9,8 +10,7 @@ from pages.utils import get_page_from_slug
 
 
 def details(request, slug=None, lang=None, ajax=False):
-    """
-    This view get the root pages for navigation
+    """This view get the root pages for navigation
     and the current page to display if there is any.
 
     All is rendered with the current page's template.
@@ -25,8 +25,7 @@ def details(request, slug=None, lang=None, ajax=False):
 
     This can be usefull if you want to write your own
     view. You can reuse the following code without having to
-    copy and paste it.
-    """
+    copy and paste it."""
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
 

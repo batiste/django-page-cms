@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+"""Django page CMS models
+
+Model Classes
+-------------
+
+    .. class:: Page
+        A simple hierarchical page model
+
+    .. class:: Content
+        A block of content, tied to a page, for a particular language
+
+"""
 from datetime import datetime
 
 from django.db import models
@@ -17,9 +29,8 @@ from pages.managers import PageManager, ContentManager, PagePermissionManager
 
 
 class Page(models.Model):
-    """
-    A simple hierarchical page model
-    """
+    """A simple hierarchical page model"""
+    
     # some class constants to refer to, e.g. Page.DRAFT
     DRAFT = 0
     PUBLISHED = 1
@@ -76,6 +87,7 @@ class Page(models.Model):
         verbose_name_plural = _('pages')
 
     def save(self, *args, **kwargs):
+        """Override save method"""
         if not self.status:
             self.status = self.DRAFT
         # Published pages should always have a publication date
@@ -92,10 +104,8 @@ class Page(models.Model):
         super(Page, self).save(*args, **kwargs)
 
     def get_calculated_status(self):
-        """
-        get the calculated status of the page based on published_date,
-        published_end_date, and status
-        """
+        """get the calculated status of the page based on
+        published_date, published_end_date, and status"""
         if settings.PAGE_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT

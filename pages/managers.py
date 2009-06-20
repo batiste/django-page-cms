@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+"""Django page CMS managers
+
+Manager Classes
+-------------
+
+    .. class:: PageManager
+        Page manager methods
+
+    .. class:: ContentManager
+        Content manager methods
+
+"""
 import itertools
 from datetime import datetime
 from django.db import models, connection
@@ -9,6 +21,7 @@ from django.core.cache import cache
 from pages import settings
 
 class PageManager(models.Manager):
+    """Page manager methods"""
     
     def on_site(self, site_id=None):
         if settings.PAGE_USE_SITE_ID:
@@ -18,15 +31,11 @@ class PageManager(models.Manager):
         return self
 
     def root(self):
-        """
-        Return a queryset with pages that don't have parents, a.k.a. root.
-        """
+        """Return a queryset with pages that don't have parents."""
         return self.filter(parent__isnull=True)
 
     def valid_targets(self, page_id, request, perms, page=None):
-        """
-        Give valid targets to move a page into the tree
-        """
+        """QuerySet of valid targets for moving a page into the tree"""
         if page is None:
             page = self.get(pk=page_id)
         exclude_list = []
@@ -40,13 +49,15 @@ class PageManager(models.Manager):
             return self.exclude(id__in=exclude_list)
 
     def navigation(self):
+        """Fisrt level navigation filter"""
         return self.on_site().filter(status=self.model.PUBLISHED).filter(parent__isnull=True)
 
     def hidden(self):
+        """Hidden page filter"""
         return self.on_site().filter(status=self.model.HIDDEN)
 
     def filter_published(self, queryset):
-        """Resuable filter for published page"""
+        """Published page filter"""
         if settings.PAGE_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
 
@@ -76,11 +87,10 @@ class PageManager(models.Manager):
             publication_end_date__lte=datetime.now())
 
 class ContentManager(models.Manager):
+    """Content manager methods"""
 
     def sanitize(self, content):
-        """
-        Sanitize the content to avoid XSS and so
-        """
+        """Sanitize the content to avoid XSS"""
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
@@ -88,9 +98,7 @@ class ContentManager(models.Manager):
         return p.parse(content).toxml()[19:-14]
 
     def set_or_create_content(self, page, language, cnttype, body):
-        """
-        set or create a content for a particular page and language
-        """
+        """Set or create a content for a particular page and language."""
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
@@ -104,9 +112,7 @@ class ContentManager(models.Manager):
         return content
 
     def create_content_if_changed(self, page, language, cnttype, body):
-        """
-        set or create a content for a particular page and language
-        """
+        """Set or create a content for a particular page and language"""
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
@@ -119,10 +125,8 @@ class ContentManager(models.Manager):
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
     def get_content(self, page, language, ctype, language_fallback=False):
-        """
-        Gets the latest content for a particular page and language. Falls back
-        to another language if wanted.
-        """
+        """Gets the latest content for a particular page and language.
+        Falls back to another language if wanted."""
         PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
@@ -150,10 +154,8 @@ class ContentManager(models.Manager):
         return ''
 
     def get_content_slug_by_slug(self, slug):
-        """
-        Returns the latest Content slug object that match the given slug for
-        the current site domain.
-        """
+        """Returns the latest Content slug object that match the given
+        slug for the current site domain."""
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
             content = content.filter(page__sites__id=settings.SITE_ID)
@@ -165,11 +167,11 @@ class ContentManager(models.Manager):
             return content
 
     def get_page_ids_by_slug(self, slug):
-        """
-        Return all the page id according to a slug
-        """
-        sql = '''SELECT pages_content.page_id, MAX(pages_content.creation_date)
-            FROM pages_content WHERE (pages_content.type = %s AND pages_content.body =%s)
+        """Return all the page id according to a slug"""
+        sql = '''SELECT pages_content.page_id,
+            MAX(pages_content.creation_date)
+            FROM pages_content WHERE (pages_content.type = %s
+            AND pages_content.body =%s)
             GROUP BY pages_content.page_id'''
             
         cursor = connection.cursor()
@@ -177,12 +179,11 @@ class ContentManager(models.Manager):
         return [c[0] for c in cursor.fetchall()]
 
 class PagePermissionManager(models.Manager):
-    
+    """Hierachic page permission"""
+
     def get_page_id_list(self, user):
-        """
-        Give a list of page where the user has rights or the string "All" if
-        the user has all rights.
-        """
+        """Give a list of page where the user has rights or the string "All"
+        if the user has all rights."""
         if user.is_superuser:
             return 'All'
         id_list = []

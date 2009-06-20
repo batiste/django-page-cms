@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Admin views"""
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.admin.views.decorators import staff_member_required
@@ -10,9 +11,7 @@ from pages.utils import get_placeholders
 from pages.http import auto_render
 
 def change_status(request, page_id, status):
-    """
-    Switch the status of a page
-    """
+    """Switch the status of a page."""
     if request.method == 'POST':
         try:
             page = Page.objects.get(pk=page_id)
@@ -25,6 +24,7 @@ def change_status(request, page_id, status):
 change_status = staff_member_required(change_status)
 
 def modify_content(request, page_id, content_id, language_id):
+    """Modify the content of a page."""
     if request.method == 'POST':
         content = request.POST.get('content', False)
         if not content:
@@ -42,6 +42,7 @@ def modify_content(request, page_id, content_id, language_id):
 modify_content = staff_member_required(modify_content)
 
 def traduction(request, page_id, language_id):
+    """Traduction helper."""
     page = Page.objects.get(pk=page_id)
     context = {}
     lang = language_id
@@ -53,6 +54,7 @@ traduction = staff_member_required(traduction)
 traduction = auto_render(traduction)
 
 def get_content(request, page_id, content_id):
+    """Get the content for a particular page"""
     content_instance = get_object_or_404(Content, pk=content_id)
     return HttpResponse(content_instance.body)
 get_content = staff_member_required(get_content)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Page Admin module."""
 from os.path import join
 from inspect import isclass, getmembers
 
@@ -23,6 +24,7 @@ from pages.admin.utils import get_connected_models
 from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content
 
 class PageAdmin(admin.ModelAdmin):
+    """Page Admin class."""
 
     form = PageForm
     exclude = ['author', 'parent']
@@ -75,8 +77,7 @@ class PageAdmin(admin.ModelAdmin):
         )]
 
     def __call__(self, request, url):
-        
-        # Delegate to the appropriate method, based on the URL.
+        """Delegate to the appropriate method, based on the URL."""
         if url is None:
             return self.list_pages(request)
         elif url == 'jsi18n':
@@ -102,13 +103,19 @@ class PageAdmin(admin.ModelAdmin):
         elif url.endswith('/change-status-hidden'):
             return change_status(request, unquote(url[:-21]), Page.HIDDEN)
         ret = super(PageAdmin, self).__call__(request, url)
-        
-        
+
+        """Persist the language and template GET arguments, both on "save and
+        keep editing" and when switching language and template (which
+        also submits)
         """
-        Persist the language and template GET arguments, both on "save and keep 
-        editing" and when switching language and template (which also submits)
-        """
-        if HttpResponseRedirect == type(ret) and (request.GET.get('new_language', False) or request.GET.get('new_template', False) or request.GET.get('language', False) or request.GET.get('template', False)):
+
+        # TODO: clean that code
+        new_lang = request.GET.get('new_language', False)
+        lang = request.GET.get('language', False)
+        template = request.GET.get('template', False)
+        
+        if HttpResponseRedirect == type(ret) and (new_lang or lang or
+                                                            template):
             for item in ret.items():
                 if 'Location' == item[0]:
                     new_uri = item[1] + \
@@ -119,8 +126,8 @@ class PageAdmin(admin.ModelAdmin):
         return ret
 
     def i18n_javascript(self, request):
-        """
-        Displays the i18n JavaScript that the Django admin requires.
+        """Displays the i18n JavaScript that the Django admin
+        requires.
 
         This takes into account the USE_I18N setting. If it's set to False, the
         generated JavaScript will be leaner and faster.
@@ -132,9 +139,8 @@ class PageAdmin(admin.ModelAdmin):
         return javascript_catalog(request, packages='pages')
 
     def save_model(self, request, obj, form, change):
-        """
-        Move the page in the tree if necessary and save every placeholder
-        Content object.
+        """Move the page in the tree if necessary and save every
+        placeholder Content object.
         """
 
         language = form.cleaned_data['language']
@@ -174,9 +180,8 @@ class PageAdmin(admin.ModelAdmin):
         obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):
-        """
-        Add fieldsets of placeholders to the list of already existing
-        fieldsets.
+        """Add fieldsets of placeholders to the list of already
+        existing fieldsets.
          """
         additional_fieldsets = []
 
@@ -206,10 +211,8 @@ class PageAdmin(admin.ModelAdmin):
         return given_fieldsets + additional_fieldsets
 
     def save_form(self, request, form, change):
-        """
-        Given a ModelForm return an unsaved instance. ``change`` is True if
-        the object is being changed, and False if it's being added.
-        """
+        """Given a ModelForm return an unsaved instance. ``change`` is True if
+        the object is being changed, and False if it's being added."""
         instance = super(PageAdmin, self).save_form(request, form, change)
         instance.template = form.cleaned_data['template']
         if not change:
@@ -217,10 +220,8 @@ class PageAdmin(admin.ModelAdmin):
         return instance
 
     def get_widget(self, name, fallback=Textarea):
-        """
-        Given the name of a placeholder return a Widget subclass
-        like Textarea or TextInput.
-        """
+        """Given the name of a placeholder return a Widget subclass
+        like Textarea or TextInput."""
         if name and '.' in name:
             name = str(name)
             module_name, class_name = name.rsplit('.', 1)
@@ -233,10 +234,8 @@ class PageAdmin(admin.ModelAdmin):
         return widget
 
     def get_form(self, request, obj=None, **kwargs):
-        """
-        Get PageForm for the Page model and modify its fields depending on
-        the request.
-        """
+        """Get PageForm for the Page model and modify its fields depending on
+        the request."""
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
         language = get_language_from_request(request, obj)
@@ -251,12 +250,12 @@ class PageAdmin(admin.ModelAdmin):
         template = get_template_from_request(request, obj)
         if settings.PAGE_TEMPLATES:
             template_choices = list(settings.PAGE_TEMPLATES)
-            template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE, _('Default template')))
+            template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE,
+                    _('Default template')))
             form.base_fields['template'].choices = template_choices
             form.base_fields['template'].initial = force_unicode(template)
 
         # handle most of the logic of connected models
-
         if obj:
             for mod in get_connected_models():
                 model = mod['model']
@@ -301,9 +300,7 @@ class PageAdmin(admin.ModelAdmin):
         return form
 
     def change_view(self, request, object_id, extra_context=None):
-        """
-        The 'change' admin view for the Page model.
-        """
+        """The 'change' admin view for the Page model."""
         extra_context = {
             'language': get_language_from_request(request),
             'page_languages': settings.PAGE_LANGUAGES,
@@ -326,26 +323,22 @@ class PageAdmin(admin.ModelAdmin):
                                                         extra_context)
 
     def has_add_permission(self, request):
-        """
-        Return true if the current user has permission to add a new page.
-        """
+        """Return true if the current user has permission to add a new
+        page."""
         if not settings.PAGE_PERMISSION:
             return super(PageAdmin, self).has_add_permission(request)
         else:
             return has_page_add_permission(request)
 
     def has_change_permission(self, request, obj=None):
-        """
-        Return true if the current user has permission on the page.
-        Return the string 'All' if the user has all rights.
-        """
+        """Return true if the current user has permission on the page.
+        Return the string 'All' if the user has all rights."""
         if settings.PAGE_PERMISSION and obj is not None:
             return obj.has_page_permission(request)
         return super(PageAdmin, self).has_change_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        """
-        Return true if the current user has permission on the page.
+        """Return true if the current user has permission on the page.
         Return the string 'All' if the user has all rights.
         """
         if settings.PAGE_PERMISSION and obj is not None:
@@ -353,9 +346,7 @@ class PageAdmin(admin.ModelAdmin):
         return super(PageAdmin, self).has_delete_permission(request, obj)
 
     def list_pages(self, request, template_name=None, extra_context=None):
-        """
-        List root pages
-        """
+        """List root pages"""
         # HACK: overrides the changelist template and later resets it to None
         if template_name:
             self.change_list_template = template_name
@@ -370,9 +361,8 @@ class PageAdmin(admin.ModelAdmin):
         return change_list
 
     def move_page(self, request, page_id, extra_context=None):
-        """
-        Move the page to the requested target, at the given position
-        """
+        """Move the page to the requested target, at the given
+        position"""
         page = Page.objects.get(pk=page_id)
 
         target = request.POST.get('target', None)

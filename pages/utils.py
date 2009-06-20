@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""A collection of functions for Page CMS"""
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template.loader_tags import ExtendsNode, ConstantIncludeNode
@@ -10,9 +11,7 @@ from pages import settings
 from pages.http import get_request_mock, get_language_from_request
 
 def get_placeholders(template_name):
-    """
-    Return a list of PlaceholderNode found in the given template
-    """
+    """Return a list of PlaceholderNode found in the given template"""
     try:
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
@@ -32,9 +31,8 @@ def get_placeholders(template_name):
     return plist
 
 def placeholders_recursif(nodelist, plist, blist):
-    """
-    Recursively search into a template node list for PlaceholderNode node
-    """
+    """Recursively search into a template node list for PlaceholderNode
+    node."""
     
     for node in nodelist:
 
@@ -77,11 +75,8 @@ def placeholders_recursif(nodelist, plist, blist):
             if isinstance(node, BlockNode):
                 blist.pop()
 
-
 def has_page_add_permission(request, page=None):
-    """
-    Return true if the current user has permission to add a new page.
-    """
+    """Return true if the current user has permission to add a new page."""
     if not settings.PAGE_PERMISSION:
         return True
     else:
@@ -93,6 +88,7 @@ def has_page_add_permission(request, page=None):
 
 # TODO: move this in the manager
 def get_page_from_slug(slug, request, lang=None):
+    """Get the page according to a slug."""
     from pages.models import Content, Page
     from django.core.urlresolvers import reverse
     lang = get_language_from_request(request)

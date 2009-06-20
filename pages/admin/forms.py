@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Page CMS forms"""
 from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -7,6 +8,7 @@ from pages import settings
 from pages.models import Page, Content
 
 class PageForm(forms.ModelForm):
+    """Form for page creation"""
     title = forms.CharField(
         label=_('Title'),
         widget=forms.TextInput(),
@@ -38,6 +40,7 @@ class PageForm(forms.ModelForm):
         model = Page
 
     def clean_slug(self):
+        """Handle move action on the pages"""
         
         slug = slugify(self.cleaned_data['slug'])
         target = self.data.get('target', None)

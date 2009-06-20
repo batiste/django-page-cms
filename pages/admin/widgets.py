@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Default Page CMS widgets."""
 from os.path import join
 from django.conf import settings
 from django.forms import TextInput, Textarea
@@ -13,6 +14,7 @@ if PAGE_TAGGING:
     from django.utils import simplejson
 
     class AutoCompleteTagInput(TextInput):
+        """An autocompete widget"""
         class Media:
             js = [join(PAGES_MEDIA_URL, path) for path in (
                 'javascript/jquery.js',
@@ -32,6 +34,7 @@ if PAGE_TAGGING:
                 'admin/pages/page/widgets/autocompletetaginput.html', context))
 
 class RichTextarea(Textarea):
+    """A RichTextarea widget."""
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -59,6 +62,7 @@ if PAGE_TINYMCE:
     from tinymce import widgets as tinymce_widgets
     
     class TinyMCE(tinymce_widgets.TinyMCE):
+        """TinyMCE widget."""
         def __init__(self, content_language=None, attrs=None, mce_attrs={}):
             self.mce_attrs = mce_attrs
             self.mce_attrs.update({
@@ -72,6 +76,7 @@ if PAGE_TINYMCE:
             super(TinyMCE, self).__init__(content_language, attrs, mce_attrs)
 
 class WYMEditor(Textarea):
+    """WYMEditor widget."""
 
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
@@ -108,6 +113,8 @@ class WYMEditor(Textarea):
             'admin/pages/page/widgets/wymeditor.html', context))
 
 class markItUpMarkdown(Textarea):
+    """markItUpMarkdown widget."""
+    
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -130,6 +137,8 @@ class markItUpMarkdown(Textarea):
             'admin/pages/page/widgets/markitupmarkdown.html', context))
 
 class markItUpHTML(Textarea):
+    """markItUpHTML widget."""
+    
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',

@@ -3,7 +3,7 @@ from django.core.urlresolvers import get_mod_func
 from pages import settings
 
 def get_connected_models():
-
+    """Return all the connected models with this CMS"""
     if not settings.PAGE_CONNECTED_MODELS:
         return []
     

@@ -98,7 +98,9 @@
 {% if current_page %}
 <p>Test for page absolute url : {% show_absolute_url current_page %}</p>
 <p>Test for page absolute url using the page slug : {% show_absolute_url current_page.slug %}</p>
-<p>Test show_content and get_content template tag : {% show_content current_page.slug "slug" %} {% get_content current_page.slug "slug" as content %}</p>
+<p>Test show_content and get_content template tag :
+    {% show_content current_page.slug "slug" %}
+    {% get_content current_page.slug "slug" as content %}</p>
 {% endif %}
 
 {% block content %}
@@ -122,10 +124,6 @@
     {% endif %}
 {% endblock %}
 
-{% block override %}
-    <!-- nice.html overrideing this block to make custom-widget-example disapear form the admin -->
-    {% placeholder custom-widget-example on current_page with example.widgets.CustomTextarea parsed  %}
-{% endblock %}
 </div>
 
 <script type="text/javascript">

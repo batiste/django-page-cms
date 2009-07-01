@@ -43,7 +43,7 @@ def get_content(context, page, content_type, lang, fallback=True):
     c = Content.objects.get_content(page, absolute_lang, content_type, fallback)
     return c
 
-"""Fitlers"""
+"""Filters"""
 
 def has_content_in(page, language):
     """Tell if the page has any content in a particular language"""
@@ -59,7 +59,8 @@ register.filter(has_permission)
 """Inclusion tags"""
 
 def pages_menu(context, page, url='/'):
-    """render a nested list of all children of the pages"""
+    """Render a nested list of all children of the given page, including
+    this page"""
     request = context['request']
     site_id = None
     children = page.get_children_for_frontend()
@@ -70,7 +71,7 @@ pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
 
 def pages_sub_menu(context, page, url='/'):
-    """Get the root page of the current page and
+    """Get the root page of the given page and
     render a nested list of all root's children pages"""
     request = context['request']
     root = page.get_root()

@@ -11,6 +11,7 @@ from django.conf import settings as global_settings
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.contrib.admin.util import unquote
+from django.contrib.admin.sites import AlreadyRegistered
 
 from pages import settings
 from pages.models import Page, Content
@@ -383,7 +384,10 @@ class PageAdmin(admin.ModelAdmin):
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')
 
-admin.site.register(Page, PageAdmin)
+try:
+    admin.site.register(Page, PageAdmin)
+except AlreadyRegistered:
+    pass
 
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')
@@ -394,4 +398,8 @@ class ContentAdmin(admin.ModelAdmin):
 
 if settings.PAGE_PERMISSION:
     from pages.models import PagePermission
-    admin.site.register(PagePermission)
+    try:
+        admin.site.register(PagePermission)
+    except AlreadyRegistered:
+        pass
+

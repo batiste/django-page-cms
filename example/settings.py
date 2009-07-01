@@ -139,6 +139,9 @@ PAGE_TEMPLATES = (
     ('pages/editor.html', 'raw editor'),
 )
 
+# A test runner that use the coverage module
+TEST_RUNNER = "test_runner.run_tests"
+
 try:
     from local_settings import *
 except ImportError:

@@ -19,33 +19,33 @@ def get_all_coverage_modules(app_module, exclude_files=[]):
     mod_list = []
     for root, dirs, files in os.walk(app_dirpath):
         root_path = app_path + root[len(app_dirpath):].split(os.path.sep)[1:]
-        for file in files:
-            if file not in exclude_files:
-                if file.lower().endswith('.py'):
-                    mod_name = file[:-3].lower()
-                    try:
-                        mod = __import__('.'.join(root_path + [mod_name]),
-                            {}, {}, mod_name)
-                    except ImportError:
-                        pass
-                    else:
-                        mod_list.append(mod)
+        if not '.svn' in root_path:
+            for file in files:
+                if file not in exclude_files:
+                    if file.lower().endswith('.py'):
+                        mod_name = file[:-3].lower()
+                        try:
+                            mod = __import__('.'.join(root_path + [mod_name]),
+                                {}, {}, mod_name)
+                        except ImportError:
+                            pass
+                        else:
+                            mod_list.append(mod)
 
     return mod_list
 
 
 def run_tests(test_labels, verbosity=1, interactive=True,
         extra_tests=[]):
-    cov = coverage()
+    """cov = coverage()
     cov.erase()
     cov.use_cache(0)
     cov.start()
-
-    app = get_app('pages')
-    modules = get_all_coverage_modules(app, exclude_files=['tests.py'])
+    app = get_app('pages')"""
+    #modules = get_all_coverage_modules(app, exclude_files=['auto_render.py'])
     results = django_test_runner(test_labels, verbosity, interactive,
         extra_tests)
-    cov.stop()
-    cov.html_report(modules, directory='coverage')
+    """cov.stop()
+    cov.html_report(modules, directory='coverage')"""
 
     return results

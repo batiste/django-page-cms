@@ -167,7 +167,7 @@ class ContentManager(models.Manager):
             return content
 
     def get_page_ids_by_slug(self, slug):
-        """Return all the page id according to a slug"""
+        """Return all the page id according to a slug."""
         sql = '''SELECT pages_content.page_id,
             MAX(pages_content.creation_date)
             FROM pages_content WHERE (pages_content.type = %s

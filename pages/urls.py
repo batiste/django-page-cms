@@ -9,9 +9,6 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
-    url(r'^.*?/?(?P<slug>[-\w]+)/ajax/$', details, {'ajax':True}, name='pages-details-by-slug'),
-)
-
-urlpatterns += patterns('',
-    url(r'^.*?/?(?P<slug>[-\w]+)/$', details, name='pages-details-by-slug'),
+    url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
+        name='pages-details-by-slug'),
 )

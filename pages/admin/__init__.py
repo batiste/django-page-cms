@@ -15,11 +15,10 @@ from django.contrib.admin.sites import AlreadyRegistered
 
 from pages import settings
 from pages.models import Page, Content
-from pages.utils import has_page_add_permission
+from pages.utils import has_page_add_permission, get_placeholders
 from pages.http import get_language_from_request, get_template_from_request
 
 from pages.admin import widgets
-from pages.utils import get_placeholders
 from pages.admin.forms import PageForm
 from pages.admin.utils import get_connected_models
 from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content
@@ -351,7 +350,9 @@ class PageAdmin(admin.ModelAdmin):
         # HACK: overrides the changelist template and later resets it to None
         if template_name:
             self.change_list_template = template_name
+        lang = get_language_from_request(request)
         context = {
+            'lang': lang,
             'name': _("page"),
             'pages': Page.objects.root().order_by("tree_id"),
             'opts': self.model._meta

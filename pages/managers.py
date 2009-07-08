@@ -18,7 +18,6 @@ from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 
 from pages import settings
 
@@ -88,13 +87,11 @@ class PageManager(models.Manager):
         return self.on_site().filter(
             publication_end_date__lte=datetime.now())
 
-    def from_slug(self, slug, complete_path, lang, exclude_drafts=True):
+    def from_path(self, path, lang, exclude_drafts=True):
         """Get the page according to a slug."""
         from pages.models import Content, Page
-        relative_url = complete_path
-        root = reverse('pages-root')
-        if relative_url.startswith(root):
-            relative_url = relative_url[len(root):]
+        from pages.http import get_slug_and_relative_path
+        slug, rpath = get_slug_and_relative_path(path)
         page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.filter(id__in=page_ids)
         if exclude_drafts:
@@ -105,7 +102,7 @@ class PageManager(models.Manager):
         # more than one page matching the slug, let's use the full url
         if len(pages_list) > 1:
             for page in pages_list:
-                if page.get_url(lang) == relative_url:
+                if page.get_url(lang) == path:
                     return page
         return None
 

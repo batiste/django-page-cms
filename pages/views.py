@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Default example views"""
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
@@ -6,9 +5,9 @@ from django.contrib.sites.models import SITE_CACHE
 from pages import settings
 from pages.models import Page, Content
 from pages.http import auto_render, get_language_from_request
+from pages.http import get_slug_and_relative_path
 
-
-def details(request, slug=None, lang=None):
+def details(request, path=None, lang=None):
     """This view get the root pages for navigation
     and the current page to display if there is any.
 
@@ -28,13 +27,16 @@ def details(request, slug=None, lang=None):
     
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
+
     if lang is None:
         lang = get_language_from_request(request, current_page)
 
-    if slug:
-        current_page = Page.objects.from_slug(slug, request.path, lang)
-        if current_page and request.META['PATH_INFO'] != \
-                                    current_page.get_absolute_url():
+    if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
+        raise Http404
+
+    if path:
+        current_page = Page.objects.from_path(path, lang)
+        if not current_page:
             raise Http404
     elif pages:
         current_page = pages[0]
@@ -55,8 +57,9 @@ def details(request, slug=None, lang=None):
     if request.is_ajax():
         new_template_name = "body_%s" % template_name
         return new_template_name, locals()
-    
+
     return template_name, {
+        'path': path,
         'pages': pages,
         'current_page': current_page,
         'lang': lang,

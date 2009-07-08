@@ -4,7 +4,17 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
+from django.core.urlresolvers import reverse
 from pages import settings
+
+def get_slug_and_relative_path(path):
+    if path[-1] == '/':
+        path = path[:-1]
+    slug = path.split("/")[-1]
+    root = reverse('pages-root')
+    if path.startswith(root):
+        path = path[len(root):]
+    return slug, path
 
 def get_request_mock():
     """Build a request mock that can be used for testing."""

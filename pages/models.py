@@ -157,7 +157,8 @@ class Page(models.Model):
         return languages
 
     def get_absolute_url(self, language=None):
-        return reverse('pages-root') + self.get_url(language)
+        return reverse('pages-root') + str(language) + '/' \
+                + self.get_url(language)
 
     def get_url(self, language=None):
         """
@@ -172,7 +173,7 @@ class Page(models.Model):
             url = ancestor.slug(language) + u'/' + url
 
         cache.set(self.PAGE_URL_KEY % (self.id, language), url)
-            
+        
         return url
 
     def slug(self, language=None, fallback=True):
@@ -247,7 +248,7 @@ class Page(models.Model):
         if self.level:
             for n in range(0, self.level):
                 level += '&nbsp;&nbsp;&nbsp;'
-        return mark_safe(level + self.__unicode__())
+        return mark_safe(level + self.slug())
         
     def margin_level(self):
         return self.level * 2

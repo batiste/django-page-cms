@@ -32,7 +32,7 @@ class PagesTestCase(TestCase):
 
     def test_02_create_page(self):
         """Test that a page can be created via the admin."""
-        setattr(settings, "SITE_ID", 2)
+        #setattr(settings, "SITE_ID", 2)
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -215,7 +215,7 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
-        setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'en-us')
+        #setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'en-us')
         
         # test that the frontend view use the good parameters
         # I cannot find a way of setting the accept-language HTTP 

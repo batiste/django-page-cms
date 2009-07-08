@@ -85,24 +85,3 @@ def has_page_add_permission(request, page=None):
         if permission == "All":
             return True
     return False
-
-# TODO: move this in the manager
-def get_page_from_slug(slug, request, lang=None):
-    """Get the page according to a slug."""
-    from pages.models import Content, Page
-    from django.core.urlresolvers import reverse
-    lang = get_language_from_request(request)
-    relative_url = request.path
-    root = reverse('pages-root')
-    if request.path.startswith(root):
-        relative_url = relative_url[len(root):]
-    page_ids = Content.objects.get_page_ids_by_slug(slug)
-    pages_list = Page.objects.filter(id__in=page_ids)
-    current_page = None
-    if len(pages_list) == 1:
-        return pages_list[0]
-    if len(pages_list) > 1:
-        for page in pages_list:
-            if page.get_url(lang) == relative_url:
-                return page
-    return None

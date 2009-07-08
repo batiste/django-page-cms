@@ -6,10 +6,9 @@ from django.contrib.sites.models import SITE_CACHE
 from pages import settings
 from pages.models import Page, Content
 from pages.http import auto_render, get_language_from_request
-from pages.utils import get_page_from_slug
 
 
-def details(request, slug=None, lang=None, ajax=False):
+def details(request, slug=None, lang=None):
     """This view get the root pages for navigation
     and the current page to display if there is any.
 
@@ -26,11 +25,14 @@ def details(request, slug=None, lang=None, ajax=False):
     This can be usefull if you want to write your own
     view. You can reuse the following code without having to
     copy and paste it."""
+    
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
+    if lang is None:
+        lang = get_language_from_request(request, current_page)
 
     if slug:
-        current_page = get_page_from_slug(slug, request, lang)
+        current_page = Page.objects.from_slug(slug, request.path, lang)
         if current_page and request.META['PATH_INFO'] != \
                                     current_page.get_absolute_url():
             raise Http404
@@ -44,16 +46,13 @@ def details(request, slug=None, lang=None, ajax=False):
         current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
         raise Http404
     
-    if not lang:
-        lang = get_language_from_request(request, current_page)
-    
     if current_page.redirect_to:
         return HttpResponsePermanentRedirect(
             current_page.redirect_to.get_absolute_url(lang))
     
     template_name = current_page.get_template()
     
-    if ajax:
+    if request.is_ajax():
         new_template_name = "body_%s" % template_name
         return new_template_name, locals()
     

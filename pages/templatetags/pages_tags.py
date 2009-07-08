@@ -9,7 +9,6 @@ import urllib
 
 from pages import settings
 from pages.models import Content, Page
-from pages.utils import get_page_from_slug
 from pages.http import get_language_from_request
 
 register = template.Library()
@@ -30,7 +29,8 @@ def get_content(context, page, content_type, lang, fallback=True):
 
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        page = get_page_from_slug(page, context['request'], absolute_lang)
+        page = Page.objects.from_slug(page, context['request'].path,
+            absolute_lang)
 
     if not page:
         return ''
@@ -40,7 +40,8 @@ def get_content(context, page, content_type, lang, fallback=True):
     if not absolute_lang:
         absolute_lang = get_language_from_request(context['request'], page)
 
-    c = Content.objects.get_content(page, absolute_lang, content_type, fallback)
+    c = Content.objects.get_content(page, absolute_lang, content_type,
+fallback)
     return c
 
 """Filters"""
@@ -89,7 +90,8 @@ def pages_admin_menu(context, page, url='', level=None):
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
-            ids = [int(id) for id in urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
+            ids = [int(id) for id in
+urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
             if page.id in ids:
                 expanded = True
     
@@ -99,7 +101,8 @@ def pages_admin_menu(context, page, url='', level=None):
 
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
-                                          takes_context=True)(pages_admin_menu)
+
+takes_context=True)(pages_admin_menu)
 
 
 def show_content(context, page, content_type, lang=None, fallback=True):
@@ -117,7 +120,8 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     lang -- the wanted language (default None, use the request object to know)
     fallback -- use fallback content
     """
-    return {'content':get_content(context, page, content_type, lang, fallback)}
+    return {'content':get_content(context, page, content_type, lang,
+fallback)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
@@ -135,16 +139,18 @@ def show_absolute_url(context, page, lang=None):
     lang -- the wanted language (defaults to None, uses request object else)
     """
     request = context.get('request', False)
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        page = get_page_from_slug(page, request)
-    if not request or not page:
+    if not request:
         return {'content':''}
     if lang is None:
         if 'lang' in context:
             lang = context['lang']
         else:
-            lang = get_language_from_request(context['request'], page)
+            lang = get_language_from_request(request, page)
+    # if the page is a SafeUnicode, try to use it like a slug
+    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
+        page = Page.objects.from_slug(page, request.path, lang)
+    if not page:
+        return {'content':''}
     url = page.get_absolute_url(language=lang)
     if url:
         return {'content':url}

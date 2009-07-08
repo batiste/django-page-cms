@@ -18,6 +18,8 @@ from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
+
 from pages import settings
 
 class PageManager(models.Manager):
@@ -85,6 +87,27 @@ class PageManager(models.Manager):
     def expired(self):
         return self.on_site().filter(
             publication_end_date__lte=datetime.now())
+
+    def from_slug(self, slug, complete_path, lang, exclude_drafts=True):
+        """Get the page according to a slug."""
+        from pages.models import Content, Page
+        relative_url = complete_path
+        root = reverse('pages-root')
+        if relative_url.startswith(root):
+            relative_url = relative_url[len(root):]
+        page_ids = Content.objects.get_page_ids_by_slug(slug)
+        pages_list = self.filter(id__in=page_ids)
+        if exclude_drafts:
+            pages_list = pages_list.exclude(status=Page.DRAFT)
+        current_page = None
+        if len(pages_list) == 1:
+            return pages_list[0]
+        # more than one page matching the slug, let's use the full url
+        if len(pages_list) > 1:
+            for page in pages_list:
+                if page.get_url(lang) == relative_url:
+                    return page
+        return None
 
 class ContentManager(models.Manager):
     """Content manager methods"""

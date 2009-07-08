@@ -69,24 +69,12 @@ def get_template_from_request(request, obj=None):
 
 def get_language_from_request(request, current_page=None):
     """Return the most obvious language according the request."""
-    # first try the GET parameter
     language = request.GET.get('language', None)
     if language:
         return language
 
     if hasattr(request, 'LANGUAGE_CODE'):
-        client_language = \
-            settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        return settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
     else:
-        client_language = settings.PAGE_DEFAULT_LANGUAGE
+        return settings.PAGE_DEFAULT_LANGUAGE
 
-    # then try to get the right one for the page
-    if current_page:
-        # try to get the language that match the client language
-        languages = current_page.get_languages()
-        for lang in languages:
-            if client_language == str(lang):
-                return client_language
-
-    # last resort
-    return settings.PAGE_DEFAULT_LANGUAGE

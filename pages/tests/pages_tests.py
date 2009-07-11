@@ -577,3 +577,39 @@ class PagesTestCase(TestCase):
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
+
+    def test_24_page_valid_targets(self):
+        """Test page valid_targets method"""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'root'
+        response = c.post('/admin/pages/page/add/', page_data)
+        root_page = Content.objects.get_content_slug_by_slug('root').page
+        page_data['position'] = 'first-child'
+        page_data['target'] = root_page.id
+        page_data['slug'] = 'child-1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        c1 = Content.objects.get_content_slug_by_slug('child-1').page
+
+        self.assertEqual(len(Page.objects.valid_targets(root_page.id)), 0)
+        self.assertEqual(str(Page.objects.valid_targets(c1.id)),
+                "[<Page: root>]")
+
+    def test_25_page_admin_view(self):
+        """Test page admin view"""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page-1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page = Content.objects.get_content_slug_by_slug('page-1').page
+        self.assertEqual(page.status, 1)
+        response = c.post('/admin/pages/page/%d/change-status-draft/' %
+            page.id)
+        page = Content.objects.get_content_slug_by_slug('page-1').page
+        self.assertEqual(page.status, 0)
+
+        url = '/admin/pages/page/%d/modify-content/title/en-us/' % page.id
+        response = c.post(url, {'content': 'test content'})
+        self.assertEqual(page.title(), 'test content')

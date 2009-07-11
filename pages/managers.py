@@ -35,7 +35,7 @@ class PageManager(models.Manager):
         """Return a queryset with pages that don't have parents."""
         return self.filter(parent__isnull=True)
 
-    def valid_targets(self, page_id, request, perms, page=None):
+    def valid_targets(self, page_id, perms="All", page=None):
         """QuerySet of valid targets for moving a page into the tree"""
         if page is None:
             page = self.get(pk=page_id)

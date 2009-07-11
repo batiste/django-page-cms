@@ -135,7 +135,6 @@ def show_absolute_url(context, page, lang=None):
     lang -- the wanted language (defaults to None, uses request object else)
     """
     lang = context.get('lang', None)
-    path = context.get('path', None)
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode) or isinstance(page, unicode):
         page = Page.objects.from_path(page, lang)

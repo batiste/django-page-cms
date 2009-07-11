@@ -2,7 +2,7 @@
 """Django page CMS test suite module"""
 import django
 from django.test import TestCase
-import settings
+from pages import settings
 from pages.models import Page, Content, PagePermission
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
@@ -120,7 +120,7 @@ class PagesTestCase(TestCase):
         """Test the site framework, and test if it's possible to
         disable it"""
 
-        """
+        
         # this kind of hacks doesn't work anymore
         setattr(settings, "SITE_ID", 2)
         setattr(settings, "PAGE_USE_SITE_ID", True)
@@ -175,22 +175,21 @@ class PagesTestCase(TestCase):
         setattr(settings, "PAGE_USE_SITE_ID", False)
 
         # we should get everything
-        self.assertEqual(Page.objects.on_site().count(), 3)"""
+        self.assertEqual(Page.objects.on_site().count(), 3)
 
     def test_07_languages(self):
         """Test post a page with different languages
-        and test that the default view works correctly."""
+        and test that the admin views works correctly."""
         c = Client()
         user = c.login(username= 'batiste', password='b')
         
-        # test that the default language setting is used add page admin
-        # and not accept-language in HTTP requests.
-        """setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'de')
+        # test that the client language setting is used in add page admin
+        c.cookies["django_language"] = 'de'
         response = c.get('/admin/pages/page/add/')
         self.assertContains(response, 'value="de" selected="selected"')
-        setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'fr-ch')
+        c.cookies["django_language"] = 'fr-ch'
         response = c.get('/admin/pages/page/add/')
-        self.assertContains(response, 'value="fr-ch" selected="selected"')"""
+        self.assertContains(response, 'value="fr-ch" selected="selected"')
 
         page_data = self.get_new_page_data()
         page_data["title"] = 'english title'

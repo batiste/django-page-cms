@@ -108,14 +108,16 @@ LANGUAGE_CODE = 'en-us'
 # django.utils.translation -- that module depends on the settings.
 gettext_noop = lambda s: s
 
-# language you want to into the CMS
+# languages you want to translate into the CMS.
 PAGE_LANGUAGES = (
     ('de', gettext_noop('German')),
     ('fr-ch', gettext_noop('Swiss french')),
     ('en-us', gettext_noop('US English')),
 )
 
-# You should add here all language you want to accept as valid client language
+# You should add here all language you want to accept as valid client
+# language. By default we copy the PAGE_LANGUAGES constant and add some other
+# similar languages.
 languages = list(PAGE_LANGUAGES)
 languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
@@ -139,7 +141,7 @@ PAGE_TEMPLATES = (
     ('pages/editor.html', 'raw editor'),
 )
 
-# A test runner that use the coverage module
+# A test runner that use the test coverage module
 TEST_RUNNER = "test_runner.run_tests"
 
 try:

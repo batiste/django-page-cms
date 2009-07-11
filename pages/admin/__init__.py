@@ -322,6 +322,17 @@ class PageAdmin(admin.ModelAdmin):
         return super(PageAdmin, self).change_view(request, object_id,
                                                         extra_context)
 
+    def add_view(self, request, form_url='', extra_context=None):
+        """The 'add' admin view for the Page model."""
+        extra_context = {
+            'language': get_language_from_request(request),
+            'page_languages': settings.PAGE_LANGUAGES,
+        }
+        template = get_template_from_request(request)
+        #extra_context['placeholders'] = get_placeholders(template)
+        return super(PageAdmin, self).add_view(request, form_url,
+                                                            extra_context)
+
     def has_add_permission(self, request):
         """Return true if the current user has permission to add a new
         page."""

@@ -91,6 +91,7 @@ class PagesTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['status'] = Page.PUBLISHED
         page_data['slug'] = 'test-page-2'
+        page_data['template'] = 'pages/index.html'
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
@@ -613,3 +614,16 @@ class PagesTestCase(TestCase):
         url = '/admin/pages/page/%d/modify-content/title/en-us/' % page.id
         response = c.post(url, {'content': 'test content'})
         self.assertEqual(page.title(), 'test content')
+
+        # TODO: realy test these methods
+        url = '/admin/pages/page/%d/traduction/en-us/' % page.id
+        response = c.get(url)
+        self.assertEqual(response.status_code, 200)
+        
+        url = '/admin/pages/page/%d/sub-menu/' % page.id
+        response = c.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = '/admin/pages/page/%d/get-content/1/' % page.id
+        response = c.get(url)
+        self.assertEqual(response.status_code, 200)

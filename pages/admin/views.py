@@ -60,19 +60,9 @@ def get_content(request, page_id, content_id):
 get_content = staff_member_required(get_content)
 get_content = auto_render(get_content)
 
-def valid_targets_list(request, page_id):
-    """A list of valid targets to move a page"""
-    if not settings.PAGE_PERMISSION:
-        perms = "All"
-    else:
-        from pages.models import PagePermission
-        perms = PagePermission.objects.get_page_id_list(request.user)
-    query = Page.objects.valid_targets(page_id, request, perms)
-    return HttpResponse(",".join([str(p.id) for p in query]))
-valid_targets_list = staff_member_required(valid_targets_list)
-
 def sub_menu(request, page_id):
-    """Render the children of the requested page"""
+    """Render the children of the requested page with the sub_menu
+    template."""
     page = Page.objects.get(id=page_id)
     pages = page.children.all()
     has_permission = page.has_page_permission(request)

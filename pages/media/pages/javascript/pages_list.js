@@ -161,6 +161,7 @@ $(function () {
                         // Update the move and add links of the inserted rows
                         if (action == 'move') {
                             $('#page-row-'+selected_page).addClass('selected').add(get_children(selected_page)).addClass('highlighted');
+                            // this could become quite slow with a lot of pages
                             $('tr:not(.highlighted)', changelist).addClass('insertable');
                         } else if (action == 'add') {
                             $('#page-row-'+selected_page).addClass('highlighted insertable');

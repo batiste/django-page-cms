@@ -95,7 +95,7 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
-        response = c.get('/pages/en-us/test-page-2/')
+        response = c.get('/pages/test-page-2/')
         self.assertEqual(response.status_code, 200)
 
     def test_05_edit_page(self):
@@ -305,7 +305,7 @@ class PagesTestCase(TestCase):
         # this assert test that the creation fails as wanted
         self.assertEqual(response.status_code, 200)
 
-        response = c.get('/pages/en-us/same-slug/')
+        response = c.get('/pages/same-slug/')
         self.assertEqual(response.status_code, 200)
 
         page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
@@ -318,10 +318,10 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         # finaly test that we can get every page according the path
-        response = c.get('/pages/en-us/same-slug/')
+        response = c.get('/pages/same-slug/')
         self.assertContains(response, "parent title", 2)
 
-        response = c.get('/pages/en-us/same-slug/same-slug/')
+        response = c.get('/pages/same-slug/same-slug/')
         self.assertContains(response, "children title", 2)
 
     def test_11_show_content_tag(self):
@@ -570,11 +570,11 @@ class PagesTestCase(TestCase):
         # create a page for the example otherwise you will get a Http404 error
         response = c.post('/admin/pages/page/add/', page_data)
 
-        response = c.get('/pages/en-us/page1/')
+        response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
 
         try:
-            response = c.get('/pages/en-us/toto/page1/')
+            response = c.get('/pages/toto/page1/')
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise

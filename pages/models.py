@@ -157,8 +157,10 @@ class Page(models.Model):
         return languages
 
     def get_absolute_url(self, language=None):
-        return reverse('pages-root') + str(language) + '/' \
-                + self.get_url(language)
+        url = reverse('pages-root')
+        if settings.PAGE_USE_LANGUAGE_PREFIX:
+            url += str(language) + '/'
+        return url + self.get_url(language)
 
     def get_url(self, language=None):
         """

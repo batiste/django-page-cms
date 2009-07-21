@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
 from pages import settings
-from pages.models import Page, Content
+from pages.models import Page, Content, PageAlias
 from pages.http import auto_render, get_language_from_request
 from pages.http import get_slug_and_relative_path
 
@@ -67,3 +67,15 @@ def details(request, path=None, lang=None):
     }
     
 details = auto_render(details)
+
+def alias_wrapper(request, path=None, lang=None, *args, **kwargs):
+    """
+    a wrapper for details() which resolves aliases and canonicalizes URLs
+    """
+    alias = PageAlias.objects.get_for_url(request, path, lang)
+    if not alias:
+        raise Http404
+    if alias.is_canonical:
+        return details(request, alias.page.slug(), *args, **kwargs)
+    else:
+        return HttpResponsePermanentRedirect(alias.page.get_absolute_url(lang))

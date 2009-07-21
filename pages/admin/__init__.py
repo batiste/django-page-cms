@@ -14,7 +14,7 @@ from django.contrib.admin.util import unquote
 from django.contrib.admin.sites import AlreadyRegistered
 
 from pages import settings
-from pages.models import Page, Content
+from pages.models import Page, Content, PageAlias
 from pages.utils import has_page_add_permission, get_placeholders
 from pages.http import get_language_from_request, get_template_from_request
 
@@ -414,4 +414,13 @@ if settings.PAGE_PERMISSION:
         admin.site.register(PagePermission)
     except AlreadyRegistered:
         pass
+
+class AliasAdmin(admin.ModelAdmin):
+    list_display = ('page', 'url', 'is_canonical',)
+    list_editable = ('url', 'is_canonical',)
+
+try:
+    admin.site.register(PageAlias, AliasAdmin)
+except AlreadyRegistered:
+    pass
 

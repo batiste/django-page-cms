@@ -36,7 +36,8 @@ class PageManager(models.Manager):
         return self.filter(parent__isnull=True)
 
     def valid_targets(self, page_id, perms="All", page=None):
-        """QuerySet of valid targets for moving a page into the tree"""
+        """return a ``QuerySet`` of valid targets for moving a page into the
+        tree"""
         if page is None:
             page = self.get(pk=page_id)
         exclude_list = []
@@ -145,7 +146,7 @@ class ContentManager(models.Manager):
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
     def get_content(self, page, language, ctype, language_fallback=False):
-        """Gets the latest content for a particular page and language.
+        """Gets the latest ``Content`` for a particular page and language.
         Falls back to another language if wanted."""
         PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
         if not language:
@@ -174,7 +175,7 @@ class ContentManager(models.Manager):
         return ''
 
     def get_content_slug_by_slug(self, slug):
-        """Returns the latest Content slug object that match the given
+        """Returns the latest ``Content`` slug object that match the given
         slug for the current site domain."""
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
@@ -187,7 +188,7 @@ class ContentManager(models.Manager):
             return content
 
     def get_page_ids_by_slug(self, slug):
-        """Return all the page id according to a slug."""
+        """Return all page id matching the given slug."""
         sql = '''SELECT pages_content.page_id,
             MAX(pages_content.creation_date)
             FROM pages_content WHERE (pages_content.type = %s
@@ -202,8 +203,8 @@ class PagePermissionManager(models.Manager):
     """Hierachic page permission"""
 
     def get_page_id_list(self, user):
-        """Give a list of page where the user has rights or the string "All"
-        if the user has all rights."""
+        """Give a list of ``Page`` ids where the user has rights or the string
+        "All" if the user has all rights."""
         if user.is_superuser:
             return 'All'
         id_list = []
@@ -217,3 +218,43 @@ class PagePermissionManager(models.Manager):
                     if page.id not in id_list:
                         id_list.append(page.id)
         return id_list
+
+class PageAliasManager(models.Manager):
+    """PageAlias manager"""
+    def get_for_url(self, request, path=None, lang=None):
+        """
+        resolve a request to an alias. returns a PageAlias object or None if the url
+        matches no page at all. The aliasing system supports plain aliases (/foo/bar)
+        as well as aliases containing GET parameters (like "index.php?page=foo").
+        """
+        from pages.utils import normalize_url
+        from pages.models import Page,PageAlias
+
+        url = normalize_url(path)
+        # §1: try with complete query string
+        if request.META["QUERY_STRING"]!="":
+            url = url + '?' + request.META["QUERY_STRING"]
+        try:
+            alias = PageAlias.objects.get(url=url)
+            return alias
+        except PageAlias.DoesNotExist:
+            pass
+        # §2: try with path only
+        url = normalize_url(path)
+        try:
+            alias = PageAlias.objects.get(url=url)
+            return alias
+        except PageAlias.DoesNotExist:
+            pass
+        # §3: the requested path is not an alias, but it may be the slug of a page
+        page = Page.objects.from_path(path, lang)
+        if page:
+            alias = PageAlias(page=page, url=path)
+            # we have a page, let's see if there is a canonical alias for it
+            if PageAlias.objects.filter(page=page, is_canonical=True).count()>0:
+                alias.is_canonical = False
+            else:
+                alias.is_canonical = True
+            return alias
+        else:
+            return None

@@ -346,3 +346,30 @@ def do_placeholder(parser, token):
     return PlaceholderNode.handle_token(parser, token)
 
 register.tag('placeholder', do_placeholder)
+
+def pages_dynamic_tree_menu(context, page, url='/'):
+    """
+    render a "dynamic" tree menu, with all nodes expanded which are either
+    ancestors or the current page itself. 
+    """
+    request = context['request']
+    site_id = None
+    children = None
+    if 'current_page' in context:
+        current_page = context['current_page']
+        # if this node is expanded, we also have to render its children
+        # a node is expanded if it is the current node or one of its ancestors        
+        if page.lft <= current_page.lft and page.rght >= current_page.rght:
+            children = page.get_children_for_frontend() 
+    return locals()
+
+pages_dynamic_tree_menu = register.inclusion_tag('pages/dynamic_tree_menu.html',
+                                                 takes_context=True)(pages_dynamic_tree_menu)
+
+def pages_breadcrumb(context, page, url='/'):
+    request = context['request']
+    site_id = None
+    pages = page.get_ancestors()
+    return locals()
+pages_breadcrumb = register.inclusion_tag('pages/breadcrumb.html',
+                                                 takes_context=True)(pages_breadcrumb)

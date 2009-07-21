@@ -25,7 +25,7 @@ from django.contrib.sites.models import Site
 import mptt
 from pages import settings
 from pages.utils import get_placeholders
-from pages.managers import PageManager, ContentManager, PagePermissionManager
+from pages.managers import PageManager, ContentManager, PagePermissionManager, PageAliasManager
 
 
 class Page(models.Model):
@@ -157,10 +157,16 @@ class Page(models.Model):
         return languages
 
     def get_absolute_url(self, language=None):
-        url = reverse('pages-root')
-        if settings.PAGE_USE_LANGUAGE_PREFIX:
-            url += str(language) + '/'
-        return url + self.get_url(language)
+        try:
+            alias = PageAlias.objects.get(page=self, is_canonical=True)
+            #if settings.PAGE_USE_LANGUAGE_PREFIX:
+            #    url = str(language) + '/' + self.url
+            return alias.url
+        except:
+            url = reverse('pages-root')
+            if settings.PAGE_USE_LANGUAGE_PREFIX:
+                url += str(language) + '/'
+            return url + self.get_url(language)
 
     def get_url(self, language=None):
         """
@@ -313,3 +319,23 @@ class Content(models.Model):
 
     def __unicode__(self):
         return "%s :: %s" % (self.page.slug(), self.body[0:15])
+
+class PageAlias(models.Model):
+    """URL alias for a page"""
+    page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
+    url = models.CharField(max_length=1024, unique=True)
+    is_canonical = models.NullBooleanField(null=True, blank=True)
+    objects = PageAliasManager()
+    class Meta:
+        verbose_name_plural = _('Aliases')
+    
+    def save(self, *args, **kwargs):
+        # normalize url
+        self.url = normalize_url(self.url) 
+    
+        # override to handle "is_canonical" properly
+        if self.is_canonical:
+            for alias in PageAlias.objects.filter(page=self.page):
+                alias.is_canonical = False
+                alias.save()
+        super(PageAlias, self).save(*args, **kwargs)       

@@ -8,42 +8,40 @@ This document assume that you already know how to setup a Django project.
 If you have any problem installing this CMS, take a look at the example application that stands in the example directory.
 This application works out of the box and will certainly help you to get started.
 
-Install instructions step by step
-=================================
+Step by step installation
+=========================
 
-For an alternative, step by step installation process, there is this an
-OpenOffice document : http://django-page-cms.googlegroups.com/web/gpc-install-instructions.odt
+For a step by step installation there is complete OpenOffice document : http://django-page-cms.googlegroups.com/web/gpc-install-instructions.odt
 
 Install by using pip
 ====================
 
-The pip install is by far the easiest one. Use this method if you have the choice. 
-
-use::
+The pip install is the easiest and the recommended installation method. Use::
 
     sudo easy_install pip
     wget -c http://django-page-cms.googlecode.com/svn/trunk/requirements/external_apps.txt
     sudo pip install -r external_apps.txt
 
-Every package listed in the `external_app.txt` should be downloaded and installed.
+Every package listed in the ``external_app.txt`` should be downloaded and installed.
 
 Install by using easy_install
 =============================
 
 On debian linux you can do::
 
+    sudo easy_install django
     sudo easy_install html5lib
     sudo easy_install django-page-cms
 
-* Tagging must be installed by hand or with subversion* because the available package is not 
+* Tagging must be installed by hand or with subversion because the available package is not
   compatible with django 1.0.
 
-* Django-mptt must be installed by hand or with subversion* because the available package is not compatible with django 1.0.
+* Django-mptt must be installed by hand or with subversion because the available package is not compatible with django 1.0.
 
 Install by using subversion externals
 =====================================
 
-You can also use the trunk version of the Django page CMS by using subversion externals::
+You can also use the trunk version of the Django Page CMS by using subversion externals::
 
 
     $ svn pe svn:externals .
@@ -54,7 +52,7 @@ You can also use the trunk version of the Django page CMS by using subversion ex
 Urls
 ====
 
-Take a look in the `example/urls.py` and copy desired URLs in your own `urls.py`.
+Take a look in the ``example/urls.py`` and copy desired URLs in your own ``urls.py``.
 Basically you need to have something like this::
 
     urlpatterns = patterns('',
@@ -63,10 +61,10 @@ Basically you need to have something like this::
         (r'^admin/(.*)', admin.site.root),
     )
 
-When you will visit the site the first time (`/pages/`), you will get a 404 error
+When you will visit the site the first time (``/pages/``), you will get a 404 error
 because there is no published page. Go to the admin first and create and publish some pages.
 
-You will certainly want to activate the static file serve view in your `urls.py` if you are in developement mode::
+You will certainly want to activate the static file serve view in your ``urls.py`` if you are in developement mode::
 
     if settings.DEBUG:
         urlpatterns += patterns('',
@@ -78,7 +76,7 @@ You will certainly want to activate the static file serve view in your `urls.py`
 Settings
 ========
 
-All the Django page CMS specific settings and options are listed and explained in the `pages/settings.py` file.
+All the Django page CMS specific settings and options are listed and explained in the ``pages/settings.py`` file.
 
 Django page CMS require several of these settings to be set. They are marked in this document with a bold "*must*". 
 
@@ -87,7 +85,7 @@ Tagging
 
 Tagging is optional and disabled by default. 
 
-If you want to use it set `PAGE_TAGGING` at `True` into your setting file and add it to your installed apps::
+If you want to use it set ``PAGE_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
 
     INSTALLED_APPS = (
         'django.contrib.auth',
@@ -121,15 +119,15 @@ Please first read how django handle languages
 * http://docs.djangoproject.com/en/dev/ref/settings/#languages
 * http://docs.djangoproject.com/en/dev/ref/settings/#language-code
 
-This CMS use the `PAGE_LANGUAGES` setting in order to present which language are supported by the CMS. 
-By default `PAGE_LANGUAGES` value is set to `settings.LANGUAGES` value.
-So you can directly set the `LANGUAGES` setting if you want.
-In any case *you should set* `PAGE_LANGUAGES` or `LANGUAGES`
-yourself because by default the `LANGUAGES` list is big.
+This CMS use the ``PAGE_LANGUAGES`` setting in order to present which language are supported by the CMS.
+By default ``PAGE_LANGUAGES`` value is set to ``settings.LANGUAGES`` value.
+So you can directly set the ``LANGUAGES`` setting if you want.
+In any case *you should set* ``PAGE_LANGUAGES`` or ``LANGUAGES``
+yourself because by default the ``LANGUAGES`` list is big.
 
-Django use `LANGUAGES` setting to set the `request.LANGUAGE_CODE` value that is used by this CMS. So if the language you want to support is not present in the `LANGUAGES` setting the `request.LANGUAGE_CODE` will not be set correctly.
+Django use ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS. So if the language you want to support is not present in the ``LANGUAGES`` setting the ``request.LANGUAGE_CODE`` will not be set correctly.
 
-A possible solution is to redefine `settings.LANGUAGES`. For example you can do::
+A possible solution is to redefine ``settings.LANGUAGES``. For example you can do::
 
     # Default language code for this installation. All choices can be found here:
     # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -158,7 +156,7 @@ A possible solution is to redefine `settings.LANGUAGES`. For example you can do:
 Template context processors and Middlewares
 -------------------------------------------
 
-You *must* have these context processors into your `TEMPLATE_CONTEXT_PROCESSORS` setting::
+You *must* have these context processors into your ``TEMPLATE_CONTEXT_PROCESSORS`` setting::
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         'django.core.context_processors.auth',
@@ -170,7 +168,7 @@ You *must* have these context processors into your `TEMPLATE_CONTEXT_PROCESSORS`
         ...
     )
 
-You *must* have these middleware into your `MIDDLEWARE_CLASSES` setting::
+You *must* have these middleware into your ``MIDDLEWARE_CLASSES`` setting::
 
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -184,16 +182,16 @@ You *must* have these middleware into your `MIDDLEWARE_CLASSES` setting::
 Default template
 ----------------
 
-You *must* set `DEFAULT_PAGE_TEMPLATE` to the name of your default CMS template::
+You *must* set ``DEFAULT_PAGE_TEMPLATE`` to the name of your default CMS template::
 
     DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
 
-And you *must* copy the directory `example/templates/pages` into your root template directory.
+And you *must* copy the directory ``example/templates/pages`` into your root template directory.
 
 Additional templates
 --------------------
 
-Optionally you can set `PAGE_TEMPLATES` if you want additional templates choices.
+Optionally you can set ``PAGE_TEMPLATES`` if you want additional templates choices.
 In the the example application you have actually this::
 
     PAGE_TEMPLATES = (
@@ -204,7 +202,7 @@ In the the example application you have actually this::
 The sites framework
 -------------------
 
-If you want to use the http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites Django sites framework] with django-page-cms, you *must* define the `SITE_ID` and `PAGE_USE_SITE_ID` settings and create the appropriate Site object into the admin interface::
+If you want to use the http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites Django sites framework] with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
 
     PAGE_USE_SITE_ID = True
     SITE_ID = 1
@@ -214,15 +212,15 @@ The Site object should have the domain that match your actual domain (ie: 127.0.
 Media directory
 ---------------
 
-The django CMS come with some javascript and CSS files. These files are standing in the `pages/media/pages` directory.
+The django CMS come with some javascript and CSS files. These files are standing in the ``pages/media/pages`` directory.
 
 If you don't know how to serve static files with Django please read :
 
 http://docs.djangoproject.com/en/dev/howto/static-files/
 
  
-Django CMS has a special setting called `PAGES_MEDIA_URL` that enable you to change
-how the browser will ask for these files in the CMS admin. By default the value of `PAGES_MEDIA_URL` is set to ::
+Django CMS has a special setting called ``PAGES_MEDIA_URL`` that enable you to change
+how the browser will ask for these files in the CMS admin. By default the value of ``PAGES_MEDIA_URL`` is set to ::
 
     PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 'pages/'))
 
@@ -239,7 +237,7 @@ In the CMS admin template you have::
     <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.js"></script>
 
 
-That will be rendered by default like this if `MEDIA_URL == '/media/'`::
+That will be rendered by default like this if ``MEDIA_URL == '/media/'``::
 
 
     <link rel="stylesheet" type="text/css" href="/media/pages/css/pages.css" />
@@ -247,11 +245,11 @@ That will be rendered by default like this if `MEDIA_URL == '/media/'`::
 
 You can off course redefine this variable in your setting file if you are not happy with this default
 
-In any case you must at least create a symbolic link or copy the directory `pages/media/pages/` into
+In any case you must at least create a symbolic link or copy the directory ``pages/media/pages/`` into
 your media directory to have a fully functioning administration interface.
 
 The example application take another approch by directly
-point the `MEDIA_ROOT` of the project on the `page/media` directory::
+point the ``MEDIA_ROOT`` of the project on the ``page/media`` directory::
 
     # Absolute path to the directory that holds media.
     MEDIA_ROOT = os.path.join(PROJECT_DIR, '../pages/media/')

@@ -2,11 +2,8 @@
 """A collection of functions for Page CMS"""
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
-from django.template.loader_tags import ExtendsNode, ConstantIncludeNode
-from django.template.loader_tags import BlockNode
 from django.template import loader, Context, RequestContext
 from django.http import Http404
-
 from pages import settings
 from pages.http import get_request_mock, get_language_from_request
 
@@ -27,12 +24,14 @@ def get_placeholders(template_name):
         context = {}
     temp.render(RequestContext(request, context))
     plist, blist = [], []
-    placeholders_recursif(temp.nodelist, plist, blist)
+    _placeholders_recursif(temp.nodelist, plist, blist)
     return plist
 
-def placeholders_recursif(nodelist, plist, blist):
+def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
+    # I needed to import make this lazy import to make the doc compile
+    from django.template.loader_tags import BlockNode
     
     for node in nodelist:
 

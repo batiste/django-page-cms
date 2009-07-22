@@ -7,15 +7,6 @@ from django.template import loader, Context, RequestContext
 from django.core.urlresolvers import reverse
 from pages import settings
 
-def get_slug_and_relative_path(path):
-    if path[-1] == '/':
-        path = path[:-1]
-    slug = path.split("/")[-1]
-    root = reverse('pages-root')
-    if path.startswith(root):
-        path = path[len(root):]
-    return slug, path
-
 def get_request_mock():
     """Build a request mock that can be used for testing."""
     bh = BaseHandler()
@@ -34,13 +25,15 @@ def get_request_mock():
     return request
 
 class AutoRenderHttpError(Exception):
-    """cannot return context dictionary because a view returned an HTTP
-    response when a (template_name, context) tuple was expected"""
+    """Cannot return context dictionary because a view returned an HTTP
+    response when a (template_name, context) tuple was expected."""
     pass
 
 def auto_render(func):
-    """A decorator which automatically inserts the template path into the
-    context and calls the render_to_response shortcut
+    """
+    This view decorator automatically calls the ``render_to_response``
+    shortcut. A view that use this decorator should return a tuple of this
+    form : (template name, context) instead of a ``HttpRequest`` object.
     """
     def _dec(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
@@ -58,12 +51,23 @@ def auto_render(func):
         (template_name, context) = response
         t = context['template_name'] = template_override or template_name
         return render_to_response(t, context,
-context_instance=RequestContext(request))
+                            context_instance=RequestContext(request))
     return _dec
 
+def get_slug_and_relative_path(path):
+    """Split a page path into the slug, and the remaining left
+    part."""
+    if path[-1] == '/':
+        path = path[:-1]
+    slug = path.split("/")[-1]
+    root = reverse('pages-root')
+    if path.startswith(root):
+        path = path[len(root):]
+    return slug, path
 
-def get_template_from_request(request, obj=None):
-    """Gets a valid template from different sources or falls back to the
+def get_template_from_request(request, page=None):
+    """
+    Gets a valid template from different sources or falls back to the
     default template.
     """
     if settings.PAGE_TEMPLATES is None:
@@ -73,8 +77,8 @@ def get_template_from_request(request, obj=None):
             (template in dict(settings.PAGE_TEMPLATES).keys() or
             template == settings.DEFAULT_PAGE_TEMPLATE):
         return template
-    if obj is not None:
-        return obj.get_template()
+    if page is not None:
+        return page.get_template()
     return settings.DEFAULT_PAGE_TEMPLATE
 
 def get_language_from_request(request, current_page=None):

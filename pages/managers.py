@@ -22,7 +22,10 @@ from django.core.cache import cache
 from pages import settings
 
 class PageManager(models.Manager):
-    """Page manager methods"""
+    """
+    Page manager provide several filters to obtain pages ``QuerySet``
+    that respect the page settings.
+    """
     
     def on_site(self, site_id=None):
         if settings.PAGE_USE_SITE_ID:
@@ -51,15 +54,17 @@ class PageManager(models.Manager):
             return self.exclude(id__in=exclude_list)
 
     def navigation(self):
-        """Fisrt level navigation filter"""
-        return self.on_site().filter(status=self.model.PUBLISHED).filter(parent__isnull=True)
+        """Creates a ``QuerySet`` of the published root pages."""
+        return self.on_site().filter(
+                status=self.model.PUBLISHED).filter(parent__isnull=True)
 
     def hidden(self):
-        """Hidden page filter"""
+        """Creates a ``QuerySet`` of the hidden pages."""
         return self.on_site().filter(status=self.model.HIDDEN)
 
     def filter_published(self, queryset):
-        """Published page filter"""
+        """Filter the given pages ``QuerySet`` to obtain only published
+        page."""
         if settings.PAGE_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
 
@@ -76,9 +81,12 @@ class PageManager(models.Manager):
         return queryset
 
     def published(self):
+        """Creates a ``QuerySet`` of published filter."""
         return self.filter_published(self)
 
     def drafts(self):
+        """Creates a ``QuerySet`` of drafts using the page's
+        status and ``publication_date``."""
         pub = self.on_site().filter(status=self.model.DRAFT)
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__gte=datetime.now())
@@ -89,7 +97,7 @@ class PageManager(models.Manager):
             publication_end_date__lte=datetime.now())
 
     def from_path(self, path, lang, exclude_drafts=True):
-        """Get the page according to a slug."""
+        """Get a page according to the page's path."""
         from pages.models import Content, Page
         from pages.http import get_slug_and_relative_path
         slug, rpath = get_slug_and_relative_path(path)

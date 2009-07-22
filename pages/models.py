@@ -29,7 +29,9 @@ from pages.managers import PageManager, ContentManager, PagePermissionManager, P
 
 
 class Page(models.Model):
-    """A simple hierarchical page model"""
+    """
+    This model contain the status, dates, author, template.
+    The real content of the page can be found in the ``Content`` model."""
     
     # some class constants to refer to, e.g. Page.DRAFT
     DRAFT = 0
@@ -70,7 +72,7 @@ class Page(models.Model):
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
             help_text=_('The site(s) the page is accessible at.'),
             verbose_name=_('sites'))
-            
+    
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
     
@@ -87,7 +89,7 @@ class Page(models.Model):
         verbose_name_plural = _('pages')
 
     def save(self, *args, **kwargs):
-        """Override save method"""
+        """Override the save method."""
         if not self.status:
             self.status = self.DRAFT
         # Published pages should always have a publication date
@@ -105,7 +107,7 @@ class Page(models.Model):
 
     def get_calculated_status(self):
         """get the calculated status of the page based on
-        published_date, published_end_date, and status"""
+        ``published_date``, ``published_end_date``, and ``status``."""
         if settings.PAGE_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT
@@ -118,11 +120,11 @@ class Page(models.Model):
     calculated_status = property(get_calculated_status)
 
     def get_children_for_frontend(self):
-        """Return the published children of the page for the frontend """
+        """Creates a ``QuerySet`` of published children page"""
         return Page.objects.filter_published(self.get_children())
 
     def invalidate(self, language_code=None):
-        """Invalidate a page and it's descendants"""
+        """Invalidate this page and it's descendants."""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         #cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
@@ -142,7 +144,7 @@ class Page(models.Model):
 
     def get_languages(self):
         """
-        get the list of all existing languages for this page
+        return a list of all existing languages for this page.
         """
         languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
         if languages:
@@ -186,7 +188,10 @@ class Page(models.Model):
 
     def slug(self, language=None, fallback=True):
         """
-        get the slug of the page depending on the given language
+        Return the slug of the page depending on the given language.
+
+        If fallback is **True**, the slug will also be searched in other
+        languages.
         """
         
         slug = Content.objects.get_content(self, language, 'slug',
@@ -196,7 +201,10 @@ class Page(models.Model):
 
     def title(self, language=None, fallback=True):
         """
-        get the title of the page depending on the given language
+        Return the title of the page depending on the given language.
+
+        If fallback is **True**, the title will also be searched in other
+        languages.
         """
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
@@ -252,6 +260,8 @@ class Page(models.Model):
             return False
 
     def with_level(self):
+        """Display the slug of the page prepended with insecable
+        spaces equal to the level of page in the hierarchy."""
         level = ''
         if self.level:
             for n in range(0, self.level):

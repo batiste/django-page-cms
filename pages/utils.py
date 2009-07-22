@@ -86,7 +86,7 @@ def has_page_add_permission(request, page=None):
     return False
 
 def normalize_url(url):
-    """ return a normalized url with trailing and without leading slash
+    """Return a normalized url with trailing and without leading slash.
      
      >>> normalize_url(None)
      '/'

@@ -333,7 +333,7 @@ class Content(models.Model):
 class PageAlias(models.Model):
     """URL alias for a page"""
     page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
-    url = models.CharField(max_length=1024, unique=True)
+    url = models.CharField(max_length=255, unique=True)
     is_canonical = models.NullBooleanField(null=True, blank=True)
     objects = PageAliasManager()
     class Meta:

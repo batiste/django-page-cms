@@ -3,7 +3,7 @@
 import django
 from django.test import TestCase
 from pages import settings
-from pages.models import Page, Content, PagePermission
+from pages.models import Page, Content, PagePermission, PageAlias
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
@@ -627,3 +627,56 @@ class PagesTestCase(TestCase):
         url = '/admin/pages/page/%d/get-content/1/' % page.id
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
+        
+    def test_26_page_alias(self):
+        """Test page aliasing system"""
+
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        
+        # create some pages
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'home-page-title'
+        page_data['slug'] = 'home-page'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        
+        page_data['title'] =  'downloads-page-title'
+        page_data['slug'] = 'downloads-page'
+        response = c.post('/admin/pages/page/add/', page_data)        
+        self.assertRedirects(response, '/admin/pages/page/')
+                
+        # create aliases for the pages
+        page = Page.objects.from_path('home-page', None)
+        self.assertTrue(page)
+        p = PageAlias(page=page, url='/', is_canonical=True)
+        p.save()
+        p = PageAlias(page=page, url='/index.php', is_canonical=False)
+        p.save()
+        
+        page = Page.objects.from_path('downloads-page', None)
+        self.assertTrue(page)
+        p = PageAlias(page=page, url='index.php?page=downloads', is_canonical=False)
+        p.save()
+        
+        # now check whether we can retrieve the pages.
+        # is the homepage available from its canonical alias?
+        response = c.get('/pages/')
+        self.assertContains(response, "home-page-title", 2)
+        
+        # the other alias must cause a 301 redirect since it is not canonical        
+        response = c.get('/pages/index.php')
+        self.assertRedirects(response, '/pages/', 301)
+
+        # same must be true if we are calling the page by slug
+        response = c.get('/pages/home-page')
+        self.assertRedirects(response, '/pages/', 301)
+        
+        # for the download page, the slug is canonical
+        response = c.get('/pages/downloads-page/')
+        self.assertContains(response, "downloads-page-title", 2)
+        
+        # calling via its alias must cause redirect
+        response = c.get('/pages/index.php?page=downloads')
+        self.assertRedirects(response, '/pages/downloads-page/', 301)            
+        

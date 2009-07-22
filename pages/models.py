@@ -24,7 +24,7 @@ from django.contrib.sites.models import Site
 
 import mptt
 from pages import settings
-from pages.utils import get_placeholders
+from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager, PagePermissionManager, PageAliasManager
 
 
@@ -163,7 +163,7 @@ class Page(models.Model):
             alias = PageAlias.objects.get(page=self, is_canonical=True)
             #if settings.PAGE_USE_LANGUAGE_PREFIX:
             #    url = str(language) + '/' + self.url
-            return alias.url
+            return reverse('pages-root')[:-1] + alias.url
         except:
             url = reverse('pages-root')
             if settings.PAGE_USE_LANGUAGE_PREFIX:
@@ -348,4 +348,11 @@ class PageAlias(models.Model):
             for alias in PageAlias.objects.filter(page=self.page):
                 alias.is_canonical = False
                 alias.save()
-        super(PageAlias, self).save(*args, **kwargs)       
+        super(PageAlias, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        str = "%s => %s" % (self.url, self.page.get_url())
+        if self.is_canonical:
+            str = str + " (canonical)"
+        return str 
+               

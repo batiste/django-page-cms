@@ -90,6 +90,8 @@ def normalize_url(url):
      
      >>> normalize_url(None)
      '/'
+     >>> normalize_url('/')
+     '/'
      >>> normalize_url('/foo/bar')
      '/foo/bar'
      >>> normalize_url('foo/bar')
@@ -101,6 +103,6 @@ def normalize_url(url):
         return '/'
     if not url.startswith('/'):
         url = '/' + url
-    if url.endswith('/'):
+    if len(url)>1 and url.endswith('/'):
         url = url[0:len(url)-1]
     return url

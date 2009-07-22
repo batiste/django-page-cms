@@ -76,6 +76,6 @@ def alias_wrapper(request, path=None, lang=None, *args, **kwargs):
     if not alias:
         raise Http404
     if alias.is_canonical:
-        return details(request, alias.page.slug(), *args, **kwargs)
+        return details(request, alias.page.get_url(), *args, **kwargs)
     else:
         return HttpResponsePermanentRedirect(alias.page.get_absolute_url(lang))

@@ -1,0 +1,9 @@
+{% load pages_tags cache %}
+{% if page.status %}
+<li {% ifequal page current_page %}class="selected"{% endifequal %}>
+<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>
+{% if children %}
+    <ul>{% for child in children %}{% pages_dynamic_tree_menu child url %}{% endfor %}</ul>
+{% endif %}
+</li>
+{% endif %}

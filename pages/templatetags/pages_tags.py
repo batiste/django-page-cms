@@ -8,7 +8,7 @@ from django.conf import settings as global_settings
 import urllib
 
 from pages import settings
-from pages.models import Content, Page
+from pages.models import Content, Page, PageAlias
 from pages.http import get_language_from_request
 
 register = template.Library()
@@ -217,6 +217,11 @@ class LoadPagesNode(template.Node):
     def render(self, context):
         if (not context.has_key('pages')):
             context['pages'] = Page.objects.navigation()
+        request = context['request']
+        if (not context.has_key('current_page')):
+            alias = PageAlias.objects.get_for_url(request, request.path)
+            if alias:
+                context['current_page'] = alias.page
         return ''
 
 def do_load_pages(parser, token):

@@ -144,7 +144,7 @@ class Page(models.Model):
 
     def get_languages(self):
         """
-        return a list of all existing languages for this page.
+        Return a list of all existing languages for this page.
         """
         languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
         if languages:
@@ -159,10 +159,10 @@ class Page(models.Model):
         return languages
 
     def get_absolute_url(self, language=None):
+        """Return the absolute page url. Add the language prefix if
+        ``PAGE_USE_LANGUAGE_PREFIX`` is set to **True***."""
         try:
             alias = PageAlias.objects.get(page=self, is_canonical=True)
-            #if settings.PAGE_USE_LANGUAGE_PREFIX:
-            #    url = str(language) + '/' + self.url
             return reverse('pages-root')[:-1] + alias.url
         except:
             url = reverse('pages-root')
@@ -171,9 +171,7 @@ class Page(models.Model):
             return url + self.get_url(language)
 
     def get_url(self, language=None):
-        """
-        get the url of this page, adding parent's slug
-        """
+        """Return url of this page, adding all parent's slug."""
         url = cache.get(self.PAGE_URL_KEY % (self.id, language))
         if url:
             return url

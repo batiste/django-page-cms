@@ -28,6 +28,8 @@ class PageManager(models.Manager):
     """
     
     def on_site(self, site_id=None):
+        """Return a ``QuerySet`` of pages that are published on the site
+        defined by the ``SITE_ID`` setting."""
         if settings.PAGE_USE_SITE_ID:
             if not site_id:
                 site_id = settings.SITE_ID
@@ -35,12 +37,12 @@ class PageManager(models.Manager):
         return self
 
     def root(self):
-        """Return a queryset with pages that don't have parents."""
+        """Return a ``QuerySet`` of pages without parent."""
         return self.filter(parent__isnull=True)
 
     def valid_targets(self, page_id, perms="All", page=None):
-        """return a ``QuerySet`` of valid targets for moving a page into the
-        tree"""
+        """Return a ``QuerySet`` of valid targets for moving a page into the
+        tree."""
         if page is None:
             page = self.get(pk=page_id)
         exclude_list = []
@@ -203,12 +205,12 @@ class ContentManager(models.Manager):
             AND pages_content.body =%s)
             GROUP BY pages_content.page_id'''
             
-        cursor = connection.cursor()
+        cursor = connection.curr()
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
 
 class PagePermissionManager(models.Manager):
-    """Hierachic page permission"""
+    """Hierachic page permission manager."""
 
     def get_page_id_list(self, user):
         """Give a list of ``Page`` ids where the user has rights or the string
@@ -228,12 +230,13 @@ class PagePermissionManager(models.Manager):
         return id_list
 
 class PageAliasManager(models.Manager):
-    """PageAlias manager"""
+    """PageAlias manager."""
     def get_for_url(self, request, path=None, lang=None):
         """
-        resolve a request to an alias. returns a PageAlias object or None if the url
-        matches no page at all. The aliasing system supports plain aliases (/foo/bar)
-        as well as aliases containing GET parameters (like "index.php?page=foo").
+        Resolve a request to an alias. returns a ``PageAlias`` object or None
+        if the url matches no page at all. The aliasing system supports plain
+        aliases (``/foo/bar``) as well as aliases containing GET parameters
+        (like ``index.php?page=foo``).
         """
         from pages.utils import normalize_url
         from pages.models import Page,PageAlias

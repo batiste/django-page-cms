@@ -28,9 +28,6 @@ settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
     DEFAULT_PAGE_TEMPLATE='index.html',
     PAGE_TAGGING=False,
     TEMPLATE_DIRS=('/home/web-apps/myapp', '/home/web-apps/base'))
-"""from django.conf import settings
-if not settings.configured:
-    settings.configure()"""
 
 # General configuration
 # ---------------------

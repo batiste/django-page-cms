@@ -1,4 +1,4 @@
-"""Page CMS functions related to the request object"""
+"""Page CMS functions related to the request object."""
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect

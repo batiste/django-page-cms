@@ -257,6 +257,18 @@ class Page(models.Model):
                 return True
             return False
 
+    def valid_targets(self, perms="All"):
+        """Return a ``QuerySet`` of valid targets for moving a page into the
+        tree."""
+        exclude_list = [self.id]
+        for p in self.get_descendants():
+            exclude_list.append(p.id)
+        if perms != "All":
+            return Page.objects.filter(id__in=perms).exclude(
+                                                id__in=exclude_list)
+        else:
+            return Page.objects.exclude(id__in=exclude_list)
+
     def with_level(self):
         """Display the slug of the page prepended with insecable
         spaces equal to the level of page in the hierarchy."""

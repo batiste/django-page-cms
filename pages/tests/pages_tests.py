@@ -591,11 +591,13 @@ class PagesTestCase(TestCase):
         page_data['target'] = root_page.id
         page_data['slug'] = 'child-1'
         response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 302)
         c1 = Content.objects.get_content_slug_by_slug('child-1').page
 
-        self.assertEqual(len(Page.objects.valid_targets(root_page.id)), 0)
-        self.assertEqual(str(Page.objects.valid_targets(c1.id)),
-                "[<Page: root>]")
+        root_page = Content.objects.get_content_slug_by_slug('root').page
+        self.assertEqual(len(root_page.valid_targets()), 0)
+        self.assertEqual(str(c1.valid_targets()),
+                                            "[<Page: root>]")
 
     def test_25_page_admin_view(self):
         """Test page admin view"""

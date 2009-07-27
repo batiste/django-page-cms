@@ -40,21 +40,6 @@ class PageManager(models.Manager):
         """Return a ``QuerySet`` of pages without parent."""
         return self.filter(parent__isnull=True)
 
-    def valid_targets(self, page_id, perms="All", page=None):
-        """Return a ``QuerySet`` of valid targets for moving a page into the
-        tree."""
-        if page is None:
-            page = self.get(pk=page_id)
-        exclude_list = []
-        if page:
-            exclude_list.append(page.id)
-            for p in page.get_descendants():
-                exclude_list.append(p.id)
-        if perms != "All":
-            return self.filter(id__in=perms).exclude(id__in=exclude_list)
-        else:
-            return self.exclude(id__in=exclude_list)
-
     def navigation(self):
         """Creates a ``QuerySet`` of the published root pages."""
         return self.on_site().filter(
@@ -205,7 +190,7 @@ class ContentManager(models.Manager):
             AND pages_content.body =%s)
             GROUP BY pages_content.page_id'''
             
-        cursor = connection.curr()
+        cursor = connection.cursor()
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
 

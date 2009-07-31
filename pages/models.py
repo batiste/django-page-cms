@@ -177,7 +177,7 @@ class Page(models.Model):
         url = cache.get(self.PAGE_URL_KEY % (self.id, language))
         if url:
             return url
-        if self.is_first_root():
+        if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
             url = u'%s/' % self.slug(language)

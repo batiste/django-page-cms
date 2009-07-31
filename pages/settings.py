@@ -120,6 +120,9 @@ PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 
                                                             'pages/'))
 
+# Hide the slug's of the first root page ie: ``/home/ becomes ``/``
+PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_SHOW_END_DATE', False)
+
 # Show the publication start date field in the admin.  Allows for future dating
 # Changing the ``PAGE_SHOW_START_DATE``  from ``True`` to ``False``
 # after adding data could cause some weirdness.  If you must do this, you 

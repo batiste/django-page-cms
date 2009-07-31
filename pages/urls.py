@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
-from pages.views import details, alias_wrapper
+from pages.views import details
 from pages import settings
 
 urlpatterns = patterns('',
@@ -10,11 +10,11 @@ urlpatterns = patterns('',
 
 if settings.PAGE_USE_LANGUAGE_PREFIX:
     urlpatterns += patterns('',
-        url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', alias_wrapper,
+        url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
             name='pages-details-by-path'),
     )
 else:
     urlpatterns += patterns('',
-        url(r'^(?P<path>.*)$', alias_wrapper,
+        url(r'^(?P<path>.*)$', details,
             name='pages-details-by-path'),
     )

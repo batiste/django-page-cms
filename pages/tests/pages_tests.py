@@ -645,40 +645,30 @@ class PagesTestCase(TestCase):
         
         page_data['title'] =  'downloads-page-title'
         page_data['slug'] = 'downloads-page'
-        response = c.post('/admin/pages/page/add/', page_data)        
+        response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-                
+        
         # create aliases for the pages
         page = Page.objects.from_path('home-page', None)
         self.assertTrue(page)
-        p = PageAlias(page=page, url='/', is_canonical=True)
-        p.save()
-        p = PageAlias(page=page, url='/index.php', is_canonical=False)
+        p = PageAlias(page=page, url='/index.php')
         p.save()
         
         page = Page.objects.from_path('downloads-page', None)
         self.assertTrue(page)
-        p = PageAlias(page=page, url='index.php?page=downloads', is_canonical=False)
+        p = PageAlias(page=page, url='index.php?page=downloads')
         p.save()
         
         # now check whether we can retrieve the pages.
-        # is the homepage available from its canonical alias?
-        response = c.get('/pages/')
-        self.assertContains(response, "home-page-title", 2)
-        
-        # the other alias must cause a 301 redirect since it is not canonical        
+        # is the homepage available from is alias
         response = c.get('/pages/index.php')
-        self.assertRedirects(response, '/pages/', 301)
+        self.assertRedirects(response, '/pages/home-page/', 301)
 
-        # same must be true if we are calling the page by slug
-        response = c.get('/pages/home-page')
-        self.assertRedirects(response, '/pages/', 301)
-        
         # for the download page, the slug is canonical
         response = c.get('/pages/downloads-page/')
         self.assertContains(response, "downloads-page-title", 2)
         
         # calling via its alias must cause redirect
         response = c.get('/pages/index.php?page=downloads')
-        self.assertRedirects(response, '/pages/downloads-page/', 301)            
+        self.assertRedirects(response, '/pages/downloads-page/', 301)
         

@@ -36,13 +36,16 @@ def details(request, path=None, lang=None):
 
     if path:
         current_page = Page.objects.from_path(path, lang)
-        if not current_page:
-            raise Http404
     elif pages:
         current_page = pages[0]
 
+    # if no pages has been found, we will try to find an Alias
     if not current_page:
-        raise Http404
+        alias = PageAlias.objects.from_path(request, path, lang)
+        if not alias:
+            raise Http404
+        url  = alias.page.get_absolute_url(lang)
+        return HttpResponsePermanentRedirect(url)
 
     if not (request.user.is_authenticated() and request.user.is_staff) and \
         current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
@@ -65,17 +68,5 @@ def details(request, path=None, lang=None):
         'lang': lang,
         'request': request,
     }
-    
-details = auto_render(details)
 
-def alias_wrapper(request, path=None, lang=None, *args, **kwargs):
-    """
-    a wrapper for details() which resolves aliases and canonicalizes URLs
-    """
-    alias = PageAlias.objects.get_for_url(request, path, lang)
-    if not alias:
-        raise Http404
-    if alias.is_canonical:
-        return details(request, alias.page.get_url(), *args, **kwargs)
-    else:
-        return HttpResponsePermanentRedirect(alias.page.get_absolute_url(lang))
+details = auto_render(details)

@@ -416,8 +416,8 @@ if settings.PAGE_PERMISSION:
         pass
 
 class AliasAdmin(admin.ModelAdmin):
-    list_display = ('page', 'url', 'is_canonical',)
-    list_editable = ('url', 'is_canonical',)
+    list_display = ('page', 'url',)
+    list_editable = ('url', )
 
 try:
     admin.site.register(PageAlias, AliasAdmin)

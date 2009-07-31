@@ -216,7 +216,7 @@ class PagePermissionManager(models.Manager):
 
 class PageAliasManager(models.Manager):
     """PageAlias manager."""
-    def get_for_url(self, request, path=None, lang=None):
+    def from_path(self, request, path=None, lang=None):
         """
         Resolve a request to an alias. returns a ``PageAlias`` object or None
         if the url matches no page at all. The aliasing system supports plain
@@ -228,7 +228,8 @@ class PageAliasManager(models.Manager):
 
         url = normalize_url(path)
         # §1: try with complete query string
-        if request.META["QUERY_STRING"]!="":
+        if ("QUERY_STRING" in request.META and
+                request.META["QUERY_STRING"] != ""):
             url = url + '?' + request.META["QUERY_STRING"]
         try:
             alias = PageAlias.objects.get(url=url)
@@ -242,15 +243,5 @@ class PageAliasManager(models.Manager):
             return alias
         except PageAlias.DoesNotExist:
             pass
-        # §3: the requested path is not an alias, but it may be the slug of a page
-        page = Page.objects.from_path(path, lang)
-        if page:
-            alias = PageAlias(page=page, url=path)
-            # we have a page, let's see if there is a canonical alias for it
-            if PageAlias.objects.filter(page=page, is_canonical=True).count()>0:
-                alias.is_canonical = False
-            else:
-                alias.is_canonical = True
-            return alias
-        else:
-            return None
+        # §3: not alias found, we give up
+        return None

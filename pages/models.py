@@ -158,25 +158,29 @@ class Page(models.Model):
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
         return languages
 
+    def is_first_root(self):
+        """Return true if the page is the first root page."""
+        if self.parent:
+            return False
+        return Page.objects.root()[0].id == self.id
+
     def get_absolute_url(self, language=None):
         """Return the absolute page url. Add the language prefix if
-        ``PAGE_USE_LANGUAGE_PREFIX`` is set to **True***."""
-        try:
-            alias = PageAlias.objects.get(page=self, is_canonical=True)
-            return reverse('pages-root')[:-1] + alias.url
-        except:
-            url = reverse('pages-root')
-            if settings.PAGE_USE_LANGUAGE_PREFIX:
-                url += str(language) + '/'
-            return url + self.get_url(language)
+        ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to **True***."""
+        url = reverse('pages-root')
+        if settings.PAGE_USE_LANGUAGE_PREFIX:
+            url += str(language) + '/'
+        return url + self.get_url(language)
 
     def get_url(self, language=None):
         """Return url of this page, adding all parent's slug."""
         url = cache.get(self.PAGE_URL_KEY % (self.id, language))
         if url:
             return url
-        
-        url = u'%s/' % self.slug(language)
+        if self.is_first_root():
+            url = ''
+        else:
+            url = u'%s/' % self.slug(language)
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
 
@@ -344,25 +348,14 @@ class PageAlias(models.Model):
     """URL alias for a page"""
     page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
-    is_canonical = models.NullBooleanField(null=True, blank=True)
     objects = PageAliasManager()
     class Meta:
         verbose_name_plural = _('Aliases')
     
     def save(self, *args, **kwargs):
         # normalize url
-        self.url = normalize_url(self.url) 
-    
-        # override to handle "is_canonical" properly
-        if self.is_canonical:
-            for alias in PageAlias.objects.filter(page=self.page):
-                alias.is_canonical = False
-                alias.save()
+        self.url = normalize_url(self.url)
         super(PageAlias, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        str = "%s => %s" % (self.url, self.page.get_url())
-        if self.is_canonical:
-            str = str + " (canonical)"
-        return str 
-               
+        return "%s => %s" % (self.url, self.page.get_url())

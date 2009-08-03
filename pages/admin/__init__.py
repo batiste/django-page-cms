@@ -77,7 +77,12 @@ class PageAdmin(admin.ModelAdmin):
         )]
 
     def __call__(self, request, url):
-        """Delegate to the appropriate method, based on the URL."""
+        """
+        Delegate to the appropriate method, based on the URL.
+
+        DEPRECATED. This function is the old way of handling URL resolution, and
+        is deprecated in favor of real URL resolution -- see ``get_urls()``.
+        """
         if url is None:
             return self.list_pages(request)
         elif url == 'jsi18n':
@@ -124,6 +129,31 @@ class PageAdmin(admin.ModelAdmin):
                     ret = HttpResponseRedirect(new_uri)
                     break
         return ret
+
+    def urls(self):
+        from django.conf.urls.defaults import patterns, url, include
+        
+        # Admin-site-wide views.
+        urlpatterns = patterns('',
+            url(r'^$', self.list_pages, name='page-index'),
+            url(r'^(?P<page_id>[-\w]+)/traduction/(?P<language_id>[-\w]+)/$',
+                traduction, name='page-traduction'),
+            url(r'^(?P<page_id>[-\w]+)/get-content/(?P<content_id>[-\w]+)/$',
+                get_content, name='page-traduction'),
+            url(r'^(?P<page_id>[-\w]+)/modify-content/(?P<content_id>[-\w]+)/(?P<language_id>[-\w]+)/$',
+                modify_content, name='page-traduction'),
+            url(r'^(?P<page_id>[-\w]+)/sub-menu/$',
+                sub_menu, name='page-sub-menu'),
+            url(r'^(?P<page_id>[-\w]+)/move-page/$',
+                self.move_page, name='page-traduction'),
+            url(r'^(?P<page_id>[-\w]+)/change-status-(?P<status>[-\w]+)/$',
+                change_status, name='page-change-status'),
+        )
+        urlpatterns += super(PageAdmin, self).urls
+        
+        return urlpatterns
+
+    urls = property(urls)
 
     def i18n_javascript(self, request):
         """Displays the i18n JavaScript that the Django admin

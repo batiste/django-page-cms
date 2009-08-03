@@ -12,10 +12,11 @@ from pages.http import auto_render
 
 def change_status(request, page_id, status):
     """Switch the status of a page."""
+    statuses = {'draft':0,'published':0,'expired':2,'hidden':3}
     if request.method == 'POST':
         try:
             page = Page.objects.get(pk=page_id)
-            page.status = status
+            page.status = statuses[status]
             page.save()
             return HttpResponse(unicode(page.status))
         except:

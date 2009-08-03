@@ -45,6 +45,7 @@ class PageForm(forms.ModelForm):
         slug = slugify(self.cleaned_data['slug'])
         target = self.data.get('target', None)
         position = self.data.get('position', None)
+        print self.data
         
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:

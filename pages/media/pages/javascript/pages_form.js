@@ -41,28 +41,28 @@ $(function() {
     });
     
     // Select the appropriate template option
-    var template = $.query.get('template');
+    // This code should go away soon
+    /*var template = $.query.get('template');
     if (template) {
         $('#id_template option').each(function() {
             if (template == this.value) {
                 $(this).attr('selected', true);
                 return false;
-            }
+            };
         });
-    }
+    };*/
     
     // Confirm language and template change if page is not saved
+    // this code doesn't work with languages
     $.each(['language', 'template'], function(i, label) {
         var select = $('#id_'+label);
         if (select.length) {
             var orig_ = select.val();
             select.change(function() {
-                var query = $.query.set(label, orig_).set('new_'+label,select.val()).toString();
-                select.val(orig_);
-                $('#page_form').attr('action',query);
-                $('input[name=_continue]').click();
+                if(confirm(gettext('You will loose any changes you have done to the page. Are you sure?')))
+                    $('input[name=_continue]').click();
             });
-        }
+        };
     });
     
     // Disable the page content if the page is a redirection

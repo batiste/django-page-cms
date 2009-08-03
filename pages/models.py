@@ -103,6 +103,7 @@ class Page(models.Model):
             else:
                 self.publication_date = None
         self.last_modification_date = datetime.now()
+        print self.template
         super(Page, self).save(*args, **kwargs)
 
     def get_calculated_status(self):

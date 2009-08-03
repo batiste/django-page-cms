@@ -17,7 +17,10 @@ class PagesTestCase(TestCase):
         """Helper method for creating page datas"""
         page_data = {'title':'test page %d' % self.counter, 
             'slug':'test-page-%d' % self.counter, 'language':'en-us',
-            'sites':[2], 'status':Page.PUBLISHED}
+            'sites':[2], 'status':Page.PUBLISHED,
+            # used to disable an error with connected models
+            'document_set-TOTAL_FORMS':0, 'document_set-INITIAL_FORMS':0,
+            }
         self.counter = self.counter + 1
         return page_data
 
@@ -54,9 +57,7 @@ class PagesTestCase(TestCase):
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-
-        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
-        
+        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)        
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertEqual(response.status_code, 200)
 

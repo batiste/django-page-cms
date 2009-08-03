@@ -20,7 +20,7 @@ from pages.http import get_language_from_request, get_template_from_request
 
 from pages.admin import widgets
 from pages.admin.forms import PageForm
-from pages.admin.utils import get_connected_models
+from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content
 
 class PageAdmin(admin.ModelAdmin):
@@ -75,6 +75,11 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/pages.js',
             'javascript/pages_form.js',
         )]
+
+    def __init__(self, *args, **kwds):
+        for model, options in get_connected():
+            self.inlines.append(make_inline_admin(model, options))
+        return super(PageAdmin, self).__init__(*args, **kwds)
 
     def __call__(self, request, url):
         """
@@ -227,14 +232,6 @@ class PageAdmin(admin.ModelAdmin):
         }))
 
         # deactived for now, create bugs with page with same slug title
-        connected_fieldsets = []
-        if obj:
-            for mod in get_connected_models():
-                for field_name, real_field_name, field in mod['fields']:
-                    connected_fieldsets.append(field_name)
-
-                additional_fieldsets.append((_('Create a new linked ' +
-                    mod['model_name']), {'fields': connected_fieldsets}))
 
         given_fieldsets = list(self.declared_fieldsets)
 
@@ -284,30 +281,6 @@ class PageAdmin(admin.ModelAdmin):
                     _('Default template')))
             form.base_fields['template'].choices = template_choices
             form.base_fields['template'].initial = force_unicode(template)
-
-        # handle most of the logic of connected models
-        if obj:
-            for mod in get_connected_models():
-                model = mod['model']
-                attributes = {'page': obj.id}
-                validate_field = True
-
-                if request.POST:
-                    for field_name, real_field_name, field in mod['fields']:
-                        if field_name in request.POST and request.POST[field_name]:
-                            attributes[real_field_name] = request.POST[field_name]
-
-                    if len(attributes) > 1:
-                        connected_form = mod['form'](attributes)
-                        if connected_form.is_valid():
-                            connected_form.save()
-                    else:
-                        validate_field = False
-
-                for field_name, real_field_name, field in mod['fields']:
-                    form.base_fields[field_name] = field
-                    if not validate_field:
-                        form.base_fields[field_name].required = False
 
         for placeholder in get_placeholders(template):
             widget = self.get_widget(placeholder.widget)()

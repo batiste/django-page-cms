@@ -19,7 +19,7 @@
         {% endif %}
     {% endblock %}
     
-    <form id="page_form" action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
+    <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
         <div class="sidebar">
         {% for fieldset in adminform %}
             {% include "admin/pages/page/includes/fieldset.html" %}
@@ -46,6 +46,10 @@
             {% endif %}
         {% endfor %}
         </div>
+
+        {% for inline_admin_formset in inline_admin_formsets %}
+            {% include inline_admin_formset.opts.template %}
+        {% endfor %}
         
         {% submit_row %}
     </form>

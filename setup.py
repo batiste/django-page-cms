@@ -8,6 +8,7 @@ setup(
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
     url='http://code.google.com/p/django-page-cms/',
+    download_url='http://code.google.com/p/django-page-cms/downloads/list',
     requires=(
         'html5lib (>=0.10)', 
         'tagging (>0.2.1)', # please use the trunk version of tagging

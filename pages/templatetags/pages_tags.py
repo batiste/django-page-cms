@@ -219,7 +219,7 @@ class LoadPagesNode(template.Node):
             context['pages'] = Page.objects.navigation()
         request = context['request']
         if (not context.has_key('current_page')):
-            alias = PageAlias.objects.get_for_url(request, request.path)
+            alias = PageAlias.objects.from_path(request, request.path)
             if alias:
                 context['current_page'] = alias.page
         return ''

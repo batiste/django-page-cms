@@ -36,6 +36,9 @@ class PageAdmin(admin.ModelAdmin):
     #if getattr(settings, 'PAGE_USE_SITE_ID'):
     general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
+    # Strange django behavior. If not provided, django will try to find
+    # 'page' foreign key in all registered models
+    inlines = []
 
     if settings.PAGE_TAGGING:
         general_fields.insert(insert_point, 'tags')

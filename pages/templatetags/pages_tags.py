@@ -21,7 +21,7 @@ def get_content(context, page, content_type, lang, fallback=True):
         return ''
 
     if not lang and 'lang' in context:
-        lang = context['lang']
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode) or isinstance(page, unicode):
@@ -56,7 +56,7 @@ register.filter(has_permission)
 def pages_menu(context, page, url='/'):
     """Render a nested list of all children of the given page, including
     this page"""
-    lang = context['lang']
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context['path']
     site_id = None
     children = page.get_children_for_frontend()
@@ -69,7 +69,7 @@ pages_menu = register.inclusion_tag('pages/menu.html',
 def pages_sub_menu(context, page, url='/'):
     """Get the root page of the given page and
     render a nested list of all root's children pages"""
-    lang = context['lang']
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context['path']
     root = page.get_root()
     children = root.get_children_for_frontend()
@@ -94,7 +94,7 @@ def pages_admin_menu(context, page, url='', level=None):
     page_languages = settings.PAGE_LANGUAGES
     has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
-    lang = context.get('lang', None)
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
 
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
@@ -134,7 +134,7 @@ def show_absolute_url(context, page, lang=None):
     page -- the page object or a slug string
     lang -- the wanted language (defaults to None, uses request object else)
     """
-    lang = context.get('lang', None)
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     # if the page is a SafeUnicode, try to use it like a slug
     if isinstance(page, SafeUnicode) or isinstance(page, unicode):
         page = Page.objects.from_path(page, lang)
@@ -297,7 +297,7 @@ class PlaceholderNode(template.Node):
         if not self.page in context:
             return ''
 
-        lang = context.get('lang', None)
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
         content = Content.objects.get_content(context[self.page], lang,
                                               self.name, True)
         if not content:

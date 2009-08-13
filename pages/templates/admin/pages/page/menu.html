@@ -48,7 +48,7 @@
             {% else %}{% ifequal page.status page.PUBLISHED %}
                 <img src="{{ PAGES_MEDIA_URL }}images/icons/published.gif" alt="published" />
             {% else %}
-                <img src="{{ PAGES_MEDIA_URL }}icons/hidden.gif" alt="hidden"/>
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
             {% endifequal %}{% endifequal %}
             &nbsp;
             <select class="publish-select" name="select-status-{{ page.id }}">

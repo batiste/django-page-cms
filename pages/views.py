@@ -52,16 +52,17 @@ def details(request, path=None, lang=None):
         if alias:
             url = alias.page.get_absolute_url(lang)
             return HttpResponsePermanentRedirect(url)
-    else:
-        if not (request.user.is_authenticated() and request.user.is_staff) and \
-                current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
-            raise Http404
+        raise Http404
+
+    if not (request.user.is_authenticated() and request.user.is_staff) and \
+            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
+        raise Http404
+
+    if current_page.redirect_to:
+        return HttpResponsePermanentRedirect(
+            current_page.redirect_to.get_absolute_url(lang))
     
-        if current_page.redirect_to:
-            return HttpResponsePermanentRedirect(
-                current_page.redirect_to.get_absolute_url(lang))
-    
-        template_name = current_page.get_template()
+    template_name = current_page.get_template()
     
     if request.is_ajax():
         template_name = "body_%s" % template_name

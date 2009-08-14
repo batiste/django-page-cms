@@ -27,9 +27,16 @@ def details(request, path=None, lang=None):
     
     pages = Page.objects.navigation().order_by("tree_id")
     current_page = False
+    template_name = settings.DEFAULT_PAGE_TEMPLATE
 
     if lang is None:
         lang = get_language_from_request(request)
+
+    context = {
+        'path': path,
+        'pages': pages,
+        'lang': lang,
+    }
 
     if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
         raise Http404
@@ -39,34 +46,29 @@ def details(request, path=None, lang=None):
     elif pages:
         current_page = pages[0]
 
-    # if no pages has been found, we will try to find an Alias
+    # if no pages has been found, we will try to find it via an Alias
     if not current_page:
         alias = PageAlias.objects.from_path(request, path, lang)
-        if not alias:
+        if alias:
+            url = alias.page.get_absolute_url(lang)
+            return HttpResponsePermanentRedirect(url)
+    else:
+        if not (request.user.is_authenticated() and request.user.is_staff) and \
+                current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
             raise Http404
-        url  = alias.page.get_absolute_url(lang)
-        return HttpResponsePermanentRedirect(url)
-
-    if not (request.user.is_authenticated() and request.user.is_staff) and \
-        current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
-        raise Http404
     
-    if current_page.redirect_to:
-        return HttpResponsePermanentRedirect(
-            current_page.redirect_to.get_absolute_url(lang))
+        if current_page.redirect_to:
+            return HttpResponsePermanentRedirect(
+                current_page.redirect_to.get_absolute_url(lang))
     
-    template_name = current_page.get_template()
+        template_name = current_page.get_template()
     
     if request.is_ajax():
-        new_template_name = "body_%s" % template_name
-        return new_template_name, locals()
+        template_name = "body_%s" % template_name
 
-    return template_name, {
-        'path': path,
-        'pages': pages,
-        'current_page': current_page,
-        'lang': lang,
-        'request': request,
-    }
+    if current_page:
+        context['current_page'] = current_page
+        
+    return template_name, context
 
 details = auto_render(details)

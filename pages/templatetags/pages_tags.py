@@ -215,7 +215,7 @@ class LoadPagesNode(template.Node):
             page_dict = details(request, only_context=True)
             context.update(page_dict)
         except Exception, e:
-            return
+            pass
 
 def do_load_pages(parser, token):
     """Load the navigation pages, lang, and current_page variables into the

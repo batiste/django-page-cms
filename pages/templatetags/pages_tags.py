@@ -52,7 +52,7 @@ def pages_menu(context, page, url='/'):
     """Render a nested list of all children of the given page, including
     this page"""
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-    path = context['path']
+    path = context.get('path', None)
     site_id = None
     children = page.get_children_for_frontend()
     if 'current_page' in context:
@@ -65,7 +65,7 @@ def pages_sub_menu(context, page, url='/'):
     """Get the root page of the given page and
     render a nested list of all root's children pages"""
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-    path = context['path']
+    path = context.get('path', None)
     root = page.get_root()
     children = root.get_children_for_frontend()
     if 'current_page' in context:

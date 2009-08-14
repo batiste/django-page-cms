@@ -29,11 +29,6 @@ def get_content(context, page, content_type, lang, fallback=True):
 
     if not page:
         return ''
-    
-    # now that we are sure to have a page object, we can found the content's
-    # language more accuratly
-    """if not absolute_lang:
-        absolute_lang = get_language_from_request(context['lang'], page)"""
 
     c = Content.objects.get_content(page, lang, content_type, fallback)
     return c
@@ -213,8 +208,10 @@ do_get_content = register.tag('get_content', do_get_content)
 
 
 class LoadPagesNode(template.Node):
-    """Load page+ node"""
+    """Load page node."""
     def render(self, context):
+        if (not context.has_key('lang')):
+            context['lang'] = get_language_from_request(request)
         if (not context.has_key('pages')):
             context['pages'] = Page.objects.navigation()
         request = context['request']
@@ -225,7 +222,8 @@ class LoadPagesNode(template.Node):
         return ''
 
 def do_load_pages(parser, token):
-    """Load the navigation pages into the current context
+    """Load the navigation pages, lang, and current_page variables into the
+    current context
 
     eg:
     <ul>
@@ -242,7 +240,7 @@ do_load_pages = register.tag('load_pages', do_load_pages)
 
 class PlaceholderNode(template.Node):
     """This template node is used to output page content and
-    is also used in the admin to dynamically generate input fields.
+    also in the admin to dynamically generate input fields.
 
     Keyword arguments:
     name -- the name of the placeholder you want to show/create

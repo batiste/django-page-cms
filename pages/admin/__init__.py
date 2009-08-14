@@ -268,7 +268,7 @@ class PageAdmin(admin.ModelAdmin):
         the request."""
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
-        language = get_language_from_request(request, obj)
+        language = get_language_from_request(request)
         form.base_fields['language'].initial = language
         if obj:
             initial_slug = obj.slug(language=language, fallback=False)

@@ -29,7 +29,7 @@ def details(request, path=None, lang=None):
     current_page = False
 
     if lang is None:
-        lang = get_language_from_request(request, current_page)
+        lang = get_language_from_request(request)
 
     if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
         raise Http404

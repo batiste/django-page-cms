@@ -81,7 +81,7 @@ def get_template_from_request(request, page=None):
         return page.get_template()
     return settings.DEFAULT_PAGE_TEMPLATE
 
-def get_language_from_request(request, current_page=None):
+def get_language_from_request(request):
     """Return the most obvious language according the request."""
     language = request.GET.get('language', None)
     if language:

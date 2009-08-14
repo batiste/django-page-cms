@@ -94,11 +94,19 @@ INSTALLED_APPS = (
     'tagging',
     'pages',
     'mptt',
+    #'tinymce',
 )
 
-PAGE_CONNECTED_MODELS = [
-    {'model':'documents.models.Document','form':'documents.models.DocumentForm'},
-]
+#PAGE_TINYMCE = True
+
+PAGE_CONNECTED_MODELS = [{
+    'model':'documents.models.Document',
+    'form':'documents.models.DocumentForm',
+    'options':{
+            'extra': 3,
+            'max_num': 10,
+        },
+},]
 
 # Default language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html

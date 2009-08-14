@@ -95,14 +95,24 @@ $(function() {
                 if ($('a.disable', formrow).length) {
                     $('iframe', formrow)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
                 } else {
+                	// support for TextInput
+                	$('input', formrow).val(html);
+                	// support for TextArea
                     var formrow_textarea = $('textarea', formrow).val(html);
                     // support for WYMeditor
-                    if (WYMeditor) {
+                    if (window.WYMeditor !== undefined) {
                         $(WYMeditor.INSTANCES).each(function (i, wym) {
                             if (formrow_textarea.attr('id') === wym._element.attr('id')) {
                                 wym.html(html);
                             }
                         });
+                    }
+                    // support for TinyMCE
+                    if (window.tinyMCE !== undefined) {
+                    	var editor = tinyMCE.get(formrow_textarea.attr('id'));
+                    	if (editor !== undefined) {
+                    		editor.setContent(html);
+                    	}
                     }
                 }
             });

@@ -55,14 +55,18 @@ def auto_render(func):
     return _dec
 
 def get_slug_and_relative_path(path):
-    """Return the page's slug and complete path."""
-    if path[-1] == '/':
-        path = path[:-1]
-    slug = path.split("/")[-1]
+    """Return the page's slug and relative path."""
     root = reverse('pages-root')
     if path.startswith(root):
         path = path[len(root):]
-    return slug, path + '/'
+    if len(path) and path[-1] == '/':
+        path = path[:-1]
+    slug = path.split("/")[-1]
+    lang = None
+    if settings.PAGE_USE_LANGUAGE_PREFIX:
+        lang = path.split("/")[0]
+        path = path[(len(lang) + 1):]
+    return slug, path, lang
 
 def get_template_from_request(request, page=None):
     """

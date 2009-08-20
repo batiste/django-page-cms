@@ -55,15 +55,14 @@ def auto_render(func):
     return _dec
 
 def get_slug_and_relative_path(path):
-    """Split a page path into the slug, and the remaining left
-    part."""
+    """Return the page's slug and complete path."""
     if path[-1] == '/':
         path = path[:-1]
     slug = path.split("/")[-1]
     root = reverse('pages-root')
     if path.startswith(root):
         path = path[len(root):]
-    return slug, path
+    return slug, path + '/'
 
 def get_template_from_request(request, page=None):
     """

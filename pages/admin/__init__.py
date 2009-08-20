@@ -79,11 +79,6 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/pages_form.js',
         )]
 
-    def __init__(self, *args, **kwds):
-        for model, options in get_connected():
-            self.inlines.append(make_inline_admin(model, options))
-        return super(PageAdmin, self).__init__(*args, **kwds)
-
     def __call__(self, request, url):
         """
         Delegate to the appropriate method, based on the URL.
@@ -401,6 +396,9 @@ class PageAdmin(admin.ModelAdmin):
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')
+
+for model, options in get_connected():
+    PageAdmin.inlines.append(make_inline_admin(model, options))
 
 try:
     admin.site.register(Page, PageAdmin)

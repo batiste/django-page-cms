@@ -32,6 +32,9 @@ def details(request, path=None, lang=None):
     if lang is None:
         lang = get_language_from_request(request)
 
+    if path is None:
+        slug, path = get_slug_and_relative_path(request.path)
+
     context = {
         'path': path,
         'pages': pages,

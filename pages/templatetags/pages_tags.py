@@ -216,10 +216,11 @@ class LoadPagesNode(template.Node):
             context.update(page_dict)
         except Exception, e:
             pass
+        return ''
 
 def do_load_pages(parser, token):
     """Load the navigation pages, lang, and current_page variables into the
-    current context
+    current context.
 
     eg:
     <ul>
@@ -357,18 +358,21 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     if 'current_page' in context:
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
-        # a node is expanded if it is the current node or one of its ancestors        
+        # a node is expanded if it is the current node or one of its ancestors
         if page.lft <= current_page.lft and page.rght >= current_page.rght:
             children = page.get_children_for_frontend() 
     return locals()
-
-pages_dynamic_tree_menu = register.inclusion_tag('pages/dynamic_tree_menu.html',
-                                                 takes_context=True)(pages_dynamic_tree_menu)
+pages_dynamic_tree_menu = register.inclusion_tag(
+    'pages/dynamic_tree_menu.html',
+    takes_context=True
+)(pages_dynamic_tree_menu)
 
 def pages_breadcrumb(context, page, url='/'):
     request = context['request']
     site_id = None
     pages = page.get_ancestors()
     return locals()
-pages_breadcrumb = register.inclusion_tag('pages/breadcrumb.html',
-                                                 takes_context=True)(pages_breadcrumb)
+pages_breadcrumb = register.inclusion_tag(
+    'pages/breadcrumb.html',
+    takes_context=True
+)(pages_breadcrumb)

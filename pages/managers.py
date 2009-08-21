@@ -143,11 +143,11 @@ class ContentManager(models.Manager):
     def get_content(self, page, language, ctype, language_fallback=False):
         """Gets the latest ``Content`` for a particular page and language.
         Falls back to another language if wanted."""
-        PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
+        PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
-        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (page.id, ctype))
+        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (str(page.id), ctype))
         #content_dict = None
 
         if not content_dict:

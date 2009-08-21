@@ -215,6 +215,7 @@ class LoadPagesNode(template.Node):
             page_dict = details(request, only_context=True)
             context.update(page_dict)
         except Exception, e:
+            context.update({'current_page': Page()})
             pass
         return ''
 

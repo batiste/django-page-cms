@@ -286,10 +286,10 @@ class Page(models.Model):
         return self.level * 2
 
     def __unicode__(self):
-        slug = self.slug()
-        # when created in console mode, page has no slug
-        if slug is None:
-            return "Page %d" % self.id
+        if self.id:
+            slug = self.slug()
+        else:
+            return "Page %s" % self.id
         return slug
 
 # Don't register the Page model twice.

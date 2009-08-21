@@ -672,4 +672,12 @@ class PagesTestCase(TestCase):
         # calling via its alias must cause redirect
         response = c.get('/pages/index.php?page=downloads')
         self.assertRedirects(response, '/pages/downloads-page/', 301)
+
+    def test_27_bug_152(self):
+        # http://code.google.com/p/django-page-cms/issues/detail?id=152
+        from pages.utils import get_placeholders
+        self.assertEqual(
+            str(get_placeholders('tests/test1.html')),
+            "[<Placeholder Node: body>]"
+        )
         

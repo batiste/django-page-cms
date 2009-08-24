@@ -58,7 +58,7 @@ Basically you need to have something like this::
     urlpatterns = patterns('',
         ...
         url(r'^pages/', include('pages.urls')),
-        (r'^admin/(.*)', admin.site.root),
+        (r'^admin/', include(admin.site.urls)),
     )
 
 When you will visit the site the first time (``/pages/``), you will get a 404 error

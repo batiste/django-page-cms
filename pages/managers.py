@@ -228,9 +228,9 @@ class PageAliasManager(models.Manager):
 
         url = normalize_url(path)
         # §1: try with complete query string
-        if ("QUERY_STRING" in request.META and
-                request.META["QUERY_STRING"] != ""):
-            url = url + '?' + request.META["QUERY_STRING"]
+        query = request.META.get('QUERY_STRING')
+        if query:
+            url = url + '?' + query
         try:
             alias = PageAlias.objects.get(url=url)
             return alias

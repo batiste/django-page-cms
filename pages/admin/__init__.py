@@ -359,6 +359,8 @@ class PageAdmin(admin.ModelAdmin):
 
     def list_pages(self, request, template_name=None, extra_context=None):
         """List root pages"""
+        if not admin.site.has_permission(request):
+            return admin.site.login(request)
         # HACK: overrides the changelist template and later resets it to None
         if template_name:
             self.change_list_template = template_name

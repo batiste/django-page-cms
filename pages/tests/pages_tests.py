@@ -318,10 +318,10 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         # finaly test that we can get every page according the path
-        response = c.get('/pages/same-slug/')
+        response = c.get('/pages/same-slug')
         self.assertContains(response, "parent title", 2)
 
-        response = c.get('/pages/same-slug/same-slug/')
+        response = c.get('/pages/same-slug/same-slug')
         self.assertContains(response, "children title", 2)
 
     def test_11_show_content_tag(self):

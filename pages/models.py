@@ -180,7 +180,7 @@ class Page(models.Model):
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
-            url = u'%s/' % self.slug(language)
+            url = u'%s' % self.slug(language)
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
 

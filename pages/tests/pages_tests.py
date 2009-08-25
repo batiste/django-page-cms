@@ -298,15 +298,14 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         # the redirect tell that the page has been create correctly
         self.assertRedirects(response, '/admin/pages/page/')
+        response = c.get('/pages/same-slug/')
+        self.assertEqual(response.status_code, 200)
 
         page = Page.objects.all()[0]
 
         response = c.post('/admin/pages/page/add/', page_data)
         # we cannot create 2 root page with the same slug
         # this assert test that the creation fails as wanted
-        self.assertEqual(response.status_code, 200)
-
-        response = c.get('/pages/same-slug/')
         self.assertEqual(response.status_code, 200)
 
         page1 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
@@ -663,7 +662,7 @@ class PagesTestCase(TestCase):
         # now check whether we can retrieve the pages.
         # is the homepage available from is alias
         response = c.get('/pages/index.php')
-        self.assertRedirects(response, '/pages/home-page/', 301)
+        self.assertRedirects(response, '/pages/home-page', 301)
 
         # for the download page, the slug is canonical
         response = c.get('/pages/downloads-page/')
@@ -671,7 +670,7 @@ class PagesTestCase(TestCase):
         
         # calling via its alias must cause redirect
         response = c.get('/pages/index.php?page=downloads')
-        self.assertRedirects(response, '/pages/downloads-page/', 301)
+        self.assertRedirects(response, '/pages/downloads-page', 301)
 
     def test_27_bug_152(self):
         # http://code.google.com/p/django-page-cms/issues/detail?id=152

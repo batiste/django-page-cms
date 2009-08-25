@@ -302,8 +302,10 @@ class PageAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_context=None):
         """The 'change' admin view for the Page model."""
+        lang = get_language_from_request(request)
         extra_context = {
-            'language': get_language_from_request(request),
+            'language': lang,
+            'lang': lang,
             'page_languages': settings.PAGE_LANGUAGES,
         }
         try:

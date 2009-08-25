@@ -160,7 +160,7 @@ class ContentManager(models.Manager):
                     content_dict[lang[0]] = ''
             cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype), content_dict)
         
-        if content_dict[language]:
+        if language in content_dict:
             return content_dict[language]
 
         if language_fallback:

@@ -15,6 +15,7 @@ def get_request_mock():
         'REQUEST_METHOD': 'GET',
         'SERVER_NAME': 'test',
         'SERVER_PORT': '8000',
+        'HTTP_HOST': 'testhost',
     })
     # Apply request middleware
     for middleware_method in bh._request_middleware:

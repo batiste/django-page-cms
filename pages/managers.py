@@ -23,12 +23,12 @@ from pages import settings
 
 class PageManager(models.Manager):
     """
-    Page manager provide several filters to obtain pages ``QuerySet``
+    Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page settings.
     """
     
     def on_site(self, site_id=None):
-        """Return a ``QuerySet`` of pages that are published on the site
+        """Return a :class:`QuerySet` of pages that are published on the site
         defined by the ``SITE_ID`` setting."""
         if settings.PAGE_USE_SITE_ID:
             if not site_id:
@@ -37,20 +37,20 @@ class PageManager(models.Manager):
         return self
 
     def root(self):
-        """Return a ``QuerySet`` of pages without parent."""
+        """Return a :class:`QuerySet` of pages without parent."""
         return self.filter(parent__isnull=True)
 
     def navigation(self):
-        """Creates a ``QuerySet`` of the published root pages."""
+        """Creates a :class:`QuerySet` of the published root pages."""
         return self.on_site().filter(
                 status=self.model.PUBLISHED).filter(parent__isnull=True)
 
     def hidden(self):
-        """Creates a ``QuerySet`` of the hidden pages."""
+        """Creates a :class:`QuerySet` of the hidden pages."""
         return self.on_site().filter(status=self.model.HIDDEN)
 
     def filter_published(self, queryset):
-        """Filter the given pages ``QuerySet`` to obtain only published
+        """Filter the given pages :class:`QuerySet` to obtain only published
         page."""
         if settings.PAGE_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
@@ -68,18 +68,20 @@ class PageManager(models.Manager):
         return queryset
 
     def published(self):
-        """Creates a ``QuerySet`` of published filter."""
+        """Creates a :class:`QuerySet` of published filter."""
         return self.filter_published(self)
 
     def drafts(self):
-        """Creates a ``QuerySet`` of drafts using the page's
-        status and ``publication_date``."""
+        """Creates a :class:`QuerySet` of drafts using the page's
+        :attr:`Page.publication_date`."""
         pub = self.on_site().filter(status=self.model.DRAFT)
         if settings.PAGE_SHOW_START_DATE:
             pub = pub.filter(publication_date__gte=datetime.now())
         return pub
 
     def expired(self):
+        """Creates a :class:`QuerySet` of expired using the page's
+        :attr:`Page.publication_end_date`."""
         return self.on_site().filter(
             publication_end_date__lte=datetime.now())
 
@@ -106,7 +108,7 @@ class ContentManager(models.Manager):
     """Content manager methods"""
 
     def sanitize(self, content):
-        """Sanitize the content to avoid XSS"""
+        """Sanitize a string in order to avoid possible XSS."""
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
@@ -114,7 +116,8 @@ class ContentManager(models.Manager):
         return p.parse(content).toxml()[19:-14]
 
     def set_or_create_content(self, page, language, cnttype, body):
-        """Set or create a content for a particular page and language."""
+        """Set or create a :class:`Content <pages.models.Content>` for a
+        particular page and language."""
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
@@ -128,7 +131,9 @@ class ContentManager(models.Manager):
         return content
 
     def create_content_if_changed(self, page, language, cnttype, body):
-        """Set or create a content for a particular page and language"""
+        """Create a :class:`Content <pages.models.Content>` for a particular
+        page and language only if the content has changed from the last
+        time."""
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
@@ -141,7 +146,7 @@ class ContentManager(models.Manager):
         content = self.create(page=page, language=language, body=body, type=cnttype)
 
     def get_content(self, page, language, ctype, language_fallback=False):
-        """Gets the latest ``Content`` for a particular page and language.
+        """Gets the latest :class:`Content <pages.models.Content>` for a particular page and language.
         Falls back to another language if wanted."""
         PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
         if not language:
@@ -170,7 +175,8 @@ class ContentManager(models.Manager):
         return ''
 
     def get_content_slug_by_slug(self, slug):
-        """Returns the latest ``Content`` slug object that match the given
+        """Returns the latest :class:`Content <pages.models.Content>`
+        slug object that match the given
         slug for the current site domain."""
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
@@ -183,7 +189,7 @@ class ContentManager(models.Manager):
             return content
 
     def get_page_ids_by_slug(self, slug):
-        """Return all page id matching the given slug."""
+        """Return all page's id matching the given slug."""
         sql = '''SELECT pages_content.page_id,
             MAX(pages_content.creation_date)
             FROM pages_content WHERE (pages_content.type = %s
@@ -198,7 +204,8 @@ class PagePermissionManager(models.Manager):
     """Hierachic page permission manager."""
 
     def get_page_id_list(self, user):
-        """Give a list of ``Page`` ids where the user has rights or the string
+        """Give a list of :class:`Page <pages.models.Page>` ids where the
+        user has rights or the string
         "All" if the user has all rights."""
         if user.is_superuser:
             return 'All'
@@ -218,7 +225,7 @@ class PageAliasManager(models.Manager):
     """PageAlias manager."""
     def from_path(self, request, path=None, lang=None):
         """
-        Resolve a request to an alias. returns a ``PageAlias`` object or None
+        Resolve a request to an alias. returns a :class:`PageAlias <pages.models.PageAlias>`
         if the url matches no page at all. The aliasing system supports plain
         aliases (``/foo/bar``) as well as aliases containing GET parameters
         (like ``index.php?page=foo``).

@@ -25,13 +25,36 @@ from django.contrib.sites.models import Site
 import mptt
 from pages import settings
 from pages.utils import get_placeholders, normalize_url
-from pages.managers import PageManager, ContentManager, PagePermissionManager, PageAliasManager
+from pages.managers import PageManager, ContentManager
+from pages.managers import PagePermissionManager, PageAliasManager
 
 
 class Page(models.Model):
     """
     This model contain the status, dates, author, template.
-    The real content of the page can be found in the ``Content`` model."""
+    The real content of the page can be found in the
+    :class:`Content <pages.models.Content>` model.
+
+    .. attribute:: creation_date
+    When the page has been created.
+
+    .. attribute:: publication_date
+    When the page should be visible.
+
+    .. attribute:: publication_end_date
+    When the publication of this page end.
+
+    .. attribute:: last_modification_date
+    Last time this page has been modified.
+
+    .. attribute:: status
+    The current status of the page. Could be DRAFT, PUBLISHED,
+    EXPIRED or HIDDEN. You should the property :attr:`calculated_status` if
+    you want that the dates are taken in account.
+
+    .. attribute:: template
+    A string containing the name of the template file for this page.
+    """
     
     # some class constants to refer to, e.g. Page.DRAFT
     DRAFT = 0
@@ -51,6 +74,7 @@ class Page(models.Model):
     PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
+    
     parent = models.ForeignKey('self', null=True, blank=True, 
             related_name='children', verbose_name=_('parent'))
     creation_date = models.DateTimeField(_('creation date'), editable=False, 
@@ -105,9 +129,11 @@ class Page(models.Model):
         self.last_modification_date = datetime.now()
         super(Page, self).save(*args, **kwargs)
 
-    def get_calculated_status(self):
+    def _get_calculated_status(self):
         """get the calculated status of the page based on
-        ``published_date``, ``published_end_date``, and ``status``."""
+        :attr:`Page.publication_date`,
+        :attr:`Page.publication_end_date`,
+        and :attr:`Page.status`."""
         if settings.PAGE_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT
@@ -117,10 +143,10 @@ class Page(models.Model):
                 return self.EXPIRED
 
         return self.status
-    calculated_status = property(get_calculated_status)
+    calculated_status = property(_get_calculated_status)
 
     def get_children_for_frontend(self):
-        """Creates a ``QuerySet`` of published children page"""
+        """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())
 
     def invalidate(self, language_code=None):
@@ -216,8 +242,8 @@ class Page(models.Model):
 
     def get_template(self):
         """
-        get the template of this page if defined or if closer parent if
-        defined or DEFAULT_PAGE_TEMPLATE otherwise
+        get the :attr:`template <Page.template>` of this page if defined or if closer parent if
+        defined or :attr:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
         """
         if self.template:
             return self.template
@@ -234,6 +260,10 @@ class Page(models.Model):
         return template
 
     def get_template_name(self):
+        """
+        get the template name of this page if defined or if a closer parent has
+        a defined template or :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        """
         template = self.get_template()
         for  t in settings.PAGE_TEMPLATES:
             if t[0] == template:
@@ -262,7 +292,7 @@ class Page(models.Model):
             return False
 
     def valid_targets(self, perms="All"):
-        """Return a ``QuerySet`` of valid targets for moving a page into the
+        """Return a :class:`QuerySet` of valid targets for moving a page into the
         tree."""
         exclude_list = [self.id]
         for p in self.get_descendants():

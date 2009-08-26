@@ -136,13 +136,14 @@ PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
 PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 
 # ``PAGE_CONNECTED_MODELS`` allows you to specify a model and form for this 
-# model into your settings to get an automatic form to create and directly link 
-# a new instance of this model with your page in the admin.  
+# model into your settings to get an automatic form to create
+# and directly link a new instance of this model with your page in the admin.
 #
 # Here is an example:
 #
 # PAGE_CONNECTED_MODELS = [
-#     {'model':'documents.models.Document','form':'documents.models.DocumentForm'},
+#     {'model':'documents.models.Document',
+#        'form':'documents.models.DocumentForm'},
 # ]
 #
 PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)

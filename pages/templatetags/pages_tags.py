@@ -16,7 +16,7 @@ register = template.Library()
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def get_content(context, page, content_type, lang, fallback=True):
-    """Helper function used by placeholder nodes"""
+    """Helper function used by placeholder nodes."""
     if not page:
         return ''
 
@@ -36,13 +36,13 @@ def get_content(context, page, content_type, lang, fallback=True):
 """Filters"""
 
 def has_content_in(page, language):
-    """Tell if the page has any content in a particular language"""
+    """Tell if the page has any content in a particular language."""
     return Content.objects.filter(page=page, language=language).count() > 0
 register.filter(has_content_in)
 
 def has_permission(page, request):
     """Tell if a user has permissions on the page according to the request
-       object"""
+       object."""
     return page.has_page_permission(request)
 register.filter(has_permission)
 
@@ -50,7 +50,7 @@ register.filter(has_permission)
 
 def pages_menu(context, page, url='/'):
     """Render a nested list of all children of the given page, including
-    this page"""
+    this page."""
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context.get('path', None)
     site_id = None
@@ -63,7 +63,7 @@ pages_menu = register.inclusion_tag('pages/menu.html',
 
 def pages_sub_menu(context, page, url='/'):
     """Get the root page of the given page and
-    render a nested list of all root's children pages"""
+    render a nested list of all root's children pages."""
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context.get('path', None)
     root = page.get_root()
@@ -75,7 +75,7 @@ pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
 def pages_admin_menu(context, page, url='', level=None):
-    """Render the admin table of pages"""
+    """Render the admin table of pages."""
     request = context['request']
     
     if "tree_expanded" in request.COOKIES:
@@ -99,17 +99,19 @@ pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
 def show_content(context, page, content_type, lang=None, fallback=True):
     """Display a content type from a page.
     
-    eg: {% show_content page_object "title" %}
+    Example::
+
+        {% show_content page_object "title" %}
     
-    You can also use the slug of a page
+    You can also use the slug of a page::
     
-    eg: {% show_content "my-page-slug" "title" %}
-    
-    Keyword arguments:
-    page -- the page object
-    args -- content_type used by a placeholder
-    lang -- the wanted language (default None, use the request object to know)
-    fallback -- use fallback content
+        {% show_content "my-page-slug" "title" %}
+
+
+    :param page: the page object
+    :param args: content_type used by a placeholder
+    :param lang: the wanted language (default None, use the request object to know)
+    :param fallback: use fallback content
     """
     return {'content':get_content(context, page, content_type, lang,
                                                                 fallback)}
@@ -119,15 +121,17 @@ show_content = register.inclusion_tag('pages/content.html',
 def show_absolute_url(context, page, lang=None):
     """Show the url of a page in the right language
 
-    eg: {% show_absolute_url page_object %}
+    Example ::
+    
+        {% show_absolute_url page_object %}
 
-    You can also use the slug of a page
-
-    eg: {% show_absolute_url "my-page-slug" %}
+    You can also use the slug of a page::
+    
+        {% show_absolute_url "my-page-slug" %}
 
     Keyword arguments:
-    page -- the page object or a slug string
-    lang -- the wanted language (defaults to None, uses request object else)
+    :param page: the page object or a slug string
+    :param lang: the wanted language (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
     """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     # if the page is a SafeUnicode, try to use it like a slug
@@ -144,7 +148,7 @@ show_absolute_url = register.inclusion_tag('pages/content.html',
 
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
-        the pages/revisions.html template"""
+        the ``pages/revisions.html`` template"""
     if not settings.PAGE_CONTENT_REVISION:
         return {'revisions':None}
     revisions = Content.objects.filter(page=page, language=lang,
@@ -178,18 +182,22 @@ class GetContentNode(template.Node):
 def do_get_content(parser, token):
     """Store a content type from a page into a context variable.
 
-    eg: {% get_content page_object "title" as content %}
+    Example::
+    
+        {% get_content page_object "title" as content %}
 
-    You can also use the slug of a page
+    You can also use the slug of a page::
+    
+        {% get_content "my-page-slug" "title" as content %}
 
-    eg: {% get_content "my-page-slug" "title" as content %}
+    Syntax::
+    
+        {% get_content page type [lang] as name %}
 
-    Syntax: {% get_content page type [lang] as name %}
-    Arguments:
-    page -- the page object
-    type -- content_type used by a placeholder
-    name -- name of the context variable to store the content in
-    lang -- the wanted language
+    :param page: the page object
+    :param type: content_type used by a placeholder
+    :param name: name of the context variable to store the content in
+    :param lang: the wanted language
     """
     bits = token.split_contents()
     if not 5 <= len(bits) <= 6:
@@ -223,14 +231,14 @@ def do_load_pages(parser, token):
     """Load the navigation pages, lang, and current_page variables into the
     current context.
 
-    eg:
-    <ul>
-        {% load_pages %}
-        {% for page in pages %}
-            {% pages_menu page %}
-        {% endfor %}
-    </ul>
-
+    Example::
+    
+        <ul>
+            {% load_pages %}
+            {% for page in pages %}
+                {% pages_menu page %}
+            {% endfor %}
+        </ul>
     """
     return LoadPagesNode()
 do_load_pages = register.tag('load_pages', do_load_pages)
@@ -240,17 +248,16 @@ class PlaceholderNode(template.Node):
     """This template node is used to output page content and
     also in the admin to dynamically generate input fields.
 
-    Keyword arguments:
-    name -- the name of the placeholder you want to show/create
-    page -- The optional page object  
-    widget -- the widget you want to use in the admin interface. Take
+    :param name: the name of the placeholder you want to show/create
+    :param page: The optional page object
+    :param widget: the widget you want to use in the admin interface. Take
         a look into pages.admin.widgets to see which widgets are available.
-    parsed -- If the "parsed" word is given, the content of the
+    :param parsed: If the "parsed" word is given, the content of the
         placeholder is evaluated as template code, within the current context.
     """
     def handle_token(cls, parser, token):
-        # {% placeholder <name> [on <page>] [with <widget>] [parsed] [as
-        # <varname>] %}
+        """{% placeholder <name> [on <page>] [with <widget>] [parsed] [as
+        <varname>] %}"""
         bits = token.split_contents()
         count = len(bits)
         error_string = '%r tag requires at least one argument' % bits[0]

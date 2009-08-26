@@ -58,7 +58,6 @@ PagePermission Manager
     :undoc-members:
 
 
-
 Utils
 =====
 
@@ -70,5 +69,12 @@ Http
 ====
 
 .. automodule:: pages.http
+    :members:
+    :undoc-members:
+
+Template tags
+=============
+
+.. automodule:: pages.templatetags.pages_tags
     :members:
     :undoc-members:

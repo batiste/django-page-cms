@@ -45,7 +45,7 @@ def details(request, path=None, lang=None):
         raise Http404
 
     if path:
-        current_page = Page.objects.on_site().from_path(path, lang)
+        current_page = Page.objects.from_path(path, lang)
     elif pages:
         current_page = pages[0]
 

@@ -89,7 +89,7 @@ class PageManager(models.Manager):
         from pages.http import get_slug_and_relative_path
         slug, path, lang = get_slug_and_relative_path(complete_path)
         page_ids = Content.objects.get_page_ids_by_slug(slug)
-        pages_list = self.filter(id__in=page_ids)
+        pages_list = self.on_site().filter(id__in=page_ids)
         if exclude_drafts:
             pages_list = pages_list.exclude(status=Page.DRAFT)
         current_page = None

@@ -77,4 +77,3 @@ Template tags
 
 .. automodule:: pages.templatetags.pages_tags
     :members:
-    :undoc-members:

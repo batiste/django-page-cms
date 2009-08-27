@@ -164,11 +164,13 @@ a.popup:hover .help,
 }
 
 /* Actions */
-.change-list .actions {
+#page-list .actions {
     position: absolute;
-    right: -5px; top: 0;
-    margin: 0; padding: 0;
+    right: -5px;
+    top: 0;
+    margin: 0;
 }
+
 .change-list .actions a {
     float: left;
     width: 15px;
@@ -177,7 +179,7 @@ a.popup:hover .help,
     margin-right: 5px;
     background-repeat: no-repeat;
     background-position: center 0.25em;
-    opacity: 0.3; filter: alpha(opacity=30);
+    opacity: 0.5; filter: alpha(opacity=50);
 }
 .change-list .actions a:hover,
 .change-list tr:hover .actions a {

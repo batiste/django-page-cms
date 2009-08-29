@@ -8,7 +8,10 @@ from pages import settings
 from pages.http import get_request_mock, get_language_from_request
 
 def get_placeholders(template_name):
-    """Return a list of PlaceholderNode found in the given template"""
+    """Return a list of PlaceholderNode found in the given template.
+
+    :param template_name: the name of the template file
+    """
     try:
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
@@ -24,10 +27,10 @@ def get_placeholders(template_name):
         context = {}
     temp.render(RequestContext(request, context))
     plist, blist = [], []
-    placeholders_recursif(temp.nodelist, plist, blist)
+    _placeholders_recursif(temp.nodelist, plist, blist)
     return plist
 
-def placeholders_recursif(nodelist, plist, blist):
+def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
     # I needed to import make this lazy import to make the doc compile
@@ -37,18 +40,18 @@ def placeholders_recursif(nodelist, plist, blist):
 
         # extends node
         if hasattr(node, 'parent_name'):
-            placeholders_recursif(node.get_parent(Context()).nodelist,
+            _placeholders_recursif(node.get_parent(Context()).nodelist,
                                                         plist, blist)
         # include node
         elif hasattr(node, 'template'):
-            placeholders_recursif(node.template.nodelist, plist, blist)
+            _placeholders_recursif(node.template.nodelist, plist, blist)
 
         # It's a placeholder
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
                 hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False
-            for p in plist:
-                if p.name == node.name:
+            for pl in plist:
+                if pl.name == node.name:
                     already_in_plist = True
             if not already_in_plist:
                 if len(blist):
@@ -59,23 +62,26 @@ def placeholders_recursif(nodelist, plist, blist):
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
             if isinstance(node, BlockNode):
                 # delete placeholders found in a block of the same name
-                for index, p in enumerate(plist):
-                    if p.found_in_block and \
-                            p.found_in_block.name == node.name \
-                            and p.found_in_block != node:
+                for index, pl in enumerate(plist):
+                    if pl.found_in_block and \
+                            pl.found_in_block.name == node.name \
+                            and pl.found_in_block != node:
                         del plist[index]
                 blist.append(node)
             
             if hasattr(node, key):
                 try:
-                    placeholders_recursif(getattr(node, key), plist, blist)
+                    _placeholders_recursif(getattr(node, key), plist, blist)
                 except:
                     pass
             if isinstance(node, BlockNode):
                 blist.pop()
 
 def has_page_add_permission(request, page=None):
-    """Return true if the current user has permission to add a new page."""
+    """Return true if the current user has permission to add a new page.
+
+    :param page: not used
+    """
     if not settings.PAGE_PERMISSION:
         return True
     else:

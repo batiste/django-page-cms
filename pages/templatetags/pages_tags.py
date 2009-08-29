@@ -15,7 +15,7 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
-def get_content(context, page, content_type, lang, fallback=True):
+def _get_content(context, page, content_type, lang, fallback=True):
     """Helper function used by placeholder nodes."""
     if not page:
         return ''
@@ -36,21 +36,33 @@ def get_content(context, page, content_type, lang, fallback=True):
 """Filters"""
 
 def has_content_in(page, language):
-    """Tell if the page has any content in a particular language."""
+    """Fitler that return ``True`` if the page has any content in a
+    particular language.
+
+    :param page: the current page
+    :param language: the language you want to look at
+    """
     return Content.objects.filter(page=page, language=language).count() > 0
 register.filter(has_content_in)
 
 def has_permission(page, request):
-    """Tell if a user has permissions on the page according to the request
-       object."""
+    """Tell if a user has permissions on the page.
+
+    :param page: the current page
+    :param request: the request object where the user is extracted
+    """
     return page.has_page_permission(request)
 register.filter(has_permission)
 
 """Inclusion tags"""
 
 def pages_menu(context, page, url='/'):
-    """Render a nested list of all children of the given page, including
-    this page."""
+    """Render a nested list of all the descendents of the given page,
+    including this page.
+
+    :param page: the page where to start the menu from.
+    :param url: not used anymore.
+    """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context.get('path', None)
     site_id = None
@@ -63,7 +75,12 @@ pages_menu = register.inclusion_tag('pages/menu.html',
 
 def pages_sub_menu(context, page, url='/'):
     """Get the root page of the given page and
-    render a nested list of all root's children pages."""
+    render a nested list of all root's children pages.
+    Good for rendering a secondary menu.
+
+    :param page: the page where to start the menu from.
+    :param url: not used anymore.
+    """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     path = context.get('path', None)
     root = page.get_root()
@@ -107,13 +124,12 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     
         {% show_content "my-page-slug" "title" %}
 
-
     :param page: the page object
-    :param args: content_type used by a placeholder
+    :param content_type: content_type used by a placeholder
     :param lang: the wanted language (default None, use the request object to know)
     :param fallback: use fallback content
     """
-    return {'content':get_content(context, page, content_type, lang,
+    return {'content':_get_content(context, page, content_type, lang,
                                                                 fallback)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
@@ -159,6 +175,52 @@ def show_revisions(context, page, content_type, lang=None):
 show_revisions = register.inclusion_tag('pages/revisions.html',
                                         takes_context=True)(show_revisions)
 
+def pages_dynamic_tree_menu(context, page, url='/'):
+    """
+    Render a "dynamic" tree menu, with all nodes expanded which are either
+    ancestors or the current page itself.
+
+    Override ``pages/dynamic_tree_menu.html`` if you want to change the
+    design.
+
+    :param page: the current page
+    :param url: not used anymore
+    """
+    request = context['request']
+    site_id = None
+    children = None
+    if 'current_page' in context:
+        current_page = context['current_page']
+        # if this node is expanded, we also have to render its children
+        # a node is expanded if it is the current node or one of its ancestors
+        if page.lft <= current_page.lft and page.rght >= current_page.rght:
+            children = page.get_children_for_frontend()
+    return locals()
+pages_dynamic_tree_menu = register.inclusion_tag(
+    'pages/dynamic_tree_menu.html',
+    takes_context=True
+)(pages_dynamic_tree_menu)
+
+def pages_breadcrumb(context, page, url='/'):
+    """
+    Render a breadcrumb like menu.
+
+    Override ``pages/breadcrumb.html`` if you want to change the
+    design.
+    
+    :param page: the current page
+    :param url: not used anymore
+    """
+    request = context['request']
+    site_id = None
+    pages = page.get_ancestors()
+    return locals()
+pages_breadcrumb = register.inclusion_tag(
+    'pages/breadcrumb.html',
+    takes_context=True
+)(pages_breadcrumb)
+
+
 """Tags"""
 
 class GetContentNode(template.Node):
@@ -173,7 +235,7 @@ class GetContentNode(template.Node):
             lang = None
         else:
             lang = self.lang.resolve(context)
-        context[self.varname] = get_content(context,
+        context[self.varname] = _get_content(context,
             self.page.resolve(context),
             self.content_type.resolve(context),
             lang)
@@ -249,15 +311,22 @@ class PlaceholderNode(template.Node):
     also in the admin to dynamically generate input fields.
 
     :param name: the name of the placeholder you want to show/create
-    :param page: The optional page object
+    :param page: the optional page object
     :param widget: the widget you want to use in the admin interface. Take
-        a look into pages.admin.widgets to see which widgets are available.
-    :param parsed: If the "parsed" word is given, the content of the
+        a look into :class:`pages.admin.widgets` to see which widgets
+        are available.
+    :param parsed: if the ``parsed`` word is given, the content of the
         placeholder is evaluated as template code, within the current context.
+    :param as_varname: if ``as_varname`` is defined, no value will be returned.
+        A variable will be created in the context with the defined name.
     """
     def handle_token(cls, parser, token):
-        """{% placeholder <name> [on <page>] [with <widget>] [parsed] [as
-        <varname>] %}"""
+        """
+        Method that parse the template tag syntax following this syntax::
+
+            {% placeholder <name> [on <page>] [with <widget>] \
+[parsed] [as <varname>] %}
+        """
         bits = token.split_contents()
         count = len(bits)
         error_string = '%r tag requires at least one argument' % bits[0]
@@ -355,32 +424,4 @@ def do_placeholder(parser, token):
 
 register.tag('placeholder', do_placeholder)
 
-def pages_dynamic_tree_menu(context, page, url='/'):
-    """
-    render a "dynamic" tree menu, with all nodes expanded which are either
-    ancestors or the current page itself. 
-    """
-    request = context['request']
-    site_id = None
-    children = None
-    if 'current_page' in context:
-        current_page = context['current_page']
-        # if this node is expanded, we also have to render its children
-        # a node is expanded if it is the current node or one of its ancestors
-        if page.lft <= current_page.lft and page.rght >= current_page.rght:
-            children = page.get_children_for_frontend() 
-    return locals()
-pages_dynamic_tree_menu = register.inclusion_tag(
-    'pages/dynamic_tree_menu.html',
-    takes_context=True
-)(pages_dynamic_tree_menu)
 
-def pages_breadcrumb(context, page, url='/'):
-    request = context['request']
-    site_id = None
-    pages = page.get_ancestors()
-    return locals()
-pages_breadcrumb = register.inclusion_tag(
-    'pages/breadcrumb.html',
-    takes_context=True
-)(pages_breadcrumb)

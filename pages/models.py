@@ -1,16 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS models
-
-Model Classes
--------------
-
-    .. class:: Page
-        A simple hierarchical page model
-
-    .. class:: Content
-        A block of content, tied to a page, for a particular language
-
-"""
+"""Django page CMS models."""
 from datetime import datetime
 
 from django.db import models
@@ -108,6 +97,7 @@ class Page(models.Model):
         tags = fields.TagField(null=True)
 
     class Meta:
+        """Make sure the ordering is correct."""
         ordering = ['tree_id', 'lft']
         verbose_name = _('page')
         verbose_name_plural = _('pages')
@@ -130,7 +120,7 @@ class Page(models.Model):
         super(Page, self).save(*args, **kwargs)
 
     def _get_calculated_status(self):
-        """get the calculated status of the page based on
+        """Get the calculated status of the page based on
         :attr:`Page.publication_date`,
         :attr:`Page.publication_end_date`,
         and :attr:`Page.status`."""
@@ -149,8 +139,8 @@ class Page(models.Model):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())
 
-    def invalidate(self, language_code=None):
-        """Invalidate this page and it's descendants."""
+    def invalidate(self):
+        """Invalidate cached data for this page."""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         #cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
@@ -192,7 +182,10 @@ class Page(models.Model):
 
     def get_absolute_url(self, language=None):
         """Return the absolute page url. Add the language prefix if
-        ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to **True***."""
+        ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
+
+        :param language: the wanted url language.
+        """
         url = reverse('pages-root')
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             url += str(language) + '/'
@@ -218,7 +211,8 @@ class Page(models.Model):
         """
         Return the slug of the page depending on the given language.
 
-        If fallback is **True**, the slug will also be searched in other
+        :param language: wanted language, if not defined default is used.
+        :param fallback: if ``True``, the slug will also be searched in other \
         languages.
         """
         
@@ -231,7 +225,8 @@ class Page(models.Model):
         """
         Return the title of the page depending on the given language.
 
-        If fallback is **True**, the title will also be searched in other
+        :param language: wanted language, if not defined default is used.
+        :param fallback: if ``True``, the slug will also be searched in other \
         languages.
         """
         if not language:
@@ -242,8 +237,9 @@ class Page(models.Model):
 
     def get_template(self):
         """
-        get the :attr:`template <Page.template>` of this page if defined or if closer parent if
-        defined or :attr:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        Get the :attr:`template <Page.template>` of this page if
+        defined or the closer parent's one if defined
+        or :attr:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
         """
         if self.template:
             return self.template
@@ -261,8 +257,9 @@ class Page(models.Model):
 
     def get_template_name(self):
         """
-        get the template name of this page if defined or if a closer parent has
-        a defined template or :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        Get the template name of this page if defined or if a closer
+        parent has a defined template or
+        :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
         """
         template = self.get_template()
         for  t in settings.PAGE_TEMPLATES:
@@ -278,7 +275,7 @@ class Page(models.Model):
 
     def has_page_permission(self, request):
         """
-        Return true if the current user has permission on the page.
+        Return ``True`` if the current user has permission on the page.
         Return the string 'All' if the user has all rights.
         """
         if not settings.PAGE_PERMISSION:
@@ -293,7 +290,10 @@ class Page(models.Model):
 
     def valid_targets(self, perms="All"):
         """Return a :class:`QuerySet` of valid targets for moving a page into the
-        tree."""
+        tree.
+
+        :param perms: the level of permission of the concerned user.
+        """
         exclude_list = [self.id]
         for p in self.get_descendants():
             exclude_list.append(p.id)

@@ -1,6 +1,6 @@
-==================
-Page reference API
-==================
+======================
+Page CMS reference API
+======================
 
 Page Model
 ==========
@@ -57,6 +57,12 @@ PagePermission Manager
     :members:
     :undoc-members:
 
+Widgets
+=======
+
+.. automodule:: pages.admin.widgets
+    :members:
+    :undoc-members:
 
 Utils
 =====

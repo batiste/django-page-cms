@@ -1,16 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS managers
-
-Manager Classes
--------------
-
-    .. class:: PageManager
-        Page manager methods
-
-    .. class:: ContentManager
-        Content manager methods
-
-"""
+"""Django page CMS managers."""
 import itertools
 from datetime import datetime
 from django.db import models, connection
@@ -20,6 +9,7 @@ from django.db.models import Q
 from django.core.cache import cache
 
 from pages import settings
+from pages.utils import normalize_url
 
 class PageManager(models.Manager):
     """
@@ -29,7 +19,10 @@ class PageManager(models.Manager):
     
     def on_site(self, site_id=None):
         """Return a :class:`QuerySet` of pages that are published on the site
-        defined by the ``SITE_ID`` setting."""
+        defined by the ``SITE_ID`` setting.
+
+        :param site_id: specify the id of the site object to filter with.
+        """
         if settings.PAGE_USE_SITE_ID:
             if not site_id:
                 site_id = settings.SITE_ID
@@ -115,39 +108,59 @@ class ContentManager(models.Manager):
         # we need to remove <html><head/><body>...</body></html>
         return p.parse(content).toxml()[19:-14]
 
-    def set_or_create_content(self, page, language, cnttype, body):
+    def set_or_create_content(self, page, language, ctype, body):
         """Set or create a :class:`Content <pages.models.Content>` for a
-        particular page and language."""
+        particular page and language.
+
+        :param page: the concerned page object.
+        :param language: the wanted language.
+        :param ctype: the content type.
+        :param body: the content of the Content object.
+        """
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
-                                  type=cnttype).latest('creation_date')
+                                  type=ctype).latest('creation_date')
             content.body = body
         except self.model.DoesNotExist:
             content = self.model(page=page, language=language, body=body,
-                                 type=cnttype)
+                                 type=ctype)
         content.save()
         return content
 
-    def create_content_if_changed(self, page, language, cnttype, body):
+    def create_content_if_changed(self, page, language, ctype, body):
         """Create a :class:`Content <pages.models.Content>` for a particular
         page and language only if the content has changed from the last
-        time."""
+        time.
+
+        :param page: the concerned page object.
+        :param language: the wanted language.
+        :param ctype: the content type.
+        :param body: the content of the Content object.
+        """
         if settings.PAGE_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
-                                  type=cnttype).latest('creation_date')
+                                  type=ctype).latest('creation_date')
             if content.body == body:
                 return content
         except self.model.DoesNotExist:
             pass
-        content = self.create(page=page, language=language, body=body, type=cnttype)
+        content = self.create(page=page, language=language, body=body,
+                type=ctype)
 
     def get_content(self, page, language, ctype, language_fallback=False):
-        """Gets the latest :class:`Content <pages.models.Content>` for a particular page and language.
-        Falls back to another language if wanted."""
+        """Gets the latest :class:`Content <pages.models.Content>`
+        for a particular page and language. Falls back to another
+        language if wanted.
+
+        :param page: the concerned page object.
+        :param language: the wanted language.
+        :param ctype: the content type.
+        :param language_fallback: fallback to another language if ``True``.
+        """
         PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
@@ -159,7 +172,11 @@ class ContentManager(models.Manager):
             content_dict = {}
             for lang in settings.PAGE_LANGUAGES:
                 try:
-                    content = self.filter(language=lang[0], type=ctype, page=page).latest()
+                    content = self.filter(
+                        language=lang[0],
+                        type=ctype,
+                        page=page
+                    ).latest()
                     content_dict[lang[0]] = content.body
                 except self.model.DoesNotExist:
                     content_dict[lang[0]] = ''
@@ -176,8 +193,10 @@ class ContentManager(models.Manager):
 
     def get_content_slug_by_slug(self, slug):
         """Returns the latest :class:`Content <pages.models.Content>`
-        slug object that match the given
-        slug for the current site domain."""
+        slug object that match the given slug for the current site domain.
+
+        :param slug: the wanted slug.
+        """
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
             content = content.filter(page__sites__id=settings.SITE_ID)
@@ -189,7 +208,10 @@ class ContentManager(models.Manager):
             return content
 
     def get_page_ids_by_slug(self, slug):
-        """Return all page's id matching the given slug."""
+        """Return all page's id matching the given slug.
+
+        :param slug: the wanted slug.
+        """
         sql = '''SELECT pages_content.page_id,
             MAX(pages_content.creation_date)
             FROM pages_content WHERE (pages_content.type = %s
@@ -206,7 +228,10 @@ class PagePermissionManager(models.Manager):
     def get_page_id_list(self, user):
         """Give a list of :class:`Page <pages.models.Page>` ids where the
         user has rights or the string
-        "All" if the user has all rights."""
+        "All" if the user has all rights.
+
+        :param user: the interested user.
+        """
         if user.is_superuser:
             return 'All'
         id_list = []
@@ -223,15 +248,18 @@ class PagePermissionManager(models.Manager):
 
 class PageAliasManager(models.Manager):
     """PageAlias manager."""
-    def from_path(self, request, path=None, lang=None):
+    def from_path(self, request, path, lang):
         """
         Resolve a request to an alias. returns a :class:`PageAlias <pages.models.PageAlias>`
         if the url matches no page at all. The aliasing system supports plain
         aliases (``/foo/bar``) as well as aliases containing GET parameters
         (like ``index.php?page=foo``).
+
+        :param request: the request object
+        :param path: the complete path to the page
+        :param lang: not used
         """
-        from pages.utils import normalize_url
-        from pages.models import Page,PageAlias
+        from pages.models import PageAlias
 
         url = normalize_url(path)
         # §1: try with complete query string

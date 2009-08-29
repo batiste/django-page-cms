@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Default Page CMS widgets."""
+"""Django CMS come with a set of ready to use widgets that you can enable
+in the admin via a placeholder tag in your template."""
 from os.path import join
 from django.conf import settings
 from django.forms import TextInput, Textarea

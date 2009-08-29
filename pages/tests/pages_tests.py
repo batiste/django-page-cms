@@ -555,7 +555,7 @@ class PagesTestCase(TestCase):
         page1.status = Page.DRAFT
         page1.save()
 
-        page1.get_calculated_status()
+        page1.calculated_status
         setattr(settings, "PAGE_SHOW_START_DATE", False)
 
     def test_23_slug_bug(self):

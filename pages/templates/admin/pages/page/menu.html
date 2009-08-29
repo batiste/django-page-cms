@@ -43,6 +43,9 @@
                 {% endfor %}
             </ul>
         </td>
+        <td class="last-modification-cell">
+            {{ page.last_modification_date|date:_("DATETIME_FORMAT") }}
+        </td>
         <td class="publish-cell">
             {% ifequal page.status page.DRAFT %}
                 <img src="{{ PAGES_MEDIA_URL }}images/icons/draft.gif" alt="draft" />

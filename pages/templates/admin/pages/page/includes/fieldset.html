@@ -33,6 +33,9 @@
                                     </li>
                                 {% endfor %}
                                 </ul>
+                                {% if page|has_content_in:language %}
+                                <p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{ page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>
+                                {% endif %}
                             {% else %}
                                 {{ field.label_tag }}{{ field.field }}
                             {% endifequal %}

@@ -57,6 +57,12 @@ PagePermission Manager
     :members:
     :undoc-members:
 
+Template tags
+=============
+
+.. automodule:: pages.templatetags.pages_tags
+    :members:
+
 Widgets
 =======
 
@@ -77,9 +83,3 @@ Http
 .. automodule:: pages.http
     :members:
     :undoc-members:
-
-Template tags
-=============
-
-.. automodule:: pages.templatetags.pages_tags
-    :members:

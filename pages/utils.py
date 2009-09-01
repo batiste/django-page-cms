@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
+import sys, re, logging, pprint, traceback
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS models."""
 from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -10,13 +9,12 @@ from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
-
 import mptt
-from pages import settings
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
-
+from pages.lib.BeautifulSoup import BeautifulSoup
+from pages import settings
 
 class Page(models.Model):
     """
@@ -85,6 +83,12 @@ class Page(models.Model):
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
             help_text=_('The site(s) the page is accessible at.'),
             verbose_name=_('sites'))
+    redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
+
+    # (extra) pagelink
+    pagelink = models.CharField(_('page(s) with link(s) to this page'), max_length=200, null=True, blank=True)
+    pagelink_broken = models.PositiveSmallIntegerField(_('broken page link(s) found'), null=True, blank=True)
+    externallink_broken = models.PositiveSmallIntegerField(_('broken URL(s) found'), null=True, blank=True)
     
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
@@ -127,13 +131,68 @@ class Page(models.Model):
         if settings.PAGE_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT
-        
+
         if settings.PAGE_SHOW_END_DATE and self.publication_end_date:
             if self.publication_end_date < datetime.now():
                 return self.EXPIRED
 
         return self.status
     calculated_status = property(_get_calculated_status)
+
+    # (extra) pagelink
+    def delete(self, *args, **kwargs): 
+        """
+        set class 'pagelink_broken' of all 'a' tags of body by language.
+        + clear pagelink page ID entries.
+        """
+        if settings.PAGE_LINK_EDITOR: 
+            if self.pagelink is not None:
+                pagelink_ids = self.pagelink.split(',')
+                if pagelink_ids[0] !='':
+                    for pk,obj in Page.objects.in_bulk(pagelink_ids).items():
+                        if obj.id != self.id:
+                            obj_pagelink_broken = 0
+                            for placeholder in get_placeholders(obj.get_template()):
+                                if placeholder.widget in settings.PAGE_LINK_EDITOR:                                    
+                                    for language in obj.get_languages():
+                                        try:
+                                            content = Content.objects.filter(language=language, type=placeholder.name, page=obj).latest()
+                                            body = BeautifulSoup(content.body)
+                                            tags = body.findAll('a')
+                                            for tag in tags:
+                                                if tag.string and tag.string.strip():
+                                                    if tag.get('class',''):
+                                                        # finf link(s) with the page_id > set link to broken
+                                                        if tag['class'] == 'page_'+str(self.id):
+                                                            obj_pagelink_broken += 1
+                                                            tag.replaceWith('<a class="pagelink_broken" title="'+self.title(language) \
+                                                                                +'" href="'+self.get_absolute_url(language)+'">'+tag.string.strip()+'</a>')
+                                                        # count already broken page link(s)
+                                                        if tag['class'] == 'pagelink_broken':
+                                                            obj_pagelink_broken += 1
+                                            content.body = unicode(body)
+                                            content.save()
+                                        except Content.DoesNotExist:
+                                            pass
+                                    cache.delete(self.PAGE_CONTENT_DICT_KEY % (obj.id, placeholder.name))                            
+                            obj.pagelink_broken = obj_pagelink_broken
+                            obj.save()
+                      
+            # update pagelink(s), remove page ID
+            for obj in Page.objects.filter(pagelink__regex=r'^(.*,|)?'+str(self.id)+'(,.*|)?$'):
+                if obj.id != self.id:
+                    if obj.pagelink is not None:
+                        obj_pagelink_ids = obj.pagelink.split(',')
+                        if obj_pagelink_ids[0] !='':
+                            if str(self.id) in obj_pagelink_ids:
+                                obj_pagelink_ids.remove(str(self.id))
+                                if obj_pagelink_ids[0] !='':
+                                    obj.pagelink = obj_pagelink_ids
+                                else:
+                                    obj.pagelink = ''
+                                obj.save()
+        super(Page, self).delete(*args, **kwargs)
+
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""

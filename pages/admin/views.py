@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """Admin views"""
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 
 from pages import settings
 from pages.models import Page, Content
-
 from pages.utils import get_placeholders
 from pages.http import auto_render
+from pages.admin.utils import set_body_pagelink, delete_body_pagelink_by_language
 
 def change_status(request, page_id, status):
     """Switch the status of a page."""
@@ -40,10 +40,26 @@ def modify_content(request, page_id, content_id, language_id):
         page.invalidate()
         # to update last modification date
         page.save()
+        if len(settings.PAGE_LINK_EDITOR) > 0:
+            set_body_pagelink(page) # (extra) pagelink
+
         return HttpResponse('ok')
     raise Http404
 modify_content = staff_member_required(modify_content)
 
+
+def delete_content(request, page_id, language_id):
+    page = get_object_or_404(Page, pk=page_id)
+    if len(settings.PAGE_LINK_EDITOR) > 0:
+        delete_body_pagelink_by_language(page, language_id) # (extra) pagelink
+    for c in Content.objects.filter(page=page,language=language_id):
+        c.delete()
+    
+    destination = request.REQUEST.get('next', request.META.get('HTTP_REFERER', '/admin/pages/page/%s/' % page_id))
+    return HttpResponseRedirect(destination)
+delete_content = staff_member_required(delete_content)
+    
+    
 def traduction(request, page_id, language_id):
     """Traduction helper."""
     page = Page.objects.get(pk=page_id)

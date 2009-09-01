@@ -178,7 +178,6 @@ a.popup:hover .help,
     padding: 0;
     margin-right: 5px;
     background-repeat: no-repeat;
-    background-position: center 0.25em;
     opacity: 0.5; filter: alpha(opacity=50);
 }
 .change-list .actions a:hover,
@@ -190,10 +189,32 @@ a.popup:hover .help,
     display: none;
 }
 .change-list .actions a.viewlink {
-    background-image: url(../images/icons/view.gif);
+    background-image: url(../images/icons/icons.gif);
+    background-position: -2px -72px;
 }
 .change-list .actions a.movelink {
-    background-image: url(../images/icons/move.gif);
+    background-image: url(../images/icons/icons.gif);
+    background-position: -2px -60px;
+}
+.change-list .actions a.deletelink {
+    background-image: url(../images/icons/icons.gif);
+    background-position: -2px -12px;
+}
+.change-list .pagelink-broken {
+    float: left;
+    height: 12px;
+    width: 16px;
+    display: block;
+    background: url(../images/icons/icons.gif) no-repeat -2px -98px;
+    text-indent: -9999px;
+    color: red;
+    font-weight: bold;
+    font-size: 80%;
+    margin-left: 16px;
+}
+
+.change-list tbody .title-cell a.broken {
+    margin-left: 3px;
 }
 .change-list .actions a.cancellink {
     display: none;
@@ -207,6 +228,36 @@ a.popup:hover .help,
     padding: 0 10px;
     background: #FFFFBB; /* IE6 fix */
 }
+
+/* Page Status links */
+.change-list .publish-cell {
+    vertical-align: center;
+    width: 200px;
+}
+.change-list .publish-cell span,
+.status span {
+    float: left;
+    height: 12px;
+    width: 12px;
+    display: block;
+    background: url(../images/icons/icons.gif) no-repeat -2px -24px;
+    text-indent: -9999px;
+    margin-top: 6px;
+}
+.change-list .publish-cell span.draft,
+.status span.draft{
+    background-position: -2px -24px;
+}
+.change-list .publish-cell span.published,
+.status span.published {
+    background-position: -2px -48px;
+}
+.change-list .publish-cell span.hidden,
+.status span.hidden {
+    background-position: -2px -36px;
+}
+
+
 
 /* Move links */
 .change-list .insert {
@@ -264,6 +315,9 @@ a.popup:hover .help,
 }
 
 /* Languages */
+.change-list th.language-cell {
+    padding-right: 10px;
+}
 .change-list .language-cell {
     width: 1%;
     white-space: nowrap;
@@ -300,8 +354,12 @@ a.popup:hover .help,
 .change-list .publish-cell {
     width: 1%;
     white-space: nowrap;
-    padding: 0 10px;
+    padding: 0 20px 0 10px;
 }
+.change-list .publish-cell .box {
+    width: 130px;
+}
+
 .change-list th.publish-cell {
     padding: 5px 10px;
 }
@@ -321,13 +379,12 @@ a.popup:hover .help,
     padding: 5px 10px;
 }
 
-/* Publication status */
+/* autor */
 .change-list .author-cell {
     width: 1%;
     white-space: nowrap;
     padding: 5px 10px;
 }
-
 
 /* change-form page =========================================== */
 
@@ -346,6 +403,7 @@ a.popup:hover .help,
 .change-form .sidebar select {
     width: 148px;
 }
+
 .change-form .sidebar p.help,
 .change-form .sidebar .form-row p.help {
     margin-left: 0;
@@ -401,6 +459,17 @@ a.popup:hover .help,
     border-right: none;
 }
 
+.change-form .module-options .redirect_to_url {
+    float: right;
+}
+
+.change-form .module-options .redirect_to_url input {
+    width: 195px;
+}
+.change-form .module-options .redirect_to label,
+.change-form .module-options .redirect_to_url label {
+    width: 94px;
+}
 /* Languages */
 .change-form .module-options .language ul {
     margin: 0;
@@ -467,6 +536,10 @@ a.popup:hover .help,
     cursor: s-resize;
 }
 
+.change-form .module-content .header_image_title input {
+    width: 60%;
+}
+
 /* Translation helper */
 .change-form .module-translation-helper #translation-helper-content {
     overflow: hidden;
@@ -516,4 +589,8 @@ a.popup:hover .help,
 .change-form .submit-row {
     clear: both;
 }
+
+/* page link */
+.change-form .module-translation-helper .translation-helper-placeholder .externallink_broken,
+.change-form .module-translation-helper .translation-helper-placeholder .pagelink_broken { text-decoration: line-through; }
 

@@ -15,13 +15,15 @@ from django.contrib.admin.sites import AlreadyRegistered
 
 from pages import settings
 from pages.models import Page, Content, PageAlias
-from pages.utils import has_page_add_permission, get_placeholders
 from pages.http import get_language_from_request, get_template_from_request
 
+from pages.utils import get_placeholders
+from pages.utils import has_page_add_permission, get_language_from_request
+from pages.admin.utils import get_body_pagelink_ids, set_body_pagelink, update_body_pagelink
+from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin import widgets
 from pages.admin.forms import PageForm
-from pages.admin.utils import get_connected, make_inline_admin
-from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content
+from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content, delete_content
 
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
@@ -31,7 +33,7 @@ class PageAdmin(admin.ModelAdmin):
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target', 'position']
-    
+
     # TODO: find solution to do this dynamically
     #if getattr(settings, 'PAGE_USE_SITE_ID'):
     general_fields.append('sites')
@@ -53,6 +55,7 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_TEMPLATES:
         normal_fields.append('template')
     normal_fields.append('redirect_to')
+    normal_fields.append('redirect_to_url')
     fieldsets = (
         (_('General'), {
             'fields': general_fields,
@@ -86,6 +89,8 @@ class PageAdmin(admin.ModelAdmin):
         DEPRECATED. This function is the old way of handling URL resolution, and
         is deprecated in favor of real URL resolution -- see ``get_urls()``.
         """
+
+        # Delegate to the appropriate method, based on the URL.
         if url is None:
             return self.list_pages(request)
         elif url == 'jsi18n':
@@ -100,6 +105,9 @@ class PageAdmin(admin.ModelAdmin):
             page_id, action, content_id, language_id = url.split('/')
             return modify_content(request, unquote(page_id),
                                     unquote(content_id), unquote(language_id))
+        elif 'delete-content' in url:
+            page_id, action, language_id = url.split('/')
+            return delete_content(request,unquote(page_id), unquote(language_id))
         elif url.endswith('/sub-menu'):
             return sub_menu(request, unquote(url[:-9]))
         elif url.endswith('/move-page'):
@@ -110,32 +118,15 @@ class PageAdmin(admin.ModelAdmin):
             return change_status(request, unquote(url[:-24]), Page.PUBLISHED)
         elif url.endswith('/change-status-hidden'):
             return change_status(request, unquote(url[:-21]), Page.HIDDEN)
+
         ret = super(PageAdmin, self).__call__(request, url)
 
-        """Persist the language and template GET arguments, both on "save and
-        keep editing" and when switching language and template (which
-        also submits)
-        """
-
-        # TODO: clean that code
-        new_lang = request.GET.get('new_language', False)
-        lang = request.GET.get('language', False)
-        template = request.GET.get('template', False)
-        
-        if HttpResponseRedirect == type(ret) and (new_lang or lang or
-                                                            template):
-            for item in ret.items():
-                if 'Location' == item[0]:
-                    new_uri = item[1] + \
-                        '?language=' + request.GET.get('new_language', request.GET.get('language', '')) + \
-                        '&template=' + request.GET.get('new_template', request.GET.get('template', ''))
-                    ret = HttpResponseRedirect(new_uri)
-                    break
         return ret
+
 
     def urls(self):
         from django.conf.urls.defaults import patterns, url, include
-        
+
         # Admin-site-wide views.
         urlpatterns = patterns('',
             url(r'^$', self.list_pages, name='page-index'),
@@ -181,6 +172,9 @@ class PageAdmin(admin.ModelAdmin):
         position = form.data.get('position', None)
         obj.save()
 
+        if settings.PAGE_LINK_EDITOR:
+            initial_pagelink_ids = get_body_pagelink_ids(obj)
+
         if target and position:
             try:
                 target = self.model.objects.get(pk=target)
@@ -211,11 +205,13 @@ class PageAdmin(admin.ModelAdmin):
                         placeholder.name, form.cleaned_data[placeholder.name])
 
         obj.invalidate()
+        if settings.PAGE_LINK_EDITOR:
+            set_body_pagelink(obj, initial_pagelink_ids) # (extra) pagelink
 
     def get_fieldsets(self, request, obj=None):
         """Add fieldsets of placeholders to the list of already
         existing fieldsets.
-         """
+        """
         additional_fieldsets = []
 
         placeholder_fieldsets = []
@@ -367,14 +363,26 @@ class PageAdmin(admin.ModelAdmin):
         if template_name:
             self.change_list_template = template_name
         lang = get_language_from_request(request)
+
+        q=request.POST.get('q', '').strip()
+
+        if q:
+            page_ids = list(set([c.page.pk for c in Content.objects.filter(body__icontains=q)]))
+            pages = Page.objects.filter(pk__in=page_ids)
+        else:
+            pages = Page.objects.root()
+
         context = {
             'lang': lang,
             'name': _("page"),
-            'pages': Page.objects.root().order_by("tree_id"),
-            'opts': self.model._meta
+            'pages': pages,
+            'opts': self.model._meta,
+            'q': q
         }
+
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)
+
         self.change_list_template = None
         return change_list
 
@@ -397,6 +405,8 @@ class PageAdmin(admin.ModelAdmin):
                 page.invalidate()
                 target.invalidate()
                 page.move_to(target, position)
+                if settings.PAGE_LINK_EDITOR:
+                    update_body_pagelink(page) # (extra) pagelink
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')

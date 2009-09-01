@@ -1,4 +1,15 @@
 {% load i18n pages_tags %}
+
+<div id="toolbar">
+<form id="changelist-search" action="" method="post">
+    <div>
+        <label for="searchbar"><img src="/admin_media/img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
+        <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
+        <input type="submit" name="g" value="{% trans "Go" %}" />
+    </div>
+</form>
+</div>
+
 <table cellspacing="0" id="page-list">
     <thead>
         <tr>

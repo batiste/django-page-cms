@@ -313,7 +313,7 @@ class PlaceholderNode(template.Node):
     :param name: the name of the placeholder you want to show/create
     :param page: the optional page object
     :param widget: the widget you want to use in the admin interface. Take
-        a look into :class:`pages.admin.widgets` to see which widgets
+        a look into :module:`pages.admin.widgets` to see which widgets
         are available.
     :param parsed: if the ``parsed`` word is given, the content of the
         placeholder is evaluated as template code, within the current context.

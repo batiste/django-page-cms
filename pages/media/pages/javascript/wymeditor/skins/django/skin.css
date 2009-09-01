@@ -37,7 +37,7 @@
 /*WYM_BOX*/
         .wym_skin_django                { border: 0px; background: none; padding: 10px}
 
-    /*auto-clear the wym_box*/
+        /*auto-clear the wym_box*/
         .wym_skin_django:after 	        { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
  * html .wym_skin_django                { height: 1%;}
 
@@ -125,12 +125,17 @@
         .wym_dialog div.row label   { float: left; width: 150px; display: block; text-align: right; margin-right: 10px; }
         .wym_dialog div.row-indent  { padding-left: 160px; }
         /*autoclearing*/        
-        .wym_dialog div.row:after            { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-        .wym_dialog div.row                  { display: inline-block; }
-            /* Hides from IE-mac \*/
-            * html .wym_dialog div.row       { height: 1%; }
-            .wym_dialog div.row              { display: block; }
-            /* End hide from IE-mac */                
+        .wym_dialog div.row:after   { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+        .wym_dialog div.row         { display: inline-block; }
+        /* Hides from IE-mac \*/
+ * html .wym_dialog div.row         { height: 1%; }
+        .wym_dialog div.row         { display: block; }
+        /* End hide from IE-mac */                
             
 /*WYMEDITOR_LINK*/
         a.wym_wymeditor_link        { text-indent: -9999px; float: right; display: block; width: 50px; height: 15px; background: url(../wymeditor_icon.png);  overflow: hidden; text-decoration: none;  }
+
+/* PAGELINK */
+        .wym_select_pagelink { width: 330px; }
+        .wym_select_pagelink option.selected { background-color: #e3d2c5; }
+

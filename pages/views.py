@@ -47,7 +47,7 @@ def details(request, path=None, lang=None):
     if path:
         current_page = Page.objects.from_path(path, lang)
     elif pages:
-        current_page = pages[0]
+        current_page = Page.objects.published().order_by("tree_id")[0]
 
     # if no pages has been found, we will try to find it via an Alias
     if not current_page:
@@ -61,6 +61,10 @@ def details(request, path=None, lang=None):
             current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
         raise Http404
 
+    if current_page.redirect_to_url:
+        # return this object if you want to activate redirections
+        http_redirect = HttpResponsePermanentRedirect(current_page.redirect_to_url)
+    
     if current_page.redirect_to:
         return HttpResponsePermanentRedirect(
             current_page.redirect_to.get_absolute_url(lang))

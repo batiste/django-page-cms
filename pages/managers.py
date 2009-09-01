@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS managers."""
-import itertools
+import itertools, re
 from datetime import datetime
 from django.db import models, connection
 from django.contrib.sites.managers import CurrentSiteManager
@@ -10,6 +10,7 @@ from django.core.cache import cache
 
 from pages import settings
 from pages.utils import normalize_url
+
 
 class PageManager(models.Manager):
     """
@@ -48,7 +49,7 @@ class PageManager(models.Manager):
         if settings.PAGE_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
 
-        queryset = queryset.filter(status=self.model.PUBLISHED)
+        queryset = queryset.exclude(status=self.model.DRAFT)
 
         if settings.PAGE_SHOW_START_DATE:
             queryset = queryset.filter(publication_date__lte=datetime.now())
@@ -118,7 +119,7 @@ class ContentManager(models.Manager):
         :param body: the content of the Content object.
         """
         if settings.PAGE_SANITIZE_USER_INPUT:
-            body = self.sanitize(body)
+            body = self.sanitize(body)       
         try:
             content = self.filter(page=page, language=language,
                                   type=ctype).latest('creation_date')
@@ -187,7 +188,7 @@ class ContentManager(models.Manager):
 
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
-                if content_dict[lang[0]]:
+                if lang[0] in content_dict:
                     return content_dict[lang[0]]
         return ''
 

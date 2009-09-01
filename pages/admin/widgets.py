@@ -7,8 +7,9 @@ from django.forms import TextInput, Textarea
 from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE
+from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_EDITOR
 from pages.models import Page
+from pages.utils import get_language_from_request 
 
 if PAGE_TAGGING:
     from tagging.models import Tag
@@ -82,10 +83,12 @@ class WYMEditor(Textarea):
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
+            'javascript/jquery.ui.js',
+            'javascript/jquery.ui.resizable.js',
             'wymeditor/jquery.wymeditor.js',
             'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
         )]
-        
+       
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
             js.append(join(PAGES_MEDIA_URL, 'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
         
@@ -98,14 +101,17 @@ class WYMEditor(Textarea):
         super(WYMEditor, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
-        rendered = super(WYMEditor, self).render(name, value, attrs)
+        rendered = super(WYMEditor, self).render(name, value, attrs)       
         context = {
-            'page_list':Page.objects.all().order_by('tree_id'),
+            'page_list': Page.objects.all().order_by('tree_id','lft'), 
             'name': name,
             'language': self.language,
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
-        
+        context['page_link_wymeditor'] = 0
+        if 'WYMEditor' in PAGE_LINK_EDITOR:
+            context['page_link_wymeditor'] = 1
+
         context['filebrowser'] = 0
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
             context['filebrowser'] = 1

@@ -10,11 +10,11 @@ setup(
     url='http://code.google.com/p/django-page-cms/',
     download_url='http://code.google.com/p/django-page-cms/downloads/list',
     requires=(
-        'html5lib (>=0.10)', 
+        'html5lib (>=0.10)',
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
-    packages=find_packages(exclude=['example', 'example.*']),
+    #packages=find_packages(exclude=['example', 'example.*']),
     include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

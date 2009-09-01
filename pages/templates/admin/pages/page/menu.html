@@ -5,6 +5,10 @@
         <td><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
         <th class="title-cell">
             <div class="title-cell-container" style="margin-left:{{ page.margin_level }}em">
+                {% if page.pagelink_broken or page.externallink_broken %}
+                    <span title="URL(s) broken!" class="pagelink-broken">PL</span>
+                {% endif %}
+
                 {% if page.children.count %}
                     <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                         <span class="expand">+</span>
@@ -12,13 +16,17 @@
                         <img class="expand-loading" src="{{ PAGES_MEDIA_URL }}images/loading.gif" alt="loading" />
                     </a>
                 {% endif %} 
-                <a href="{{ url }}{{ page.id }}/" class="title changelink">{% show_content page "slug" %}</a>
+                <a href="{{ url }}{{ page.id }}/" class="title changelink {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">{% show_content page "slug" %}</a>
                 
                 <div class="actions">
                     <a class="viewlink" href="{% show_absolute_url page %}" target="_blank" title="{% trans "view this page" %}"></a>
                     <a class="movelink" id="move-link-{{ page.id }}" href="#" title="{% trans "move this page" %}"></a>
                     <a class="addlink" id="add-link-{{ page.id }}" href="#" title="{% trans "insert a new page here" %}"></a>
+                    {% if not page.children.count %}
                     <a class="deletelink" href="{{ page.id }}/delete/" title="{% trans "delete this page" %}"></a>
+                    {% else %}
+                    <a></a>
+                    {% endif %}
                     <a class="cancellink" href="#" title="{% trans "don&#x27;t move this page" %}">{% trans "cancel" %}</a>
                 </div>
                 
@@ -59,7 +67,7 @@
                 <option value="0" {% ifequal page.status page.DRAFT %}selected="selected"{% endifequal %}>{% trans "Draft" %}</option>
                 <option value="1" {% ifequal page.status page.PUBLISHED %}selected="selected"{% endifequal %}>{% trans "In navigation" %}</option>
                 <option value="3" {% ifequal page.status page.HIDDEN %}selected="selected"{% endifequal %}>{% trans "Hidden" %}</option>
-            </select>
+            </select>            
         </td>
         <td class="template-cell">
             {{ page.get_template_name }}

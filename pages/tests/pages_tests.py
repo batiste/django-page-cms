@@ -122,7 +122,6 @@ class PagesTestCase(TestCase):
         """Test the site framework, and test if it's possible to
         disable it"""
 
-        
         # this kind of hacks doesn't work anymore
         setattr(settings, "SITE_ID", 2)
         setattr(settings, "PAGE_USE_SITE_ID", True)
@@ -242,7 +241,6 @@ class PagesTestCase(TestCase):
         response = c.get('/pages/')
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
-
         
     def test_08_revision(self):
         """Test that a page can edited several times."""

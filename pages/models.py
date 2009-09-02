@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 import mptt
-from pages.utils import get_placeholders, normalize_url
+from pages.utils import get_placeholders, normalize_url, mark_deleted
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
 from pages.lib.BeautifulSoup import BeautifulSoup
@@ -85,10 +85,15 @@ class Page(models.Model):
             verbose_name=_('sites'))
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
-    # (extra) pagelink
-    pagelink = models.CharField(_('page(s) with link(s) to this page'), max_length=200, null=True, blank=True)
-    pagelink_broken = models.PositiveSmallIntegerField(_('broken page link(s) found'), null=True, blank=True)
-    externallink_broken = models.PositiveSmallIntegerField(_('broken URL(s) found'), null=True, blank=True)
+    # If this page contain links to other pages, the pages will be added here
+    pagelink = models.CharField(_('page(s) with link(s) to this page'),
+            max_length=200, null=True, blank=True)
+    # Count all the internal broken links
+    pagelink_broken = models.PositiveSmallIntegerField(
+            _('broken page link(s) found'), null=True, blank=True)
+    # Count all the external broken links
+    externallink_broken = models.PositiveSmallIntegerField(
+            _('broken URL(s) found'), null=True, blank=True)
     
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
@@ -139,60 +144,59 @@ class Page(models.Model):
         return self.status
     calculated_status = property(_get_calculated_status)
 
-    # (extra) pagelink
     def delete(self, *args, **kwargs): 
         """
-        set class 'pagelink_broken' of all 'a' tags of body by language.
-        + clear pagelink page ID entries.
+        Set class :attr:`pagelink_broken` of all `a` tags contained in Content
+        objects. Then clear :attr:`pagelink` from this page ID in other pages.
         """
-        if settings.PAGE_LINK_EDITOR: 
-            if self.pagelink is not None:
-                pagelink_ids = self.pagelink.split(',')
-                if pagelink_ids[0] !='':
-                    for pk,obj in Page.objects.in_bulk(pagelink_ids).items():
-                        if obj.id != self.id:
-                            obj_pagelink_broken = 0
-                            for placeholder in get_placeholders(obj.get_template()):
-                                if placeholder.widget in settings.PAGE_LINK_EDITOR:                                    
-                                    for language in obj.get_languages():
-                                        try:
-                                            content = Content.objects.filter(language=language, type=placeholder.name, page=obj).latest()
-                                            body = BeautifulSoup(content.body)
-                                            tags = body.findAll('a')
-                                            for tag in tags:
-                                                if tag.string and tag.string.strip():
-                                                    if tag.get('class',''):
-                                                        # finf link(s) with the page_id > set link to broken
-                                                        if tag['class'] == 'page_'+str(self.id):
-                                                            obj_pagelink_broken += 1
-                                                            tag.replaceWith('<a class="pagelink_broken" title="'+self.title(language) \
-                                                                                +'" href="'+self.get_absolute_url(language)+'">'+tag.string.strip()+'</a>')
-                                                        # count already broken page link(s)
-                                                        if tag['class'] == 'pagelink_broken':
-                                                            obj_pagelink_broken += 1
-                                            content.body = unicode(body)
-                                            content.save()
-                                        except Content.DoesNotExist:
-                                            pass
-                                    cache.delete(self.PAGE_CONTENT_DICT_KEY % (obj.id, placeholder.name))                            
-                            obj.pagelink_broken = obj_pagelink_broken
+        if not settings.PAGE_LINK_EDITOR:
+            super(Page, self).delete(*args, **kwargs)
+            return
+        if self.pagelink is not None:
+            pagelink_ids = self.pagelink.split(',')
+            if pagelink_ids[0] !='':
+                for pk, obj in Page.objects.in_bulk(pagelink_ids).items():
+                    if obj.id != self.id:
+                        obj.update_broken_links()
+
+        # update pagelink by remove page ID from other pages
+        find_page_regexp = r'^(.*,|)?'+str(self.id)+'(,.*|)?$'
+        for obj in Page.objects.filter(pagelink__regex=find_page_regexp):
+            if obj.id != self.id:
+                if obj.pagelink is not None:
+                    obj_pagelink_ids = obj.pagelink.split(',')
+                    if obj_pagelink_ids[0] !='':
+                        if str(self.id) in obj_pagelink_ids:
+                            obj_pagelink_ids.remove(str(self.id))
+                            if obj_pagelink_ids[0] !='':
+                                obj.pagelink = obj_pagelink_ids
+                            else:
+                                obj.pagelink = ''
                             obj.save()
-                      
-            # update pagelink(s), remove page ID
-            for obj in Page.objects.filter(pagelink__regex=r'^(.*,|)?'+str(self.id)+'(,.*|)?$'):
-                if obj.id != self.id:
-                    if obj.pagelink is not None:
-                        obj_pagelink_ids = obj.pagelink.split(',')
-                        if obj_pagelink_ids[0] !='':
-                            if str(self.id) in obj_pagelink_ids:
-                                obj_pagelink_ids.remove(str(self.id))
-                                if obj_pagelink_ids[0] !='':
-                                    obj.pagelink = obj_pagelink_ids
-                                else:
-                                    obj.pagelink = ''
-                                obj.save()
         super(Page, self).delete(*args, **kwargs)
 
+    def update_broken_links(self):
+        broken_links = 0
+        for placeholder in get_placeholders(self.get_template()):
+            # this condition doesn't make that much sense to me
+            # I removed it for now
+            # if placeholder.widget in settings.PAGE_LINK_EDITOR:
+            for language in self.get_languages():
+                try:
+                    content = Content.objects.filter(
+                        language=language,
+                        type=placeholder.name,
+                        page=self).latest()
+                    content.body, broken_links = mark_deleted(
+                        content.body
+                    )
+                    content.save()
+                except Content.DoesNotExist:
+                    pass
+            cache.delete(self.PAGE_CONTENT_DICT_KEY %
+                    (self.id, placeholder.name))
+        self.pagelink_broken = broken_links
+        self.save()
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""

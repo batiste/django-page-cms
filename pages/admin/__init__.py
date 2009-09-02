@@ -23,7 +23,8 @@ from pages.admin.utils import get_body_pagelink_ids, set_body_pagelink, update_b
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin import widgets
 from pages.admin.forms import PageForm
-from pages.admin.views import traduction, get_content, sub_menu, change_status, modify_content, delete_content
+from pages.admin.views import traduction, get_content, sub_menu
+from pages.admin.views import change_status, modify_content, delete_content
 
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
@@ -107,7 +108,7 @@ class PageAdmin(admin.ModelAdmin):
                                     unquote(content_id), unquote(language_id))
         elif 'delete-content' in url:
             page_id, action, language_id = url.split('/')
-            return delete_content(request,unquote(page_id), unquote(language_id))
+            return delete_content(request, unquote(page_id), unquote(language_id))
         elif url.endswith('/sub-menu'):
             return sub_menu(request, unquote(url[:-9]))
         elif url.endswith('/move-page'):

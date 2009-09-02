@@ -113,3 +113,22 @@ def normalize_url(url):
     if len(url)>1 and url.endswith('/'):
         url = url[0:len(url)-1]
     return url
+
+def mark_deleted(content):
+    body = BeautifulSoup(content)
+    tags = body.findAll('a')
+    broken_links = 0
+    for tag in tags:
+        if tag.string and tag.string.strip():
+            if tag.get('class', ''):
+                # find link(s) with the page_id > set link to broken
+                if 'page_'+str(self.id) in tag['class']:
+                    obj_pagelink_broken += 1
+                    tag.replaceWith('<a class="pagelink_broken" title="' \
+                        + self.title(language) 
+                        + '"href="'+self.get_absolute_url(language) + '">'
+                        + tag.string.strip() + '</a>')
+                # count already broken page link(s)
+                if 'pagelink_broken' in tag['class']:
+                    broken_links += 1
+    return unicode(body), broken_links

@@ -155,4 +155,4 @@ PAGE_LINK_EDITOR = ['WYMEditor']
 # pagelink url validator agent
 PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)
 
-#PAGE_LINK_EDITOR = getattr(settings, 'PAGE_LINK_EDITOR', False)
+PAGE_LINK_EDITOR = getattr(settings, 'PAGE_LINK_EDITOR', [])

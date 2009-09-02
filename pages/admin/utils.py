@@ -88,7 +88,10 @@ def get_body_pagelink_ids(page):
         if placeholder.widget in settings.PAGE_LINK_EDITOR:
             for language in page.get_languages():
                 try:
-                    content = Content.objects.filter(language=language, type=placeholder.name, page=page).latest()
+                    content = Content.objects.filter(
+                        language=language,
+                        type=placeholder.name, page=page
+                    ).latest()
                     body = BeautifulSoup(content.body)
                     # find page link ID
                     tags = body.findAll('a', {'class': re.compile('^page_[0-9]*$')})
@@ -98,7 +101,7 @@ def get_body_pagelink_ids(page):
                     pass
 
     if pagelink_ids:
-        return list(set(pagelink_ids)) # remove duplicates        
+        return list(set(pagelink_ids)) # remove duplicates
     else:
         return None
 

@@ -1,4 +1,4 @@
-{% load mptt_tags %}
+{% load mptt_tags pages_tags %}
 <script type="text/javascript">
 <!--
     jQuery('#id_{{ name }}').wymeditor({
@@ -77,7 +77,7 @@
                          + "<label>Page</label>"
                          + "<select class='wym_select_pagelink'>"
                          {% for page in page_list %}
-                         + "<option class='page_{{page.id}}' value='{{ page.get_absolute_url }}#{{page.id}}'>{{ page.with_level }}</option>"
+                         + "<option class='page_{{page.id}}' value='{% show_absolute_url page language %}#{{page.id}}'>{% show_content page 'slug' language %}</option>"
                          {% endfor %}
                          + "</select>"
                          + "</div>"

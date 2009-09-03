@@ -85,18 +85,19 @@ class Page(models.Model):
             verbose_name=_('sites'))
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
-    # If this page contain links to other pages, the pages will be added here
-    pagelink = models.CharField(_('page(s) with link(s) to this page'),
-            max_length=200, null=True, blank=True)
-    # Count all the internal broken links
-    pagelink_broken = models.PositiveSmallIntegerField(
-            _('broken page link(s) found'), null=True, blank=True)
-    # Count all the external broken links
-    externallink_broken = models.PositiveSmallIntegerField(
-            _('broken URL(s) found'), null=True, blank=True)
-    
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
+
+    if settings.PAGE_LINK_EDITOR:
+        # If this page contain links to other pages, the pages will be added here
+        pagelink = models.CharField(_('page(s) with link(s) to this page'),
+            max_length=200, null=True, blank=True)
+        # Count all the internal broken links
+        pagelink_broken = models.PositiveSmallIntegerField(
+            _('broken page link(s) found'), null=True, blank=True)
+        # Count all the external broken links
+        externallink_broken = models.PositiveSmallIntegerField(
+            _('broken URL(s) found'), null=True, blank=True)
     
     # Managers
     objects = PageManager()
@@ -176,26 +177,27 @@ class Page(models.Model):
         super(Page, self).delete(*args, **kwargs)
 
     def update_broken_links(self):
-        broken_links = 0
+        all_broken_links = 0
         for placeholder in get_placeholders(self.get_template()):
             # this condition doesn't make that much sense to me
             # I removed it for now
-            # if placeholder.widget in settings.PAGE_LINK_EDITOR:
-            for language in self.get_languages():
-                try:
-                    content = Content.objects.filter(
-                        language=language,
-                        type=placeholder.name,
-                        page=self).latest()
-                    content.body, broken_links = mark_deleted(
-                        content.body
-                    )
-                    content.save()
-                except Content.DoesNotExist:
-                    pass
-            cache.delete(self.PAGE_CONTENT_DICT_KEY %
-                    (self.id, placeholder.name))
-        self.pagelink_broken = broken_links
+            if placeholder.widget in settings.PAGE_LINK_EDITOR:
+                for language in self.get_languages():
+                    try:
+                        content = Content.objects.filter(
+                            language=language,
+                            type=placeholder.name,
+                            page=self).latest()
+                        content.body, broken_links = mark_deleted(
+                            content.body
+                        )
+                        content.save()
+                        all_broken_links += broken_links
+                    except Content.DoesNotExist:
+                        pass
+                cache.delete(self.PAGE_CONTENT_DICT_KEY %
+                        (self.id, placeholder.name))
+        self.pagelink_broken = all_broken_links
         self.save()
 
     def get_children_for_frontend(self):

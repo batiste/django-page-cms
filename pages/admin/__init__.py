@@ -137,6 +137,8 @@ class PageAdmin(admin.ModelAdmin):
                 get_content, name='page-traduction'),
             url(r'^(?P<page_id>[-\w]+)/modify-content/(?P<content_id>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 modify_content, name='page-traduction'),
+            url(r'^(?P<page_id>[-\w]+)/delete-content/(?P<language_id>[-\w]+)/$',
+                delete_content, name='page-delete_content'),
             url(r'^(?P<page_id>[-\w]+)/sub-menu/$',
                 sub_menu, name='page-sub-menu'),
             url(r'^(?P<page_id>[-\w]+)/move-page/$',

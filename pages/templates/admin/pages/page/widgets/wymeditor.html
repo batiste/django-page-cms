@@ -108,7 +108,7 @@
                 jQuery(body)
                     .find('input.wym_submit_pagelink')
                     .click(function() {
-                        var values = jQuery(body).find('.wym_select_pagelink').val().split('#');                   
+                        var values = jQuery(body).find('.wym_select_pagelink').val().split('#');
                         wym.wrap('<a class="page_' + values[1] + '" href="' + values[0] + '" title="">', '</a>');
                         wdw.close();
     

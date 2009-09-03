@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
 import re

@@ -25,7 +25,11 @@ if PAGE_TAGGING:
                 'javascript/jquery.autocomplete.min.js'
             )]
 
-        def render(self, name, value, attrs=None):
+        def __init__(self, language=None, attrs=None):
+            self.language = language
+            super(AutoCompleteTagInput, self).__init__(attrs)
+
+        def render(self, name, value, language=None, attrs=None):
             rendered = super(AutoCompleteTagInput, self).render(name, value, attrs)
             page_tags = Tag.objects.usage_for_model(Page)
             context = {
@@ -47,8 +51,9 @@ class RichTextarea(Textarea):
             )]
         }
 
-    def __init__(self, attrs=None):
+    def __init__(self, language=None, attrs=None):
         attrs = {'class': 'rte'}
+        self.language = language
         super(RichTextarea, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
@@ -65,7 +70,8 @@ if PAGE_TINYMCE:
     
     class TinyMCE(tinymce_widgets.TinyMCE):
         """TinyMCE widget."""
-        def __init__(self, content_language=None, attrs=None, mce_attrs={}):
+        def __init__(self, language=None, attrs=None, mce_attrs={}):
+            self.language = language
             self.mce_attrs = mce_attrs
             self.mce_attrs.update({
                 'mode': "exact",
@@ -75,7 +81,7 @@ if PAGE_TINYMCE:
                 'theme_advanced_toolbar_location': "top",
                 'theme_advanced_toolbar_align': "left"
             })
-            super(TinyMCE, self).__init__(content_language, attrs, mce_attrs)
+            super(TinyMCE, self).__init__(language, attrs, mce_attrs)
 
 class WYMEditor(Textarea):
     """WYMEditor widget."""
@@ -94,14 +100,14 @@ class WYMEditor(Textarea):
         
 
     def __init__(self, language=None, attrs=None):
-        self.language = language or settings.LANGUAGE_CODE[:2]
+        self.language = language
         self.attrs = {'class': 'wymeditor'}
         if attrs:
             self.attrs.update(attrs)
         super(WYMEditor, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
-        rendered = super(WYMEditor, self).render(name, value, attrs)       
+        rendered = super(WYMEditor, self).render(name, value, attrs)
         context = {
             'page_list': Page.objects.all().order_by('tree_id','lft'), 
             'name': name,
@@ -176,7 +182,7 @@ class EditArea(Textarea):
     
         
     def __init__(self, language=None, attrs=None):
-        self.language = language or settings.LANGUAGE_CODE[:2]
+        self.language = language
         self.attrs = {'class': 'editarea',}
         if attrs:
             self.attrs.update(attrs)

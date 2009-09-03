@@ -280,7 +280,11 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         for placeholder in get_placeholders(template):
-            widget = self.get_widget(placeholder.widget)()
+            widget_class = self.get_widget(placeholder.widget)
+            try:
+                widget = widget_class(language=language)
+            except TypeError:
+                widget = widget_class()
             if placeholder.parsed:
                 help_text = _('Note: This field is evaluated as template code.')
             else:

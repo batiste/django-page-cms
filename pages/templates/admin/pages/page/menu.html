@@ -18,7 +18,7 @@
                 {% endif %} 
                 <a href="{{ url }}{{ page.id }}/" class="title changelink {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">{% show_content page "slug" %}</a>
                 
-                <div class="actions">
+                <div class="actions-pages">
                     <a class="viewlink" href="{% show_absolute_url page %}" target="_blank" title="{% trans "view this page" %}"></a>
                     <a class="movelink" id="move-link-{{ page.id }}" href="#" title="{% trans "move this page" %}"></a>
                     <a class="addlink" id="add-link-{{ page.id }}" href="#" title="{% trans "insert a new page here" %}"></a>

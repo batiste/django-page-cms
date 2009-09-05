@@ -164,14 +164,14 @@ a.popup:hover .help,
 }
 
 /* Actions */
-#page-list .actions {
+#page-list .actions-pages {
     position: absolute;
     right: -5px;
     top: 0;
     margin: 0;
 }
 
-.change-list .actions a {
+.change-list .actions-pages a {
     float: left;
     width: 15px;
     height: 14px;
@@ -180,23 +180,23 @@ a.popup:hover .help,
     background-repeat: no-repeat;
     opacity: 0.5; filter: alpha(opacity=50);
 }
-.change-list .actions a:hover,
-.change-list tr:hover .actions a {
+.change-list .actions-pages a:hover,
+.change-list tr:hover .actions-pages a {
     opacity: 1; filter: alpha(opacity=100);
 }
-.change-list .insert-add .actions a,
-.change-list .insert-move .actions a {
+.change-list .insert-add .actions-pages a,
+.change-list .insert-move .actions-pages a {
     display: none;
 }
-.change-list .actions a.viewlink {
+.change-list .actions-pages a.viewlink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -72px;
 }
-.change-list .actions a.movelink {
+.change-list .actions-pages a.movelink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -60px;
 }
-.change-list .actions a.deletelink {
+.change-list .actions-pages a.deletelink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -12px;
 }
@@ -216,12 +216,12 @@ a.popup:hover .help,
 .change-list tbody .title-cell a.broken {
     margin-left: 3px;
 }
-.change-list .actions a.cancellink {
+.change-list .actions-pages a.cancellink {
     display: none;
     font-weight: normal;
     opacity: 1;  filter: alpha(opacity=100);
 }
-.change-list .insert-move .selected .actions a.cancellink {
+.change-list .insert-move .selected .actions-pages a.cancellink {
     display: block;
     width: auto;
     height: auto;
@@ -245,7 +245,7 @@ a.popup:hover .help,
     margin-top: 6px;
 }
 .change-list .publish-cell span.draft,
-.status span.draft{
+.status span.draft {
     background-position: -2px -24px;
 }
 .change-list .publish-cell span.published,

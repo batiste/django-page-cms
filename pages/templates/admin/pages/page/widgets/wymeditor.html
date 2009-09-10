@@ -77,7 +77,7 @@
                          + "<label>Page</label>"
                          + "<select class='wym_select_pagelink'>"
                          {% for page in page_list %}
-                         + "<option class='page_{{page.id}}' value='{% show_absolute_url page language %}#{{page.id}}'>{% show_content page 'slug' language %}</option>"
+                         + "<option class='page_{{page.id}}' value='{% show_absolute_url page language %}#{{page.id}}'>{% show_slug_with_level page language %}</option>"
                          {% endfor %}
                          + "</select>"
                          + "</div>"

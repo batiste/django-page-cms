@@ -368,14 +368,14 @@ class Page(models.Model):
         else:
             return Page.objects.exclude(id__in=exclude_list)
 
-    def with_level(self):
+    def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
         spaces equal to the level of page in the hierarchy."""
         level = ''
         if self.level:
             for n in range(0, self.level):
                 level += '&nbsp;&nbsp;&nbsp;'
-        return mark_safe(level + self.slug())
+        return mark_safe(level + self.slug(language))
         
     def margin_level(self):
         return self.level * 2

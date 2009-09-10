@@ -134,6 +134,23 @@ def show_content(context, page, content_type, lang=None, fallback=True):
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
+def show_slug_with_level(context, page, lang=None, fallback=True):
+    """Display slug with level by language."""
+    if not page:
+        return ''
+    if not lang and 'lang' in context:
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+
+    page = Page.objects.from_path(page, lang)
+
+    if not page:
+        return ''
+
+    return {'content': page.slug_with_level(lang)}
+show_slug_with_level = register.inclusion_tag('pages/content.html',
+                                      takes_context=True)(show_slug_with_level)
+
+
 def show_absolute_url(context, page, lang=None):
     """Show the url of a page in the right language
 

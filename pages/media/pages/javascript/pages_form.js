@@ -50,8 +50,9 @@ $(function() {
                 if(confirm(gettext('You will loose any changes you have done to the page. Are you sure?')))
                     $('input[name=_continue]').click();
             });
-        }
-    }); 
+        };
+    });
+    
     // Disable the page content if the page is a redirection
     /*
     // To fix if we use placeholder in templates for META or extra content
@@ -75,6 +76,7 @@ $(function() {
     }
     update_redirect();
     */
+    
     // Content revision selector
     $('.revisions').change(function () {
         var select = $(this);

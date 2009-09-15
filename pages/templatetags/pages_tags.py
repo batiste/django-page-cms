@@ -141,8 +141,6 @@ def show_slug_with_level(context, page, lang=None, fallback=True):
     if not lang and 'lang' in context:
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
 
-    page = Page.objects.from_path(page, lang)
-
     if not page:
         return ''
 

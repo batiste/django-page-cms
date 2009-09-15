@@ -2,8 +2,8 @@
 """Django page CMS test suite module"""
 import django
 from django.test import TestCase
-from pages import settings
-from pages.models import Page, Content, PagePermission, PageAlias
+from django.conf import settings
+from pages.models import Page, Content, PageAlias
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect

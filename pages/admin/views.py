@@ -13,15 +13,11 @@ from pages.admin.utils import set_body_pagelink, delete_body_pagelink_by_languag
 def change_status(request, page_id):
     """Switch the status of a page."""
     if request.method == 'POST':
-        #try:
         page = Page.objects.get(pk=page_id)
         page.status = int(request.POST['status'])
         page.save()
         return HttpResponse(unicode(page.status))
-        #except:
-        #return HttpResponse(unicode(status))
     raise Http404
-    return HttpResponse("Not allowed")
 change_status = staff_member_required(change_status)
 
 def modify_content(request, page_id, content_id, language_id):

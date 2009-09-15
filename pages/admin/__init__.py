@@ -113,12 +113,9 @@ class PageAdmin(admin.ModelAdmin):
             return sub_menu(request, unquote(url[:-9]))
         elif url.endswith('/move-page'):
             return self.move_page(request, unquote(url[:-10]))
-        elif url.endswith('/change-status-draft'):
-            return change_status(request, unquote(url[:-20]), Page.DRAFT)
-        elif url.endswith('/change-status-published'):
-            return change_status(request, unquote(url[:-24]), Page.PUBLISHED)
-        elif url.endswith('/change-status-hidden'):
-            return change_status(request, unquote(url[:-21]), Page.HIDDEN)
+        elif url.endswith('/change-status'):
+            page_id, action = url.split('/')
+            return change_status(request, page_id)
 
         ret = super(PageAdmin, self).__call__(request, url)
 
@@ -131,19 +128,19 @@ class PageAdmin(admin.ModelAdmin):
         # Admin-site-wide views.
         urlpatterns = patterns('',
             url(r'^$', self.list_pages, name='page-index'),
-            url(r'^(?P<page_id>[-\w]+)/traduction/(?P<language_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
-            url(r'^(?P<page_id>[-\w]+)/get-content/(?P<content_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[-\w]+)/$',
                 get_content, name='page-traduction'),
-            url(r'^(?P<page_id>[-\w]+)/modify-content/(?P<content_id>[-\w]+)/(?P<language_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_id>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 modify_content, name='page-traduction'),
-            url(r'^(?P<page_id>[-\w]+)/delete-content/(?P<language_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/delete-content/(?P<language_id>[-\w]+)/$',
                 delete_content, name='page-delete_content'),
-            url(r'^(?P<page_id>[-\w]+)/sub-menu/$',
+            url(r'^(?P<page_id>[0-9]+)/sub-menu/$',
                 sub_menu, name='page-sub-menu'),
-            url(r'^(?P<page_id>[-\w]+)/move-page/$',
+            url(r'^(?P<page_id>[0-9]+)/move-page/$',
                 self.move_page, name='page-traduction'),
-            url(r'^(?P<page_id>[-\w]+)/change-status-(?P<status>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
         )
         urlpatterns += super(PageAdmin, self).urls

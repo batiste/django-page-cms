@@ -90,7 +90,17 @@ def has_page_add_permission(request, page=None):
         permission = PagePermission.objects.get_page_id_list(request.user)
         if permission == "All":
             return True
+        # the user has the right to add a page under a page he control
+        target = request.GET.get('target', None)
+        if target is not None:
+            try:
+                target = int(target)
+                if target in permission:
+                    return True
+            except:
+                pass
     return False
+
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

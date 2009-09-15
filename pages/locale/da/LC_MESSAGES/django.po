@@ -1,0 +1,316 @@
+# django-page-cms in Danish.
+# django-page-cms på Dansk.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Michael Lind Mortensen <illio@cs.au.dk>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-13 02:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: models.py:40
+msgid "Published"
+msgstr "Offentliggjort"
+
+#: models.py:41 templates/admin/pages/page/menu.html:58
+msgid "Hidden"
+msgstr "Skjult"
+
+#: models.py:42 templates/admin/pages/page/menu.html:56
+msgid "Draft"
+msgstr "Kladde"
+
+#: models.py:51 templates/admin/pages/page/change_list_table.html:9
+msgid "author"
+msgstr "forfatter"
+
+#: models.py:53
+msgid "parent"
+msgstr "forældre"
+
+#: models.py:54 models.py:302
+msgid "creation date"
+msgstr "skabelsesdato"
+
+#: models.py:56
+msgid "publication date"
+msgstr "offentliggørelsesdato"
+
+#: models.py:57
+msgid ""
+"When the page should go live.\n"
+"            Status must be \"Published\" for page to go live."
+msgstr ""
+"Hvornår siden skal gøres tilgængelig online.\n"
+"	     Status skal være \"Offentliggjort\" for at en side kan gøres tilgængelig online."
+
+#: models.py:59
+msgid "publication end date"
+msgstr "offentliggørelses-slutdato"
+
+#: models.py:60
+msgid ""
+"When to expire the page.\n"
+"            Leave empty to never expire."
+msgstr ""
+"Hvornår siden skal udløbe.\n"
+"	     Efterlad tom for at indikere ingen udløb."
+
+#: models.py:63
+msgid "last modification date"
+msgstr "sidste ændringsdato"
+
+#: models.py:65
+msgid "status"
+msgstr "status"
+
+#: models.py:66 templates/admin/pages/page/change_list_table.html:8
+msgid "template"
+msgstr "skabelon"
+
+#: models.py:71
+msgid "The site(s) the page is accessible at."
+msgstr "Websiderne siden er tilgængelig hos."
+
+#: models.py:72
+msgid "sites"
+msgstr "websider"
+
+#: models.py:86 models.py:279 models.py:300 admin/__init__.py:354
+msgid "page"
+msgstr "side"
+
+#: models.py:87
+msgid "pages"
+msgstr "sider"
+
+#: models.py:274
+msgid "All"
+msgstr "Alle"
+
+#: models.py:275
+msgid "This page only"
+msgstr "Kun denne side"
+
+#: models.py:276
+msgid "This page and all children"
+msgstr "Denne side og alle dets børn"
+
+#: models.py:280
+msgid "user"
+msgstr "bruger"
+
+#: models.py:281 models.py:299
+msgid "type"
+msgstr "type"
+
+#: models.py:286
+msgid "page permission"
+msgstr "siderettighed"
+
+#: models.py:287
+msgid "page permissions"
+msgstr "siderettigheder"
+
+#: models.py:297
+msgid "language"
+msgstr "sprog"
+
+#: models.py:298
+msgid "body"
+msgstr "krop"
+
+#: models.py:308
+msgid "content"
+msgstr "indhold"
+
+#: models.py:309
+msgid "contents"
+msgstr "indholdet"
+
+#: admin/__init__.py:54
+msgid "General"
+msgstr "Generelt"
+
+#: admin/__init__.py:58
+msgid "Options"
+msgstr "Indstillinger"
+
+#: admin/__init__.py:194
+msgid "Content"
+msgstr "Indhold"
+
+#: admin/__init__.py:206
+msgid "Create a new linked "
+msgstr "Skab en ny forbundet."
+
+#: admin/__init__.py:248 admin/forms.py:17
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/__init__.py:254
+msgid "Default template"
+msgstr "Standardskabelon"
+
+#: admin/__init__.py:285
+msgid "Note: This field is evaluated as template code."
+msgstr "Obs: Dette felt evalueres som skabelonkode."
+
+#: admin/forms.py:13
+msgid "Title"
+msgstr "Titel"
+
+#: admin/forms.py:19
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr ""
+"Dette slug vil blive brugt til at skabe em side-url. Den skal være unik i forhold til de "
+"andre sider på samme niveau."
+
+#: admin/forms.py:22
+msgid "Language"
+msgstr "Sprog"
+
+#: admin/forms.py:27
+msgid "Template"
+msgstr "Skabelon"
+
+#: admin/forms.py:52 admin/forms.py:54
+msgid "Another page with this slug already exists"
+msgstr "En anden side med dette slug eksisterer allerede"
+
+#: admin/forms.py:62 admin/forms.py:76
+msgid "A sibiling with this slug already exists at the root level"
+msgstr "En søskend med denne slug eksisterer allerede på rodniveauet."
+
+#: admin/forms.py:66
+msgid "A sibiling with this slug already exists at the targeted position"
+msgstr "En søskend med denne slug eksisterer allerede på den ønskede position"
+
+#: admin/forms.py:69
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Et barn med denne slug eksisterer allerede på den ønskede position"
+
+#: admin/forms.py:73
+msgid "A sibiling with this slug already exists"
+msgstr "En søskend med denne slug eksisterer allerede"
+
+#: templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Rediger"
+
+#: templates/admin/pages/page/change_form.html:17
+msgid "View on site"
+msgstr "Vis på siden"
+
+#: templates/admin/pages/page/change_form.html:30
+msgid "Translation helper"
+msgstr "Oversættelseshjælper"
+
+#: templates/admin/pages/page/change_form.html:32
+#: templates/admin/pages/page/includes/fieldset.html:19
+msgid "Language:"
+msgstr "Sprog:"
+
+#: templates/admin/pages/page/change_list.html:4
+msgid "List of pages"
+msgstr "Liste af sider"
+
+#: templates/admin/pages/page/change_list.html:10
+msgid "Home"
+msgstr "Hjem"
+
+#: templates/admin/pages/page/change_list.html:30
+#, python-format
+msgid "Add %(name)s"
+msgstr "Tilføj %(name)s"
+
+#: templates/admin/pages/page/change_list_table.html:5
+msgid "title"
+msgstr "titel"
+
+#: templates/admin/pages/page/change_list_table.html:6
+msgid "languages"
+msgstr "sprog"
+
+#: templates/admin/pages/page/change_list_table.html:7
+msgid "published"
+msgstr "offentliggjort"
+
+#: templates/admin/pages/page/menu.html:18
+msgid "view this page"
+msgstr "vis denne side"
+
+#: templates/admin/pages/page/menu.html:19
+msgid "move this page"
+msgstr "flyt denne side"
+
+#: templates/admin/pages/page/menu.html:20
+msgid "insert a new page here"
+msgstr "indsæt en ny side her"
+
+#: templates/admin/pages/page/menu.html:21
+msgid "delete this page"
+msgstr "slet denne side"
+
+#: templates/admin/pages/page/menu.html:22
+msgid "don&#x27;t move this page"
+msgstr "flyt ikke denne side"
+
+#: templates/admin/pages/page/menu.html:22
+#: templates/admin/pages/page/menu.html:26
+msgid "cancel"
+msgstr "annullér"
+
+#: templates/admin/pages/page/menu.html:26
+msgid "don&#x27;t insert a new page here"
+msgstr "indsæt ikke en ny side her"
+
+#: templates/admin/pages/page/menu.html:27
+msgid "insert above"
+msgstr "indsæt over"
+
+#: templates/admin/pages/page/menu.html:28
+msgid "insert below"
+msgstr "indsæt under"
+
+#: templates/admin/pages/page/menu.html:29
+msgid "insert as child"
+msgstr "indsæt som barn"
+
+#: templates/admin/pages/page/menu.html:38
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "rediger %(lang)s oversættelse"
+
+#: templates/admin/pages/page/menu.html:40
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "skab %(lang)s oversættelse"
+
+#: templates/admin/pages/page/menu.html:57
+msgid "In navigation"
+msgstr "I navigation"
+
+#: templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: templates/pages/traduction_helper.html:4
+msgid "Wanted language has not been translated yet."
+msgstr "Ønskede sprog er ikke blevet oversat endnu."
+
+#: templatetags/pages_tags.py:17
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Placeholder %(name)s har syntaksfejl: %(error)s]"

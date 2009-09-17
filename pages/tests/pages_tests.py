@@ -464,9 +464,10 @@ class PagesTestCase(TestCase):
             
     
     def test_20_ajax_language(self):
+        """Test that language is working properly"""
         c = Client()
         c.login(username= 'batiste', password='b')
-        # Activate a language other thant settings.LANGUAGE_CODE
+        # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
         self.assertEqual(c.session.get('django_language', False), 'fr-ch')
         
@@ -478,7 +479,6 @@ class PagesTestCase(TestCase):
         # Create some pages (taken from test_18_tree_admin_interface)
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
-
         response = c.post('/admin/pages/page/add/', page_data)
         
         root_page = Content.objects.get_content_slug_by_slug('root').page
@@ -612,7 +612,7 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/%d/change-status/' %
             page.id, {'status':Page.DRAFT})
         page = Content.objects.get_content_slug_by_slug('page-1').page
-        self.assertEqual(page.status, 0)
+        self.assertEqual(page.status, Page.DRAFT)
 
         url = '/admin/pages/page/%d/modify-content/title/en-us/' % page.id
         response = c.post(url, {'content': 'test content'})

@@ -295,13 +295,18 @@ do_get_content = register.tag('get_content', do_get_content)
 class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
+        from django.http import Http404
         request = context['request']
         try:
             page_dict = details(request, only_context=True)
             context.update(page_dict)
-        except Exception, e:
-            context.update({'current_page': Page()})
-            pass
+        except Http404:
+            pages = Page.objects.navigation().order_by("tree_id")
+            if pages:
+                current_page = Page.objects.published().order_by("tree_id")[0]
+            else:
+                current_page = Page()
+            context.update({'pages': pages, 'current_page':current_page})
         return ''
 
 def do_load_pages(parser, token):

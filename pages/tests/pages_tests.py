@@ -3,10 +3,13 @@
 import django
 from django.test import TestCase
 from django.conf import settings
-from pages.models import Page, Content, PageAlias
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response
+
+from pages.models import Page, Content, PageAlias
 
 class PagesTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -671,10 +674,28 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/pages/downloads-page', 301)
 
     def test_27_bug_152(self):
-        # http://code.google.com/p/django-page-cms/issues/detail?id=152
+        """Test bug 152
+        http://code.google.com/p/django-page-cms/issues/detail?id=152"""
         from pages.utils import get_placeholders
         self.assertEqual(
             str(get_placeholders('tests/test1.html')),
             "[<Placeholder Node: body>]"
         )
+
+    def test_28_bug_162(self):
+        """Test bug 162
+        http://code.google.com/p/django-page-cms/issues/detail?id=162"""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'test-162-title'
+        page_data['slug'] = 'test-162-slug'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        temp = loader.get_template('tests/test2.html')
+        render = temp.render(RequestContext(request, {}))
+        self.assertTrue('test-162-title' in render)
+        self.assertTrue('test-162-slug' in render)
         

@@ -609,8 +609,8 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         page = Content.objects.get_content_slug_by_slug('page-1').page
         self.assertEqual(page.status, 1)
-        response = c.post('/admin/pages/page/%d/change-status-draft/' %
-            page.id)
+        response = c.post('/admin/pages/page/%d/change-status/' %
+            page.id, {'status':Page.DRAFT})
         page = Content.objects.get_content_slug_by_slug('page-1').page
         self.assertEqual(page.status, 0)
 

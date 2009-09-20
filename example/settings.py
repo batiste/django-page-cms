@@ -150,6 +150,7 @@ PAGE_TEMPLATES = (
 )
 
 PAGE_SANITIZE_USER_INPUT = False
+PAGE_LINK_EDITOR = ['WYMEditor']
 
 # A test runner that use the test coverage module
 TEST_RUNNER = "test_runner.run_tests"

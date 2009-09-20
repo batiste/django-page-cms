@@ -50,13 +50,13 @@ def get_pagelink_absolute_url(page, language=None):
     """
     get the url of this page, adding parent's slug - with not cache usage
     """
-    url = u'%s/' % page.slug(language)
+    url = u'%s' % page.slug(language)
     for ancestor in page.get_ancestors(ascending=True):
         url = ancestor.slug(language) + u'/' + url
 
     return reverse('pages-root') + url
 
-# (extra) pagelink    
+# (extra) pagelink
 def valide_url(value):
     """
     return 1 if URL is validate
@@ -78,6 +78,8 @@ def valide_url(value):
         return 0
     return 1
 
+page_id_regexp = re.compile('^page_[0-9]+$')
+
 # for pagelink
 def get_body_pagelink_ids(page):
     """
@@ -95,10 +97,10 @@ def get_body_pagelink_ids(page):
                     body = BeautifulSoup(content.body)
                     # find page link ID
                     tags = body.findAll('a', \
-                                    {'class': re.compile('^page_[0-9]*$')})
+                                    {'class': page_id_regexp})
                     for tag in tags:
-                        pagelink_ids.append(tag['class'] \
-                                        .replace('page_',''))
+                        pagelink_ids.append(int(tag['class'] \
+                                        .replace('page_','')))
                 except Content.DoesNotExist:
                     pass
 
@@ -108,8 +110,6 @@ def get_body_pagelink_ids(page):
         return None
 
 PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
-
-page_id_regexp = re.compile('^page_[0-9]*$')
 
 # for pagelink
 def set_body_pagelink(page, initial_pagelink_ids=None):
@@ -152,10 +152,7 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
                             if 'http://' in tag.get('href','') \
                             and not valide_url(tag['href']):
                                 externallink_broken += 1
-                                tag.replaceWith('<a class="externallink_broken" title="'
-                                        +tag.get('title', '')
-                                        +'" href="'+tag['href']+'">'
-                                        +tag.string.strip()+'</a>')
+                                tag['class'] = 'externallink_broken'
                         else:
                             # remove empty tag (prevent false-positive)
                             tag.extract()
@@ -174,7 +171,7 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
 
     # set/update 'pagelink' of pages concerned
     for pk, obj in Page.objects.in_bulk(pagelink_ids).items():
-        if obj.pagelink is not None:            
+        if obj.pagelink is not None:
             obj_pagelink_ids = obj.pagelink.split(',')
             if obj_pagelink_ids[0] !='':
                 if str(page.id) not in obj_pagelink_ids:
@@ -191,7 +188,7 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
         # set/update all link 'a' of body content
         for placeholder in get_placeholders(page.get_template()):
             if placeholder.widget in settings.PAGE_LINK_EDITOR:
-                content_dict = {}                
+                content_dict = {}
                 for language in page.get_languages():
                     try:
                         content = Content.objects.filter(
@@ -203,12 +200,8 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
                                         +str(obj.id)})
                         for tag in tags:
                             if tag.string and tag.string.strip():
-                                tag.replaceWith('<a class="page_'
-                                        +str(obj.id)+'" title="'
-                                        +obj.title(language) \
-                                        +'" href="'
-                                        +get_pagelink_absolute_url(obj, language)
-                                        +'">'+tag.string.strip()+'</a>')
+                                tag['title'] = obj.title(language)
+                                tag['href'] = get_pagelink_absolute_url(obj, language)
                         content.body = unicode(body)
                         content.save()
                         content_dict[language] = content.body
@@ -247,29 +240,25 @@ def update_body_pagelink(page):
             for pk, obj in Page.objects.in_bulk(pagelink_ids).items():
                 for placeholder in get_placeholders(obj.get_template()):
                     if placeholder.widget in settings.PAGE_LINK_EDITOR:
-                        content_dict = {}                        
+                        content_dict = {}
                         for language in obj.get_languages():
                             try:
                                 content = Content.objects.filter(
                                             language=language, 
                                             type=placeholder.name, 
                                             page=obj).latest()
-                                body = BeautifulSoup(content.body)                    
+                                body = BeautifulSoup(content.body)
                                 tags = body.findAll('a', attrs={'class': 'page_'
-                                                        +str(page.id)})                            
+                                                        +str(page.id)})
                                 for tag in tags:
                                     if tag.string and tag.string.strip():
-                                        tag.replaceWith('<a class="page_'
-                                                +str(page.id)+'" title="'
-                                                +page.title(language)
-                                                +'" href="'
-                                                +get_pagelink_absolute_url(page, language)+'">'
-                                                +tag.string.strip()+'</a>')
+                                        tag['title'] = obj.title(language)
+                                        tag['href'] = get_pagelink_absolute_url(obj, language)
                                 content.body = unicode(body)
                                 content.save()
                                 content_dict[language] = content.body
                             except Content.DoesNotExist:
-                                content_dict[language] = ''              
+                                content_dict[language] = ''
                         cache.set(PAGE_CONTENT_DICT_KEY % 
                             (str(obj.id), placeholder.name), content_dict)
 
@@ -290,20 +279,16 @@ def update_body_pagelink(page):
                                                 page=obj).latest()
                                     body = BeautifulSoup(content.body)
                                     tags = body.findAll('a', attrs={'class': 'page_'
-                                                        +str(page.id)})                                    
+                                                        +str(page.id)})
                                     for tag in tags:
                                         if tag.string and tag.string.strip():
-                                            tag.replaceWith('<a class="page_'
-                                                    +str(page.id)+'" title="'
-                                                    +page.title(language)
-                                                    +'" href="'
-                                                    +get_pagelink_absolute_url(page, language)+'">'
-                                                    +tag.string.strip()+'</a>')
-                                    content.body = unicode(body)                          
+                                            tag['title'] = page.title(language)
+                                            tag['href'] = get_pagelink_absolute_url(page, language)
+                                    content.body = unicode(body)
                                     content.save() 
                                     content_dict[language] = content.body
                                 except Content.DoesNotExist:
-                                    content_dict[language] = ''                    
+                                    content_dict[language] = ''
                             cache.set(PAGE_CONTENT_DICT_KEY % 
                                 (str(obj.id), placeholder.name), content_dict)
 
@@ -318,7 +303,7 @@ def delete_body_pagelink_by_language(page, language):
         if pagelink_ids[0] !='':
             for pk, obj in Page.objects.in_bulk(pagelink_ids).items():
                 if obj.id != page.id:
-                    obj_pagelink_broken = obj_externallink_broken = 0   
+                    obj_pagelink_broken = obj_externallink_broken = 0
                     for placeholder in get_placeholders(obj.get_template()):
                         if placeholder.widget in settings.PAGE_LINK_EDITOR:
                             for lang in obj.get_languages():
@@ -334,17 +319,12 @@ def delete_body_pagelink_by_language(page, language):
                                             if tag.get('class',''):
                                                 # for the removed language
                                                 if lang == language:
-                                                    # finf link(s) with the page_id > set link to broken
-                                                    if tag['class'] == 'page_' \
-                                                        +str(page.id):
+                                                    # if link(s) with the page_id > set link to broken
+                                                    if tag['class'] == 'page_' +str(page.id):
                                                         obj_pagelink_broken += 1
-                                                        tag.replaceWith('<a class="pagelink_broken" \
-                                                                title="'+page.title(language)
-                                                                +'" href="'
-                                                                +get_pagelink_absolute_url(page, language)
-                                                                +'">'+tag.string.strip()+'</a>')
+                                                        tag['class']="pagelink_broken"
                                                 # for other language(s)
-                                                else:                           
+                                                else:
                                                     # count already broken page link(s)
                                                     if tag['class'] == 'pagelink_broken':
                                                         obj_pagelink_broken += 1
@@ -377,7 +357,7 @@ def delete_body_pagelink_by_language(page, language):
                     tags = body.findAll('a')
                     for tag in tags:
                         if tag.string and tag.string.strip():
-                            if tag.get('class',''):                          
+                            if tag.get('class',''):
                                 if page_id_regexp.match(tag['class']):
                                     pagelink_ids.append(tag['class'] \
                                                     .replace('page_',''))

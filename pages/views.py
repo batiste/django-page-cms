@@ -62,8 +62,7 @@ def details(request, path=None, lang=None):
         raise Http404
 
     if current_page.redirect_to_url:
-        # return this object if you want to activate redirections
-        http_redirect = HttpResponsePermanentRedirect(current_page.redirect_to_url)
+        return HttpResponsePermanentRedirect(current_page.redirect_to_url)
     
     if current_page.redirect_to:
         return HttpResponsePermanentRedirect(

@@ -618,5 +618,47 @@ class PagesTestCase(TestCase):
         # calling via its alias must cause redirect
         response = c.get('/pages/index.php?page=downloads')
         self.assertRedirects(response, '/pages/downloads-page', 301)
+       
+    def test_27_page_redirect_to(self):
+        """Test page redirected to a other page."""
 
-        
+        c = Client()
+        c.login(username= 'batiste', password='b')
+
+        # create some pages
+        page_data = self.get_new_page_data()
+
+        page_data['title'] = 'Home Page Title'
+        page_data['slug'] = 'home-page-title'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+       
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'Redirected Page Title'
+        page_data['slug'] = 'redirected-page-title'
+        # set ID of first page (target)
+        page_data['redirect_to'] = 1
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        # now check whether you go to the target page.
+        response = c.get('/pages/redirected-page-title/')       
+        self.assertRedirects(response, '/pages/home-page-title', 301)
+        self.assertContains(response, "Home Page Title", 2)
+
+    def test_28_page_redirect_to_url(self):
+        """Test page redirected to extarnal url."""
+
+        c = Client()
+        c.login(username= 'batiste', password='b')
+
+        # create some pages
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'redirect-page-to-url'
+        page_data['redirect_to_url'] = 'http://code.google.com/p/django-page-cms/'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        # now check whether we can retrieve the pages.
+        response = c.get('/pages/redirect-page-to-url/')       
+        self.assertRedirects(response, 'http://code.google.com/p/django-page-cms/', 301)

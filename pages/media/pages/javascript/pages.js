@@ -78,19 +78,26 @@ pages.fade_color = function (elem, o) {
 };
 
 
-pages.update_published_icon = function (url, select, img) {
-    var opt = { 0: 'draft', 1: 'published', 3: 'hidden' };
+pages.update_published_icon = function (url, select, img, change_status) {
+    var opt = { 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' };
     var select_val = opt[$(select).val()];
     img.attr({
         'src': img.attr('src').replace(/icons\/.*/, 'loading.gif'),
         'alt': 'Loading'
     });
-    $.post(url+'change-status/', {'status':$(select).val()}, function(val) {
+    if (change_status) {
+        $.post(url+'change-status/', {'status':$(select).val()}, function(val) {
+            img.attr({
+                'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.gif'),
+                'alt': select_val
+            });
+        });
+    } else {
         img.attr({
             'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.gif'),
             'alt': select_val
         });
-    });
+    }
 };
 
 

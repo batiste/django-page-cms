@@ -111,11 +111,12 @@ class WYMEditor(Textarea):
         context = {
             'page_list': Page.objects.all().order_by('tree_id','lft'), 
             'name': name,
+            'lang': self.language[:2],
             'language': self.language,
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         context['page_link_wymeditor'] = 0
-        if 'WYMEditor' in PAGE_LINK_EDITOR:
+        if [editor for editor in PAGE_LINK_EDITOR if editor.endswith('WYMEditor')]:
             context['page_link_wymeditor'] = 1
 
         context['filebrowser'] = 0

@@ -24,7 +24,7 @@
             {% include "admin/pages/page/includes/fieldset.html" %}
             
             {% if forloop.first %}
-                {% if not add %}
+                {% if not add and traduction_languages %}
                 <fieldset class="module module-translation-helper aligned">
                     <h2>{% trans "Translation helper" %}</h2>
                     <div class="form-row">
@@ -55,6 +55,7 @@
 </div>
 <script type="text/javascript" charset="utf-8">
 <!--
+var add_form = {% if add %}1{% else %}0{% endif %};
 (function() {
     /* Hide the Sites options if not needed */
     {% if not PAGE_USE_SITE_ID %}

@@ -206,7 +206,7 @@ class PageAdmin(admin.ModelAdmin):
 
         obj.invalidate()
         if settings.PAGE_LINK_EDITOR:
-            set_body_pagelink(obj, initial_pagelink_ids) # (extra) pagelink
+            set_body_pagelink(obj, initial_pagelink_ids)
 
     def get_fieldsets(self, request, obj=None):
         """Add fieldsets of placeholders to the list of already
@@ -302,10 +302,11 @@ class PageAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_context=None):
         """The 'change' admin view for the Page model."""
-        lang = get_language_from_request(request)
+        language = get_language_from_request(request)
         extra_context = {
-            'language': lang,
-            'lang': lang,
+            'language': language,
+            # don't see where it's used
+            #'lang': current_lang,
             'page_languages': settings.PAGE_LANGUAGES,
         }
         try:
@@ -320,7 +321,7 @@ class PageAdmin(admin.ModelAdmin):
             extra_context['placeholders'] = get_placeholders(template)
             extra_context['traduction_languages'] = [l for l in
                 settings.PAGE_LANGUAGES if Content.objects.get_content(obj,
-                                                            l[0], "title")]
+                                    l[0], "title") and l[0] != language]
         extra_context['page'] = obj
         return super(PageAdmin, self).change_view(request, object_id,
                                                         extra_context)
@@ -366,7 +367,7 @@ class PageAdmin(admin.ModelAdmin):
         # HACK: overrides the changelist template and later resets it to None
         if template_name:
             self.change_list_template = template_name
-        lang = get_language_from_request(request)
+        language = get_language_from_request(request)
 
         q=request.POST.get('q', '').strip()
 
@@ -377,7 +378,7 @@ class PageAdmin(admin.ModelAdmin):
             pages = Page.objects.root()
 
         context = {
-            'lang': lang,
+            'language': language,
             'name': _("page"),
             'pages': pages,
             'opts': self.model._meta,

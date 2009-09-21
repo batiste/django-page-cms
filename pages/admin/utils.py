@@ -320,9 +320,9 @@ def delete_body_pagelink_by_language(page, language):
                                                 # for the removed language
                                                 if lang == language:
                                                     # if link(s) with the page_id > set link to broken
-                                                    if tag['class'] == 'page_' +str(page.id):
+                                                    if tag['class'] == 'page_' + str(page.id):
                                                         obj_pagelink_broken += 1
-                                                        tag['class']="pagelink_broken"
+                                                        tag['class'] = "pagelink_broken"
                                                 # for other language(s)
                                                 else:
                                                     # count already broken page link(s)

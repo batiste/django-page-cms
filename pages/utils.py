@@ -19,14 +19,7 @@ def get_placeholders(template_name):
         return []
         
     request = get_request_mock()
-
-    try:
-        # to avoid circular import
-        from pages.views import details
-        context = details(request, only_context=True)
-    except Http404:
-        context = {}
-    temp.render(RequestContext(request, context))
+    temp.render(RequestContext(request, {}))
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
     return plist

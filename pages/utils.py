@@ -8,6 +8,13 @@ from django.http import Http404
 from pages import settings
 from pages.http import get_request_mock, get_language_from_request
 
+def get_context_mock():
+    """return a mockup dictionnary to use in get_placeholders."""
+    context = {}
+    if settings.PAGE_EXTRA_CONTEXT:
+        context.update(settings.PAGE_EXTRA_CONTEXT())
+    return context
+
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.
 
@@ -19,7 +26,10 @@ def get_placeholders(template_name):
         return []
         
     request = get_request_mock()
-    temp.render(RequestContext(request, {}))
+    context = get_context_mock()
+    # I need to render the template in order to extract
+    # placeholder tags
+    temp.render(RequestContext(request, context))
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
     return plist

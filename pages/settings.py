@@ -159,3 +159,7 @@ PAGE_LINK_EDITOR = getattr(settings, 'PAGE_LINK_EDITOR', [])
 
 # pagelink url validator user agent
 PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)
+
+# This setting is a function that can be defined if you need to pass extra context
+# data to the pages templates.
+PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)

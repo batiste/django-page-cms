@@ -75,6 +75,9 @@ def details(request, path=None, lang=None):
 
     if current_page:
         context['current_page'] = current_page
+
+    if settings.PAGE_EXTRA_CONTEXT:
+        context.update(settings.PAGE_EXTRA_CONTEXT())
         
     return template_name, context
 

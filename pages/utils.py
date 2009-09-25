@@ -10,7 +10,7 @@ from pages.http import get_request_mock, get_language_from_request
 
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
-    context = {}
+    context = {'current_page':None}
     if settings.PAGE_EXTRA_CONTEXT:
         context.update(settings.PAGE_EXTRA_CONTEXT())
     return context

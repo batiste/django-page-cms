@@ -385,6 +385,9 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         if not self.page in context:
             return ''
+        # current_page can be set to None
+        if not context[self.page]:
+            return ''
 
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
         content = Content.objects.get_content(context[self.page], lang,

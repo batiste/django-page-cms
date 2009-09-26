@@ -296,7 +296,9 @@ class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
         from django.http import Http404
-        request = context['request']
+        request = context.get('request', None)
+        if request is None:
+            return ''
         try:
             page_dict = details(request, only_context=True)
             context.update(page_dict)

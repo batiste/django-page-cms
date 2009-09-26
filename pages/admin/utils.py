@@ -222,7 +222,7 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
                     if update_pagelink_ids[0] !='' \
                     and str(page.id) in update_pagelink_ids:
                         update_pagelink_ids.remove(str(page.id))
-                        if update_pagelink_ids[0] !='':
+                        if len(update_pagelink_ids) and update_pagelink_ids[0]:
                             obj.pagelink = ','.join(update_pagelink_ids)
                         else:
                             obj.pagelink = ''

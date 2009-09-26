@@ -112,9 +112,10 @@ class PagesTestCase(TestCase):
         """Test the site framework, and test if it's possible to
         disable it"""
 
-        # this kind of hacks doesn't work anymore
-        setattr(settings, "SITE_ID", 2)
-        setattr(settings, "PAGE_USE_SITE_ID", True)
+        # this is necessary to make the test pass
+        from pages import settings as pages_settings
+        setattr(pages_settings, "SITE_ID", 2)
+        setattr(pages_settings, "PAGE_USE_SITE_ID", True)
 
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -140,7 +141,7 @@ class PagesTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_data['slug'])
         self.assertEqual(content, None)
 
-        setattr(settings, "SITE_ID", 3)
+        setattr(pages_settings, "SITE_ID", 3)
         page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertEqual(page.sites.count(), 1)
         self.assertEqual(page.sites.all()[0].id, 3)
@@ -151,7 +152,7 @@ class PagesTestCase(TestCase):
 
         # without param
         self.assertEqual(Page.objects.on_site().count(), 1)
-        setattr(settings, "SITE_ID", 2)
+        setattr(pages_settings, "SITE_ID", 2)
         self.assertEqual(Page.objects.on_site().count(), 1)
 
         page_data = self.get_new_page_data()
@@ -163,7 +164,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(Page.objects.on_site(2).count(), 2)
         self.assertEqual(Page.objects.on_site().count(), 2)
 
-        setattr(settings, "PAGE_USE_SITE_ID", False)
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
 
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)

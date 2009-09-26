@@ -78,6 +78,5 @@ class RegressionTestCase(TestCase):
         request = get_request_mock()
         temp = loader.get_template('tests/test2.html')
         render = temp.render(RequestContext(request, {}))
-        self.assertTrue('test-162-title' in render)
         self.assertTrue('test-162-slug' in render)
         

@@ -57,12 +57,12 @@ def get_pagelink_absolute_url(page, language=None):
     return reverse('pages-root') + url
 
 # (extra) pagelink
-def valide_url(value):
+def validate_url(value):
     """
-    return 1 if URL is validate
+    return ``True`` if URL is validate
     """
-    if value == u'':
-        return 1
+    if not value:
+        return True
     import urllib2
     headers = {
         "Accept": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5",
@@ -75,8 +75,8 @@ def valide_url(value):
         req = urllib2.Request(value, None, headers)
         u = urllib2.urlopen(req)
     except:
-        return 0
-    return 1
+        return False
+    return True
 
 page_id_regexp = re.compile('^page_[0-9]+$')
 
@@ -150,7 +150,7 @@ def set_body_pagelink(page, initial_pagelink_ids=None):
                             # set class 'externallink_broken' 
                             # if link return a 404
                             if 'http://' in tag.get('href','') \
-                            and not valide_url(tag['href']):
+                            and not validate_url(tag['href']):
                                 externallink_broken += 1
                                 tag['class'] = 'externallink_broken'
                         else:

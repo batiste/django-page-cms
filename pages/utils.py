@@ -5,8 +5,10 @@ from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext
 from django.http import Http404
+from django.core.cache import cache
 from pages import settings
 from pages.http import get_request_mock, get_language_from_request
+from pages.lib.BeautifulSoup import BeautifulSoup
 
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
@@ -127,21 +129,28 @@ def normalize_url(url):
         url = url[0:len(url)-1]
     return url
 
-def mark_deleted(content):
-    body = BeautifulSoup(content)
-    tags = body.findAll('a')
-    broken_links = 0
-    for tag in tags:
-        if tag.string and tag.string.strip():
-            if tag.get('class', ''):
-                # find link(s) with the page_id > set link to broken
-                if 'page_'+str(self.id) in tag['class']:
-                    obj_pagelink_broken += 1
-                    tag.replaceWith('<a class="pagelink_broken" title="' \
-                        + self.title(language) 
-                        + '"href="'+self.get_absolute_url(language) + '">'
-                        + tag.string.strip() + '</a>')
-                # count already broken page link(s)
-                if 'pagelink_broken' in tag['class']:
-                    broken_links += 1
-    return unicode(body), broken_links
+PAGE_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
+
+def filter_link(content, page, language):
+    """Transform the HTML link href to point to the targeted page
+    absolute URL.
+
+     >>> filter_link('<a href="#" class="page_1">hello</a>', 'en-us')
+     '<a href="/pages/page-1" class="page_1">hello</a>'
+    """
+    tree = BeautifulSoup(content)
+    for tag in tree.findAll('a'):
+        tag_class = tag.get('class', False)
+        if tag_class:
+            # find page link with class 'page_ID'
+            result = PAGE_CLASS_ID_REGEX.search(content)
+            if result and result.group:
+                try:
+                    # TODO: try the cache before fetching the Page object
+                    from pages.models import Page
+                    target_page = Page.objects.get(pk=int(result.group(1)))
+                    tag['href'] = target_page.get_absolute_url(language)
+                except Page.DoesNotExist:
+                    cache.set(Page.PAGE_BROKEN_LINK_KEY % page.id, True)
+                    tag['class'] = 'pagelink_broken'
+    return unicode(tree)

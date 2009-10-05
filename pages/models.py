@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 import mptt
-from pages.utils import get_placeholders, normalize_url, mark_deleted
+from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
 from pages.lib.BeautifulSoup import BeautifulSoup
@@ -59,6 +59,7 @@ class Page(models.Model):
     #PAGE_TEMPLATE_KEY = "page_%d_template"
     #PAGE_CHILDREN_KEY = "page_children_%d_%d"
     PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
+    PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
     
@@ -127,6 +128,8 @@ class Page(models.Model):
             else:
                 self.publication_date = None
         self.last_modification_date = datetime.now()
+        # let's assume there is no more broken links after a save
+        cache.delete(self.PAGE_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
 
     def _get_calculated_status(self):
@@ -144,61 +147,6 @@ class Page(models.Model):
 
         return self.status
     calculated_status = property(_get_calculated_status)
-
-    def delete(self, *args, **kwargs): 
-        """
-        Set class :attr:`pagelink_broken` of all `a` tags contained in Content
-        objects. Then clear :attr:`pagelink` from this page ID in other pages.
-        """
-        if not settings.PAGE_LINK_EDITOR:
-            super(Page, self).delete(*args, **kwargs)
-            return
-        if self.pagelink is not None:
-            pagelink_ids = self.pagelink.split(',')
-            if pagelink_ids[0] !='':
-                for pk, obj in Page.objects.in_bulk(pagelink_ids).items():
-                    if obj.id != self.id:
-                        obj.update_broken_links()
-
-        # update pagelink by remove page ID from other pages
-        find_page_regexp = r'^(.*,|)?'+str(self.id)+'(,.*|)?$'
-        for obj in Page.objects.filter(pagelink__regex=find_page_regexp):
-            if obj.id != self.id:
-                if obj.pagelink is not None:
-                    obj_pagelink_ids = obj.pagelink.split(',')
-                    if obj_pagelink_ids[0] !='':
-                        if str(self.id) in obj_pagelink_ids:
-                            obj_pagelink_ids.remove(str(self.id))
-                            if obj_pagelink_ids[0] !='':
-                                obj.pagelink = obj_pagelink_ids
-                            else:
-                                obj.pagelink = ''
-                            obj.save()
-        super(Page, self).delete(*args, **kwargs)
-
-    def update_broken_links(self):
-        all_broken_links = 0
-        for placeholder in get_placeholders(self.get_template()):
-            # this condition doesn't make that much sense to me
-            # I removed it for now
-            if placeholder.widget in settings.PAGE_LINK_EDITOR:
-                for language in self.get_languages():
-                    try:
-                        content = Content.objects.filter(
-                            language=language,
-                            type=placeholder.name,
-                            page=self).latest()
-                        content.body, broken_links = mark_deleted(
-                            content.body
-                        )
-                        content.save()
-                        all_broken_links += broken_links
-                    except Content.DoesNotExist:
-                        pass
-                cache.delete(self.PAGE_CONTENT_DICT_KEY %
-                        (self.id, placeholder.name))
-        self.pagelink_broken = all_broken_links
-        self.save()
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
@@ -352,6 +300,9 @@ class Page(models.Model):
             if self.id in permission:
                 return True
             return False
+
+    def has_broken_link(self):
+        return cache.get(self.PAGE_BROKEN_LINK_KEY % self.id)
 
     def valid_targets(self, perms="All"):
         """Return a :class:`QuerySet` of valid targets for moving a page into the

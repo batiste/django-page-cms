@@ -183,12 +183,12 @@ class ContentManager(models.Manager):
             cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype), content_dict)
 
         if language in content_dict and content_dict[language]:
-            return filter_link(content_dict[language], page, language)
+            return filter_link(content_dict[language], page, language, ctype)
 
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
                 if lang[0] in content_dict:
-                    return filter_link(content_dict[lang[0]], page, lang[0])
+                    return filter_link(content_dict[lang[0]], page, lang[0], ctype)
         return ''
 
     def get_content_slug_by_slug(self, slug):

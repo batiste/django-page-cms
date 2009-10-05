@@ -131,15 +131,22 @@ def normalize_url(url):
 
 PAGE_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
 
-def filter_link(content, page, language):
+def filter_link(content, page, language, content_type):
     """Transform the HTML link href to point to the targeted page
     absolute URL.
 
-     >>> filter_link('<a href="#" class="page_1">hello</a>', 'en-us')
+     >>> filter_link('<a class="page_1">hello</a>', page, 'en-us', body)
      '<a href="/pages/page-1" class="page_1">hello</a>'
     """
+    if not settings.PAGE_LINK_FILTER:
+        return content
+    if content_type in ('title', 'slug'):
+        return content
     tree = BeautifulSoup(content)
-    for tag in tree.findAll('a'):
+    tags = tree.findAll('a')
+    if len(tags) == 0:
+        return content
+    for tag in tags:
         tag_class = tag.get('class', False)
         if tag_class:
             # find page link with class 'page_ID'

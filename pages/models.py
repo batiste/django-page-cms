@@ -88,17 +88,6 @@ class Page(models.Model):
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
-
-    if settings.PAGE_LINK_EDITOR:
-        # If this page contain links to other pages, the pages will be added here
-        pagelink = models.CharField(_('page(s) with link(s) to this page'),
-            max_length=200, null=True, blank=True)
-        # Count all the internal broken links
-        pagelink_broken = models.PositiveSmallIntegerField(
-            _('broken page link(s) found'), null=True, blank=True)
-        # Count all the external broken links
-        externallink_broken = models.PositiveSmallIntegerField(
-            _('broken URL(s) found'), null=True, blank=True)
     
     # Managers
     objects = PageManager()

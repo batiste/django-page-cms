@@ -19,7 +19,6 @@ from pages.http import get_language_from_request, get_template_from_request
 
 from pages.utils import get_placeholders
 from pages.utils import has_page_add_permission, get_language_from_request
-#from pages.admin.utils import get_body_pagelink_ids, set_body_pagelink, update_body_pagelink
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin import widgets
 from pages.admin.forms import PageForm
@@ -171,10 +170,7 @@ class PageAdmin(admin.ModelAdmin):
         target = form.data.get('target', None)
         position = form.data.get('position', None)
         obj.save()
-
-        #if settings.PAGE_LINK_EDITOR:
-        #    initial_pagelink_ids = get_body_pagelink_ids(obj)
-
+        
         if target and position:
             try:
                 target = self.model.objects.get(pk=target)
@@ -205,8 +201,6 @@ class PageAdmin(admin.ModelAdmin):
                         placeholder.name, form.cleaned_data[placeholder.name])
 
         obj.invalidate()
-        #if settings.PAGE_LINK_EDITOR:
-        #    set_body_pagelink(obj, initial_pagelink_ids)
 
     def get_fieldsets(self, request, obj=None):
         """Add fieldsets of placeholders to the list of already
@@ -410,8 +404,6 @@ class PageAdmin(admin.ModelAdmin):
                 page.invalidate()
                 target.invalidate()
                 page.move_to(target, position)
-                #if settings.PAGE_LINK_EDITOR:
-                #    update_body_pagelink(page) # (extra) pagelink
                 return self.list_pages(request,
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')

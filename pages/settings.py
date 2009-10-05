@@ -151,11 +151,10 @@ PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 # pagelink url validator agent
 PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)
 
-# pagelink system - add a button to WYMEditor to add internal cms links 
-# + check external url validity 
-# if you active this 3 new fields will be added to the model of Page !!!
-# valid editor: 'WYMEditor'
-PAGE_LINK_EDITOR = getattr(settings, 'PAGE_LINK_EDITOR', [])
+# The page link filter enable a output filter on you content links. The goal is
+# to transform special page class into real links at the last moment. This ensure
+# that even if you have moved a page, the URL will be correct.
+PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', True)
 
 # pagelink url validator user agent
 PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)

@@ -7,7 +7,7 @@ from django.forms import TextInput, Textarea
 from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_EDITOR
+from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_FILTER
 from pages.models import Page
 from pages.utils import get_language_from_request 
 
@@ -115,9 +115,10 @@ class WYMEditor(Textarea):
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         context['page_link_wymeditor'] = 0
-        if [editor for editor in PAGE_LINK_EDITOR if editor.endswith('WYMEditor')]:
-            context['page_link_wymeditor'] = 1
-            context['page_list'] = Page.objects.all().order_by('tree_id','lft')
+        #if [editor for editor in PAGE_LINK_EDITOR if editor.endswith('WYMEditor')]:
+        # let's enable that by default
+        context['page_link_wymeditor'] = 1
+        context['page_list'] = Page.objects.all().order_by('tree_id','lft')
 
         context['filebrowser'] = 0
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):

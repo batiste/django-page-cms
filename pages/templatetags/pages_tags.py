@@ -204,6 +204,8 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     request = context['request']
     site_id = None
     children = None
+    if not lang and 'lang' in context:
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     if 'current_page' in context:
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
@@ -226,6 +228,8 @@ def pages_breadcrumb(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
+    if not lang and 'lang' in context:
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     request = context['request']
     site_id = None
     pages = page.get_ancestors()

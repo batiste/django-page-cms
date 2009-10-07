@@ -11,7 +11,8 @@ This application works out of the box and will certainly help you to get started
 Step by step installation
 =========================
 
-For a step by step installation there is complete OpenOffice document : http://django-page-cms.googlegroups.com/web/gpc-install-instructions.odt
+For a step by step installation there is `a complete OpenOffice
+document <http://django-page-cms.googlegroups.com/web/gpc-install-instructions.odt>`_. 
 
 Install by using pip
 ====================
@@ -202,7 +203,8 @@ In the the example application you have actually this::
 The sites framework
 -------------------
 
-If you want to use the http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites Django sites framework] with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
+If you want to use the http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites Django sites framework
+with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
 
     PAGE_USE_SITE_ID = True
     SITE_ID = 1

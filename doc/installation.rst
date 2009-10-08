@@ -203,7 +203,7 @@ In the the example application you have actually this::
 The sites framework
 -------------------
 
-If you want to use the http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites Django sites framework
+If you want to use the `Django sites framework <http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites>`_
 with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
 
     PAGE_USE_SITE_ID = True

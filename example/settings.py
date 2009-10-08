@@ -37,6 +37,8 @@ USE_I18N = True
 # Absolute path to the directory that holds media.
 MEDIA_ROOT = os.path.join(PROJECT_DIR, '../pages/media/')
 ADMIN_MEDIA_ROOT = os.path.join(PROJECT_DIR, '../admin_media/')
+MEDIA_URL = 'http://127.0.0.1:9000/media/'
+ADMIN_MEDIA_PREFIX = 'http://127.0.0.1:9000/admin_media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 

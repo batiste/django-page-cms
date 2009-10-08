@@ -1,10 +1,14 @@
 from coverage import coverage
-import os
+import os, sys
+os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
 from inspect import getmembers, ismodule
 
 from django.conf import settings
 from django.test.simple import run_tests as django_test_runner
 from django.db.models import get_app, get_apps
+
+test_dir = os.path.dirname(__file__)
+sys.path.insert(0, test_dir)
 
 def get_all_coverage_modules(app_module, exclude_files=[]):
     """Returns all possible modules to report coverage on, even if they
@@ -35,7 +39,7 @@ def get_all_coverage_modules(app_module, exclude_files=[]):
     return mod_list
 
 
-def run_tests(test_labels, verbosity=1, interactive=True,
+def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         extra_tests=[]):
     cov = coverage()
     cov.erase()
@@ -48,4 +52,5 @@ def run_tests(test_labels, verbosity=1, interactive=True,
     cov.stop()
     cov.html_report(modules, directory='coverage')
 
-    return results
+    sys.exit(results)
+

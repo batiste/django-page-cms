@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-page-cms',
+    test_suite = "example.test_runner.run_tests",
     version=__import__('pages').__version__,
     description='A tree based Django CMS application',
     author='Batiste Bieler',

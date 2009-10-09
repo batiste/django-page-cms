@@ -79,4 +79,29 @@ class RegressionTestCase(TestCase):
         temp = loader.get_template('tests/test2.html')
         render = temp.render(RequestContext(request, {}))
         self.assertTrue('test-162-slug' in render)
+
+    def test_29_bug_172(self):
+        """Test bug 167
+        http://code.google.com/p/django-page-cms/issues/detail?id=172"""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'title-en-us'
+        page_data['slug'] = 'slug'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page = Content.objects.get_content_slug_by_slug('slug').page
+        Content(page=page, type='title', language='fr-ch',
+            body="title-fr-ch").save()
+
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        temp = loader.get_template('tests/test3.html')
+        render = temp.render(RequestContext(request, {'page':page}))
+        self.assertTrue('title-en-us' in render)
+
+        render = temp.render(RequestContext(
+            request,
+            {'page':page, 'lang':'fr-ch'}
+        ))
+        self.assertTrue('title-fr-ch' in render)
         

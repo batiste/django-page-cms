@@ -138,7 +138,7 @@ def show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
     if not page:
         return ''
-    if not lang and 'lang' in context:
+    if not lang:
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
 
     if not page:
@@ -204,8 +204,7 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     request = context['request']
     site_id = None
     children = None
-    if not lang and 'lang' in context:
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     if 'current_page' in context:
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
@@ -228,8 +227,7 @@ def pages_breadcrumb(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
-    if not lang and 'lang' in context:
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     request = context['request']
     site_id = None
     pages = page.get_ancestors()

@@ -55,24 +55,25 @@ class PageForm(forms.ModelForm):
 
         if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if target and position:
-                try:
-                    target = Page.objects.get(pk=target)
-                except Page.DoesNotExist:
-                    if slug in [sibling.slug() for sibling in Page.objects.root()]:
-                        raise forms.ValidationError(_('A sibiling with this slug already exists at the root level'))
-                else:
-                    if position in ['right-sibling', 'left-sibling']:
-                        if slug in [sibling.slug() for sibling in target.get_siblings()]:
-                            raise forms.ValidationError(_('A sibiling with this slug already exists at the targeted position'))
-                    if position == 'first-child':
-                        if slug in [sibling.slug() for sibling in target.get_children()]:
-                            raise forms.ValidationError(_('A child with this slug already exists at the targeted position'))
+                target = Page.objects.get(pk=target)
+                if position in ['right', 'left']:
+                    slugs = [sibling.slug() for sibling in target.get_siblings()]
+                    slugs.append(target.slug())
+                    if slug in slugs:
+                        raise forms.ValidationError(
+                            _('A sibiling with this slug already exists at the targeted position'))
+                if position == 'first-child':
+                    if slug in [sibling.slug() for sibling in target.get_children()]:
+                        raise forms.ValidationError(
+                            _('A child with this slug already exists at the targeted position'))
             else:
                 if self.instance.id:
-                    if slug in [sibling.slug() for sibling in self.instance.get_siblings().exclude(id=self.instance.id)]:
-                        raise forms.ValidationError(_('A sibiling with this slug already exists'))
+                    if (slug in [sibling.slug() for sibling in
+                        self.instance.get_siblings().exclude(id=self.instance.id)]):
+                        raise forms.ValidationError(
+                            _('A sibiling with this slug already exists'))
                 else:
                     if slug in [sibling.slug() for sibling in Page.objects.root()]:
-                        raise forms.ValidationError(_('A sibiling with this slug already exists at the root level'))
-            
+                        raise forms.ValidationError(
+                            _('A sibiling with this slug already exists at the root level'))
         return slug

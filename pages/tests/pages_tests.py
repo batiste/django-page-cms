@@ -31,7 +31,9 @@ class PagesTestCase(TestCase):
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        slug_content = Content.objects.get_content_slug_by_slug(page_data['slug'])
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
         assert(slug_content is not None)
         page = slug_content.page
         self.assertEqual(page.title(), page_data['title'])
@@ -189,6 +191,7 @@ class PagesTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         page = Page.objects.all()[0]
+        self.assertEqual(page.get_languages(), ['en-us'])
 
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
@@ -364,7 +367,7 @@ class PagesTestCase(TestCase):
 
     def test_18_tree_admin_interface(self):
         """
-        Test that moving page in the tree is working properly
+        Test that moving/creating page in the tree is working properly
         using the admin interface
         """
         c = Client()
@@ -375,12 +378,14 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         
         root_page = Content.objects.get_content_slug_by_slug('root').page
+        self.assertTrue(root_page.is_first_root())
         page_data['position'] = 'first-child'
         page_data['target'] = root_page.id
         page_data['slug'] = 'child-1'
         response = c.post('/admin/pages/page/add/', page_data)
         
         child_1 = Content.objects.get_content_slug_by_slug('child-1').page
+        self.assertFalse(child_1.is_first_root())
         
         page_data['slug'] = 'child-2'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -389,18 +394,57 @@ class PagesTestCase(TestCase):
 
         self.assertEqual(str(Page.objects.all()),
             "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+        # move page 1 in the first position
         response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
             {'position':'first-child', 'target':root_page.id})
 
         self.assertEqual(str(Page.objects.all()),
             "[<Page: root>, <Page: child-1>, <Page: child-2>]")
-        
+
+        # move page 2 in the first position
         response = c.post('/admin/pages/page/%d/move-page/' % child_2.id,
             {'position': 'left', 'target': child_1.id})
         
         self.assertEqual(str(Page.objects.all()),
             "[<Page: root>, <Page: child-2>, <Page: child-1>]")
 
+        # try to create a sibling with the same slug, via left, right
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        page_data['target'] = child_2.id
+        page_data['position'] = 'left'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 200)
+
+        # try to create a sibling with the same slug, via first-child
+        page_data['target'] = root_page.id
+        page_data['position'] = 'first-child'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 200)
+        # try to create a second page 2 in root
+        del page_data['target']
+        del page_data['position']
+
+        setattr(pages_settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
+        # cannot create because slug exists
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 200)
+        # Now it should work beause the page is not a sibling
+        setattr(pages_settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Page.objects.count(), 4)
+        # Should not work because we already have sibling at the same level
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertEqual(response.status_code, 200)
+
+        # try to change the page 2 slug into page 1
+        page_data['slug'] = 'child-1'
+        response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
+        self.assertEqual(response.status_code, 200)
+        setattr(pages_settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
+        response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
+        self.assertEqual(response.status_code, 200)
 
     def test_19_tree(self):
         """

@@ -268,12 +268,6 @@ class Page(models.Model):
             if t[0] == template:
                 return t[1]
         return template
-        
-    def traductions(self):
-        langs = ""
-        for lang in self.get_languages():
-            langs += '%s, ' % lang
-        return langs[0:-2]
 
     def has_page_permission(self, request):
         """

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Convenience module that provides access to custom settings for the
-``pages`` 
-application.  Provides default settings for the ``pages`` application when the
-project ``settings`` module does not contain the appropriate settings."""
+# Convenience module that provides access to custom settings for the
+# ``pages`` application.  Provides default settings for the ``pages``
+# application when the project ``settings`` module does not contain
+# the appropriate settings.
 from os.path import join
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -74,11 +74,11 @@ PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE',
 
 # PAGE_LANGUAGE_MAPPING should be assigned a function that takes a single
 # argument, the language code of the incoming browser request.  This function
-# maps the incoming client language code to another language code, presumably 
-# one for which you have translation strings.  This is most useful if your 
+# maps the incoming client language code to another language code, presumably
+# one for which you have translation strings.  This is most useful if your
 # project only has one set of translation strings for a language like Chinese,
-# which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk`, etc., but 
-# you want to provide your Chinese translations to all Chinese browsers, not 
+# which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk`, etc., but
+# you want to provide your Chinese translations to all Chinese browsers, not
 # just those with the exact ``zh-cn``
 # locale.
 #
@@ -109,15 +109,15 @@ PAGE_USE_LANGUAGE_PREFIX = getattr(settings, 'PAGE_USE_LANGUAGE_PREFIX',
 # Assign a list of placeholders to PAGE_CONTENT_REVISION_EXCLUDE_LIST
 # to exclude them from the revision process.
 PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
-                                             'PAGE_CONTENT_REVISION_EXCLUDE_LIST', 
-                                             ())
+    'PAGE_CONTENT_REVISION_EXCLUDE_LIST', ()
+)
 
 # Set ``PAGE_SANITIZE_USER_INPUT`` to ``True`` to sanitize the user input with
 # ``html5lib``
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
 # URL that handles pages' media and uses <MEDIA_ROOT>/pages by default.
-PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL, 
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL,
                                                             'pages/'))
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
@@ -148,17 +148,12 @@ PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 #
 PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 
-# pagelink url validator agent
-PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)
-
-# The page link filter enable a output filter on you content links. The goal is
-# to transform special page class into real links at the last moment. This ensure
-# that even if you have moved a page, the URL will be correct.
+# The page link filter enable a output filter on you content links. The goal
+# is to transform special page class into real links at the last moment.
+# This ensure that even if you have moved a page, the URL will remain correct.
 PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', True)
 
-# pagelink url validator user agent
-PAGE_URL_VALIDATOR_USER_AGENT = getattr(settings, 'URL_VALIDATOR_USER_AGENT', False)
 
-# This setting is a function that can be defined if you need to pass extra context
-# data to the pages templates.
+# This setting is a function that can be defined if you need to pass extra
+# context data to the pages templates.
 PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)

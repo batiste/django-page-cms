@@ -1,5 +1,11 @@
 include INSTALL
 include LICENSE
+include AUTHORS
+include TODO
+include README
+include THANKS
+include CHANGELOG
+include NEWS
 include MANIFEST.in
 recursive-include docs *
 recursive-include pages/locale *

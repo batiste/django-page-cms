@@ -3,3 +3,4 @@
 html5lib>=0.10
 django>=1.0.2
 django-page-cms
+BeautifulSoup

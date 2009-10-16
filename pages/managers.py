@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS managers."""
+"""Django page CMS ``managers``."""
 import itertools, re
 from datetime import datetime
 from django.db import models, connection
@@ -79,7 +79,8 @@ class PageManager(models.Manager):
             publication_end_date__lte=datetime.now())
 
     def from_path(self, complete_path, lang, exclude_drafts=True):
-        """Get a page according to the page's path."""
+        """Return a :class:`Page <pages.models.Page>` according to
+        the page's path."""
         from pages.models import Content, Page
         from pages.http import get_slug_and_relative_path
         slug, path, lang = get_slug_and_relative_path(complete_path)
@@ -98,10 +99,11 @@ class PageManager(models.Manager):
         return None
 
 class ContentManager(models.Manager):
-    """Content manager methods"""
+    """:class:`Content <pages.models.Content>` manager methods"""
 
     def sanitize(self, content):
-        """Sanitize a string in order to avoid possible XSS."""
+        """Sanitize a string in order to avoid possible XSS using
+        ``html5lib``."""
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
@@ -247,7 +249,8 @@ class PagePermissionManager(models.Manager):
         return id_list
 
 class PageAliasManager(models.Manager):
-    """PageAlias manager."""
+    """:class:`PageAlias <pages.models.PageAlias>` manager."""
+    
     def from_path(self, request, path, lang):
         """
         Resolve a request to an alias. returns a :class:`PageAlias <pages.models.PageAlias>`

@@ -83,3 +83,10 @@ Http
 .. automodule:: pages.http
     :members:
     :undoc-members:
+
+Admin views
+===========
+
+.. automodule:: pages.admin.views
+    :members:
+    :undoc-members:

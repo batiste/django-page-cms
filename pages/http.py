@@ -1,4 +1,4 @@
-"""Page CMS functions related to the request object."""
+"""Page CMS functions related to the ``request`` object."""
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from pages import settings
 
 def get_request_mock():
-    """Build a request mock that can be used for testing."""
+    """Build a ``request`` mock that can be used for testing."""
     bh = BaseHandler()
     bh.load_middleware()
     request = WSGIRequest({
@@ -26,8 +26,8 @@ def get_request_mock():
     return request
 
 class AutoRenderHttpError(Exception):
-    """Cannot return context dictionary because a view returned an HTTP
-    response when a (template_name, context) tuple was expected."""
+    """Cannot return context dictionary because a view returned an
+    ``HttpResponse`` when a (template_name, context) tuple was expected."""
     pass
 
 def auto_render(func):

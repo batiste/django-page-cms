@@ -152,7 +152,7 @@ class PageAdmin(admin.ModelAdmin):
         """Displays the i18n JavaScript that the Django admin
         requires.
 
-        This takes into account the USE_I18N setting. If it's set to False, the
+        This takes into account the ``USE_I18N`` setting. If it's set to False, the
         generated JavaScript will be leaner and faster.
         """
         if global_settings.USE_I18N:
@@ -163,14 +163,15 @@ class PageAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """Move the page in the tree if necessary and save every
-        placeholder Content object.
+        placeholder :class:`Content <pages.models.Content>`.
         """
 
         language = form.cleaned_data['language']
         target = form.data.get('target', None)
         position = form.data.get('position', None)
         obj.save()
-        
+
+        # if True, we need to move the page
         if target and position:
             try:
                 target = self.model.objects.get(pk=target)
@@ -203,7 +204,8 @@ class PageAdmin(admin.ModelAdmin):
         obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):
-        """Add fieldsets of placeholders to the list of already
+        """
+        Add fieldsets of placeholders to the list of already
         existing fieldsets.
         """
         additional_fieldsets = []
@@ -235,7 +237,7 @@ class PageAdmin(admin.ModelAdmin):
         return instance
 
     def get_widget(self, name, fallback=Textarea):
-        """Given the name of a placeholder return a Widget subclass
+        """Given the name of a placeholder return a ``Widget`` subclass
         like Textarea or TextInput."""
         if name and '.' in name:
             name = str(name)
@@ -249,7 +251,8 @@ class PageAdmin(admin.ModelAdmin):
         return widget
 
     def get_form(self, request, obj=None, **kwargs):
-        """Get PageForm for the Page model and modify its fields depending on
+        """Get a :class:`Page <pages.admin.forms.PageForm>` for the
+        :class:`Page <pages.models.Page>` and modify its fields depending on
         the request."""
         form = super(PageAdmin, self).get_form(request, obj, **kwargs)
 
@@ -295,7 +298,8 @@ class PageAdmin(admin.ModelAdmin):
         return form
 
     def change_view(self, request, object_id, extra_context=None):
-        """The 'change' admin view for the Page model."""
+        """The ``change`` admin view for the
+        :class:`Page <pages.models.Page>`."""
         language = get_language_from_request(request)
         extra_context = {
             'language': language,
@@ -321,7 +325,7 @@ class PageAdmin(admin.ModelAdmin):
                                                         extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):
-        """The 'add' admin view for the Page model."""
+        """The ``add`` admin view for the :class:`Page <pages.models.Page>`."""
         extra_context = {
             'language': get_language_from_request(request),
             'page_languages': settings.PAGE_LANGUAGES,
@@ -332,7 +336,7 @@ class PageAdmin(admin.ModelAdmin):
                                                             extra_context)
 
     def has_add_permission(self, request):
-        """Return true if the current user has permission to add a new
+        """Return ``True`` if the current user has permission to add a new
         page."""
         if not settings.PAGE_PERMISSION:
             return super(PageAdmin, self).has_add_permission(request)
@@ -340,15 +344,15 @@ class PageAdmin(admin.ModelAdmin):
             return has_page_add_permission(request)
 
     def has_change_permission(self, request, obj=None):
-        """Return true if the current user has permission on the page.
-        Return the string 'All' if the user has all rights."""
+        """Return ``True`` if the current user has permission on the page.
+        Return the string ``All`` if the user has all rights."""
         if settings.PAGE_PERMISSION and obj is not None:
             return obj.has_page_permission(request)
         return super(PageAdmin, self).has_change_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        """Return true if the current user has permission on the page.
-        Return the string 'All' if the user has all rights.
+        """Return ``True``  if the current user has permission on the page.
+        Return the string ``All`` if the user has all rights.
         """
         if settings.PAGE_PERMISSION and obj is not None:
             return obj.has_page_permission(request)

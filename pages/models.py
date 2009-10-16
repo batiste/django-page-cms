@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS models."""
+"""Django page CMS ``models``."""
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -13,7 +13,6 @@ import mptt
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
-from pages.lib.BeautifulSoup import BeautifulSoup
 from pages import settings
 
 class Page(models.Model):
@@ -97,13 +96,13 @@ class Page(models.Model):
         tags = fields.TagField(null=True)
 
     class Meta:
-        """Make sure the ordering is correct."""
+        """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
         verbose_name = _('page')
         verbose_name_plural = _('pages')
 
     def save(self, *args, **kwargs):
-        """Override the save method."""
+        """Override the default ``save`` method."""
         if not self.status:
             self.status = self.DRAFT
         # Published pages should always have a publication date
@@ -162,7 +161,7 @@ class Page(models.Model):
 
     def get_languages(self):
         """
-        Return a list of all existing languages for this page.
+        Return a list of all used languages for this page.
         """
         languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
         if languages:
@@ -177,7 +176,7 @@ class Page(models.Model):
         return languages
 
     def is_first_root(self):
-        """Return true if the page is the first root page."""
+        """Return ``True`` if the page is the first root page."""
         if self.parent:
             return False
         return Page.objects.root()[0].id == self.id
@@ -285,11 +284,15 @@ class Page(models.Model):
             return False
 
     def has_broken_link(self):
+        """
+        Return ``True`` if the page have broken links to other pages
+        into the content.
+        """
         return cache.get(self.PAGE_BROKEN_LINK_KEY % self.id)
 
     def valid_targets(self, perms="All"):
-        """Return a :class:`QuerySet` of valid targets for moving a page into the
-        tree.
+        """Return a :class:`QuerySet` of valid targets for moving a page
+        into the tree.
 
         :param perms: the level of permission of the concerned user.
         """
@@ -330,7 +333,7 @@ except mptt.AlreadyRegistered:
 if settings.PAGE_PERMISSION:
     class PagePermission(models.Model):
         """
-        Page permission object
+        :class:`Page <pages.models.Page>` permission object
         """
         TYPES = (
             (0, _('All')),
@@ -353,7 +356,8 @@ if settings.PAGE_PERMISSION:
                     unicode(PagePermission.TYPES[self.type][1]))
 
 class Content(models.Model):
-    """A block of content, tied to a page, for a particular language"""
+    """A block of content, tied to a :class:`Page <pages.models.Page>`,
+    for a particular language"""
     
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
@@ -374,7 +378,7 @@ class Content(models.Model):
         return "%s :: %s" % (self.page.slug(), self.body[0:15])
 
 class PageAlias(models.Model):
-    """URL alias for a page"""
+    """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()

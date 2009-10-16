@@ -8,7 +8,6 @@ from django.http import Http404
 from django.core.cache import cache
 from pages import settings
 from pages.http import get_request_mock, get_language_from_request
-from pages.lib.BeautifulSoup import BeautifulSoup
 
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
@@ -142,6 +141,7 @@ def filter_link(content, page, language, content_type):
         return content
     if content_type in ('title', 'slug'):
         return content
+    from BeautifulSoup import BeautifulSoup
     tree = BeautifulSoup(content)
     tags = tree.findAll('a')
     if len(tags) == 0:

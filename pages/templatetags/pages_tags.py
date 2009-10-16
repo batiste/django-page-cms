@@ -16,7 +16,7 @@ register = template.Library()
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def _get_content(context, page, content_type, lang, fallback=True):
-    """Helper function used by placeholder nodes."""
+    """Helper function used by ``PlaceholderNode``."""
     if not page:
         return ''
 

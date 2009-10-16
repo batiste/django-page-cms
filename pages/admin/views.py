@@ -13,12 +13,6 @@ from pages.http import auto_render
 def change_status(request, page_id):
     """
     Switch the status of a page.
-
-    possible status:
-       0: draft
-       1: published 
-       2: expired 
-       3: hidden
     """
     if request.method == 'POST':
         page = Page.objects.get(pk=page_id)
@@ -44,8 +38,6 @@ def modify_content(request, page_id, content_id, language_id):
         page.invalidate()
         # to update last modification date
         page.save()
-        #if len(settings.PAGE_LINK_EDITOR) > 0:
-        #    set_body_pagelink(page) # (extra) pagelink
 
         return HttpResponse('ok')
     raise Http404
@@ -54,8 +46,6 @@ modify_content = staff_member_required(modify_content)
 
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
-    #if settings.PAGE_LINK_EDITOR:
-    #    delete_body_pagelink_by_language(page, language_id)
     for c in Content.objects.filter(page=page,language=language_id):
         c.delete()
     

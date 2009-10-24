@@ -15,6 +15,18 @@ register = template.Library()
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
+def get_page_from_string_or_id(page_string, lang):
+    """Return a Page object from a slug or an id."""
+    if type(page_string) == int:
+        return Page.objects.get(pk=int(page_string))
+    # if we have a string coming from some templates templates
+    if (isinstance(page_string, SafeUnicode) or
+        isinstance(page_string, unicode)):
+        if page_string.isdigit():
+            return Page.objects.get(pk=int(page_string))
+        return Page.objects.from_path(page_string, lang)
+    return page_string
+
 def _get_content(context, page, content_type, lang, fallback=True):
     """Helper function used by ``PlaceholderNode``."""
     if not page:
@@ -22,10 +34,8 @@ def _get_content(context, page, content_type, lang, fallback=True):
 
     if not lang and 'lang' in context:
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-    
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        page = Page.objects.from_path(page, lang)
+
+    page = get_page_from_string_or_id(page, lang)
 
     if not page:
         return ''
@@ -64,6 +74,7 @@ def pages_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     site_id = None
     children = page.get_children_for_frontend()
@@ -82,6 +93,7 @@ def pages_sub_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     root = page.get_root()
     children = root.get_children_for_frontend()
@@ -124,7 +136,11 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     
         {% show_content "my-page-slug" "title" %}
 
-    :param page: the page object
+    Or even the id of a page::
+
+        {% show_content 10 "title" %}
+
+    :param page: the page object, slug or id
     :param content_type: content_type used by a placeholder
     :param lang: the wanted language (default None, use the request object to know)
     :param fallback: use fallback content
@@ -136,11 +152,10 @@ show_content = register.inclusion_tag('pages/content.html',
 
 def show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
-    if not page:
-        return ''
     if not lang:
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
 
+    page = get_page_from_string_or_id(page, lang)
     if not page:
         return ''
 
@@ -161,13 +176,12 @@ def show_absolute_url(context, page, lang=None):
         {% show_absolute_url "my-page-slug" %}
 
     Keyword arguments:
-    :param page: the page object or a slug string
+    :param page: the page object, slug or id
     :param lang: the wanted language (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-    # if the page is a SafeUnicode, try to use it like a slug
-    if isinstance(page, SafeUnicode) or isinstance(page, unicode):
-        page = Page.objects.from_path(page, lang)
+    if not lang:
+        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
     if not page:
         return {'content':''}
     url = page.get_absolute_url(language=lang)
@@ -201,10 +215,11 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
     request = context['request']
     site_id = None
     children = None
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     if 'current_page' in context:
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
@@ -228,6 +243,7 @@ def pages_breadcrumb(context, page, url='/'):
     :param url: not used anymore
     """
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
     request = context['request']
     site_id = None
     pages = page.get_ancestors()
@@ -273,7 +289,7 @@ def do_get_content(parser, token):
     
         {% get_content page type [lang] as name %}
 
-    :param page: the page object
+    :param page: the page object, slug or id
     :param type: content_type used by a placeholder
     :param name: name of the context variable to store the content in
     :param lang: the wanted language

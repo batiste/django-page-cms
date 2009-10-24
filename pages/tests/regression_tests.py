@@ -105,3 +105,21 @@ class RegressionTestCase(TestCase):
         ))
         self.assertTrue('title-fr-ch' in render)
         
+
+    def test_30_page_id_in_template(self):
+        """Get a page in the templates via the page id."""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'title-en-us'
+        page_data['slug'] = 'slug'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page = Content.objects.get_content_slug_by_slug('slug').page
+
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        temp = loader.get_template('tests/test4.html')
+        render = temp.render(RequestContext(request, {}))
+        self.assertTrue('title-en-us' in render)
+
+        

@@ -122,4 +122,13 @@ class RegressionTestCase(TestCase):
         render = temp.render(RequestContext(request, {}))
         self.assertTrue('title-en-us' in render)
 
+    def test_31_bug_178(self):
+        """http://code.google.com/p/django-page-cms/issues/detail?id=178"""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        temp = loader.get_template('tests/test5.html')
+        render = temp.render(RequestContext(request, {'page':None}))
+
         

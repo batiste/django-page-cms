@@ -77,7 +77,8 @@ def pages_menu(context, page, url='/'):
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     site_id = None
-    children = page.get_children_for_frontend()
+    if page:
+        children = page.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -95,8 +96,9 @@ def pages_sub_menu(context, page, url='/'):
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
-    root = page.get_root()
-    children = root.get_children_for_frontend()
+    if page:
+        root = page.get_root()
+        children = root.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']
     return locals()
@@ -246,7 +248,8 @@ def pages_breadcrumb(context, page, url='/'):
     page = get_page_from_string_or_id(page, lang)
     request = context['request']
     site_id = None
-    pages = page.get_ancestors()
+    if page:
+        pages = page.get_ancestors()
     return locals()
 pages_breadcrumb = register.inclusion_tag(
     'pages/breadcrumb.html',

@@ -4,6 +4,9 @@ from setuptools import setup, find_packages
 setup(
     name='django-page-cms',
     test_suite = "example.test_runner.run_tests",
+    test_requires = (
+        'coverage',
+    ),
     version=__import__('pages').__version__,
     description='A tree based Django CMS application',
     author='Batiste Bieler',
@@ -11,6 +14,8 @@ setup(
     url='http://code.google.com/p/django-page-cms/',
     download_url='http://code.google.com/p/django-page-cms/downloads/list',
     requires=(
+        'BeautifulSoup',
+        'Django',
         'html5lib (>=0.10)',
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt

@@ -141,4 +141,16 @@ class RegressionTestCase(TestCase):
             Content.objects.get_content(page, 'fr-ch', 'new_type', True),
             'toto'
         )
+
+    def test_33_bug_156(self):
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        page_data['title'] = 'title &amp;'
+        response = c.post('/admin/pages/page/add/', page_data)
+        page1 = Content.objects.get_content_slug_by_slug('page1').page
+        page1.invalidate()
+        c = Content.objects.get_content(page1, 'en-us', 'title')
+        self.assertEqual(c, page_data['title'])
         

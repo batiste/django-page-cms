@@ -149,7 +149,7 @@ PAGE_TEMPLATES = (
     ('pages/editor.html', 'raw editor'),
 )
 
-PAGE_SANITIZE_USER_INPUT = False
+PAGE_SANITIZE_USER_INPUT = True
 
 # A test runner that use the test coverage module
 TEST_RUNNER = "test_runner.run_tests"

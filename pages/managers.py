@@ -189,7 +189,7 @@ class ContentManager(models.Manager):
 
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
-                if lang[0] in content_dict:
+                if lang[0] in content_dict and content_dict[lang[0]]:
                     return filter_link(content_dict[lang[0]], page, lang[0], ctype)
         return ''
 

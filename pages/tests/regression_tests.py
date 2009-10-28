@@ -108,27 +108,37 @@ class RegressionTestCase(TestCase):
 
     def test_30_page_id_in_template(self):
         """Get a page in the templates via the page id."""
-        c = Client()
-        c.login(username= 'batiste', password='b')
-        page_data = self.get_new_page_data()
-        page_data['title'] = 'title-en-us'
-        page_data['slug'] = 'slug'
-        response = c.post('/admin/pages/page/add/', page_data)
-        page = Content.objects.get_content_slug_by_slug('slug').page
-
+        page = self.create_new_page()
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('tests/test4.html')
         render = temp.render(RequestContext(request, {}))
-        self.assertTrue('title-en-us' in render)
+        self.assertTrue(page.title() in render)
 
     def test_31_bug_178(self):
         """http://code.google.com/p/django-page-cms/issues/detail?id=178"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('tests/test5.html')
         render = temp.render(RequestContext(request, {'page':None}))
 
+    def test_32_language_fallback_bug(self):
+        """Language fallback doesn't work properly."""
+        page = self.create_new_page()
+        
+        c = Content(page=page, type='new_type', body='toto', language='en-us')
+        c.save()
+
+        self.assertEqual(
+            Content.objects.get_content(page, 'en-us', 'new_type'),
+            'toto'
+        )
+        self.assertEqual(
+            Content.objects.get_content(page, 'fr-ch', 'new_type'),
+            ''
+        )
+        self.assertEqual(
+            Content.objects.get_content(page, 'fr-ch', 'new_type', True),
+            'toto'
+        )
         

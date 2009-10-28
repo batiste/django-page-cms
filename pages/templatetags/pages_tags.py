@@ -145,7 +145,7 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     :param page: the page object, slug or id
     :param content_type: content_type used by a placeholder
     :param lang: the wanted language (default None, use the request object to know)
-    :param fallback: use fallback content
+    :param fallback: use fallback content from other language
     """
     return {'content':_get_content(context, page, content_type, lang,
                                                                 fallback)}

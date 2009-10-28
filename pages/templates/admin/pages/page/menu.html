@@ -12,7 +12,10 @@
                         <img class="expand-loading" src="{{ PAGES_MEDIA_URL }}images/loading.gif" alt="loading" />
                     </a>
                 {% endif %} 
-                <a href="{{ url }}{{ page.id }}/" class="title changelink {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">{% show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %} <img class="redirected" src="{{ PAGES_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
+                <a href="{{ url }}{{ page.id }}/" class="title changelink
+                {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
+                {% show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
+                <img class="redirected" src="{{ PAGES_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
 
                 {% if page.has_broken_link %}
                     <span title="{% trans "This page contain broken links" %}" class="pagelink-broken">PL</span>

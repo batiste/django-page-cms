@@ -51,6 +51,5 @@ def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         extra_tests)
     cov.stop()
     cov.html_report(modules, directory='coverage')
-
     sys.exit(results)
 

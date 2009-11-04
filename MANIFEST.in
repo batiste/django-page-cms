@@ -11,5 +11,3 @@ recursive-include docs *
 recursive-include pages/locale *
 recursive-include pages/media *
 recursive-include pages/templates *
-recursive-include example/fixtures *
-recursive-include example/templates *

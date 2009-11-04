@@ -1,6 +1,6 @@
 -e svn+http://django-mptt.googlecode.com/svn/trunk@119#egg=django-mptt
 -e svn+http://django-tagging.googlecode.com/svn/trunk@154#egg=django-tagging
 html5lib>=0.10
-django>=1.0.2
+django>=1.1.0
 django-page-cms
 BeautifulSoup

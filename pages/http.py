@@ -55,7 +55,7 @@ def auto_render(func):
                             context_instance=RequestContext(request))
     return _dec
 
-def get_slug_and_relative_path(path):
+def get_slug_and_relative_path(path, lang=None):
     """Return the page's slug and relative path."""
     root = reverse('pages-root')
     if path.startswith(root):
@@ -63,7 +63,6 @@ def get_slug_and_relative_path(path):
     if len(path) and path[-1] == '/':
         path = path[:-1]
     slug = path.split("/")[-1]
-    lang = None
     if settings.PAGE_USE_LANGUAGE_PREFIX:
         lang = path.split("/")[0]
         path = path[(len(lang) + 1):]

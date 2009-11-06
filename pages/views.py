@@ -30,7 +30,7 @@ def details(request, path=None, lang=None):
     template_name = settings.DEFAULT_PAGE_TEMPLATE
 
     if path is None:
-        slug, path, lang = get_slug_and_relative_path(request.path)
+        slug, path, lang = get_slug_and_relative_path(request.path, lang)
 
     if lang is None:
         lang = get_language_from_request(request)

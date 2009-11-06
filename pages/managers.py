@@ -83,7 +83,7 @@ class PageManager(models.Manager):
         the page's path."""
         from pages.models import Content, Page
         from pages.http import get_slug_and_relative_path
-        slug, path, lang = get_slug_and_relative_path(complete_path)
+        slug, path, lang = get_slug_and_relative_path(complete_path, lang)
         page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)
         if exclude_drafts:

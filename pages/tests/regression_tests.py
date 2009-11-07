@@ -153,4 +153,26 @@ class RegressionTestCase(TestCase):
         page1.invalidate()
         c = Content.objects.get_content(page1, 'en-us', 'title')
         self.assertEqual(c, page_data['title'])
+
+    def test_34_bug_181(self):
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data(draft=True)
+        page_data['slug'] = 'page1'
+        
+        # create a draft page and ensure we can view it
+        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.get('/pages/page1/')
+        self.assertEqual(response.status_code, 200)
+
+        # logout and we should get a 404
+        c.logout()
+        response = c.get('/pages/page1/')
+        self.assertEqual(response.status_code, 404)
+
+        # login as a non staff user and we should get a 404
+        c.login(username= 'nonstaff', password='b')
+        response = c.get('/pages/page1/')
+        self.assertEqual(response.status_code, 404)
+
         

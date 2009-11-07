@@ -44,8 +44,9 @@ def details(request, path=None, lang=None):
     if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
         raise Http404
 
+    exclude_drafts = not(request.user.is_authenticated() and request.user.is_staff)
     if path:
-        current_page = Page.objects.from_path(path, lang)
+        current_page = Page.objects.from_path(path, lang, exclude_drafts=exclude_drafts)
     elif pages:
         current_page = Page.objects.published().order_by("tree_id")[0]
 

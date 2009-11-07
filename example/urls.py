@@ -8,8 +8,6 @@ urlpatterns = patterns('',
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^pages/', include('pages.urls')),
     (r'^admin/', include(admin.site.urls)),
-    # DEPRECATED. This function is the old way of handling URL
-    #(r'^admin/(.*)', admin.site.root),
 )
 
 if settings.DEBUG:

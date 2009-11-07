@@ -82,45 +82,6 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/pages_form.js',
         )]
 
-    def __call__(self, request, url):
-        """
-        Delegate to the appropriate method, based on the URL.
-
-        DEPRECATED. This function is the old way of handling URL resolution, and
-        is deprecated in favor of real URL resolution -- see ``get_urls()``.
-        """
-
-        # Delegate to the appropriate method, based on the URL.
-        if url is None:
-            return self.list_pages(request)
-        elif url == 'jsi18n':
-            return self.i18n_javascript(request)
-        elif 'traduction' in url:
-            page_id, action, language_id = url.split('/')
-            return traduction(request, unquote(page_id), unquote(language_id))
-        elif 'get-content' in url:
-            page_id, action, content_id = url.split('/')
-            return get_content(request, unquote(page_id), unquote(content_id))
-        elif 'modify-content' in url:
-            page_id, action, content_id, language_id = url.split('/')
-            return modify_content(request, unquote(page_id),
-                                    unquote(content_id), unquote(language_id))
-        elif 'delete-content' in url:
-            page_id, action, language_id = url.split('/')
-            return delete_content(request, unquote(page_id), unquote(language_id))
-        elif url.endswith('/sub-menu'):
-            return sub_menu(request, unquote(url[:-9]))
-        elif url.endswith('/move-page'):
-            return self.move_page(request, unquote(url[:-10]))
-        elif url.endswith('/change-status'):
-            page_id, action = url.split('/')
-            return change_status(request, page_id)
-
-        ret = super(PageAdmin, self).__call__(request, url)
-
-        return ret
-
-
     def urls(self):
         from django.conf.urls.defaults import patterns, url, include
 

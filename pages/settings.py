@@ -151,7 +151,7 @@ PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 # The page link filter enable a output filter on you content links. The goal
 # is to transform special page class into real links at the last moment.
 # This ensure that even if you have moved a page, the URL will remain correct.
-PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', True)
+PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', False)
 
 
 # This setting is a function that can be defined if you need to pass extra

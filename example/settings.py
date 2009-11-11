@@ -34,8 +34,10 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+# Absolute path to the directory that holds pages media.
+PAGES_MEDIA_ROOT = os.path.join(PROJECT_DIR, os.pardir, 'pages', 'media', 'pages')
+MEDIA_ROOT = 'media'
 # Absolute path to the directory that holds media.
-MEDIA_ROOT = os.path.join(PROJECT_DIR, os.pardir, 'pages', 'media', '')
 ADMIN_MEDIA_ROOT = os.path.join(PROJECT_DIR, os.pardir, 'admin_media', '')
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'

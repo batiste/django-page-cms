@@ -5,11 +5,14 @@ from django.utils.safestring import SafeUnicode, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, TemplateSyntaxError
 from django.conf import settings as global_settings
+from django.forms import Widget, Textarea, ImageField, CharField
+from inspect import isclass, getmembers
 import urllib
 
 from pages import settings
 from pages.models import Content, Page
 from pages.views import details
+from pages.admin import widgets
 
 register = template.Library()
 
@@ -354,6 +357,8 @@ class PlaceholderNode(template.Node):
     :param as_varname: if ``as_varname`` is defined, no value will be returned.
         A variable will be created in the context with the defined name.
     """
+
+    field = CharField
     
     def __init__(self, name, page=None, widget=None, parsed=False, as_varname=None):
         self.page = page or 'current_page'
@@ -362,6 +367,34 @@ class PlaceholderNode(template.Node):
         self.parsed = parsed
         self.as_varname = as_varname
         self.found_in_block = None
+
+    def get_widget(self, language, fallback=Textarea):
+        """Given the name of a placeholder return a ``Widget`` subclass
+        like Textarea or TextInput."""
+        name = self.widget
+        if name and '.' in name:
+            name = str(name)
+            module_name, class_name = name.rsplit('.', 1)
+            module = __import__(module_name, {}, {}, [class_name])
+            widget_class = getattr(module, class_name, fallback)
+        else:
+            widget_class = dict(getmembers(widgets, isclass)).get(name, fallback)
+        if not isinstance(widget_class(), Widget):
+            widget_class = fallback
+        try:
+            widget = widget_class(language=language)
+        except TypeError:
+            widget = widget_class()
+        return widget
+
+    def get_field(self, language, initial=None):
+        if self.parsed:
+            help_text = _('Note: This field is evaluated as template code.')
+        else:
+            help_text = ""
+        widget = self.get_widget(language)
+        return self.field(widget=widget, initial=initial,
+                    help_text=help_text, required=False)
 
     def render(self, context):
         if not self.page in context:
@@ -451,35 +484,21 @@ register.tag('placeholder', do_placeholder)
 
 
 class ImagePlaceholderNode(PlaceholderNode):
-    
+
     def __init__(self, name, *args, **kwargs):
         super(ImagePlaceholderNode, self).__init__(name, *args, **kwargs)
 
-    def render(self, context):
-        '''Pages uses _test_ as server_name in a dummy admin rendered context
-        In admin context, we don't want to render the content of the node,
-        but instead render the admin placeholder.'''
-        # Why?
-        if (isinstance(context, RequestContext)
-            and not context['request'].META['SERVER_NAME'] == 'test'):
-            page = context['current_page']
-            placeholder = self.placeholder_node.name
-            image = Image.objects.get_or_create(
-                placeholder_name=placeholder,
-                page=page)[0]
-            if self.placeholder_node.as_varname is None:
-                return image.image_file
-            else:
-                context[self.as_varname] = image.image_file
-                return ''
-        else:
-            return self.placeholder_node.render(context)
+    def get_field(self, language, initial=None):
+        help_text = ""
+        widget = self.get_widget(language)
+        return ImageField(widget=widget, initial=initial,
+                    help_text=help_text, required=False)
 
 def do_imageplaceholder(parser, token):
     """
     Method that parse the imageplaceholder template tag.
     """
     name, params = parse_placeholder(parser, token)
-    params['widget'] = 'pages.admin.widgets.ImageField'
+    params['widget'] = 'pages.admin.widgets.ImageInput'
     return ImagePlaceholderNode(name, **params)
 register.tag('imageplaceholder', do_imageplaceholder)

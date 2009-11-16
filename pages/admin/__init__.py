@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """Page Admin module."""
 from os.path import join
-from inspect import isclass, getmembers
 
-from django.forms import Widget, TextInput, Textarea, CharField
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
@@ -20,7 +18,6 @@ from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.utils import has_page_add_permission, get_language_from_request
 from pages.admin.utils import get_connected, make_inline_admin
-from pages.admin import widgets
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
@@ -143,25 +140,41 @@ class PageAdmin(admin.ModelAdmin):
                 obj.move_to(target, position)
 
         for mandatory_placeholder in self.mandatory_placeholders:
-            Content.objects.set_or_create_content(obj, language,
-                mandatory_placeholder, form.cleaned_data[mandatory_placeholder])
+            Content.objects.set_or_create_content(
+                obj,
+                language,
+                mandatory_placeholder,
+                form.cleaned_data[mandatory_placeholder]
+            )
 
         for placeholder in get_placeholders(obj.get_template()):
-            if placeholder.name in form.cleaned_data:
+            if(placeholder.name in form.cleaned_data and placeholder.name
+                    not in self.mandatory_placeholders):
+                data = form.cleaned_data[placeholder.name]
+                # the page is being changed
                 if change:
-                    if placeholder.name not in self.mandatory_placeholders:
-                        # we need create a new content if revision is enabled
-                        if settings.PAGE_CONTENT_REVISION and placeholder.name \
-                                not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST:
-                            Content.objects.create_content_if_changed(obj, language,
-                                placeholder.name, form.cleaned_data[placeholder.name])
-                        else:
-                            Content.objects.set_or_create_content(obj, language,
-                                placeholder.name, form.cleaned_data[placeholder.name])
+                    # we need create a new content if revision is enabled
+                    if(settings.PAGE_CONTENT_REVISION and placeholder.name
+                        not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
+                        Content.objects.create_content_if_changed(
+                            obj, language,
+                            placeholder.name,
+                            data
+                        )
+                    else:
+                        Content.objects.set_or_create_content(
+                            obj, language,
+                            placeholder.name,
+                            data
+                        )
+                # the page is being added
                 else:
-                    Content.objects.set_or_create_content(obj, language,
-                        placeholder.name, form.cleaned_data[placeholder.name])
-
+                    Content.objects.set_or_create_content(
+                        obj, language,
+                        placeholder.name,
+                        data
+                    )
+        
         obj.invalidate()
 
     def get_fieldsets(self, request, obj=None):
@@ -197,20 +210,6 @@ class PageAdmin(admin.ModelAdmin):
             instance.author = request.user
         return instance
 
-    def get_widget(self, name, fallback=Textarea):
-        """Given the name of a placeholder return a ``Widget`` subclass
-        like Textarea or TextInput."""
-        if name and '.' in name:
-            name = str(name)
-            module_name, class_name = name.rsplit('.', 1)
-            module = __import__(module_name, {}, {}, [class_name])
-            widget = getattr(module, class_name, fallback)
-        else:
-            widget = dict(getmembers(widgets, isclass)).get(name, fallback)
-        if not isinstance(widget(), Widget):
-            widget = fallback
-        return widget
-
     def get_form(self, request, obj=None, **kwargs):
         """Get a :class:`Page <pages.admin.forms.PageForm>` for the
         :class:`Page <pages.models.Page>` and modify its fields depending on
@@ -235,26 +234,12 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_unicode(template)
 
         for placeholder in get_placeholders(template):
-            widget_class = self.get_widget(placeholder.widget)
-            try:
-                widget = widget_class(language=language, page=obj)
-            except TypeError:
-                widget = widget_class()
-            if placeholder.parsed:
-                help_text = _('Note: This field is evaluated as template code.')
-            else:
-                help_text = ""
             name = placeholder.name
             if obj:
                 initial = Content.objects.get_content(obj, language, name)
             else:
                 initial = None
-            if name not in self.mandatory_placeholders:
-                form.base_fields[placeholder.name] = CharField(widget=widget,
-                    initial=initial, help_text=help_text, required=False)
-            else:
-                form.base_fields[name].initial = initial
-                form.base_fields[name].help_text = help_text
+            form.base_fields[name] = placeholder.get_field(language, initial=initial)
 
         return form
 

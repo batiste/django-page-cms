@@ -208,29 +208,17 @@ class EditArea(Textarea):
             'admin/pages/page/widgets/editarea.html', context))
 
 
-class ImageField(FileInput):
+class ImageInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
         self.language = language
         self.page = page
-        super(ImageField, self).__init__(attrs)
+        super(ImageInput, self).__init__(attrs)
     
-    def render(self, name, value, attrs=None, **kwargs):
+    """def render(self, name, value, attrs=None, **kwargs):
+        print value
         if not self.page:
             field_content = _('Please save the page to show the image field')
         else:
-            try:
-                image = PageImage.objects.get(page=self.page,
-                    placeholder_name=name)
-                content_type = ContentType.objects.get_for_model(PageImage)
-                image_admin_url = reverse('admin:%s_%s_change'
-                    % (content_type.app_label, content_type.model),
-                    args=[image.id])
-                rendered_field = super(ImageField, self).render(name, image.id, attrs)
-
-            except PageImage.DoesNotExist:
-                rendered_field = super(ImageField, self).render(name, attrs)
-                current_file = None
-                image_admin_url = None
-            field_content = rendered_field
-        return mark_safe(field_content)
+            field_content = super(ImageField, self).render(name, attrs)
+        return mark_safe(field_content)"""

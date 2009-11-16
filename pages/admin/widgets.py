@@ -3,12 +3,18 @@
 in the admin via a placeholder tag in your template."""
 from os.path import join
 from django.conf import settings
-from django.forms import TextInput, Textarea
+from django.forms import TextInput, Textarea, HiddenInput, FileInput
 from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.forms.forms import pretty_name
+from django.utils.translation import ugettext as _
+
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_FILTER
-from pages.models import Page
+from pages.models import Page, PageImage
 from pages.utils import get_language_from_request 
 
 if PAGE_TAGGING:
@@ -25,11 +31,11 @@ if PAGE_TAGGING:
                 'javascript/jquery.autocomplete.min.js'
             )]
 
-        def __init__(self, language=None, attrs=None):
+        def __init__(self, language=None, attrs=None, **kwargs):
             self.language = language
             super(AutoCompleteTagInput, self).__init__(attrs)
 
-        def render(self, name, value, language=None, attrs=None):
+        def render(self, name, value, language=None, attrs=None, **kwargs):
             rendered = super(AutoCompleteTagInput, self).render(name, value, attrs)
             page_tags = Tag.objects.usage_for_model(Page)
             context = {
@@ -51,12 +57,12 @@ class RichTextarea(Textarea):
             )]
         }
 
-    def __init__(self, language=None, attrs=None):
+    def __init__(self, language=None, attrs=None, **kwargs):
         attrs = {'class': 'rte'}
         self.language = language
         super(RichTextarea, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         rendered = super(RichTextarea, self).render(name, value, attrs)
         context = {
             'name': name,
@@ -99,14 +105,14 @@ class WYMEditor(Textarea):
             js.append(join(PAGES_MEDIA_URL, 'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
         
 
-    def __init__(self, language=None, attrs=None):
+    def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
         self.attrs = {'class': 'wymeditor'}
         if attrs:
             self.attrs.update(attrs)
         super(WYMEditor, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         rendered = super(WYMEditor, self).render(name, value, attrs)
         context = {
             'name': name,
@@ -143,7 +149,7 @@ class markItUpMarkdown(Textarea):
             )]
         }
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         rendered = super(markItUpMarkdown, self).render(name, value, attrs)
         context = {
             'name': name,
@@ -167,7 +173,7 @@ class markItUpHTML(Textarea):
             )]
         }
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         rendered = super(markItUpHTML, self).render(name, value, attrs)
         context = {
             'name': name,
@@ -175,22 +181,23 @@ class markItUpHTML(Textarea):
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/markituphtml.html', context))
 
+
 class EditArea(Textarea):
-    "EditArea is a html syntax coloured widget"
+    """EditArea is a html syntax coloured widget."""
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'edit_area/edit_area_full.js',
         )]
     
         
-    def __init__(self, language=None, attrs=None):
+    def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
         self.attrs = {'class': 'editarea',}
         if attrs:
             self.attrs.update(attrs)
         super(EditArea, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, **kwargs):
         rendered = super(EditArea, self).render(name, value, attrs)
         context = {
             'name': name,
@@ -199,3 +206,31 @@ class EditArea(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/editarea.html', context))
+
+
+class ImageField(FileInput):
+
+    def __init__(self, page=None, language=None, attrs=None, **kwargs):
+        self.language = language
+        self.page = page
+        super(ImageField, self).__init__(attrs)
+    
+    def render(self, name, value, attrs=None, **kwargs):
+        if not self.page:
+            field_content = _('Please save the page to show the image field')
+        else:
+            try:
+                image = PageImage.objects.get(page=self.page,
+                    placeholder_name=name)
+                content_type = ContentType.objects.get_for_model(PageImage)
+                image_admin_url = reverse('admin:%s_%s_change'
+                    % (content_type.app_label, content_type.model),
+                    args=[image.id])
+                rendered_field = super(ImageField, self).render(name, image.id, attrs)
+
+            except PageImage.DoesNotExist:
+                rendered_field = super(ImageField, self).render(name, attrs)
+                current_file = None
+                image_admin_url = None
+            field_content = rendered_field
+        return mark_safe(field_content)

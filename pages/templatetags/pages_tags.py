@@ -342,7 +342,7 @@ do_load_pages = register.tag('load_pages', do_load_pages)
 
 class PlaceholderNode(template.Node):
     """This template node is used to output page content and
-    also in the admin to dynamically generate input fields.
+    dynamically generate input fields in the admin.
 
     :param name: the name of the placeholder you want to show/create
     :param page: the optional page object
@@ -354,42 +354,6 @@ class PlaceholderNode(template.Node):
     :param as_varname: if ``as_varname`` is defined, no value will be returned.
         A variable will be created in the context with the defined name.
     """
-    def handle_token(cls, parser, token):
-        """
-        Method that parse the template tag syntax following this syntax::
-
-            {% placeholder <name> [on <page>] [with <widget>] \
-[parsed] [as <varname>] %}
-        """
-        bits = token.split_contents()
-        count = len(bits)
-        error_string = '%r tag requires at least one argument' % bits[0]
-        if count <= 1:
-            raise template.TemplateSyntaxError(error_string)
-        name = bits[1]
-        remaining = bits[2:]
-        params = {}
-        while remaining:
-            bit = remaining[0]
-            if bit not in ('as', 'on', 'with', 'parsed'):
-                raise template.TemplateSyntaxError(
-                    "%r is not an correct option for a placeholder" % bit)
-            if bit in ('as', 'on', 'with'):
-                if len(remaining) < 2:
-                    raise template.TemplateSyntaxError(
-                    "Placeholder option '%s' need a parameter" % bit)
-                if bit == 'as':
-                    params['as_varname'] = remaining[1]
-                if bit == 'with':
-                    params['widget'] = remaining[1]
-                if bit == 'on':
-                    params['page'] = remaining[1]
-                remaining = remaining[2:]
-            else:
-                params['parsed'] = True
-                remaining = remaining[1:]
-        return cls(name, **params)
-    handle_token = classmethod(handle_token)
     
     def __init__(self, name, page=None, widget=None, parsed=False, as_varname=None):
         self.page = page or 'current_page'
@@ -435,20 +399,44 @@ class PlaceholderNode(template.Node):
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name
 
+def parse_placeholder(parser, token):
+    bits = token.split_contents()
+    count = len(bits)
+    error_string = '%r tag requires at least one argument' % bits[0]
+    if count <= 1:
+        raise template.TemplateSyntaxError(error_string)
+    name = bits[1]
+    remaining = bits[2:]
+    params = {}
+    while remaining:
+        bit = remaining[0]
+        if bit not in ('as', 'on', 'with', 'parsed'):
+            raise template.TemplateSyntaxError(
+                "%r is not an correct option for a placeholder" % bit)
+        if bit in ('as', 'on', 'with'):
+            if len(remaining) < 2:
+                raise template.TemplateSyntaxError(
+                "Placeholder option '%s' need a parameter" % bit)
+            if bit == 'as':
+                params['as_varname'] = remaining[1]
+            if bit == 'with':
+                params['widget'] = remaining[1]
+            if bit == 'on':
+                params['page'] = remaining[1]
+            remaining = remaining[2:]
+        else:
+            params['parsed'] = True
+            remaining = remaining[1:]
+    return name, params
+
 def do_placeholder(parser, token):
     """
+    Method that parse the placeholder template tag.
+    
     Syntax::
 
-        {% placeholder [name] %}
-        {% placeholder [name] parsed %}
-
-        {% placeholder [name] on [page]  %}
-        {% placeholder [name] with [widget] %}
-        {% placeholder [name] on [page] with [widget] %}
-
-        {% placeholder [name] on [page] parsed %}
-        {% placeholder [name] with [widget] parsed %}
-        {% placeholder [name] on [page] with [widget] parsed %}
+        {% placeholder <name> [on <page>] [with <widget>] \
+[parsed] [as <varname>] %}
 
     Example usage::
 
@@ -457,8 +445,41 @@ def do_placeholder(parser, token):
         {% placeholder welcome with TextArea parsed as welcome_text %}
         {% placeholder teaser on next_page with TextArea parsed %}
     """
-    return PlaceholderNode.handle_token(parser, token)
-
+    name, params = parse_placeholder(parser, token)
+    return PlaceholderNode(name, **params)
 register.tag('placeholder', do_placeholder)
 
 
+class ImagePlaceholderNode(PlaceholderNode):
+    
+    def __init__(self, name, *args, **kwargs):
+        super(ImagePlaceholderNode, self).__init__(name, *args, **kwargs)
+
+    def render(self, context):
+        '''Pages uses _test_ as server_name in a dummy admin rendered context
+        In admin context, we don't want to render the content of the node,
+        but instead render the admin placeholder.'''
+        # Why?
+        if (isinstance(context, RequestContext)
+            and not context['request'].META['SERVER_NAME'] == 'test'):
+            page = context['current_page']
+            placeholder = self.placeholder_node.name
+            image = Image.objects.get_or_create(
+                placeholder_name=placeholder,
+                page=page)[0]
+            if self.placeholder_node.as_varname is None:
+                return image.image_file
+            else:
+                context[self.as_varname] = image.image_file
+                return ''
+        else:
+            return self.placeholder_node.render(context)
+
+def do_imageplaceholder(parser, token):
+    """
+    Method that parse the imageplaceholder template tag.
+    """
+    name, params = parse_placeholder(parser, token)
+    params['widget'] = 'pages.admin.widgets.ImageField'
+    return ImagePlaceholderNode(name, **params)
+register.tag('imageplaceholder', do_imageplaceholder)

@@ -237,7 +237,7 @@ class PageAdmin(admin.ModelAdmin):
         for placeholder in get_placeholders(template):
             widget_class = self.get_widget(placeholder.widget)
             try:
-                widget = widget_class(language=language)
+                widget = widget_class(language=language, page=obj)
             except TypeError:
                 widget = widget_class()
             if placeholder.parsed:

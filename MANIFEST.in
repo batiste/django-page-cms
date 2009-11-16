@@ -7,6 +7,7 @@ include THANKS
 include CHANGELOG
 include NEWS
 include MANIFEST.in
+global-exclude *pyc
 recursive-include docs *
 recursive-include pages/locale *
 recursive-include pages/media *

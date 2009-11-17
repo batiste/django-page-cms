@@ -50,7 +50,7 @@ $(function() {
         if (select.length) {
             var orig_ = select.val();
             select.change(function() {
-                if(confirm(gettext('You will loose any changes you have done to the page. Are you sure?')))
+                if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
                     $('input[name=_continue]').click();
             });
         };

@@ -429,15 +429,15 @@ a.popup:hover .help,
 }
 
 /* Status */
-.module-general .status div {
-    position: relative;
+
+.module-general #id_status {
+    width:140px;
 }
+
 .module-general .status img {
-    position: absolute;
-    top: 8px;
-    left: 8em;
     width: 10px;
     height: 10px;
+    margin-left:4px;
 }
 
 /* Options */

@@ -215,10 +215,12 @@ class ImageInput(FileInput):
         self.page = page
         super(ImageInput, self).__init__(attrs)
     
-    """def render(self, name, value, attrs=None, **kwargs):
-        print value
+    def render(self, name, value, attrs=None, **kwargs):
         if not self.page:
             field_content = _('Please save the page to show the image field')
         else:
-            field_content = super(ImageField, self).render(name, attrs)
-        return mark_safe(field_content)"""
+            field_content = ""
+            if value:
+                field_content = _("Current file: ") + value + '<br>'
+            field_content += super(ImageInput, self).render(name, attrs)
+        return mark_safe(field_content)

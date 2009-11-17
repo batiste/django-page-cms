@@ -17,6 +17,7 @@ from pages.http import get_language_from_request, get_template_from_request
 
 from pages.utils import get_placeholders
 from pages.utils import has_page_add_permission, get_language_from_request
+from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
@@ -119,7 +120,7 @@ class PageAdmin(admin.ModelAdmin):
             from django.views.i18n import null_javascript_catalog as javascript_catalog
         return javascript_catalog(request, packages='pages')
 
-    def save_model(self, request, obj, form, change):
+    def save_model(self, request, page, form, change):
         """Move the page in the tree if necessary and save every
         placeholder :class:`Content <pages.models.Content>`.
         """
@@ -127,7 +128,7 @@ class PageAdmin(admin.ModelAdmin):
         language = form.cleaned_data['language']
         target = form.data.get('target', None)
         position = form.data.get('position', None)
-        obj.save()
+        page.save()
 
         # if True, we need to move the page
         if target and position:
@@ -137,45 +138,20 @@ class PageAdmin(admin.ModelAdmin):
                 pass
             else:
                 target.invalidate()
-                obj.move_to(target, position)
+                page.move_to(target, position)
 
-        for mandatory_placeholder in self.mandatory_placeholders:
-            Content.objects.set_or_create_content(
-                obj,
-                language,
-                mandatory_placeholder,
-                form.cleaned_data[mandatory_placeholder]
-            )
+        for name in self.mandatory_placeholders:
+            data = form.cleaned_data[name]
+            placeholder = PlaceholderNode(name)
+            placeholder.save(page, language, data, change)
 
-        for placeholder in get_placeholders(obj.get_template()):
+        for placeholder in get_placeholders(page.get_template()):
             if(placeholder.name in form.cleaned_data and placeholder.name
                     not in self.mandatory_placeholders):
                 data = form.cleaned_data[placeholder.name]
-                # the page is being changed
-                if change:
-                    # we need create a new content if revision is enabled
-                    if(settings.PAGE_CONTENT_REVISION and placeholder.name
-                        not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
-                        Content.objects.create_content_if_changed(
-                            obj, language,
-                            placeholder.name,
-                            data
-                        )
-                    else:
-                        Content.objects.set_or_create_content(
-                            obj, language,
-                            placeholder.name,
-                            data
-                        )
-                # the page is being added
-                else:
-                    Content.objects.set_or_create_content(
-                        obj, language,
-                        placeholder.name,
-                        data
-                    )
+                placeholder.save(page, language, data, change)
         
-        obj.invalidate()
+        page.invalidate()
 
     def get_fieldsets(self, request, obj=None):
         """
@@ -239,7 +215,7 @@ class PageAdmin(admin.ModelAdmin):
                 initial = Content.objects.get_content(obj, language, name)
             else:
                 initial = None
-            form.base_fields[name] = placeholder.get_field(language, initial=initial)
+            form.base_fields[name] = placeholder.get_field(obj, language, initial=initial)
 
         return form
 

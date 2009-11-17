@@ -395,14 +395,3 @@ class PageAlias(models.Model):
     def __unicode__(self):
         return "%s => %s" % (self.url, self.page.get_url())
 
-
-class PageImage(models.Model):
-    """Image object for image placeholder."""
-    image_file = models.ImageField(_('image file'),
-        upload_to='pages_images_upload/',
-        blank=True)
-    placeholder_name = models.TextField(_('placeholder name'))
-    page = models.ForeignKey(Page)
-
-    def __unicode__(self):
-        return _('%s on %s' % (self.placeholder_name, self.page))

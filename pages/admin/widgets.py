@@ -14,7 +14,7 @@ from django.forms.forms import pretty_name
 from django.utils.translation import ugettext as _
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_FILTER
-from pages.models import Page, PageImage
+from pages.models import Page
 from pages.utils import get_language_from_request 
 
 if PAGE_TAGGING:

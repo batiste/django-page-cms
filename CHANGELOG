@@ -1,6 +1,11 @@
 
+Release 1.1.0
+=============
+
+ * Add a new placeholder {% imageplaceholder %} for a basic automatic image handling in the admin.
+
 Release 1.0.8
 =============
 
- * A few bug fix
+ * A few bug fix.
  * A automatic internal link system. Page link don't break even if you move the linked page.

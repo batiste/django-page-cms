@@ -130,3 +130,17 @@ Usage::
     {% placeholder [name] with EditArea %}
 
 .. image:: http://sourceforge.net/dbimage.php?id=69125&image.png
+
+
+Image placeholder
+=================
+
+You can also use a special placeholder for images::
+
+    {% imageplaceholder body-image as imgsrc %}
+    {% if imgsrc %}
+        <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
+    {% endif %}
+
+A file upload field will appears into the page admin interface.
+

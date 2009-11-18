@@ -116,9 +116,9 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
 # ``html5lib``
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
-# URL that handles pages' media and uses <MEDIA_ROOT>/pages by default.
-PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(settings.MEDIA_URL,
-                                                            'pages/'))
+# URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
+_media_url = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(_media_url, 'pages/'))
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)

@@ -4,7 +4,7 @@
 <title>
     {% show_content current_page "title" %}
 </title>
-<script type="text/javascript" src="{{ MEDIA_URL }}pages/javascript/jquery.js" /></script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}pages/javascript/jquery.js" /></script>
 <style>
     .placeholder-editable {
         border:1px #bbb solid;
@@ -114,7 +114,10 @@
         </h3>
         <div>body placeholder
             <div id="body" class="placeholder">{% placeholder body on current_page with WYMEditor parsed  %}</div>
-            {% imageplaceholder body-image %}
+            {% imageplaceholder body-image as imgsrc %}
+            {% if imgsrc %}
+                <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
+            {% endif %}
         </div>
 
         {% placeholder content2 with TinyMCE %}

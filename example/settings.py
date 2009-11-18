@@ -34,13 +34,18 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# Absolute path to the directory that holds pages media.
-PAGES_MEDIA_ROOT = os.path.join(PROJECT_DIR, os.pardir, 'pages', 'media', 'pages')
-MEDIA_ROOT = 'media'
-# Absolute path to the directory that holds media.
-ADMIN_MEDIA_ROOT = os.path.join(PROJECT_DIR, os.pardir, 'admin_media', '')
+MEDIA_ROOT = STATIC_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
+STATIC_URL = MEDIA_URL + 'static/'
+
+# Absolute path to the directory that holds pages media.
+PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
+# Absolute path to the directory that holds media.
+ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
+
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 
@@ -61,6 +66,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.media",
     "pages.context_processors.media",
+    #"staticfiles.context_processors.static_url",
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -96,6 +102,7 @@ INSTALLED_APPS = (
     'tagging',
     'pages',
     'mptt',
+    'staticfiles',
     #'tinymce',
 )
 

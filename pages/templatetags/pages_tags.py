@@ -269,14 +269,12 @@ class GetContentNode(template.Node):
         self.varname = varname
         self.lang = lang
     def render(self, context):
-        if self.lang is None:
-            lang = None
-        else:
-            lang = self.lang.resolve(context)
-        context[self.varname] = _get_content(context,
+        context[self.varname] = _get_content(
+            context,
             self.page.resolve(context),
             self.content_type.resolve(context),
-            lang)
+            self.lang
+        )
         return ''
 
 def do_get_content(parser, token):

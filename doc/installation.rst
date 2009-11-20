@@ -19,9 +19,9 @@ Install by using pip
 
 The pip install is the easiest and the recommended installation method. Use::
 
-    sudo easy_install pip
-    wget -c http://django-page-cms.googlecode.com/svn/trunk/requirements/external_apps.txt
-    sudo pip install -r external_apps.txt
+    $ sudo easy_install pip
+    $ wget -c http://django-page-cms.googlecode.com/svn/trunk/requirements/external_apps.txt
+    $ sudo pip install -r external_apps.txt
 
 Every package listed in the ``external_app.txt`` should be downloaded and installed.
 
@@ -30,9 +30,9 @@ Install by using easy_install
 
 On debian linux you can do::
 
-    sudo easy_install django
-    sudo easy_install html5lib
-    sudo easy_install django-page-cms
+    $ sudo easy_install django
+    $ sudo easy_install html5lib
+    $ sudo easy_install django-page-cms
 
 * Tagging must be installed by hand or with subversion because the available package is not
   compatible with django 1.0.
@@ -224,7 +224,7 @@ You can also look at how the example project is working to make a local setup. I
 `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
 files for you. After installation in your project just run::
 
-    http://pypi.python.org/pypi/django-staticfiles/
+    $ python manage.py build_media
 
 And the cms media files will be copied in your project's media directory.
 

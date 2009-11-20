@@ -7,6 +7,9 @@ Contents:
    :maxdepth: 2
 
    installation.rst
+   display-content.rst
+   navigation-template-tags.rst
+   
    placeholders.rst
    3rd-party-apps.rst
    page-api.rst

@@ -8,11 +8,11 @@ The syntax for placeholder is the following::
 
 A few explanations are needed:
 
-* If the **on** option is not specified the CMS will automatically
+* If the **on** option is omitted the CMS will automatically
   take the current page (by using the `current_page` context variable)
   to get the content of the placeholder.
 
-* If the **widget** option is not specified the CMS will render a simple `TextInput`.
+* If the **widget** option is omitted the CMS will render a simple `TextInput`.
 
 * If you use the keyword **parsed** the content of the placeholder
   will be evaluated as Django template, within the current context.
@@ -37,8 +37,98 @@ To clarify, here is a list of different possible syntaxes for this template tag:
 
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
-List of placeholder widgets
+
+Image placeholder
+=================
+
+You can also use a special placeholder for images::
+
+    {% imageplaceholder body-image as imgsrc %}
+    {% if imgsrc %}
+        <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
+    {% endif %}
+
+A file upload field will appears into the page admin interface.
+
+
+Create your own placeholder
 ===========================
+
+If you want to create yout own new type of placeholder,
+you can simple subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
+
+    from pages.placeholders import PlaceholderNode
+    from pages.templatetags.page_tags import parse_placeholder
+    register = template.Library()
+
+    class ContactFormPlaceholderNode(PlaceholderNode):
+
+        def __init__(self, name, *args, **kwargs):
+            ...
+
+        def get_widget(self, page, language, fallback=Textarea):
+            """Redefine this to change the widget of the field."""
+            ...
+
+        def get_field(self, page, language, initial=None):
+            """Redefine this to change the field displayed in the admin."""
+            ...
+
+        def save(self, page, language, data, change):
+            """Redefine this to change the way to save the placeholder data."""
+            ...
+
+        def render(self, context):
+            """Output the content of the node in the template."""
+            ...
+
+    def do_imageplaceholder(parser, token):
+        name, params = parse_placeholder(parser, token)
+        return ContactForm(name, **params)
+    register.tag('contactplaceholder', do_imageplaceholder)
+
+And use it your templates as a normal placeholder::
+
+    {% contactplaceholder contact %}
+
+
+Changing the widget of the common placeholder
+=============================================
+
+If you want to just redefine the widget of the default :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`
+without subclassing it, you can just you create a valid Django Widget that take an extra language paramater::
+
+    from django.forms import Textarea
+    from django.utils.safestring import mark_safe
+
+    class CustomTextarea(Textarea):
+        class Media:
+            js = ['path to the widget extra javascript']
+            css = {
+                'all': ['path to the widget extra javascript']
+            }
+
+        def __init__(self, language=None, attrs=None, **kwargs):
+            attrs = {'class': 'custom-textarea'}
+            super(CustomTextarea, self).__init__(attrs)
+
+        def render(self, name, value, attrs=None):
+            rendered = super(CustomTextarea, self).render(name, value, attrs)
+            return mark_safe("""Take a look at \
+                    example.widgets.CustomTextarea<br>""") \
+                    + rendered
+
+Create a file named widgets (or whathever you want) somewhere in one of your project's application
+and then you can simply use the placeholder syntax.
+
+If your widget is in the `example.widgets` module the syntax should look like this::
+
+    {% placeholder custom_widget_example with example.widgets.CustomTextarea parsed  %}
+
+More examples of custom widgets are available in :mod:`pages/admin/widgets.py <pages.admin.widgets>`.
+
+List of placeholder widgets shipped with the CMS
+================================================
 
 Placeholder could be rendered with different widgets
 
@@ -131,16 +221,4 @@ Usage::
 
 .. image:: http://sourceforge.net/dbimage.php?id=69125&image.png
 
-
-Image placeholder
-=================
-
-You can also use a special placeholder for images::
-
-    {% imageplaceholder body-image as imgsrc %}
-    {% if imgsrc %}
-        <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
-    {% endif %}
-
-A file upload field will appears into the page admin interface.
 

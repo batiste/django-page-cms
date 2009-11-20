@@ -2,6 +2,26 @@
 Page CMS reference API
 ======================
 
+Placeholders
+============
+
+.. automodule:: pages.placeholders
+    :members:
+    :undoc-members:
+
+Template tags
+=============
+
+.. automodule:: pages.templatetags.pages_tags
+    :members:
+
+Widgets
+=======
+
+.. automodule:: pages.admin.widgets
+    :members:
+    :undoc-members:
+
 Page Model
 ==========
 
@@ -54,19 +74,6 @@ PagePermission Manager
 ======================
 
 .. autoclass:: pages.managers.PagePermissionManager
-    :members:
-    :undoc-members:
-
-Template tags
-=============
-
-.. automodule:: pages.templatetags.pages_tags
-    :members:
-
-Widgets
-=======
-
-.. automodule:: pages.admin.widgets
     :members:
     :undoc-members:
 

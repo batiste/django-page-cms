@@ -8,12 +8,12 @@ from django.utils.safestring import SafeUnicode, mark_safe
 
 from pages import settings
 from pages.models import Content, Page
-from pages.admin import widgets
 from inspect import isclass, getmembers
 import os
 import time
 
 def parse_placeholder(parser, token):
+    """Parser that understand all the placeholder's parameters."""
     bits = token.split_contents()
     count = len(bits)
     error_string = '%r tag requires at least one argument' % bits[0]
@@ -72,6 +72,7 @@ class PlaceholderNode(template.Node):
     def get_widget(self, page, language, fallback=Textarea):
         """Given the name of a placeholder return a ``Widget`` subclass
         like Textarea or TextInput."""
+        from pages.admin import widgets
         name = self.widget
         if name and '.' in name:
             name = str(name)
@@ -89,6 +90,7 @@ class PlaceholderNode(template.Node):
         return widget
 
     def get_field(self, page, language, initial=None):
+        """The field that will be shown within the admin."""
         if self.parsed:
             help_text = _('Note: This field is evaluated as template code.')
         else:
@@ -98,6 +100,7 @@ class PlaceholderNode(template.Node):
                     help_text=help_text, required=False)
 
     def save(self, page, language, data, change):
+        """Actually save the placeholder data into the Content object."""
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
@@ -126,6 +129,7 @@ class PlaceholderNode(template.Node):
             )
 
     def render(self, context):
+        """Output the content of the node in the template."""
         if not self.page in context:
             return ''
         # current_page can be set to None

@@ -220,6 +220,13 @@ These files are standing in the ``pages/media/pages`` directory.
 To make these files accessible to your project you can simply copy them  or make a symbolic link into
 your media directory. That's necessary to have a fully functioning administration interface.
 
-You can also look at how the example project is working to make a local setup.
+You can also look at how the example project is working to make a local setup. It use the very good
+`django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
+files for you. After installation in your project just run::
+
+    http://pypi.python.org/pypi/django-staticfiles/
+
+And the cms media files will be copied in your project's media directory.
+
 
 

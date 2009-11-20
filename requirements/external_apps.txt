@@ -4,3 +4,4 @@ html5lib>=0.10
 django>=1.1.0
 django-page-cms
 BeautifulSoup
+django-staticfiles

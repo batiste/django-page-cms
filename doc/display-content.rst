@@ -2,7 +2,6 @@
 Display page's content in templates
 ===================================
 
-
 Django page CMS provide several, ready to use, template tags. To load these tags you must load them first::
 
     {% load pages_tags %}
@@ -22,8 +21,8 @@ You can also use the id of a page::
 
     {% get_content 10 "title" as content %}
 
-All the other tags where you could expect a identifiant.
-you could the page object, the slug, or the id of the page.
+In any of the content retrieval you can use either the page object, the slug,
+or the id of the page.
 
 show_content
 -----------
@@ -40,7 +39,6 @@ Show the absolute url of a page in the right language::
 
     {% show_absolute_url current_page %}
 
-
 page_menu
 ---------
 
@@ -48,7 +46,8 @@ Render a navigation nested list of all children of the given page::
 
     {% pages_menu page %}
 
-You can override the template `pages/menu.html` if you need more control on the rendering of this menu.
+You can override the template `pages/menu.html` if you need more control
+on the rendering of this menu.
 
 page_sub_menu
 -------------
@@ -59,4 +58,5 @@ for a secondary menu that is always open::
     
     {% pages_sub_menu page %}
 
-You can override the template `pages/sub_menu.html` if you need more control on the rendering of this menu.
+You can override the template `pages/sub_menu.html` if you need more
+control on the rendering of this menu.

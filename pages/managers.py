@@ -10,12 +10,29 @@ from django.core.cache import cache
 
 from pages import settings
 from pages.utils import normalize_url, filter_link
+from django.contrib.auth.models import User
 
 class PageManager(models.Manager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page settings.
     """
+
+    def populate_pages(self, parent=None, child=5, depth=5):
+        """Create a population of pages for testing purpose."""
+        from pages.models import Content
+        author = User.objects.all()[0]
+        if depth==0:
+            return
+        p = self.model(parent=parent, author=author,
+            status=self.model.PUBLISHED)
+        p.save()
+        Content(body='page-'+str(p.id), type='title',
+            language='en-us', page=p).save()
+        Content(body='page-'+str(p.id), type='slug',
+            language='en-us', page=p).save()
+        for child in range(1, child):
+            self.populate_pages(parent=p, child=child, depth=(depth-1))
     
     def on_site(self, site_id=None):
         """Return a :class:`QuerySet` of pages that are published on the site
@@ -120,7 +137,7 @@ class ContentManager(models.Manager):
         :param body: the content of the Content object.
         """
         if settings.PAGE_SANITIZE_USER_INPUT:
-            body = self.sanitize(body)       
+            body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
                                   type=ctype).latest('creation_date')

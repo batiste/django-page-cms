@@ -1,7 +1,9 @@
 
-Release 1.1.0
+Release 1.0.9
 =============
 
+ * Finish to migrate the old wiki into the sphinx documentation
+ * Fix the package so it can be installed properly with easy_install
  * Add a new placeholder {% imageplaceholder %} for a basic automatic image handling in the admin.
 
 Release 1.0.8

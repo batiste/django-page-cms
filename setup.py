@@ -21,7 +21,7 @@ setup(
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
     packages=find_packages(exclude=['example', 'example.*']),
-    include_package_data=True, # include package data under svn source control
+    #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',

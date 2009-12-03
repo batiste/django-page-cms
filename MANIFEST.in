@@ -5,10 +5,9 @@ include TODO
 include README
 include THANKS
 include CHANGELOG
-include NEWS
 include MANIFEST.in
-global-exclude *.pyc
-global-exclude *.pyo
-recursive-include *.html *.py *.po
-recursive-include docs *
+recursive-include doc *
 recursive-include pages *
+recursive-include requirements *
+global-include *.py
+global-exclude *.pyc

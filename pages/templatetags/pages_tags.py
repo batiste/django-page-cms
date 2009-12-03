@@ -9,7 +9,6 @@ import urllib
 
 from pages import settings
 from pages.models import Content, Page
-from pages.views import details
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode
 from pages.placeholders import parse_placeholder
 

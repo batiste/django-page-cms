@@ -2,7 +2,6 @@
 from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
-import re
 from django.core.urlresolvers import get_mod_func
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse

@@ -1,6 +1,5 @@
 """Default example views"""
 from django.http import Http404, HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404
 from django.contrib.sites.models import SITE_CACHE
 from pages import settings
 from pages.models import Page, Content, PageAlias

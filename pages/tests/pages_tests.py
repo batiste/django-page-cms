@@ -4,7 +4,6 @@ import django
 from django.conf import settings
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
-from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 

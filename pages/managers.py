@@ -3,7 +3,6 @@
 import itertools, re
 from datetime import datetime
 from django.db import models, connection
-from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.core.cache import cache

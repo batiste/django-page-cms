@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Auto render test suite"""
-import django
 from django.test import TestCase
 from pages.http import auto_render, AutoRenderHttpError
 from django.test.client import Client

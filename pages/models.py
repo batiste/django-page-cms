@@ -3,7 +3,6 @@
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache

@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
 from django.conf import settings as global_settings
-from django.db import models
 from django.http import HttpResponseRedirect
 from django.contrib.admin.util import unquote
 from django.contrib.admin.sites import AlreadyRegistered

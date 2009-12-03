@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module for page links"""
-import django
 from django.test.client import Client
 
 from pages import settings

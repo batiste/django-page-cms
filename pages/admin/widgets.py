@@ -5,7 +5,6 @@ from os.path import join
 from django.conf import settings
 from django.forms import TextInput, Textarea, HiddenInput, FileInput
 from django.utils.safestring import mark_safe
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist

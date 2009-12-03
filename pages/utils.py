@@ -4,7 +4,6 @@ import sys, re, logging, pprint, traceback
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext
-from django.http import Http404
 from django.core.cache import cache
 from pages import settings
 from pages.http import get_request_mock, get_language_from_request

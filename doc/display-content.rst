@@ -2,9 +2,14 @@
 Display page's content in templates
 ===================================
 
-Django page CMS provide several, ready to use, template tags. To load these tags you must load them first::
+Django page CMS provide several ready to use template tags. To use these tags in your templates
+you must load them first::
 
     {% load pages_tags %}
+
+.. contents::
+    :local:
+    :depth: 1
 
 get_content
 -----------
@@ -25,7 +30,7 @@ In any of the content retrieval you can use either the page object, the slug,
 or the id of the page.
 
 show_content
------------
+------------
 
 Output the content of a page directly within the template::
 

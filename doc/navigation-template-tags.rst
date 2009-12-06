@@ -1,15 +1,15 @@
-
+===============================================
 How to use the various navigation template tags
 ===============================================
 
-Introduction
-------------
-
 Presenting a navigational structure to the user is an common task on every website.
-Django-pages-cms offers various template tags which can be used to create a site navigation menu::
+Django-pages-cms offers various template tags which can be used to create a site navigation menu.
+
+.. contents::
+    :local:
 
 pages_menu
-----------
+==========
 
 The pages_menu tag displays the whole navigation tree, including all subpages.
 This is useful for smaller sites which do not have a large number of pages.
@@ -34,7 +34,7 @@ You can of course override this template with the Django default mechanism
 to render things differently.
 
 pages_dynamic_tree_menu
------------------------
+=======================
 
 The pages_dynamic_tree_menu tag works similar to the pages_menu tag.
 but instead of displaying the whole navigation structure,
@@ -62,7 +62,7 @@ template to render the navigation menu. By default, the menu is rendered
 as a nested list similar to the pages_menu tag.
 
 pages_sub_menu
---------------
+==============
 
 The pages_sub_menu tag shows all the children of the root of the current page.
 This can be used for example as a secondary menu.
@@ -78,7 +78,7 @@ Again, the default template `pages/sub_menu.html` will render the items as a nes
 unordered list (see above).
 
 pages_breadcrumb
-----------------
+================
 
 With the pages_breadcrumb tag, it is possible to use the "breadcrumb"/"you are here"
 navigational pattern, consisting of a list of all parents of the current page::
@@ -90,7 +90,7 @@ navigational pattern, consisting of a list of all parents of the current page::
 The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`
 
 load_pages
-----------
+==========
 
 The load_pages Tag can be used to load the navigational structure
 in views which are *not* rendered through page's own details() view.

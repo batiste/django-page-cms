@@ -9,6 +9,9 @@ If you have any problem installing this CMS, take a look at the example applicat
 This application works out of the box and will certainly help you to get started.
 
 .. contents::
+    :local:
+    :depth: 1
+
 
 Step by step installation
 =========================

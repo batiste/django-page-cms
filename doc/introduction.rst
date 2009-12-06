@@ -1,5 +1,6 @@
-A tree based django CMS application
-===================================
+============
+Introduction
+============
 
 This Django CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
 
@@ -7,8 +8,12 @@ Django page CMS is based around a placeholders concept. A placeholder is special
 you use in your page templates. Every time you add a placeholder in your template  a field
 dynamically appears in the page admin.
 
+.. contents::
+    :local:
+    :depth: 1
+
 Demo
-----
+====
 
 This admin interface is no up to date, but could give you an idea of what the software is doing:
 
@@ -16,7 +21,7 @@ This admin interface is no up to date, but could give you an idea of what the so
  * frontend : http://pagesdemo.piquadrat.ch/pages/
 
 Key features
-------------
+============
 
   * :doc:`Automatic creation of localized placeholders </placeholders>`
     (content area) in admin by adding placeholders tags into page templates.
@@ -32,7 +37,7 @@ Key features
   * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`
 
 Other features
---------------
+==============
 
 Here is the list of features you can enable/disable:
 
@@ -47,20 +52,20 @@ Here is the list of features you can enable/disable:
   * `Sites framework <http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites>`_
 
 Dependencies & Compatibility
-----------------------------
+============================
 
   * Django 1.1.1, Django 1.0 with older release (1.0.5)
   * Python 2.3.
-  * `http://code.google.com/p/django-mptt/ django-mptt`_
-  * `http://code.google.com/p/django-tagging/ django-tagging`_ (if PAGE_TAGGING = True)
-  * `http://code.google.com/p/html5lib/ html5lib`_ (if PAGE_SANITIZE_USER_INPUT = True)
-  * `http://code.google.com/p/django-tinymce/ django-tinymce`_ (if PAGE_TINYMCE = True)
+  * `django-mptt <http://code.google.com/p/django-mptt/>`_
+  * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
+  * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
+  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Django page CMS is shipped with jQuery.
   * Django page CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle
 
 Ask for help
-------------
+============
 
 `Django page CMS Google Group <http://groups.google.com/group/django-page-cms>`_
 
@@ -101,14 +106,4 @@ Translations
 ------------
 
 This application is available in english, german, french, spanish, danish and russian.
-
-Site made with Django Page CMS
-------------------------------
-
- * http://www.osff.no/
-
-Other Django CMS
-----------------
-
-`Django CMS comparaison <http://code.djangoproject.com/wiki/CMSAppsComparison Django CMS comparaison>`_
 

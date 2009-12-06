@@ -3,6 +3,8 @@ Page CMS reference API
 ======================
 
 .. contents::
+    :local:
+    :depth: 1
 
 Placeholders
 ============

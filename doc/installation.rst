@@ -362,6 +362,7 @@ PAGE_HIDE_ROOT_SLUG
 Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 
 PAGE_SHOW_START_DATE
+--------------------
 
 Show the publication start date field in the admin.  Allows for future dating
 Changing the ``PAGE_SHOW_START_DATE``  from ``True`` to ``False``

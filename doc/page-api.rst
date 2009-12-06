@@ -2,6 +2,8 @@
 Page CMS reference API
 ======================
 
+.. contents::
+
 Placeholders
 ============
 

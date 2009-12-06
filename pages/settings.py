@@ -52,7 +52,7 @@ PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
                                     False)
 
 # Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of 
-# revision information about made to pages in the database
+# pages revision information in the database
 PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 
 # A list tuples that defines the languages that pages can be translated into.
@@ -67,7 +67,7 @@ PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 
 # Defines which language should be used by default.  If 
-# ``PAGE_DEFAULT_LANGUAGE`` not specified, then project 
+# ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
 # ``settings.LANGUAGE_CODE`` is used 
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
                                 settings.LANGUAGE_CODE)

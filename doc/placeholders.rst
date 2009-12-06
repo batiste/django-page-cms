@@ -2,11 +2,20 @@
 Placeholders template tag
 =========================
 
+.. contents::
+
+The placeholder template tag is what make Django Page CMS special. The basic workflow
+is that you design your template first, according to the design needs. You put a placeholder tag
+where you want the administration users to input data.
+
+For each placeholder you will have a corresponding field appearing dynamicaly in the administration interface.
+You can make as many templates as you want, use the Django template inheritance, and CMS will behave as intended.
+
 The syntax for placeholder is the following::
 
     {% placeholder <name> [on <page>] [with <widget>] [parsed] [as <varname>] %}
 
-A few explanations are needed:
+A few explanations of these options:
 
 * If the **on** option is omitted the CMS will automatically
   take the current page (by using the `current_page` context variable)
@@ -20,8 +29,8 @@ A few explanations are needed:
 * Each placeholder with the **parsed** keyword defined will also have
   a note in the admin interface noting its ability to be evaluated as template.
 
-* If you use the option **as** you will define in the template's context
-  with the content of the placeholder that you will be able to use for different purpose.
+* If you use the option **as** the content of the placeholder will not be displayed but
+  a variable will be defined within the template's context instead.
 
 To clarify, here is a list of different possible syntaxes for this template tag::
 
@@ -33,7 +42,7 @@ To clarify, here is a list of different possible syntaxes for this template tag:
     {% placeholder body parsed %}
     {% placeholder right-column as right_column %}
 
-    ..random content..
+    ...
 
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
@@ -126,6 +135,8 @@ If your widget is in the `example.widgets` module the syntax should look like th
     {% placeholder custom_widget_example with example.widgets.CustomTextarea parsed  %}
 
 More examples of custom widgets are available in :mod:`pages/admin/widgets.py <pages.admin.widgets>`.
+
+.. _placeholder-widgets-list:
 
 List of placeholder widgets shipped with the CMS
 ================================================

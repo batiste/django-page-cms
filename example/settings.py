@@ -103,10 +103,10 @@ INSTALLED_APPS = (
     'pages',
     'mptt',
     'staticfiles',
-    #'tinymce',
+    'tinymce',
 )
 
-#PAGE_TINYMCE = True
+PAGE_TINYMCE = True
 
 PAGE_CONNECTED_MODELS = [{
     'model':'documents.models.Document',

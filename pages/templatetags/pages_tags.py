@@ -365,6 +365,5 @@ def do_imageplaceholder(parser, token):
     Method that parse the imageplaceholder template tag.
     """
     name, params = parse_placeholder(parser, token)
-    params['widget'] = 'pages.admin.widgets.ImageInput'
     return ImagePlaceholderNode(name, **params)
 register.tag('imageplaceholder', do_imageplaceholder)

@@ -2,13 +2,14 @@ from django import template
 from django.template import Template, TemplateSyntaxError
 from django.core.files.storage import FileSystemStorage
 from django.forms import Widget, Textarea, ImageField, CharField
+from django.forms import TextInput
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import SafeUnicode, mark_safe
 
+from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content, Page
-from inspect import isclass, getmembers
 import os
 import time
 
@@ -61,7 +62,7 @@ class PlaceholderNode(template.Node):
 
     field = CharField
 
-    def __init__(self, name, page=None, widget=None, parsed=False, as_varname=None):
+    def __init__(self, name, page=None, widget=TextInput, parsed=False, as_varname=None):
         self.page = page or 'current_page'
         self.name = name
         self.widget = widget
@@ -72,22 +73,17 @@ class PlaceholderNode(template.Node):
     def get_widget(self, page, language, fallback=Textarea):
         """Given the name of a placeholder return a ``Widget`` subclass
         like Textarea or TextInput."""
-        from pages.admin import widgets
-        name = self.widget
-        if name and '.' in name:
-            name = str(name)
-            module_name, class_name = name.rsplit('.', 1)
-            module = __import__(module_name, {}, {}, [class_name])
-            widget_class = getattr(module, class_name, fallback)
+        is_str = type(self.widget) == type(str())
+        is_unicode =  type(self.widget) == type(unicode())
+        if is_str or is_unicode:
+            widget = get_widget(self.widget)
         else:
-            widget_class = dict(getmembers(widgets, isclass)).get(name, fallback)
-        if not isinstance(widget_class(), Widget):
-            widget_class = fallback
+            widget = self.widget
         try:
-            widget = widget_class(language=language, page=page)
-        except TypeError:
-            widget = widget_class()
-        return widget
+            return widget(page=page, language=language)
+        except:
+            pass
+        return widget()
 
     def get_field(self, page, language, initial=None):
         """The field that will be shown within the admin."""
@@ -167,6 +163,8 @@ class PlaceholderNode(template.Node):
 
 
 class ImagePlaceholderNode(PlaceholderNode):
+
+    widget = 'ImageInput'
 
     def __init__(self, name, *args, **kwargs):
         super(ImagePlaceholderNode, self).__init__(name, *args, **kwargs)

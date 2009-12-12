@@ -53,3 +53,5 @@ def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
     cov.html_report(modules, directory='coverage')
     sys.exit(results)
 
+if __name__ == '__main__':
+    run_tests()

@@ -14,7 +14,11 @@ from django.utils.translation import ugettext as _
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING, PAGE_TINYMCE, PAGE_LINK_FILTER
 from pages.models import Page
-from pages.utils import get_language_from_request 
+from pages.utils import get_language_from_request
+from pages.widgets_registry import register_widget
+
+register_widget(TextInput)
+register_widget(Textarea)
 
 if PAGE_TAGGING:
     from tagging.models import Tag
@@ -69,6 +73,7 @@ class RichTextarea(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/richtextarea.html', context))
+register_widget(RichTextarea)
 
 if PAGE_TINYMCE:
     from tinymce import widgets as tinymce_widgets
@@ -87,6 +92,7 @@ if PAGE_TINYMCE:
                 'theme_advanced_toolbar_align': "left"
             })
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
+    register_widget(TinyMCE)
 
 class WYMEditor(Textarea):
     """WYMEditor widget."""
@@ -132,6 +138,8 @@ class WYMEditor(Textarea):
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/wymeditor.html', context))
 
+register_widget(WYMEditor)
+
 class markItUpMarkdown(Textarea):
     """markItUpMarkdown widget."""
     
@@ -155,6 +163,7 @@ class markItUpMarkdown(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/markitupmarkdown.html', context))
+register_widget(markItUpMarkdown)
 
 class markItUpHTML(Textarea):
     """markItUpHTML widget."""
@@ -179,6 +188,7 @@ class markItUpHTML(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/markituphtml.html', context))
+register_widget(markItUpHTML)
 
 
 class EditArea(Textarea):
@@ -205,7 +215,7 @@ class EditArea(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/editarea.html', context))
-
+register_widget(EditArea)
 
 class ImageInput(FileInput):
 
@@ -223,3 +233,4 @@ class ImageInput(FileInput):
                 field_content = _("Current file: ") + value + '<br>'
             field_content += super(ImageInput, self).render(name, attrs)
         return mark_safe(field_content)
+register_widget(ImageInput)

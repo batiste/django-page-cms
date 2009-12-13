@@ -6,12 +6,14 @@ from django.forms import TextInput
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import SafeUnicode, mark_safe
+from django.template.loader import render_to_string
 
 from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content, Page
 import os
 import time
+import re
 
 def parse_placeholder(parser, token):
     """Parser that understand all the placeholder's parameters."""
@@ -124,8 +126,7 @@ class PlaceholderNode(template.Node):
                 data
             )
 
-    def render(self, context):
-        """Output the content of the node in the template."""
+    def get_content(self, context):
         if not self.page in context:
             return ''
         # current_page can be set to None
@@ -135,6 +136,11 @@ class PlaceholderNode(template.Node):
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
         content = Content.objects.get_content(context[self.page], lang,
                                               self.name, True)
+        return content
+
+    def render(self, context):
+        """Output the content of the node in the template."""
+        content = self.get_content(context)
         if not content:
             return ''
         if self.parsed:
@@ -166,9 +172,6 @@ class ImagePlaceholderNode(PlaceholderNode):
 
     widget = 'ImageInput'
 
-    def __init__(self, name, *args, **kwargs):
-        super(ImagePlaceholderNode, self).__init__(name, *args, **kwargs)
-
     def get_field(self, page, language, initial=None):
         help_text = ""
         widget = self.get_widget(page, language)
@@ -192,3 +195,19 @@ class ImagePlaceholderNode(PlaceholderNode):
                 filename,
                 change
             )
+
+class VideoPlaceholderNode(PlaceholderNode):
+
+    def render(self, context):
+        content = self.get_content(context)
+        if not content:
+            return ''
+        if content:
+            video_url = content
+            m = re.search('youtube\.com\/watch\?v=([^&]+)', content)
+            if m:
+                video_url = 'http://www.youtube.com/v/'+m.group(1)
+            context = {'video_url': video_url}
+            renderer = render_to_string('pages/embed.html', context)
+            return mark_safe(renderer)
+        return ''

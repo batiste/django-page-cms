@@ -1,3 +1,18 @@
+============
+ Changelog
+============
+
+This file describe new features and incompatibilites between released version of the CMS.
+
+
+Release 1.1.0
+=============
+
+  * Admin widgets now needs to a registery to be used within the admin.
+    The CMS doesn't load load an external module for you anymore.
+  * RTL support for pages in admin
+  * The context variable `pages` has been renommed to `pages_naviagtion` to avoid
+    name conflict with some pagination tags.
 
 Release 1.0.9
 =============

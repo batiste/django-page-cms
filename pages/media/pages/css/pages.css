@@ -128,22 +128,39 @@ a.popup:hover .help,
     height: 100%;
     padding-right: 150px;
 }
+html[dir=rtl] .change-list tbody .title-cell-container {
+    text-align: right;
+    padding-right: 0;
+    padding-left:150px;
+}
+
 .change-list tbody .title-cell .title {
     float: left;
     margin: 0 0 0 20px;
     padding: 0 14px 0 0;
     background: none;
 }
+html[dir=rtl] .change-list tbody .title-cell .title {
+    float: right;
+    margin: 0 20px 0 0;
+    padding: 0 0 0 14px;
+    background: none;
+}
 .change-list tbody .title-cell .title:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
-
+html[dir=rtl] .change-list tbody .title-cell .title:hover {
+    background-position: left 0.2em;
+}
 /* Expand-collapse link */
 .change-list .expand-collapse {
     position: absolute;
     left: 4px; top: 1px;
     font-family: monospace;
     font-size: 16px;
+}
+html[dir=rtl] .change-list .expand-collapse  {
+    left: auto; right:4px;
 }
 .change-list .expand,
 .change-list .expanded .collapse,
@@ -170,7 +187,10 @@ a.popup:hover .help,
     top: 0;
     margin: 0;
 }
-
+html[dir=rtl] #page-list .actions-pages {
+    right:auto;
+    left:-5px;
+}
 .change-list .actions-pages a {
     float: left;
     width: 15px;
@@ -179,6 +199,11 @@ a.popup:hover .help,
     margin-right: 5px;
     background-repeat: no-repeat;
     opacity: 0.5; filter: alpha(opacity=50);
+}
+html[dir=rtl] .change-list .actions-pages a {
+    float: right;
+    margin-left: 5px;
+    margin-right:0;
 }
 .change-list .actions-pages a:hover,
 .change-list tr:hover .actions-pages a {
@@ -266,6 +291,11 @@ a.popup:hover .help,
     right: 0; top: -4px;
     height: 21px; /* IE6 fix */
 }
+html[dir=rtl] .change-list .insert { 
+    right:auto;
+    left:0;
+}
+
 .change-list .insertable .insert {
     display: block;
 }
@@ -395,6 +425,12 @@ a.popup:hover .help,
     display: inline; /* IE6 fix */
     margin-right: 1em;
 }
+html[dir=rtl] .change-form .sidebar {
+    float:right;
+    margin-left:1em;
+    margin-right: 0;
+}
+
 .change-form label {
     width: 90px; /* IE6 fix */
     line-height: 20px;
@@ -439,6 +475,7 @@ a.popup:hover .help,
     height: 10px;
     margin-left:4px;
 }
+html[dir=rtl] .module-general .status img {margin-left:0; margin-right:4px;}
 
 /* Options */
 .change-form .module-options .form-row {
@@ -449,6 +486,14 @@ a.popup:hover .help,
     border-bottom: none;
     border-right: 1px solid #eee;
 }
+html[dir=rtl] .change-form .module-options .form-row {
+    float: right;
+    margin-right:0;
+    margin-left:-1px;
+    border-left: 1px solid #eee;
+    border-right: 0px none;
+}
+
 .change-form .module-options .form-row .field-box {
     padding: 8px 12px;
 }

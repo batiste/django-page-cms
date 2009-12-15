@@ -4,7 +4,7 @@
     <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }}">
         <td><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
         <th class="title-cell">
-            <div class="title-cell-container" style="margin-left:{{ page.margin_level }}em">
+            <div class="title-cell-container" style="margin-{{LANGUAGE_BIDI|yesno:"right,left"}}:{{ page.margin_level }}em">
                 {% if page.children.count %}
                     <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                         <span class="expand">+</span>

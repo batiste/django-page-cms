@@ -123,6 +123,7 @@ def pages_admin_menu(context, page, url='', level=None):
     has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    LANGUAGE_BIDI = context.get('LANGUAGE_BIDI', False)
 
     return locals()
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',

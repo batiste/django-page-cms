@@ -26,8 +26,10 @@ You can also use the id of a page::
 
     {% get_content 10 "title" as content %}
 
-In any of the content retrieval you can use either the page object, the slug,
-or the id of the page.
+.. note::
+
+    In any of the content retrieval you can use either the page object, the slug,
+    or the id of the page.
 
 show_content
 ------------

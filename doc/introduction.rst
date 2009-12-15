@@ -105,5 +105,5 @@ Django page CMS include a image placeholder for basic needs. For a complete file
 Translations
 ------------
 
-This application is available in english, german, french, spanish, danish and russian.
+This application is available in English, German, French, Spanish, Danish, Russian and Hebrew.
 

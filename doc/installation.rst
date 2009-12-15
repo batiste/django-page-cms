@@ -39,10 +39,10 @@ On debian linux you can do::
     $ sudo easy_install html5lib
     $ sudo easy_install django-page-cms
 
-* Tagging must be installed by hand or with subversion because the available package is not
-  compatible with django 1.0.
+.. note::
 
-* Django-mptt must be installed by hand or with subversion because the available package is not compatible with django 1.0.
+    Django-Tagging and Django-mptt must be installed by hand or with subversion because the available package is not
+    compatible with django 1.0.
 
 Install by using subversion externals
 =====================================
@@ -131,7 +131,9 @@ So you can directly set the ``LANGUAGES`` setting if you want.
 In any case *you should set* ``PAGE_LANGUAGES`` or ``LANGUAGES``
 yourself because by default the ``LANGUAGES`` list is big.
 
-Django use ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS. So if the language you want to support is not present in the ``LANGUAGES`` setting the ``request.LANGUAGE_CODE`` will not be set correctly.
+Django use ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS.
+So if the language you want to support is not present in the ``LANGUAGES``
+setting the ``request.LANGUAGE_CODE`` will not be set correctly.
 
 A possible solution is to redefine ``settings.LANGUAGES``. For example you can do::
 
@@ -304,14 +306,18 @@ Defines which language should be used by default.  If
 PAGE_LANGUAGE_MAPPING
 ---------------------
 
-PAGE_LANGUAGE_MAPPING should be assigned a function that takes a single
-argument, the language code of the incoming browser request.  This function
-maps the incoming client language code to another language code, presumably
-one for which you have translation strings.  This is most useful if your
-project only has one set of translation strings for a language like Chinese,
-which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk``, etc., but
-you want to provide your Chinese translations to all Chinese browsers, not
-just those with the exact ``zh-cn`` locale.
+PAGE_LANGUAGE_MAPPING should be assigned a function that takes
+the language code of the incoming browser request as an argument.
+
+This function maps the incoming client language code to another language code,
+presumably one for which you are managing trough the CMS.
+
+This is most useful if your project only has one set of translation strings
+for a language like Chinese, which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk``, etc.
+You don't have the ressources to a real translation for every variant.
+
+`PAGE_LANGUAGE_MAPPING` help you to server the same Chinese translation to all those Chinese variants,
+not just those with the exact ``zh-cn`` locale.
 
 Enable that behavior here by assigning the following function to the
 ``PAGE_LANGUAGE_MAPPING`` variable::

@@ -22,6 +22,8 @@ A few explanations of these options:
   to get the content of the placeholder.
 
 * If the **widget** option is omitted the CMS will render a simple `TextInput`.
+  Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
+  before you can use them in the CMS.
 
 * If you use the keyword **parsed** the content of the placeholder
   will be evaluated as Django template, within the current context.
@@ -109,6 +111,7 @@ without subclassing it, you can just you create a valid Django Widget that take 
 
     from django.forms import Textarea
     from django.utils.safestring import mark_safe
+    from pages.widgets_registry import register_widget
 
     class CustomTextarea(Textarea):
         class Media:
@@ -127,12 +130,12 @@ without subclassing it, you can just you create a valid Django Widget that take 
                     example.widgets.CustomTextarea<br>""") \
                     + rendered
 
+    register_widget(CustomTextarea)
+
 Create a file named widgets (or whathever you want) somewhere in one of your project's application
-and then you can simply use the placeholder syntax.
+and then you can simply use the placeholder syntax::
 
-If your widget is in the `example.widgets` module the syntax should look like this::
-
-    {% placeholder custom_widget_example with example.widgets.CustomTextarea parsed  %}
+    {% placeholder custom_widget_example CustomTextarea parsed  %}
 
 More examples of custom widgets are available in :mod:`pages/admin/widgets.py <pages.admin.widgets>`.
 

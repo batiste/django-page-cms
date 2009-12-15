@@ -22,7 +22,7 @@ Use the following snippet in your template::
     {% endfor %}
     </ul>
 
-The pages_menu tag uses the pages/menu.html template to render the navigation menu.
+The pages_menu tag uses the `pages/menu.html` template to render the navigation menu.
 By default, the menu is rendered as a nested list::
 
     <ul>
@@ -30,8 +30,8 @@ By default, the menu is rendered as a nested list::
         ...
     </ul>
 
-You can of course override this template with the Django default mechanism
-to render things differently.
+You can of course change `pages/menu.html` with the Django override mechanism
+to render things as differently.
 
 pages_dynamic_tree_menu
 =======================
@@ -87,7 +87,7 @@ navigational pattern, consisting of a list of all parents of the current page::
     {% pages_breadcrumb current_page %}
     </ul>
 
-The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`
+The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`.
 
 load_pages
 ==========

@@ -319,7 +319,7 @@ class LoadPagesNode(template.Node):
     def render(self, context):
         if 'pages' not in context:
             pages = Page.objects.navigation().order_by("tree_id")
-            context.update({'pages': pages})
+            context.update({'pages_navigation': pages})
         if 'current_page' not in context:
             context.update({'current_page':None})
         return ''

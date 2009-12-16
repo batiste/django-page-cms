@@ -25,7 +25,7 @@ def details(request, path=None, lang=None):
     view. You can reuse the following code without having to
     copy and paste it."""
     
-    pages = Page.objects.navigation().order_by("tree_id")
+    pages_navigation = Page.objects.navigation().order_by("tree_id")
     current_page = False
     template_name = settings.DEFAULT_PAGE_TEMPLATE
 
@@ -37,7 +37,7 @@ def details(request, path=None, lang=None):
 
     context = {
         'path': path,
-        'pages': pages,
+        'pages_navigation': pages_navigation,
         'lang': lang,
     }
 
@@ -47,7 +47,7 @@ def details(request, path=None, lang=None):
     exclude_drafts = not(request.user.is_authenticated() and request.user.is_staff)
     if path:
         current_page = Page.objects.from_path(path, lang, exclude_drafts=exclude_drafts)
-    elif pages:
+    elif pages_navigation:
         current_page = Page.objects.published().order_by("tree_id")[0]
 
     # if no pages has been found, we will try to find it via an Alias

@@ -4,14 +4,15 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-
 Release 1.1.0
 =============
 
+  * A new character field called `delegate_to` is added to the page model
+    to enable the delegation of the pages rendering to a 3rd party application.
   * Admin widgets now needs to a registery to be used within the admin.
     The CMS doesn't load load an external module for you anymore.
   * RTL support for pages in admin
-  * The context variable `pages` has been renammed to `pages_naviagtion` to avoid
+  * The context variable `pages` has been renamed to `pages_naviagtion` to avoid
     any name conflict with some pagination tags.
 
 Release 1.0.9

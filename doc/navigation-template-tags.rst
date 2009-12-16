@@ -17,7 +17,7 @@ This is useful for smaller sites which do not have a large number of pages.
 Use the following snippet in your template::
 
     <ul>
-    {% for page in pages %}
+    {% for page in pages_navigation %}
         {% pages_menu page %}
     {% endfor %}
     </ul>
@@ -52,7 +52,7 @@ to be presented to the user at once.
 Use the following snippet in your template::
 
     <ul>
-    {% for page in pages %}
+    {% for page in pages_navigation %}
         {% pages_dynamic_tree_menu page %}
     {% endfor %}
     </ul>

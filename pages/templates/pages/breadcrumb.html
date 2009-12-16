@@ -1,4 +1,4 @@
 {% load pages_tags cache %}
-{% for page in pages %}
+{% for page in pages_navigation %}
 <a href="{% show_absolute_url page %}">{% show_content page "title" %}</a> &raquo;
 {% endfor %}<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>

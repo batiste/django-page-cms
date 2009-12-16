@@ -18,15 +18,19 @@ registry = []
 def get_choices():
     choices = [('', 'No delegation')]
     for reg in registry:
-        choices.append((reg[0], reg[0]))
+        if reg[2]:
+            label = reg[2]
+        else:
+            label = reg[0]
+        choices.append((reg[0], label))
     return choices
 
-def register_view(name, view):
+def register_view(name, view, label=None):
     for view_tuple in registry:
         if view_tuple[0] == name:
             raise AlreadyRegistered(
                 _('The view %s has already been registered.') % name)
-    view_tuple = (name, view)
+    view_tuple = (name, view, label)
     registry.append(view_tuple)
 
 def get_view(name):

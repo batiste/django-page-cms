@@ -82,7 +82,8 @@ def details(request, path=None, lang=None):
 
     if current_page.delegate_to:
         view = get_view(current_page.delegate_to)
-        return view(request, current_page=current_page, path=path, lang=lang)
+        return view(request, current_page=current_page, path=path,
+            lang=lang, pages=pages)
         
     return template_name, context
 

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from pages import settings
 from pages.models import Page, Content
-from pages.views_registry import get_choices
+from pages.urlconf_registry import get_choices
 
 class PageForm(forms.ModelForm):
     """Form for page creation"""

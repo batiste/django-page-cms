@@ -15,3 +15,4 @@ class Document(models.Model):
 class DocumentForm(ModelForm):
     class Meta:
         model = Document
+

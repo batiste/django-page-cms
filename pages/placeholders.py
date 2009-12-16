@@ -76,7 +76,9 @@ class PlaceholderNode(template.Node):
         """Given the name of a placeholder return a ``Widget`` subclass
         like Textarea or TextInput."""
         is_str = type(self.widget) == type(str())
-        is_unicode =  type(self.widget) == type(unicode())
+        is_unicode = type(self.widget) == type(unicode())
+        print is_str, is_unicode
+        print type(self.widget)
         if is_str or is_unicode:
             widget = get_widget(self.widget)
         else:
@@ -170,11 +172,11 @@ class PlaceholderNode(template.Node):
 
 class ImagePlaceholderNode(PlaceholderNode):
 
-    widget = 'ImageInput'
 
     def get_field(self, page, language, initial=None):
         help_text = ""
-        widget = self.get_widget(page, language)
+        from pages.admin.widgets import ImageInput
+        widget = ImageInput(page, language)
         return ImageField(
             widget=widget,
             initial=initial,

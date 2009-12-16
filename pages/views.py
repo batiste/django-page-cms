@@ -5,7 +5,8 @@ from pages import settings
 from pages.models import Page, Content, PageAlias
 from pages.http import auto_render, get_language_from_request
 from pages.http import get_slug_and_relative_path
-from pages.views_registry import get_view
+from pages.urlconf_registry import registry, get_urlconf
+from django.core.urlresolvers import resolve
 
 def details(request, path=None, lang=None):
     """This view get the root pages for navigation
@@ -44,9 +45,11 @@ def details(request, path=None, lang=None):
     if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
         raise Http404
 
-    exclude_drafts = not(request.user.is_authenticated() and request.user.is_staff)
+    exclude_drafts = not(request.user.is_authenticated()
+        and request.user.is_staff)
     if path:
-        current_page = Page.objects.from_path(path, lang, exclude_drafts=exclude_drafts)
+        current_page = Page.objects.from_path(path, lang,
+            exclude_drafts=exclude_drafts)
     elif pages_navigation:
         current_page = Page.objects.published().order_by("tree_id")[0]
 
@@ -56,6 +59,27 @@ def details(request, path=None, lang=None):
         if alias:
             url = alias.page.get_absolute_url(lang)
             return HttpResponsePermanentRedirect(url)
+        # no Alias found, search in the page that delegate to another view
+        if len(registry):
+            # only get the pages that delegate on application
+            delegates = Page.objects.filter(delegate_to__gt=1)
+            for page in delegates:
+                url = page.get_url()
+                if path.find(url) != -1:
+                    new_path = path.replace(url, '')
+                    urlconf = get_urlconf(page.delegate_to)
+                    result = resolve(new_path, urlconf)
+                    if len(result):
+                        view, args, kwargs = result
+                        return view(
+                            request,
+                            *args,
+                            current_page=page,
+                            path=path,
+                            lang=lang,
+                            pages_navigation=pages_navigation,
+                            **kwargs
+                        )
         raise Http404
 
     if not (request.user.is_authenticated() and request.user.is_staff) and \
@@ -81,10 +105,20 @@ def details(request, path=None, lang=None):
         context.update(settings.PAGE_EXTRA_CONTEXT())
 
     if current_page.delegate_to:
-        view = get_view(current_page.delegate_to)
-        return view(request, current_page=current_page, path=path,
-            lang=lang, pages=pages)
-        
+        urlconf = get_urlconf(current_page.delegate_to)
+        result = resolve('/', urlconf)
+        if len(result):
+            view, args, kwargs = result
+            return view(
+                request,
+                *args,
+                current_page=current_page,
+                path=path,
+                lang=lang,
+                pages_navigation=pages_navigation,
+                **kwargs
+            )
+
     return template_name, context
 
 details = auto_render(details)

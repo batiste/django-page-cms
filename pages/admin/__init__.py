@@ -49,7 +49,7 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_SHOW_START_DATE:
         general_fields.insert(insert_point, 'publication_date')
 
-    from pages.views_registry import registry
+    from pages.urlconf_registry import registry
     if(len(registry)):
         general_fields.append('delegate_to')
         insert_point = general_fields.index('status') + 1

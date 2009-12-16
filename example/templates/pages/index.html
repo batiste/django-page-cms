@@ -92,7 +92,21 @@
 
 <h2>Content</h2>
 
-{% if in_blog_view %}<p><strong>You have delegated the rendering of this page to the blog view.</strong></p>{% endif %}
+{% if in_document_view %}
+<p>
+    <strong>You have delegated the rendering of this page to the document view.</strong>
+</p>
+{% if document %}
+<p>
+    <strong>You selected this document: {{ document.title }}</strong>
+</p>
+{% endif %}
+<ul>
+{% for doc in documents %}
+<li><a href="{% show_absolute_url current_page %}/{{ doc.id }}/">{{ doc.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
 
 {% if current_page %}
 <p>Test for page absolute url : {% show_absolute_url current_page %}</p>

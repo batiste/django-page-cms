@@ -5,10 +5,23 @@
 Delegate the rendering of a page to an application
 ===================================================
 
-If you want to use another Django application but still have this application
-represented into the CMS navigation you can delegate the page rendering to any
-kind of views. Let's take a look a the default document application present
-in the example project::
+By delegating the rendering of a page to another application, you will
+be able to use customized views and still get all the CMS variables
+to render a proper navigation.
+
+First you need to register the urlconf module of your application to use it
+within the admin interface. Here is an example for a document application::
+
+    from pages.urlconf_registry import register_urlconf
+
+    register_urlconf('Documents', 'example.documents.urls',
+        label='Display documents')
+
+As soon as you have registered your urlconf, a new field will appear in the page administration.
+Choose the `Display documents`. The view used to render this page on the frontend
+is now choosen by `example.documents.urls`.
+
+This is a valid example from the documents application::
 
     from django.shortcuts import render_to_response
     from django.template import loader, Context, RequestContext
@@ -24,31 +37,22 @@ in the example project::
         context['in_document_view'] = True
         return render_to_response('pages/index.html', context)
 
-The view will receive a bunch of extra parameters related to the CMS:
+The `document_view` will receive a bunch of extra parameters related to the CMS:
 
     * `current_page` the page object,
     * `path` the path used to reach the page,
     * `lang` the current language,
     * `pages_navigation` the list of pages used to render navigation.
 
-Then you need to register the urlconf module of this application to use it within the admin interface::
-
-    from pages.urlconf_registry import register_urlconf
-
-    register_urlconf('Documents', 'example.documents.urls',
-        label='Display documents')
-
-As soon as you registerd your urlconf, a new field will appear in the page administration.
-
 .. note::
 
     If the field doesn't appear within the admin interface make sure that
-    your regsitry code is executed properly at some point in time.
+    your registry code is executed properly.
 
 .. note::
 
-    Now all the URLs that start with your page URL will automaticaly be passed to the URL conf and rendered with the
-    appropriate view. You can still add children to this page and they will be rooted accordingly.
+    The children pages will not be resolved by the URL module, but all the URL that don't
+    have any corresponding pages will.
 
 Integrate application models and forms into the page admin
 ==========================================================

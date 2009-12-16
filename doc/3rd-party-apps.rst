@@ -7,13 +7,21 @@ Delegate the rendering of a page to an application
 
 If you want to use another Django application but still have this application
 represented into the CMS navigation you can delegate the page rendering to any
-kind of view::
+kind of views. Let's take a look a the default document application present
+in the example project::
 
     from django.shortcuts import render_to_response
     from django.template import loader, Context, RequestContext
+    from example.documents.models import Document
 
-    def blog(request, **kwargs):
+    def document_view(request, **kwargs):
         context = RequestContext(request, kwargs)
+        documents = Document.objects.filter(page=kwargs['current_page'])
+        context['documents'] = documents
+        if kwargs.has_key('document_id'):
+            document = Document.objects.get(pk=int(kwargs['document_id']))
+            context['document'] = document
+        context['in_document_view'] = True
         return render_to_response('pages/index.html', context)
 
 The view will receive a bunch of extra parameters related to the CMS:
@@ -23,24 +31,30 @@ The view will receive a bunch of extra parameters related to the CMS:
     * `lang` the current language,
     * `pages_navigation` the list of pages used to render navigation.
 
-Then you need to register this view to be able to use it within the admin interface::
+Then you need to register the urlconf module of this application to use it within the admin interface::
 
-    from example.views import blog
-    from pages.views_registry import register_view
-    register_view('Blog', blog, label='Blog of the company')
+    from pages.urlconf_registry import register_urlconf
 
-As soon as you registerd your view, a new field will appear in the page edition.
+    register_urlconf('Documents', 'example.documents.urls',
+        label='Display documents')
+
+As soon as you registerd your urlconf, a new field will appear in the page administration.
 
 .. note::
 
     If the field doesn't appear within the admin interface make sure that
-    the regsitry code is executed at some point in time.
+    your regsitry code is executed properly at some point in time.
+
+.. note::
+
+    Now all the URLs that start with your page URL will automaticaly be passed to the URL conf and rendered with the
+    appropriate view. You can still add children to this page and they will be rooted accordingly.
 
 Integrate application models and forms into the page admin
 ==========================================================
 
 Django page CMS provide a solid way to integrate external application
-forms for managing page related objects (create/delete/update) into the page's administraion interface.
+forms for managing page related objects (create/delete/update) into the page's administration interface.
 
 For this you need an object with foreign key pointing to a page::
 

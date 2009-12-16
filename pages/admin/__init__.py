@@ -35,6 +35,7 @@ class PageAdmin(admin.ModelAdmin):
     #if getattr(settings, 'PAGE_USE_SITE_ID'):
     general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
+    
     # Strange django behavior. If not provided, django will try to find
     # 'page' foreign key in all registered models
     inlines = []
@@ -47,6 +48,11 @@ class PageAdmin(admin.ModelAdmin):
         general_fields.insert(insert_point, 'publication_end_date')
     if settings.PAGE_SHOW_START_DATE:
         general_fields.insert(insert_point, 'publication_date')
+
+    from pages.views_registry import registry
+    if(len(registry)):
+        general_fields.append('delegate_to')
+        insert_point = general_fields.index('status') + 1
 
     normal_fields = ['language']
     if settings.PAGE_TEMPLATES:

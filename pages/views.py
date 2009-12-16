@@ -5,6 +5,7 @@ from pages import settings
 from pages.models import Page, Content, PageAlias
 from pages.http import auto_render, get_language_from_request
 from pages.http import get_slug_and_relative_path
+from pages.views_registry import get_view
 
 def details(request, path=None, lang=None):
     """This view get the root pages for navigation
@@ -78,6 +79,10 @@ def details(request, path=None, lang=None):
 
     if settings.PAGE_EXTRA_CONTEXT:
         context.update(settings.PAGE_EXTRA_CONTEXT())
+
+    if current_page.delegate_to:
+        view = get_view(current_page.delegate_to)
+        return view(request, current_page=current_page, path=path, lang=lang)
         
     return template_name, context
 

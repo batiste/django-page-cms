@@ -77,6 +77,9 @@ class Page(models.Model):
     status = models.IntegerField(_('status'), choices=STATUSES, default=DRAFT)
     template = models.CharField(_('template'), max_length=100, null=True,
             blank=True)
+
+    delegate_to = models.CharField(_('template'), max_length=100, null=True,
+            blank=True)
     
     # Disable could make site tests fail
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 

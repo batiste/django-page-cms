@@ -92,6 +92,8 @@
 
 <h2>Content</h2>
 
+{% if in_blog_view %}<p><strong>You have delegated the rendering of this page to the blog view.</strong></p>{% endif %}
+
 {% if current_page %}
 <p>Test for page absolute url : {% show_absolute_url current_page %}</p>
 <p>Test for page absolute url using the page slug : {% show_absolute_url current_page.slug %}</p>

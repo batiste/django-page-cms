@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from pages import settings
 from pages.models import Page, Content
+from pages.views_registry import get_choices
 
 class PageForm(forms.ModelForm):
     """Form for page creation"""
@@ -27,9 +28,20 @@ class PageForm(forms.ModelForm):
         label=_('Template'),
         choices=settings.PAGE_TEMPLATES,
     )
+    delegate_to = forms.ChoiceField(
+        required=False,
+        label=_('Delegate to application'),
+        choices=get_choices(),
+    )
     
     target = forms.IntegerField(required=False, widget=forms.HiddenInput)
     position = forms.CharField(required=False, widget=forms.HiddenInput)
+
+    template = forms.ChoiceField(
+        required=False,
+        label=_('Template'),
+        choices=settings.PAGE_TEMPLATES,
+    )
     
     if settings.PAGE_TAGGING:
         from tagging.forms import TagField

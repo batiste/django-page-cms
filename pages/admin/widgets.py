@@ -80,8 +80,12 @@ if PAGE_TINYMCE:
     
     class TinyMCE(tinymce_widgets.TinyMCE):
         """TinyMCE widget."""
-        def __init__(self, language=None, attrs=None, mce_attrs={}):
+        def __init__(self, language=None, attrs=None, mce_attrs=None, **kwargs):
             self.language = language
+
+            if mce_attrs is None:
+                mce_attrs = {}
+
             self.mce_attrs = mce_attrs
             self.mce_attrs.update({
                 'mode': "exact",
@@ -91,6 +95,9 @@ if PAGE_TINYMCE:
                 'theme_advanced_toolbar_location': "top",
                 'theme_advanced_toolbar_align': "left"
             })
+            # take into account the default settings, don't allow
+            # the above hard coded ones overriding them
+            self.mce_attrs.update(getattr(settings, 'TINYMCE_DEFAULT_CONFIG', {}))
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
     register_widget(TinyMCE)
 

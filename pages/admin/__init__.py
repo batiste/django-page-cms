@@ -21,6 +21,7 @@ from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
+import pages.admin.widgets
 
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""

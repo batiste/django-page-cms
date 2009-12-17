@@ -60,7 +60,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=152"""
         from pages.utils import get_placeholders
         self.assertEqual(
-            str(get_placeholders('tests/test1.html')),
+            str(get_placeholders('pages/tests/test1.html')),
             "[<Placeholder Node: body>]"
         )
 
@@ -76,7 +76,7 @@ class RegressionTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
         from pages.utils import get_request_mock
         request = get_request_mock()
-        temp = loader.get_template('tests/test2.html')
+        temp = loader.get_template('pages/tests/test2.html')
         render = temp.render(RequestContext(request, {}))
         self.assertTrue('test-162-slug' in render)
 
@@ -95,7 +95,7 @@ class RegressionTestCase(TestCase):
 
         from pages.utils import get_request_mock
         request = get_request_mock()
-        temp = loader.get_template('tests/test3.html')
+        temp = loader.get_template('pages/tests/test3.html')
         render = temp.render(RequestContext(request, {'page':page}))
         self.assertTrue('title-en-us' in render)
 
@@ -111,7 +111,7 @@ class RegressionTestCase(TestCase):
         page = self.create_new_page()
         from pages.utils import get_request_mock
         request = get_request_mock()
-        temp = loader.get_template('tests/test4.html')
+        temp = loader.get_template('pages/tests/test4.html')
         render = temp.render(RequestContext(request, {}))
         self.assertTrue(page.title() in render)
 
@@ -119,7 +119,7 @@ class RegressionTestCase(TestCase):
         """http://code.google.com/p/django-page-cms/issues/detail?id=178"""
         from pages.utils import get_request_mock
         request = get_request_mock()
-        temp = loader.get_template('tests/test5.html')
+        temp = loader.get_template('pages/tests/test5.html')
         render = temp.render(RequestContext(request, {'page':None}))
 
     def test_language_fallback_bug(self):
@@ -181,7 +181,7 @@ class RegressionTestCase(TestCase):
         page = self.create_new_page()
         from pages.utils import get_request_mock
         request = get_request_mock()
-        temp = loader.get_template('tests/test6.html')
+        temp = loader.get_template('pages/tests/test6.html')
         render = temp.render(RequestContext(request, {'current_page':page}))
 
         self.assertTrue('t1_'+page.get_absolute_url() in render)

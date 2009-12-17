@@ -17,23 +17,23 @@ class AutoRenderTestCase(TestCase):
         def testview(request, *args, **kwargs):
             assert 'only_context' not in kwargs
             assert 'template_name' not in kwargs
-            return 'tests/auto_render.txt', locals()
+            return 'pages/tests/auto_render.txt', locals()
         response = testview(None)
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
-                         "template_name: 'tests/auto_render.txt', "
+                         "template_name: 'pages/tests/auto_render.txt', "
                          "only_context: ''\n")
         self.assertEqual(testview(None, only_context=True),
                          {'args': (), 'request': None, 'kwargs': {}})
         response = testview(None, only_context=False)
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
-                         "template_name: 'tests/auto_render.txt', "
+                         "template_name: 'pages/tests/auto_render.txt', "
                          "only_context: ''\n")
-        response = testview(None, template_name='tests/auto_render2.txt')
+        response = testview(None, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
-                         "alternate template_name: 'tests/auto_render2.txt', "
+                         "alternate template_name: 'pages/tests/auto_render2.txt', "
                          "only_context: ''\n")
 
     def test_auto_render_httpresponse(self):
@@ -53,7 +53,7 @@ class AutoRenderTestCase(TestCase):
         self.assertOnlyContextException(testview)
         self.assertEqual(testview(None, only_context=False).__class__,
                          HttpResponse)
-        response = testview(None, template_name='tests/auto_render2.txt')
+        response = testview(None, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
                          "[('args', ()), ('kwargs', {}), ('request', None)]")
@@ -71,7 +71,7 @@ class AutoRenderTestCase(TestCase):
         self.assertOnlyContextException(testview)
         self.assertEqual(testview(None, only_context=False).__class__,
                          HttpResponseRedirect)
-        response = testview(None, template_name='tests/auto_render2.txt')
+        response = testview(None, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, HttpResponseRedirect)
 
     def test_auto_render_any_httpresponse(self):
@@ -94,7 +94,7 @@ class AutoRenderTestCase(TestCase):
                          "('args', ()), ('kwargs', {}), ('request', None)]")
         self.assertEqual(testview(None, only_context=False).__class__,
                          MyResponse)
-        response = testview(None, template_name='tests/auto_render2.txt')
+        response = testview(None, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, MyResponse)
         self.assertEqual(response.content,
                          "[('MyResponse', "

@@ -10,11 +10,11 @@ urlpatterns = patterns('',
 
 if settings.PAGE_USE_LANGUAGE_PREFIX:
     urlpatterns += patterns('',
-        url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
-            name='pages-details-by-path'),
+        url(r'^(?P<lang>[-\w]+)/(?P<path>.*)/documents/', include("example.documents.urls")),
+        url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details, name='pages-details-by-path')
     )
 else:
     urlpatterns += patterns('',
-        url(r'^(?P<path>.*)$', details,
-            name='pages-details-by-path'),
+        url(r'^(?P<path>.*)/documents/', include("example.documents.urls")),
+        url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
     )

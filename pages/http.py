@@ -55,6 +55,23 @@ def auto_render(func):
                             context_instance=RequestContext(request))
     return _dec
 
+def pages_view(view):
+    """
+    Provide the pages variables to the decorated view.
+    """
+    def _dec(request, *args, **kwargs):
+        path = kwargs.pop('path', None)
+        lang = kwargs.pop('lang', None)
+        if path or lang:
+            from pages.views import details
+            response = details(request, path=path, lang=lang,
+                only_context=True, delegation=False)
+            context = response
+            kwargs.update(context)
+        return view(request, *args, **kwargs)
+    return _dec
+
+
 def get_slug_and_relative_path(path, lang=None):
     """Return the page's slug and relative path."""
     root = reverse('pages-root')

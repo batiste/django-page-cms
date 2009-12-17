@@ -14,7 +14,7 @@ from pages.tests.testcase import TestCase
 class RegressionTestCase(TestCase):
     """Django page CMS test suite class"""
 
-    def test_22_calculated_status_bug(self):
+    def test_calculated_status_bug(self):
         """
         Test the issue 100
         http://code.google.com/p/django-page-cms/issues/detail?id=100
@@ -34,7 +34,7 @@ class RegressionTestCase(TestCase):
         page1.calculated_status
         setattr(settings, "PAGE_SHOW_START_DATE", False)
 
-    def test_23_slug_bug(self):
+    def test_slug_bug(self):
         """
         Test the issue 97
         http://code.google.com/p/django-page-cms/issues/detail?id=97
@@ -55,7 +55,7 @@ class RegressionTestCase(TestCase):
             if e.args != ('404.html',):
                 raise
 
-    def test_27_bug_152(self):
+    def test_bug_152(self):
         """Test bug 152
         http://code.google.com/p/django-page-cms/issues/detail?id=152"""
         from pages.utils import get_placeholders
@@ -64,7 +64,7 @@ class RegressionTestCase(TestCase):
             "[<Placeholder Node: body>]"
         )
 
-    def test_28_bug_162(self):
+    def test_bug_162(self):
         """Test bug 162
         http://code.google.com/p/django-page-cms/issues/detail?id=162"""
         c = Client()
@@ -80,7 +80,7 @@ class RegressionTestCase(TestCase):
         render = temp.render(RequestContext(request, {}))
         self.assertTrue('test-162-slug' in render)
 
-    def test_29_bug_172(self):
+    def test_bug_172(self):
         """Test bug 167
         http://code.google.com/p/django-page-cms/issues/detail?id=172"""
         c = Client()
@@ -106,7 +106,7 @@ class RegressionTestCase(TestCase):
         self.assertTrue('title-fr-ch' in render)
         
 
-    def test_30_page_id_in_template(self):
+    def test_page_id_in_template(self):
         """Get a page in the templates via the page id."""
         page = self.create_new_page()
         from pages.utils import get_request_mock
@@ -115,14 +115,14 @@ class RegressionTestCase(TestCase):
         render = temp.render(RequestContext(request, {}))
         self.assertTrue(page.title() in render)
 
-    def test_31_bug_178(self):
+    def test_bug_178(self):
         """http://code.google.com/p/django-page-cms/issues/detail?id=178"""
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('tests/test5.html')
         render = temp.render(RequestContext(request, {'page':None}))
 
-    def test_32_language_fallback_bug(self):
+    def test_language_fallback_bug(self):
         """Language fallback doesn't work properly."""
         page = self.create_new_page()
         
@@ -142,7 +142,7 @@ class RegressionTestCase(TestCase):
             'toto'
         )
 
-    def test_33_bug_156(self):
+    def test_bug_156(self):
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -154,7 +154,7 @@ class RegressionTestCase(TestCase):
         c = Content.objects.get_content(page1, 'en-us', 'title')
         self.assertEqual(c, page_data['title'])
 
-    def test_34_bug_181(self):
+    def test_bug_181(self):
         c = Client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data(draft=True)
@@ -175,4 +175,17 @@ class RegressionTestCase(TestCase):
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 404)
 
-        
+
+    def test_urls_in_templates(self):
+        """Test different ways of displaying urls in templates."""
+        page = self.create_new_page()
+        from pages.utils import get_request_mock
+        request = get_request_mock()
+        temp = loader.get_template('tests/test6.html')
+        render = temp.render(RequestContext(request, {'current_page':page}))
+
+        self.assertTrue('t1_'+page.get_absolute_url() in render)
+        self.assertTrue('t2_'+page.get_absolute_url() in render)
+        self.assertTrue('t3_'+page.get_absolute_url() in render)
+        self.assertTrue('t4_'+page.slug() in render)
+        self.assertTrue('t5_'+page.slug() in render)

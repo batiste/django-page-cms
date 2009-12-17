@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 class AutoRenderTestCase(TestCase):
     """Auto render test suite class"""
 
-    def test_13_auto_render(self):
+    def test_auto_render(self):
         """
         Call an @auto_render decorated view with allowed keyword argument
         combinations.
@@ -36,7 +36,7 @@ class AutoRenderTestCase(TestCase):
                          "alternate template_name: 'tests/auto_render2.txt', "
                          "only_context: ''\n")
 
-    def test_14_auto_render_httpresponse(self):
+    def test_auto_render_httpresponse(self):
         """
         Call an @auto_render decorated view which returns an HttpResponse with
         allowed keyword argument combinations.
@@ -58,7 +58,7 @@ class AutoRenderTestCase(TestCase):
         self.assertEqual(response.content,
                          "[('args', ()), ('kwargs', {}), ('request', None)]")
 
-    def test_15_auto_render_redirect(self):
+    def test_auto_render_redirect(self):
         """Call an @auto_render decorated view which returns an
         HttpResponseRedirect with allowed keyword argument combinations."""
         @auto_render
@@ -74,7 +74,7 @@ class AutoRenderTestCase(TestCase):
         response = testview(None, template_name='tests/auto_render2.txt')
         self.assertEqual(response.__class__, HttpResponseRedirect)
 
-    def test_16_auto_render_any_httpresponse(self):
+    def test_auto_render_any_httpresponse(self):
         """Call an @auto_render decorated view which returns an
         arbitrary HttpResponse subclass with allowed keyword argument
         combinations."""

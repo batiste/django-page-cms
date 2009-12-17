@@ -77,8 +77,6 @@ class PlaceholderNode(template.Node):
         like Textarea or TextInput."""
         is_str = type(self.widget) == type(str())
         is_unicode = type(self.widget) == type(unicode())
-        print is_str, is_unicode
-        print type(self.widget)
         if is_str or is_unicode:
             widget = get_widget(self.widget)
         else:

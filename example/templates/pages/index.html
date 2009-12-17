@@ -103,17 +103,9 @@
 {% endif %}
 <ul>
 {% for doc in documents %}
-<li><a href="{% show_absolute_url current_page %}/{{ doc.id }}/">{{ doc.title }}</a></li>
+<li><a href="{% url document_details path=current_page.get_url document_id=doc.id %}/">{{ doc.title }}</a></li>
 {% endfor %}
 </ul>
-{% endif %}
-
-{% if current_page %}
-<p>Test for page absolute url : {% show_absolute_url current_page %}</p>
-<p>Test for page absolute url using the page slug : {% show_absolute_url current_page.slug %}</p>
-<p>Test show_content and get_content template tag :
-    {% show_content current_page.slug "slug" %}
-    {% get_content current_page.slug "slug" as content %}</p>
 {% endif %}
 
 {% block content %}

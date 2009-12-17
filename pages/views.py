@@ -8,7 +8,7 @@ from pages.http import get_slug_and_relative_path
 from pages.urlconf_registry import registry, get_urlconf
 from django.core.urlresolvers import resolve
 
-def details(request, path=None, lang=None):
+def details(request, path=None, lang=None, delegation=True, **kwargs):
     """This view get the root pages for navigation
     and the current page to display if there is any.
 
@@ -59,27 +59,6 @@ def details(request, path=None, lang=None):
         if alias:
             url = alias.page.get_absolute_url(lang)
             return HttpResponsePermanentRedirect(url)
-        # no Alias found, search in the page that delegate to another view
-        if len(registry):
-            # only get the pages that delegate on application
-            delegates = Page.objects.filter(delegate_to__gt=1)
-            for page in delegates:
-                url = page.get_url()
-                if path.find(url) != -1:
-                    new_path = path.replace(url, '')
-                    urlconf = get_urlconf(page.delegate_to)
-                    result = resolve(new_path, urlconf)
-                    if len(result):
-                        view, args, kwargs = result
-                        return view(
-                            request,
-                            *args,
-                            current_page=page,
-                            path=path,
-                            lang=lang,
-                            pages_navigation=pages_navigation,
-                            **kwargs
-                        )
         raise Http404
 
     if not (request.user.is_authenticated() and request.user.is_staff) and \
@@ -104,7 +83,7 @@ def details(request, path=None, lang=None):
     if settings.PAGE_EXTRA_CONTEXT:
         context.update(settings.PAGE_EXTRA_CONTEXT())
 
-    if current_page.delegate_to:
+    if delegation and current_page.delegate_to:
         urlconf = get_urlconf(current_page.delegate_to)
         result = resolve('/', urlconf)
         if len(result):

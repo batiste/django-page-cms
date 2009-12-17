@@ -13,7 +13,7 @@ from pages.tests.testcase import TestCase
 class PagesTestCase(TestCase):
     """Django page CMS test suite class"""
     
-    def test_01_add_page(self):
+    def test_add_page(self):
         """Test that the add admin page could be displayed via the
         admin"""
         c = Client()
@@ -22,7 +22,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    def test_02_create_page(self):
+    def test_create_page(self):
         """Test that a page can be created via the admin."""
         #setattr(settings, "SITE_ID", 2)
         c = Client()
@@ -39,7 +39,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(page.slug(), page_data['slug'])
         self.assertNotEqual(page.last_modification_date, None)
 
-    def test_03_slug_collision(self):
+    def test_slug_collision(self):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
 
@@ -60,7 +60,7 @@ class PagesTestCase(TestCase):
         page2 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertNotEqual(page1.id, page2.id)
 
-    def test_04_details_view(self):
+    def test_details_view(self):
         """Test the details view"""
 
         c = Client()
@@ -90,7 +90,7 @@ class PagesTestCase(TestCase):
         response = c.get('/pages/test-page-2/')
         self.assertEqual(response.status_code, 200)
 
-    def test_05_edit_page(self):
+    def test_edit_page(self):
         """Test that a page can edited via the admin"""
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -109,7 +109,7 @@ class PagesTestCase(TestCase):
         body = Content.objects.get_content(page, 'en-us', 'body')
         self.assertEqual(body, 'changed body')
 
-    def test_06_site_framework(self):
+    def test_site_framework(self):
         """Test the site framework, and test if it's possible to
         disable it"""
 
@@ -170,7 +170,7 @@ class PagesTestCase(TestCase):
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)
 
-    def test_07_languages(self):
+    def test_languages(self):
         """Test post a page with different languages
         and test that the admin views works correctly."""
         c = Client()
@@ -235,7 +235,7 @@ class PagesTestCase(TestCase):
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
         
-    def test_08_revision(self):
+    def test_revision(self):
         """Test that a page can edited several times."""
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -258,7 +258,7 @@ class PagesTestCase(TestCase):
         
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
 
-    def test_09_placeholder(self):
+    def test_placeholder(self):
         """
         Test that the placeholder is correctly displayed in
         the admin
@@ -275,7 +275,7 @@ class PagesTestCase(TestCase):
 
         self.assertContains(response, 'name="right-column"', 1)
 
-    def test_10_directory_slug(self):
+    def test_directory_slug(self):
         """
         Test diretory slugs
         """
@@ -315,7 +315,7 @@ class PagesTestCase(TestCase):
         response = c.get('/pages/same-slug/same-slug')
         self.assertContains(response, "children title", 2)
 
-    def test_11_show_content_tag(self):
+    def test_show_content_tag(self):
         """
         Test the {% show_content %} template tag
         """
@@ -336,7 +336,7 @@ class PagesTestCase(TestCase):
                             '{% show_content page "title" %}')
         self.assertEqual(template.render(context), page_data['title'])
 
-    def test_12_get_content_tag(self):
+    def test_get_content_tag(self):
         """
         Test the {% get_content %} template tag
         """
@@ -359,12 +359,12 @@ class PagesTestCase(TestCase):
         self.assertEqual(template.render(context), page_data['title'])
 
 
-    def test_17_request_mockup(self):
+    def test_request_mockup(self):
         from pages.utils import get_request_mock
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
 
-    def test_18_tree_admin_interface(self):
+    def test_tree_admin_interface(self):
         """
         Test that moving/creating page in the tree is working properly
         using the admin interface
@@ -445,7 +445,7 @@ class PagesTestCase(TestCase):
         response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
         self.assertEqual(response.status_code, 200)
 
-    def test_19_tree(self):
+    def test_tree(self):
         """
         Test that the navigation tree works properly with mptt
         """
@@ -494,7 +494,7 @@ class PagesTestCase(TestCase):
             "[<Page: page3>, <Page: page1>]")
             
     
-    def test_20_ajax_language(self):
+    def test_ajax_language(self):
         """Test that language is working properly"""
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -507,7 +507,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Auteur' in response.content)
         
-        # Create some pages (taken from test_18_tree_admin_interface)
+        # Create some pages (taken from test_tree_admin_interface)
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -551,7 +551,7 @@ class PagesTestCase(TestCase):
         # Make sure the content response we got was in french
         self.assertTrue('Auteur' in response.content)
 
-    def test_21_view_context(self):
+    def test_view_context(self):
         """
         Test that the default view can only return the context
         """
@@ -570,7 +570,7 @@ class PagesTestCase(TestCase):
         context = details(request, only_context=True)
         self.assertEqual(context['current_page'], page1)
 
-    def test_24_page_valid_targets(self):
+    def test_page_valid_targets(self):
         """Test page valid_targets method"""
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -590,7 +590,7 @@ class PagesTestCase(TestCase):
         self.assertEqual(str(c1.valid_targets()),
                                             "[<Page: root>]")
 
-    def test_25_page_admin_view(self):
+    def test_page_admin_view(self):
         """Test page admin view"""
         c = Client()
         c.login(username= 'batiste', password='b')
@@ -621,7 +621,7 @@ class PagesTestCase(TestCase):
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
         
-    def test_26_page_alias(self):
+    def test_page_alias(self):
         """Test page aliasing system"""
 
         c = Client()
@@ -663,7 +663,7 @@ class PagesTestCase(TestCase):
         response = c.get('/pages/index.php?page=downloads')
         self.assertRedirects(response, '/pages/downloads-page', 301)
        
-    def test_27_page_redirect_to(self):
+    def test_page_redirect_to(self):
         """Test page redirected to an other page."""
 
         client = Client()
@@ -680,7 +680,7 @@ class PagesTestCase(TestCase):
         response = client.get(page1.get_absolute_url())
         self.assertRedirects(response, page2.get_absolute_url(), 301)
 
-    def test_28_page_redirect_to_url(self):
+    def test_page_redirect_to_url(self):
         """Test page redirected to external url."""
 
         client = Client()
@@ -694,3 +694,5 @@ class PagesTestCase(TestCase):
         response = client.get(page1.get_absolute_url())
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
+
+        

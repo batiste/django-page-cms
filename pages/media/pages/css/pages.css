@@ -571,6 +571,10 @@ html[dir=rtl] .change-form .module-options .form-row {
     right: 12px;
     width: 150px;
 }
+html[dir=rtl] .change-form .module-content .revisions {
+    left: 12px;
+    right: auto;
+}
 .change-form .module-content .wym_skin_django {
     padding: 0;
 }

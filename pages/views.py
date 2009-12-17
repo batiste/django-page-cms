@@ -83,20 +83,22 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     if settings.PAGE_EXTRA_CONTEXT:
         context.update(settings.PAGE_EXTRA_CONTEXT())
 
-    if delegation and current_page.delegate_to:
-        urlconf = get_urlconf(current_page.delegate_to)
-        result = resolve('/', urlconf)
-        if len(result):
-            view, args, kwargs = result
-            return view(
-                request,
-                *args,
-                current_page=current_page,
-                path=path,
-                lang=lang,
-                pages_navigation=pages_navigation,
-                **kwargs
-            )
+    # This works only for python 2.6 (named args after *args)
+    # so disable for now
+    #if delegation and current_page.delegate_to:
+    #    urlconf = get_urlconf(current_page.delegate_to)
+    #    result = resolve('/', urlconf)
+    #    if len(result):
+    #        view, args, kwargs = result
+    #        return view(
+    #            request,
+    #            *args,
+    #            current_page=current_page,
+    #            path=path,
+    #            lang=lang,
+    #            pages_navigation=pages_navigation,
+    #            **kwargs
+    #        )
 
     return template_name, context
 

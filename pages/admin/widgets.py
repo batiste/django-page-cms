@@ -77,7 +77,7 @@ register_widget(RichTextarea)
 
 if PAGE_TINYMCE:
     from tinymce import widgets as tinymce_widgets
-    
+
     class TinyMCE(tinymce_widgets.TinyMCE):
         """TinyMCE widget."""
         def __init__(self, language=None, attrs=None, mce_attrs=None, **kwargs):
@@ -112,10 +112,9 @@ class WYMEditor(Textarea):
             'wymeditor/jquery.wymeditor.js',
             'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
         )]
-       
+
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
             js.append(join(PAGES_MEDIA_URL, 'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
-        
 
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
@@ -141,7 +140,7 @@ class WYMEditor(Textarea):
         context['filebrowser'] = 0
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
             context['filebrowser'] = 1
-            
+
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/wymeditor.html', context))
 
@@ -149,7 +148,7 @@ register_widget(WYMEditor)
 
 class markItUpMarkdown(Textarea):
     """markItUpMarkdown widget."""
-    
+
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -174,7 +173,7 @@ register_widget(markItUpMarkdown)
 
 class markItUpHTML(Textarea):
     """markItUpHTML widget."""
-    
+
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
@@ -204,8 +203,7 @@ class EditArea(Textarea):
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'edit_area/edit_area_full.js',
         )]
-    
-        
+
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
         self.attrs = {'class': 'editarea',}
@@ -230,14 +228,14 @@ class ImageInput(FileInput):
         self.language = language
         self.page = page
         super(ImageInput, self).__init__(attrs)
-    
+
     def render(self, name, value, attrs=None, **kwargs):
         if not self.page:
             field_content = _('Please save the page to show the image field')
         else:
-            field_content = ""
+            field_content = ''
             if value:
-                field_content = _("Current file: ") + value + '<br>'
+                field_content = _('Current file: %s<br/>') % value
             field_content += super(ImageInput, self).render(name, attrs)
         return mark_safe(field_content)
 register_widget(ImageInput)

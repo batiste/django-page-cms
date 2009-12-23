@@ -188,6 +188,11 @@ class ImagePlaceholderNode(PlaceholderNode):
             storage = FileSystemStorage()
             filename = os.path.join(settings.PAGE_UPLOAD_ROOT, 'page_'+str(page.id),
                 self.name + '-' + str(time.time()))
+
+            m = re.search('\.[a-zA-Z]{3}$', str(data))
+            if m is not None:
+                filename += m.group(0)
+
             filename = storage.save(filename, data)
             super(ImagePlaceholderNode, self).save(
                 page,

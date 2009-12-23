@@ -186,7 +186,7 @@ class ImagePlaceholderNode(PlaceholderNode):
         filename = ""
         if page and page.id and data:
             storage = FileSystemStorage()
-            filename = os.path.join('upload', 'page_'+str(page.id),
+            filename = os.path.join(settings.PAGE_UPLOAD_ROOT, 'page_'+str(page.id),
                 self.name + '-' + str(time.time()))
             filename = storage.save(filename, data)
             super(ImagePlaceholderNode, self).save(

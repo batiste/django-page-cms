@@ -155,7 +155,7 @@ def filter_link(content, page, language, content_type):
                     # TODO: try the cache before fetching the Page object
                     from pages.models import Page
                     target_page = Page.objects.get(pk=int(result.group(1)))
-                    tag['href'] = target_page.get_absolute_url(language)
+                    tag['href'] = target_page.get_url_path(language)
                 except Page.DoesNotExist:
                     cache.set(Page.PAGE_BROKEN_LINK_KEY % page.id, True)
                     tag['class'] = 'pagelink_broken'

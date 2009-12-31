@@ -57,7 +57,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     if not current_page:
         alias = PageAlias.objects.from_path(request, path, lang)
         if alias:
-            url = alias.page.get_absolute_url(lang)
+            url = alias.page.get_url_path(lang)
             return HttpResponsePermanentRedirect(url)
         raise Http404
 
@@ -70,7 +70,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     
     if current_page.redirect_to:
         return HttpResponsePermanentRedirect(
-            current_page.redirect_to.get_absolute_url(lang))
+            current_page.redirect_to.get_url_path(lang))
     
     template_name = current_page.get_template()
     

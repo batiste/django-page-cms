@@ -189,7 +189,7 @@ def show_absolute_url(context, page, lang=None):
     page = get_page_from_string_or_id(page, lang)
     if not page:
         return {'content':''}
-    url = page.get_absolute_url(language=lang)
+    url = page.get_url_path(language=lang)
     if url:
         return {'content':url}
     return {'content':''}

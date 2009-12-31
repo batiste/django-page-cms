@@ -677,8 +677,8 @@ class PagesTestCase(TestCase):
         page1.save()
 
         # now check whether you go to the target page.
-        response = client.get(page1.get_absolute_url())
-        self.assertRedirects(response, page2.get_absolute_url(), 301)
+        response = client.get(page1.get_url_path())
+        self.assertRedirects(response, page2.get_url_path(), 301)
 
     def test_page_redirect_to_url(self):
         """Test page redirected to external url."""
@@ -691,7 +691,7 @@ class PagesTestCase(TestCase):
         page1.save()
 
         # now check whether we can retrieve the page.
-        response = client.get(page1.get_absolute_url())
+        response = client.get(page1.get_url_path())
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
 

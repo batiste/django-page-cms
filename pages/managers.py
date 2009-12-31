@@ -110,7 +110,7 @@ class PageManager(models.Manager):
         # more than one page matching the slug, let's use the full url
         if len(pages_list) > 1:
             for page in pages_list:
-                if page.get_url(lang) == complete_path:
+                if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
 

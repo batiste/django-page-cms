@@ -184,8 +184,9 @@ class RegressionTestCase(TestCase):
         temp = loader.get_template('pages/tests/test6.html')
         render = temp.render(RequestContext(request, {'current_page':page}))
 
-        self.assertTrue('t1_'+page.get_absolute_url() in render)
-        self.assertTrue('t2_'+page.get_absolute_url() in render)
-        self.assertTrue('t3_'+page.get_absolute_url() in render)
+        self.assertTrue('t1_'+page.get_url_path() in render)
+        self.assertTrue('t2_'+page.get_url_path() in render)
+        self.assertTrue('t3_'+page.get_url_path() in render)
         self.assertTrue('t4_'+page.slug() in render)
         self.assertTrue('t5_'+page.slug() in render)
+        

@@ -7,11 +7,13 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.0
 =============
 
-  * A new character field called `delegate_to` is added to the page model
+  * `get_url` is renamed into `get_complete_slug`.
+  * `get_absolute_url` is renamed into `get_url_path`.
+  * A new character field called `delegate_to` is added to the page model.
     to enable the delegation of the pages rendering to a 3rd party application.
   * Admin widgets now needs to a registery to be used within the admin.
     The CMS doesn't load load an external module for you anymore.
-  * RTL support for pages in admin
+  * RTL support for pages in admin.
   * The context variable `pages` has been renamed to `pages_naviagtion` to avoid
     any name conflict with some pagination tags.
 

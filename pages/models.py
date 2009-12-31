@@ -183,8 +183,8 @@ class Page(models.Model):
             return False
         return Page.objects.root()[0].id == self.id
 
-    def get_absolute_url(self, language=None):
-        """Return the absolute page url. Add the language prefix if
+    def get_url_path(self, language=None):
+        """Return the URL's path component. Add the language prefix if
         ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
 
         :param language: the wanted url language.
@@ -192,10 +192,23 @@ class Page(models.Model):
         url = reverse('pages-root')
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             url += str(language) + '/'
-        return url + self.get_url(language)
+        return url + self.get_complete_slug(language)
 
-    def get_url(self, language=None):
-        """Return url of this page, adding all parent's slug."""
+    def get_absolute_url(self, language=None):
+        """Alias for `get_url_path`.
+
+        This method is only there for backward compatibility and will be
+        removed in a near futur.
+
+        :param language: the wanted url language.
+        """
+        return self.get_url_path(self, language=language)
+
+    def get_complete_slug(self, language=None):
+        """Return the complete slug of this page by concatenating
+        all parent's slugs.
+
+        :param language: the wanted slug language."""
         url = cache.get(self.PAGE_URL_KEY % (self.id, language))
         if url:
             return url
@@ -209,6 +222,16 @@ class Page(models.Model):
         cache.set(self.PAGE_URL_KEY % (self.id, language), url)
         
         return url
+
+    def get_url(self, language=None):
+        """Alias for `get_complete_slug`.
+
+        This method is only there for backward compatibility and will be
+        removed in a near futur.
+
+        :param language: the wanted url language.
+        """
+        return self.get_complete_slug(self, language=language)
 
     def slug(self, language=None, fallback=True):
         """
@@ -395,5 +418,5 @@ class PageAlias(models.Model):
         super(PageAlias, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "%s => %s" % (self.url, self.page.get_url())
+        return "%s => %s" % (self.url, self.page.get_complete_slug())
 

@@ -153,7 +153,10 @@ PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 # This ensure that even if you have moved a page, the URL will remain correct.
 PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', False)
 
-
 # This setting is a function that can be defined if you need to pass extra
 # context data to the pages templates.
 PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
+
+# This setting is the name of a sub-folder where uploaded content, like
+# placeholder images, is placed.
+PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')

@@ -88,13 +88,13 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
         result = resolve('/', urlconf)
         if len(result):
             view, args, kwargs = result
+            kwargs['current_page'] = current_page
+            kwargs['path'] = path
+            kwargs['lang'] = lang
+            kwargs['pages_navigation'] = pages_navigation
             return view(
                 request,
                 *args,
-                current_page=current_page,
-                path=path,
-                lang=lang,
-                pages_navigation=pages_navigation,
                 **kwargs
             )
 

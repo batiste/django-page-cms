@@ -61,8 +61,8 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
             return HttpResponsePermanentRedirect(url)
         raise Http404
 
-    if not (request.user.is_authenticated() and request.user.is_staff) and \
-            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
+    if (not (request.user.is_authenticated() and request.user.is_staff) and
+            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED)):
         raise Http404
 
     if current_page.redirect_to_url:

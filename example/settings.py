@@ -104,6 +104,7 @@ INSTALLED_APPS = (
     'mptt',
     'staticfiles',
     'tinymce',
+    'south',
 )
 
 PAGE_TINYMCE = True

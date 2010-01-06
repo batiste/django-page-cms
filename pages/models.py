@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
+import mptt
+
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -8,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
-import mptt
+
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
@@ -113,7 +115,8 @@ class Page(models.Model):
         # Drafts should not, unless they have been set to the future
         if self.status == self.DRAFT:
             if settings.PAGE_SHOW_START_DATE:
-                if self.publication_date and self.publication_date <= datetime.now():
+                if (self.publication_date and
+                        self.publication_date <= datetime.now()):
                     self.publication_date = None
             else:
                 self.publication_date = None
@@ -406,7 +409,8 @@ class Content(models.Model):
 
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
-    page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
+    page = models.ForeignKey(Page, null=True, blank=True,
+        verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
     class Meta:

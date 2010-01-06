@@ -65,11 +65,11 @@ class Page(models.Model):
     
     parent = models.ForeignKey('self', null=True, blank=True, 
             related_name='children', verbose_name=_('parent'))
-    creation_date = models.DateTimeField(_('creation date'), editable=False, 
+    creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=datetime.now)
     publication_date = models.DateTimeField(_('publication date'), 
-            null=True, blank=True, help_text=_('''When the page should go live.
-            Status must be "Published" for page to go live.'''))
+            null=True, blank=True, help_text=_('''When the page should go
+            live. Status must be "Published" for page to go live.'''))
     publication_end_date = models.DateTimeField(_('publication end date'), 
             null=True, blank=True, help_text=_('''When to expire the page.
             Leave empty to never expire.'''))

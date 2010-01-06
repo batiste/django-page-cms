@@ -16,7 +16,9 @@ import time
 import re
 
 def parse_placeholder(parser, token):
-    """Parser that understand all the placeholder's parameters."""
+    """Parse the `PlaceholderNode` parameters.
+
+    Return a tuple with the name and parameters."""
     bits = token.split_contents()
     count = len(bits)
     error_string = '%r tag requires at least one argument' % bits[0]
@@ -57,14 +59,20 @@ class PlaceholderNode(template.Node):
         a look into :mod:`pages.admin.widgets` to see which widgets
         are available.
     :param parsed: if the ``parsed`` word is given, the content of the
-        placeholder is evaluated as template code, within the current context.
-    :param as_varname: if ``as_varname`` is defined, no value will be returned.
-        A variable will be created in the context with the defined name.
+        placeholder is evaluated as template code, within the current
+        context.
+    :param as_varname: if ``as_varname`` is defined, no value will be
+        returned. A variable will be created in the context
+        with the defined name.
     """
 
     field = CharField
 
-    def __init__(self, name, page=None, widget=TextInput, parsed=False, as_varname=None):
+    def __init__(self, name, page=None, widget=TextInput, parsed=False,
+            as_varname=None):
+        """Gather basic values for the `PlaceholderNode`.
+
+        These values should be thread safe and don't change between calls."""
         self.page = page or 'current_page'
         self.name = name
         self.widget = widget
@@ -73,7 +81,7 @@ class PlaceholderNode(template.Node):
         self.found_in_block = None
 
     def get_widget(self, page, language, fallback=Textarea):
-        """Given the name of a placeholder return a ``Widget`` subclass
+        """Given the name of a placeholder return a `Widget` subclass
         like Textarea or TextInput."""
         is_str = type(self.widget) == type(str())
         is_unicode = type(self.widget) == type(unicode())
@@ -92,7 +100,7 @@ class PlaceholderNode(template.Node):
         if self.parsed:
             help_text = _('Note: This field is evaluated as template code.')
         else:
-            help_text = ""
+            help_text = ''
         widget = self.get_widget(page, language)
         return self.field(widget=widget, initial=initial,
                     help_text=help_text, required=False)
@@ -169,7 +177,10 @@ class PlaceholderNode(template.Node):
 
 
 class ImagePlaceholderNode(PlaceholderNode):
+    """A `PlaceholderNode` that saves one image on disk.
 
+    `PAGE_UPLOAD_ROOT` setting define where to save the image.
+    """
 
     def get_field(self, page, language, initial=None):
         help_text = ""
@@ -186,8 +197,11 @@ class ImagePlaceholderNode(PlaceholderNode):
         filename = ""
         if page and page.id and data:
             storage = FileSystemStorage()
-            filename = os.path.join(settings.PAGE_UPLOAD_ROOT, 'page_'+str(page.id),
-                self.name + '-' + str(time.time()))
+            filename = os.path.join(
+                settings.PAGE_UPLOAD_ROOT,
+                'page_'+str(page.id),
+                self.name + '-' + str(time.time())
+            )
 
             m = re.search('\.[a-zA-Z]{1,4}$', str(data))
             if m is not None:

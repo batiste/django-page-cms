@@ -3,7 +3,8 @@ from django.utils.translation import ugettext as _
 
 class WidgetAlreadyRegistered(Exception):
     """
-    An attempt was made to register a widget for Django page CMS more than once.
+    An attempt was made to register a widget for Django page CMS more
+    than once.
     """
     pass
 

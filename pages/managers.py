@@ -206,7 +206,8 @@ class ContentManager(models.Manager):
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
                 if lang[0] in content_dict and content_dict[lang[0]]:
-                    return filter_link(content_dict[lang[0]], page, lang[0], ctype)
+                    return filter_link(content_dict[lang[0]], page, lang[0],
+                        ctype)
         return ''
 
     def get_content_slug_by_slug(self, slug):
@@ -269,8 +270,9 @@ class PageAliasManager(models.Manager):
     
     def from_path(self, request, path, lang):
         """
-        Resolve a request to an alias. returns a :class:`PageAlias <pages.models.PageAlias>`
-        if the url matches no page at all. The aliasing system supports plain
+        Resolve a request to an alias. returns a
+        :class:`PageAlias <pages.models.PageAlias>` if the url matches
+        no page at all. The aliasing system supports plain
         aliases (``/foo/bar``) as well as aliases containing GET parameters
         (like ``index.php?page=foo``).
 

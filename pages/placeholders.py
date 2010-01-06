@@ -9,6 +9,7 @@ from django.utils.safestring import SafeUnicode, mark_safe
 from django.template.loader import render_to_string
 
 from pages.widgets_registry import get_widget
+from pages.admin.widgets import VideoWidget
 from pages import settings
 from pages.models import Content, Page
 import os
@@ -67,15 +68,17 @@ class PlaceholderNode(template.Node):
     """
 
     field = CharField
+    widget = TextInput
 
-    def __init__(self, name, page=None, widget=TextInput, parsed=False,
+    def __init__(self, name, page=None, widget=None, parsed=False,
             as_varname=None):
         """Gather basic values for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
         self.page = page or 'current_page'
         self.name = name
-        self.widget = widget
+        if widget:
+            self.widget = widget
         self.parsed = parsed
         self.as_varname = as_varname
         self.found_in_block = None
@@ -195,7 +198,7 @@ class ImagePlaceholderNode(PlaceholderNode):
 
     def save(self, page, language, data, change):
         filename = ""
-        if page and page.id and data:
+        if change and data:
             storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,
@@ -216,17 +219,24 @@ class ImagePlaceholderNode(PlaceholderNode):
             )
 
 class VideoPlaceholderNode(PlaceholderNode):
+    """A youtube `PlaceholderNode`, just here as an example."""
+
+    widget = VideoWidget
 
     def render(self, context):
         content = self.get_content(context)
         if not content:
             return ''
         if content:
-            video_url = content
+            video_url, w, h = content.split('\\')
             m = re.search('youtube\.com\/watch\?v=([^&]+)', content)
             if m:
                 video_url = 'http://www.youtube.com/v/'+m.group(1)
-            context = {'video_url': video_url}
+            if not w:
+                w = 425
+            if not h:
+                h = 344
+            context = {'video_url': video_url, 'w':w, 'h':h}
             renderer = render_to_string('pages/embed.html', context)
             return mark_safe(renderer)
         return ''

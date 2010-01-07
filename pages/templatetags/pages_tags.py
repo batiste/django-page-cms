@@ -252,7 +252,7 @@ def pages_breadcrumb(context, page, url='/'):
     request = context['request']
     site_id = None
     if page:
-        pages = page.get_ancestors()
+        pages_navigation = page.get_ancestors()
     return locals()
 pages_breadcrumb = register.inclusion_tag(
     'pages/breadcrumb.html',
@@ -317,7 +317,7 @@ do_get_content = register.tag('get_content', do_get_content)
 class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
-        if 'pages' not in context:
+        if 'pages_navigation' not in context:
             pages = Page.objects.navigation().order_by("tree_id")
             context.update({'pages_navigation': pages})
         if 'current_page' not in context:

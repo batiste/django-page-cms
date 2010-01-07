@@ -291,7 +291,8 @@ class Page(models.Model):
         :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
         """
         template = self.get_template()
-        for  t in settings.PAGE_TEMPLATES:
+        page_templates = settings.get_page_templates()
+        for t in page_templates:
             if t[0] == template:
                 return t[1]
         return template

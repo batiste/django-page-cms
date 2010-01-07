@@ -21,9 +21,29 @@ if DEFAULT_PAGE_TEMPLATE is None:
 #    ('pages/nice.html', 'nice one'),
 #    ('pages/cool.html', 'cool one'),
 # )
+# 
+# One can also assign a function returning the tuple to this variable to achieve
+# dynamic template list (e.g. if the list is maintained in a model in the admin interface
 PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
-if PAGE_TEMPLATES is None:
+if (PAGE_TEMPLATES is None and 
+    not (isinstance(PAGE_TEMPLATES, str) or
+         isinstance(PAGE_TEMPLATES, unicode))):
     PAGE_TEMPLATES = ()
+
+get_page_templates_func = None    
+def get_page_templates():
+    global get_page_templates_func
+    if get_page_templates_func:
+        return get_page_templates_func()
+    if (isinstance(PAGE_TEMPLATES, str) or
+        isinstance(PAGE_TEMPLATES, unicode)):
+        from django.core.urlresolvers import get_mod_func
+        mod_name, model_name = get_mod_func(PAGE_TEMPLATES)
+        m = getattr(__import__(mod_name, {}, {}, ['']), model_name)
+        get_page_templates_func = m.get_page_templates
+        return get_page_templates_func()
+    else:
+        return PAGE_TEMPLATES  
 
 # Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable 
 # advanced hierarchic permissions on your pages.

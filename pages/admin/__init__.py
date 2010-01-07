@@ -56,7 +56,8 @@ class PageAdmin(admin.ModelAdmin):
         insert_point = general_fields.index('status') + 1
 
     normal_fields = ['language']
-    if settings.PAGE_TEMPLATES:
+    page_templates = settings.get_page_templates()
+    if len(page_templates) > 0:
         normal_fields.append('template')
     normal_fields.append('redirect_to')
     normal_fields.append('redirect_to_url')
@@ -208,8 +209,9 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['slug'].label = _('Slug')
 
         template = get_template_from_request(request, obj)
-        if settings.PAGE_TEMPLATES:
-            template_choices = list(settings.PAGE_TEMPLATES)
+        page_templates = settings.get_page_templates()
+        if len(page_templates) > 0:
+            template_choices = list(page_templates)
             template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE,
                     _('Default template')))
             form.base_fields['template'].choices = template_choices

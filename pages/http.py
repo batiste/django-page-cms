@@ -94,7 +94,7 @@ def get_template_from_request(request, page=None):
     default template.
     """
     page_templates = settings.get_page_templates()
-    if len(page_templates) > 0:
+    if len(page_templates) == 0:
         return settings.DEFAULT_PAGE_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \

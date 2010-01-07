@@ -22,8 +22,30 @@ if DEFAULT_PAGE_TEMPLATE is None:
 #    ('pages/cool.html', 'cool one'),
 # )
 # 
-# One can also assign a function returning the tuple to this variable to achieve
-# dynamic template list (e.g. if the list is maintained in a model in the admin interface
+# One can also assign a model string that contains a static method called
+# get_page_templates (which should return the tuple) to this variable to achieve
+# dynamic template list e.g.:
+#
+# PAGE_TEMPLATES = 'django_site.administration.models.PageTemplate'
+#
+# Where the model might look like this:
+#
+# class PageTemplate(OrderedModel):
+#    name = models.CharField(unique=True, max_length=100)
+#    template = models.CharField(unique=True, max_length=260)
+#    
+#    @staticmethod
+#    def get_page_templates():
+#        return PageTemplate.objects.values_list('template', 'name')
+#        
+#    
+#    class Meta:
+#        ordering = ["order"]
+#    
+#    def __unicode__(self):
+#        return self.name
+
+
 PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
 if (PAGE_TEMPLATES is None and 
     not (isinstance(PAGE_TEMPLATES, str) or

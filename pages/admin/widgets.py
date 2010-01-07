@@ -6,6 +6,7 @@ from django.conf import settings
 from django.forms import MultiWidget
 from django.forms import TextInput, Textarea, HiddenInput
 from django.forms import MultiWidget, FileInput
+from django.contrib.admin.widgets import AdminTextInputWidget, AdminTextareaWidget
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
@@ -20,9 +21,22 @@ from pages.models import Page
 from pages.utils import get_language_from_request
 from pages.widgets_registry import register_widget
 
+
 register_widget(TextInput)
 register_widget(Textarea)
+register_widget(AdminTextInputWidget)
+register_widget(AdminTextareaWidget)
 
+if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
+    from filebrowser.fields import FileBrowseWidget
+    class FileBrowseInput(FileBrowseWidget):
+        """FileBrowse widget."""
+
+        def __init__(self, attrs={}):
+            super(FileBrowseInput, self).__init__(attrs)
+    register_widget(FileBrowseInput)
+            
+            
 if PAGE_TAGGING:
     from tagging.models import Tag
     from django.utils import simplejson

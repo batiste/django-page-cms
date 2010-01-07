@@ -160,6 +160,33 @@ A multi line input::
 
     {% placeholder [name] with Textarea %}
 
+AdminTextInput
+--------------
+
+A simple line input with Django admin CSS styling (better for larger input fields)::
+
+    {% placeholder [name] with AdminTextInput %}
+
+AdminTextarea
+-------------
+
+A multi line input with Django admin CSS styling::
+
+    {% placeholder [name] with AdminTextarea %}
+
+FileBrowseInput
+---------------
+
+A file browsing widget::
+
+The following app needs to be installed:
+
+  * http://code.google.com/p/django-filebrowser/
+
+
+    {% placeholder [name] with FileBrowseInput %}
+
+
 RichTextarea
 ------------
 

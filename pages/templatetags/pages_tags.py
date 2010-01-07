@@ -332,7 +332,7 @@ def do_load_pages(parser, token):
     
         <ul>
             {% load_pages %}
-            {% for page in pages %}
+            {% for page in pages_navigation %}
                 {% pages_menu page %}
             {% endfor %}
         </ul>

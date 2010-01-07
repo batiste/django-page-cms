@@ -30,7 +30,7 @@ register_widget(AdminTextareaWidget)
 if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
     from filebrowser.fields import FileBrowseWidget
     class FileBrowseInput(FileBrowseWidget):
-        """FileBrowse widget."""
+        """FileBrowseInput widget."""
 
         def __init__(self, attrs={}):
             super(FileBrowseInput, self).__init__(attrs)

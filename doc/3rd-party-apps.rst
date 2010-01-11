@@ -2,6 +2,7 @@
  Third party applications
 ==========================
 
+
 Delegate the rendering of a page to an application
 ===================================================
 
@@ -53,6 +54,8 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
 
     The children pages will not be resolved by the URL module, but all the URL that don't
     have any corresponding pages will.
+
+.. _3rd-party-apps:
 
 Integrate application models and forms into the page admin
 ==========================================================

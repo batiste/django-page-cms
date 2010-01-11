@@ -21,30 +21,14 @@ if DEFAULT_PAGE_TEMPLATE is None:
 #    ('pages/nice.html', 'nice one'),
 #    ('pages/cool.html', 'cool one'),
 # )
-# 
-# One can also assign a model string that contains a static method called
-# get_page_templates (which should return the tuple) to this variable to achieve
-# dynamic template list e.g.:
 #
-# PAGE_TEMPLATES = 'django_site.administration.models.PageTemplate'
+# One can also assign a callable (which should return the tuple) to this
+# variable to achieve dynamic template list e.g.:
 #
-# Where the model might look like this:
+# def _get_templates():
+#    ...
 #
-# class PageTemplate(OrderedModel):
-#    name = models.CharField(unique=True, max_length=100)
-#    template = models.CharField(unique=True, max_length=260)
-#    
-#    @staticmethod
-#    def get_page_templates():
-#        return PageTemplate.objects.values_list('template', 'name')
-#        
-#    
-#    class Meta:
-#        ordering = ["order"]
-#    
-#    def __unicode__(self):
-#        return self.name
-
+# PAGE_TEMPLATES = _get_templates
 
 PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
 if (PAGE_TEMPLATES is None and 
@@ -52,20 +36,11 @@ if (PAGE_TEMPLATES is None and
          isinstance(PAGE_TEMPLATES, unicode))):
     PAGE_TEMPLATES = ()
 
-get_page_templates_func = None    
 def get_page_templates():
-    global get_page_templates_func
-    if get_page_templates_func:
-        return get_page_templates_func()
-    if (isinstance(PAGE_TEMPLATES, str) or
-        isinstance(PAGE_TEMPLATES, unicode)):
-        from django.core.urlresolvers import get_mod_func
-        mod_name, model_name = get_mod_func(PAGE_TEMPLATES)
-        m = getattr(__import__(mod_name, {}, {}, ['']), model_name)
-        get_page_templates_func = m.get_page_templates
-        return get_page_templates_func()
+    if callable(PAGE_TEMPLATES):
+        return PAGE_TEMPLATES()
     else:
-        return PAGE_TEMPLATES  
+        return PAGE_TEMPLATES
 
 # Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable 
 # advanced hierarchic permissions on your pages.

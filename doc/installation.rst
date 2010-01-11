@@ -1,4 +1,4 @@
-﻿============
+============
 Installation
 ============
 
@@ -207,13 +207,17 @@ In the the example application you have actually this::
         ('pages/cool.html', 'cool one'),
     )
 
-One can also assign a model string that contains a static method called
-get_page_templates (which should return the tuple) to this variable to achieve
-dynamic template list e.g.:
+One can also assign a callable (which should return the tuple) to this
+setting to achieve dynamic template list e.g.::
 
-    PAGE_TEMPLATES = 'django_site.administration.models.PageTemplate'
+    def _get_templates():
+        # to avoid any import issues
+        from app.models import PageTemplate
+        return PageTemplate.get_page_templates()
 
-Where the model might look like this:
+    PAGE_TEMPLATES = _get_templates
+
+Where the model might look like this::
 
     class PageTemplate(OrderedModel):
         name = models.CharField(unique=True, max_length=100)
@@ -420,6 +424,9 @@ and directly link a new instance of this model with your page in the admin::
             'form':'documents.models.DocumentForm'},
     ]
 
+.. note::
+
+    :ref:`Complete documentation on how to use this setting <3rd-party-apps>`
 
 PAGE_LINK_FILTER
 ----------------

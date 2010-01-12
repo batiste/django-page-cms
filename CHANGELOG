@@ -7,6 +7,8 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.0
 =============
 
+  * PAGE_TEMPLATES setting can also be a callable.
+  * PAGE_UPLOAD_ROOT setting enable you to choose where files are uploaded.
   * The CMS comes with south migrations if you want to use them.
   * `get_url` is renamed into `get_complete_slug`.
   * `get_absolute_url` is renamed into `get_url_path`.

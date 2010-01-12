@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
+from datetime import datetime
+
 import django
 from django.conf import settings
 from django.test.client import Client
@@ -695,4 +697,33 @@ class PagesTestCase(TestCase):
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
 
+    def test_page_freeze_date(self):
+        """Test page freezing feature."""
+        c = Client()
+        c.login(username= 'batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'before'
+        page_data['slug'] = 'before'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.from_path('before', None)
+        self.assertEqual(page.freeze_date, None)
+        limit = datetime.now()
+        page.freeze_date = limit
+        page.save()
+
+        page_data['title'] = 'after'
+        page_data['slug'] = 'after'
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        page = Page.objects.from_path('after', None)
+        self.assertEqual(page.slug(), 'before')
+        page.freeze_date = None
+        page.save()
+        self.assertEqual(page.slug(), 'after')
+        page.freeze_date = limit
+        page.save()
+        self.assertEqual(page.slug(), 'before')
+        
         

@@ -58,7 +58,7 @@ class Page(models.Model):
     PAGE_URL_KEY = "page_%d_language_%s_url"
     #PAGE_TEMPLATE_KEY = "page_%d_template"
     #PAGE_CHILDREN_KEY = "page_children_%d_%d"
-    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
+    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
@@ -82,6 +82,10 @@ class Page(models.Model):
 
     delegate_to = models.CharField(_('template'), max_length=100, null=True,
             blank=True)
+
+    freeze_date = models.DateTimeField(_('freeze date'),
+            null=True, blank=True, help_text=_('''Don't publish any content
+            after this date.'''))
     
     # Disable could make site tests fail
     sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
@@ -156,8 +160,13 @@ class Page(models.Model):
             p_names.append('slug')
         if 'title' not in p_names:
             p_names.append('title')
+        #frozen = int(bool(self.freeze_date))
+        # delete content cache, frozen or not
         for name in p_names:
-            cache.delete(self.PAGE_CONTENT_DICT_KEY % (self.id, name))
+            cache.delete(self.PAGE_CONTENT_DICT_KEY %
+                (self.id, name, 1))
+            cache.delete(self.PAGE_CONTENT_DICT_KEY %
+                (self.id, name, 0))
 
         for lang in settings.PAGE_LANGUAGES:
             cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))

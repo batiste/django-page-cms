@@ -2,6 +2,7 @@
 """Django CMS come with a set of ready to use widgets that you can enable
 in the admin via a placeholder tag in your template."""
 from os.path import join
+
 from django.conf import settings
 from django.forms import MultiWidget
 from django.forms import TextInput, Textarea, HiddenInput
@@ -35,8 +36,8 @@ if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
         def __init__(self, attrs={}):
             super(FileBrowseInput, self).__init__(attrs)
     register_widget(FileBrowseInput)
-            
-            
+
+
 if PAGE_TAGGING:
     from tagging.models import Tag
     from django.utils import simplejson
@@ -64,6 +65,8 @@ if PAGE_TAGGING:
             }
             return rendered + mark_safe(render_to_string(
                 'admin/pages/page/widgets/autocompletetaginput.html', context))
+
+    register_widget(AutoCompleteTagInput)
 
 class RichTextarea(Textarea):
     """A RichTextarea widget."""

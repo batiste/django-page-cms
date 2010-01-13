@@ -2,14 +2,16 @@
 """Django page CMS ``managers``."""
 import itertools, re
 from datetime import datetime
+
 from django.db import models, connection
 from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.core.cache import cache
+from django.contrib.auth.models import User
 
 from pages import settings
 from pages.utils import normalize_url, filter_link
-from django.contrib.auth.models import User
+from pages.http import get_slug_and_relative_path
 
 class PageManager(models.Manager):
     """
@@ -74,6 +76,7 @@ class PageManager(models.Manager):
                 Q(publication_end_date__gt=datetime.now()) |
                 Q(publication_end_date__isnull=True)
             )
+
         return queryset
 
     def published(self):
@@ -98,7 +101,6 @@ class PageManager(models.Manager):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
         from pages.models import Content, Page
-        from pages.http import get_slug_and_relative_path
         slug, path, lang = get_slug_and_relative_path(complete_path, lang)
         page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)
@@ -123,6 +125,7 @@ class ContentManager(models.Manager):
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
+        # TODO: that's a bit of a hack there
         # we need to remove <html><head/><body>...</body></html>
         return p.parse(content).toxml()[19:-14]
 
@@ -179,26 +182,32 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
-        PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
+        PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
-        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (str(page.id), ctype))
-        #content_dict = None
+        frozen = int(bool(page.freeze_date))
+        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen))
 
+        # fill a dict object for each language
         if not content_dict:
             content_dict = {}
             for lang in settings.PAGE_LANGUAGES:
+                params = {
+                    'language':lang[0],
+                    'type':ctype,
+                    'page':page
+                }
+                if page.freeze_date:
+                    params['creation_date__lte'] = page.freeze_date
+                language=lang[0]
                 try:
-                    content = self.filter(
-                        language=lang[0],
-                        type=ctype,
-                        page=page
-                    ).latest()
-                    content_dict[lang[0]] = content.body
+                    content = self.filter(**params).latest()
+                    content_dict[language] = content.body
                 except self.model.DoesNotExist:
-                    content_dict[lang[0]] = ''
-            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype), content_dict)
+                    content_dict[language] = ''
+            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
+                content_dict)
 
         if language in content_dict and content_dict[language]:
             return filter_link(content_dict[language], page, language, ctype)

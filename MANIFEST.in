@@ -9,5 +9,6 @@ include MANIFEST.in
 recursive-include doc *
 recursive-include pages *
 recursive-include requirements *
-global-include *.py
 global-exclude *.pyc
+prune example
+

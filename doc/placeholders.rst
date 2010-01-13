@@ -179,12 +179,11 @@ FileBrowseInput
 
 A file browsing widget::
 
-The following app needs to be installed:
-
-  * http://code.google.com/p/django-filebrowser/
-
-
     {% placeholder [name] with FileBrowseInput %}
+
+.. note::
+
+    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
 
 
 RichTextarea
@@ -223,6 +222,14 @@ A HTML editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
 
 .. image:: http://t37.net/files/markitup-081127.jpg
 
+AutoCompleteTagInput
+---------------------
+
+Provide a dynamic auto complete widget for tags used on pages::
+
+    {% placeholder [name] with AutoCompleteTagInput %}
+
+
 TinyMCE
 -------
 
@@ -249,10 +256,10 @@ Usage::
 EditArea
 --------
 
-Allows to edit raw html code with syntax highlight based on [http://www.cdolivet.com/index.php?page=editArea editArea]
+Allows to edit raw html code with syntax highlight based on this project: http://www.cdolivet.com/index.php?page=editArea
 
-The code (Javascript, CSS) for editarea is not included into the codebase.
-To get the code you can add this into your svn external dependecies::
+Basic code (Javascript, CSS) for editarea is included into the codebase.
+If you want the full version you can get it there::
 
     pages/media/pages/edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
 

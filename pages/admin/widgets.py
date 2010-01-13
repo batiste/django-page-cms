@@ -35,8 +35,8 @@ if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
         def __init__(self, attrs={}):
             super(FileBrowseInput, self).__init__(attrs)
     register_widget(FileBrowseInput)
-            
-            
+
+
 if PAGE_TAGGING:
     from tagging.models import Tag
     from django.utils import simplejson
@@ -64,6 +64,8 @@ if PAGE_TAGGING:
             }
             return rendered + mark_safe(render_to_string(
                 'admin/pages/page/widgets/autocompletetaginput.html', context))
+
+    register_widget(AutoCompleteTagInput)
 
 class RichTextarea(Textarea):
     """A RichTextarea widget."""

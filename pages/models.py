@@ -83,10 +83,20 @@ class Page(models.Model):
     delegate_to = models.CharField(_('template'), max_length=100, null=True,
             blank=True)
     
-    # Disable could make site tests fail
-    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
-            help_text=_('The site(s) the page is accessible at.'),
-            verbose_name=_('sites'))
+    if settings.PAGE_USE_SITE_ID:
+        sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
+                help_text=_('The site(s) the page is accessible at.'),
+                verbose_name=_('sites'))
+    else:
+        # Total disabling could make site tests fail
+        _sites = [settings.SITE_ID]
+        def _get_sites(self):
+            return self.sites 
+        def _set_sites(self, new_sites):
+            self.sites = new_sites
+        sites = property(_get_sites, _set_sites)
+        
+            
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,

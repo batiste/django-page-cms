@@ -32,9 +32,8 @@ class PageAdmin(admin.ModelAdmin):
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target', 'position']
 
-    # TODO: find solution to do this dynamically
-    #if getattr(settings, 'PAGE_USE_SITE_ID'):
-    general_fields.append('sites')
+    if settings.PAGE_USE_SITE_ID:
+        general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
     
     # Strange django behavior. If not provided, django will try to find

@@ -21,6 +21,14 @@ setup(
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
     packages=find_packages(exclude=['example', 'example.*']),
+    # very important for the egg to work properly
+    package_data={'pages': [
+        'templates/admin/pages/page/*.html',
+        'templates/admin/pages/page/widgets/*.html',
+        'templates/admin/pages/page/includes/*.html',
+        'templates/pages/*.html',
+        'templates/pages/tests/*.html'
+    ]},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

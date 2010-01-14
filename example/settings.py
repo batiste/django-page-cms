@@ -54,9 +54,11 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    # this syntax is deprecated with django 1.2
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    # could help
+    'django.template.loaders.eggs.load_template_source',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

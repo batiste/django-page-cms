@@ -2,6 +2,8 @@
 
 from south.db import db
 from django.db import models
+
+from pages import settings
 from pages.models import *
 
 class Migration:
@@ -9,25 +11,27 @@ class Migration:
     def forwards(self, orm):
         
         # Adding model 'Page'
-        db.create_table('pages_page', (
-            ('id', orm['pages.Page:id']),
-            ('author', orm['pages.Page:author']),
-            ('parent', orm['pages.Page:parent']),
-            ('creation_date', orm['pages.Page:creation_date']),
-            ('publication_date', orm['pages.Page:publication_date']),
-            ('publication_end_date', orm['pages.Page:publication_end_date']),
-            ('last_modification_date', orm['pages.Page:last_modification_date']),
-            ('status', orm['pages.Page:status']),
-            ('template', orm['pages.Page:template']),
-            ('delegate_to', orm['pages.Page:delegate_to']),
-            ('redirect_to_url', orm['pages.Page:redirect_to_url']),
-            ('redirect_to', orm['pages.Page:redirect_to']),
-            ('tags', orm['pages.Page:tags']),
-            ('lft', orm['pages.Page:lft']),
-            ('rght', orm['pages.Page:rght']),
-            ('tree_id', orm['pages.Page:tree_id']),
-            ('level', orm['pages.Page:level']),
-        ))
+        pages_page = (
+               ('id', orm['pages.Page:id']),
+               ('author', orm['pages.Page:author']),
+               ('parent', orm['pages.Page:parent']),
+               ('creation_date', orm['pages.Page:creation_date']),
+               ('publication_date', orm['pages.Page:publication_date']),
+               ('publication_end_date', orm['pages.Page:publication_end_date']),
+               ('last_modification_date', orm['pages.Page:last_modification_date']),
+               ('status', orm['pages.Page:status']),
+               ('template', orm['pages.Page:template']),
+               ('delegate_to', orm['pages.Page:delegate_to']),
+               ('redirect_to_url', orm['pages.Page:redirect_to_url']),
+               ('redirect_to', orm['pages.Page:redirect_to']),
+               ('lft', orm['pages.Page:lft']),
+               ('rght', orm['pages.Page:rght']),
+               ('tree_id', orm['pages.Page:tree_id']),
+               ('level', orm['pages.Page:level'])
+               )
+        if settings.PAGE_TAGGING:
+            pages_page.append(('tags', orm['pages.Page:tags']))
+        db.create_table('pages_page', pages_page)
         db.send_create_signal('pages', ['Page'])
         
         # Adding model 'Content'
@@ -58,12 +62,13 @@ class Migration:
         ))
         db.send_create_signal('pages', ['PagePermission'])
         
-        # Adding ManyToManyField 'Page.sites'
-        db.create_table('pages_page_sites', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('page', models.ForeignKey(orm.Page, null=False)),
-            ('site', models.ForeignKey(orm['sites.Site'], null=False))
-        ))
+        if settings.PAGE_USE_SITE_ID:
+            # Adding ManyToManyField 'Page.sites'
+            db.create_table('pages_page_sites', (
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+                ('page', models.ForeignKey(orm.Page, null=False)),
+                ('site', models.ForeignKey(orm['sites.Site'], null=False))
+            ))
         
     
     
@@ -85,7 +90,28 @@ class Migration:
         db.delete_table('pages_page_sites')
         
     
-    
+    page = {
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
+            'creation_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'delegate_to': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_modification_date': ('django.db.models.fields.DateTimeField', [], {}),
+            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
+            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['pages.Page']"}),
+            'publication_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'publication_end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'redirect_to': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirected_pages'", 'null': 'True', 'to': "orm['pages.Page']"}),
+            'redirect_to_url': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
+            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"}),
+            'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+            }
+    if settings.PAGE_TAGGING:
+        page['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
+        
     models = {
         'auth.group': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -129,26 +155,7 @@ class Migration:
             'page': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['pages.Page']"}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'pages.page': {
-            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
-            'creation_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'delegate_to': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_modification_date': ('django.db.models.fields.DateTimeField', [], {}),
-            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['pages.Page']"}),
-            'publication_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'publication_end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'redirect_to': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirected_pages'", 'null': 'True', 'to': "orm['pages.Page']"}),
-            'redirect_to_url': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"}),
-            'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'tags': ('tagging.fields.TagField', [], {'null': 'True'}),
-            'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
-        },
+        'pages.page': page,
         'pages.pagealias': {
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['pages.Page']", 'null': 'True', 'blank': 'True'}),

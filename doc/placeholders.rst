@@ -4,14 +4,15 @@ Placeholders template tag
 
 .. contents::
 
-The placeholder template tag is what make Django Page CMS special. The basic workflow
-is that you design your template first, according to the design needs. You put a placeholder tag
-where you want the administration users to input data.
+The placeholder template tag is what make Django Page CMS special. The workflow
+is that you design your template first according to the page design.
+Then you put placeholder tag where you want dynamic content.
 
-For each placeholder you will have a corresponding field appearing dynamicaly in the administration interface.
-You can make as many templates as you want, use the Django template inheritance, and CMS will behave as intended.
+For each placeholder you will have a corresponding field appearing automaticaly
+in the administration interface. You can make as many templates as you want,
+use the Django template inheritance, and then CMS will still behave as intended.
 
-The syntax for placeholder is the following::
+The syntax for a placeholder tag is the following::
 
     {% placeholder <name> [on <page>] [with <widget>] [parsed] [as <varname>] %}
 

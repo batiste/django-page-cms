@@ -43,6 +43,7 @@ Here is the list of features you can enable/disable:
 
   * Revisions,
   * Image placeholder,
+  * File browser with django-filebrowser,
   * Support for future publication start/end date,
   * Each page can have special permissions that child pages inehrit,
   * Each page can have a different that child pages inehrit,
@@ -95,12 +96,14 @@ than 80% and we try to keep it this way. To run the test suite:
     you must create a PagePermission object with all rights assigned to your user.
     After that you will be able to create pages.
 
-Handling images
----------------
+Handling images and files
+---------------------------
 
-Django page CMS include a image placeholder for basic needs. For a complete file browser you could use:
+Django page CMS include a image placeholder for basic needs. For files browser you could use django-filebrowser:
 
   * http://code.google.com/p/django-filebrowser/
+
+Once the application installed a `FileBrowseInput` will be available to use with your placeholders.
 
 Translations
 ------------

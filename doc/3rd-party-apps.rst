@@ -7,7 +7,7 @@ Delegate the rendering of a page to an application
 ===================================================
 
 By delegating the rendering of a page to another application, you will
-be able to use customize views and still get all the CMS variables
+be able to use customized views and still get all the CMS variables
 to render a proper navigation.
 
 First you need to register the urlconf module of your application to use it

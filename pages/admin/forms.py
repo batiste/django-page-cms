@@ -26,7 +26,7 @@ class PageForm(forms.ModelForm):
     template = forms.ChoiceField(
         required=False,
         label=_('Template'),
-        choices=settings.PAGE_TEMPLATES,
+        choices=settings.get_page_templates(),
     )
     delegate_to = forms.ChoiceField(
         required=False,

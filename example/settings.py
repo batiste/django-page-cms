@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'staticfiles',
     'tinymce',
     'south',
+    'authority',
 )
 
 PAGE_TINYMCE = True

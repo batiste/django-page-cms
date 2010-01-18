@@ -8,13 +8,14 @@ from pages import settings
 from pages.models import Page, Content
 from pages.utils import get_placeholders
 from pages.http import auto_render
-#from pages.admin.utils import set_body_pagelink, delete_body_pagelink_by_language
+from pages.permissions import PagePermission
 
 def change_status(request, page_id):
     """
     Switch the status of a page.
     """
-    if request.method == 'POST':
+    perm = PagePermission(request.user).check('change', method='POST')
+    if perm and request.method == 'POST':
         page = Page.objects.get(pk=page_id)
         page.status = int(request.POST['status'])
         page.save()
@@ -24,7 +25,10 @@ change_status = staff_member_required(change_status)
 
 def modify_content(request, page_id, content_id, language_id):
     """Modify the content of a page."""
-    if request.method == 'POST':
+    page = get_object_or_404(Page, pk=page_id)
+    perm = PagePermission(request.user).check('change', page=page,
+            lang=language_id, method='POST')
+    if perm and request.method == 'POST':
         content = request.POST.get('content', False)
         if not content:
             raise Http404
@@ -43,26 +47,37 @@ def modify_content(request, page_id, content_id, language_id):
     raise Http404
 modify_content = staff_member_required(modify_content)
 
-
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
-    for c in Content.objects.filter(page=page,language=language_id):
+    perm = PagePermission(request.user).check('delete', page=page,
+            lang=language_id, method='POST')
+    if not perm:
+        raise Http404
+    
+    for c in Content.objects.filter(page=page, language=language_id):
         c.delete()
     
-    destination = request.REQUEST.get('next', request.META.get('HTTP_REFERER', '/admin/pages/page/%s/' % page_id))
+    destination = request.REQUEST.get('next', request.META.get('HTTP_REFERER',
+        '/admin/pages/page/%s/' % page_id))
     return HttpResponseRedirect(destination)
 delete_content = staff_member_required(delete_content)
-    
-    
+
+
 def traduction(request, page_id, language_id):
     """Traduction helper."""
     page = Page.objects.get(pk=page_id)
-    context = {}
     lang = language_id
     placeholders = get_placeholders(page.get_template())
-    if Content.objects.get_content(page, language_id, "title") is None:
-        language_error = True
-    return 'pages/traduction_helper.html', locals()
+    language_error = (
+        Content.objects.get_content(page, language_id, "title")
+        is None
+    )
+    return 'pages/traduction_helper.html', {
+        'page':page,
+        'lang':lang,
+        'language_error':language_error,
+        'placeholders':placeholders,
+    }
 traduction = staff_member_required(traduction)
 traduction = auto_render(traduction)
 
@@ -78,9 +93,11 @@ def sub_menu(request, page_id):
     template."""
     page = Page.objects.get(id=page_id)
     pages = page.children.all()
-    has_permission = page.has_page_permission(request)
     page_languages = settings.PAGE_LANGUAGES
-    return "admin/pages/page/sub_menu.html", locals()
-    
+    return "admin/pages/page/sub_menu.html", {
+        'page':page,
+        'pages':pages,
+        'page_languages':page_languages,
+    }
 sub_menu = staff_member_required(sub_menu)
 sub_menu = auto_render(sub_menu)

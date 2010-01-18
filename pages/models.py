@@ -315,21 +315,7 @@ class Page(models.Model):
             if t[0] == template:
                 return t[1]
         return template
-
-    def has_page_permission(self, request):
-        """
-        Return ``True`` if the current user has permission on the page.
-        Return the string 'All' if the user has all rights.
-        """
-        if not settings.PAGE_PERMISSION:
-            return True
-        else:
-            permission = PagePermission.objects.get_page_id_list(request.user)
-            if permission == "All":
-                return True
-            if self.id in permission:
-                return True
-            return False
+        
 
     def has_broken_link(self):
         """
@@ -378,8 +364,8 @@ try:
 except mptt.AlreadyRegistered:
     pass
 
-if settings.PAGE_PERMISSION:
-    class PagePermission(models.Model):
+'''if settings.PAGE_PERMISSION:
+    class DeprecatedPagePermission(models.Model):
         """
         :class:`Page <pages.models.Page>` permission object
         """
@@ -401,7 +387,7 @@ if settings.PAGE_PERMISSION:
 
         def __unicode__(self):
             return "%s :: %s" % (self.user,
-                    unicode(PagePermission.TYPES[self.type][1]))
+                    unicode(DeprecatedPagePermission.TYPES[self.type][1]))'''
 
 
 class Content(models.Model):

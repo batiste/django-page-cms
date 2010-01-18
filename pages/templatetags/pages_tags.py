@@ -57,14 +57,14 @@ def has_content_in(page, language):
     return Content.objects.filter(page=page, language=language).count() > 0
 register.filter(has_content_in)
 
-def has_permission(page, request):
+'''def has_permission(page, request):
     """Tell if a user has permissions on the page.
 
     :param page: the current page
     :param request: the request object where the user is extracted
     """
     return page.has_page_permission(request)
-register.filter(has_permission)
+register.filter(has_permission)'''
 
 """Inclusion tags"""
 
@@ -120,7 +120,7 @@ def pages_admin_menu(context, page, url='', level=None):
                 expanded = True
     
     page_languages = settings.PAGE_LANGUAGES
-    has_permission = page.has_page_permission(request)
+    #has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     LANGUAGE_BIDI = context.get('LANGUAGE_BIDI', False)

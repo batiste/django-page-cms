@@ -15,12 +15,13 @@ from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 
 from pages.utils import get_placeholders
-from pages.utils import has_page_add_permission, get_language_from_request
+from pages.utils import get_language_from_request
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
+from pages.permissions import PagePermission
 import pages.admin.widgets
 
 class PageAdmin(admin.ModelAdmin):
@@ -267,33 +268,26 @@ class PageAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         """Return ``True`` if the current user has permission to add a new
         page."""
-        if not settings.PAGE_PERMISSION:
-            return super(PageAdmin, self).has_add_permission(request)
-        else:
-            return has_page_add_permission(request)
+        lang = get_language_from_request(request)
+        return PagePermission(request.user).check('add', lang=lang)
 
     def has_change_permission(self, request, obj=None):
-        """Return ``True`` if the current user has permission on the page.
-        Return the string ``All`` if the user has all rights."""
-        if settings.PAGE_PERMISSION and obj is not None:
-            return obj.has_page_permission(request)
-        return super(PageAdmin, self).has_change_permission(request, obj)
+        """Return ``True`` if the current user has permission
+        to change the page."""
+        lang = get_language_from_request(request)
+        return PagePermission(request.user).check('change', page=obj,
+            lang=lang, method=request.method)
 
     def has_delete_permission(self, request, obj=None):
-        """Return ``True``  if the current user has permission on the page.
-        Return the string ``All`` if the user has all rights.
-        """
-        if settings.PAGE_PERMISSION and obj is not None:
-            return obj.has_page_permission(request)
-        return super(PageAdmin, self).has_delete_permission(request, obj)
+        """Return ``True`` if the current user has permission on the page."""
+        lang = get_language_from_request(request)
+        return PagePermission(request.user).check('change', page=obj,
+            lang=lang)
 
     def list_pages(self, request, template_name=None, extra_context=None):
         """List root pages"""
         if not admin.site.has_permission(request):
             return admin.site.login(request)
-        # HACK: overrides the changelist template and later resets it to None
-        if template_name:
-            self.change_list_template = template_name
         language = get_language_from_request(request)
 
         q=request.POST.get('q', '').strip()
@@ -314,8 +308,6 @@ class PageAdmin(admin.ModelAdmin):
 
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)
-
-        self.change_list_template = None
         return change_list
 
     def move_page(self, request, page_id, extra_context=None):
@@ -356,12 +348,12 @@ class ContentAdmin(admin.ModelAdmin):
 
 #admin.site.register(Content, ContentAdmin)
 
-if settings.PAGE_PERMISSION:
+'''if settings.PAGE_PERMISSION:
     from pages.models import PagePermission
     try:
         admin.site.register(PagePermission)
     except AlreadyRegistered:
-        pass
+        pass'''
 
 class AliasAdmin(admin.ModelAdmin):
     list_display = ('page', 'url',)

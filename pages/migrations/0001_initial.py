@@ -11,7 +11,7 @@ class Migration:
     def forwards(self, orm):
         
         # Adding model 'Page'
-        pages_page = (
+        pages_page = [
                ('id', orm['pages.Page:id']),
                ('author', orm['pages.Page:author']),
                ('parent', orm['pages.Page:parent']),
@@ -28,7 +28,7 @@ class Migration:
                ('rght', orm['pages.Page:rght']),
                ('tree_id', orm['pages.Page:tree_id']),
                ('level', orm['pages.Page:level'])
-               )
+               ]
         if settings.PAGE_TAGGING:
             pages_page.append(('tags', orm['pages.Page:tags']))
         db.create_table('pages_page', pages_page)

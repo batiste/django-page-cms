@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'mptt',
     'staticfiles',
     'tinymce',
-    'south',
+    #'south',
     'authority',
 )
 

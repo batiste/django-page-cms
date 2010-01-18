@@ -16,6 +16,7 @@ from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
 from pages import settings
 
+
 class Page(models.Model):
     """
     This model contain the status, dates, author, template.
@@ -118,6 +119,7 @@ class Page(models.Model):
         ordering = ['tree_id', 'lft']
         verbose_name = _('page')
         verbose_name_plural = _('pages')
+        permissions = settings.PAGE_EXTRA_PERMISSIONS
 
     def save(self, *args, **kwargs):
         """Override the default ``save`` method."""

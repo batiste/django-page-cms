@@ -20,7 +20,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=100
         """
         setattr(settings, "PAGE_SHOW_START_DATE", True)
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -39,7 +39,7 @@ class RegressionTestCase(TestCase):
         Test the issue 97
         http://code.google.com/p/django-page-cms/issues/detail?id=97
         """
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -67,7 +67,7 @@ class RegressionTestCase(TestCase):
     def test_bug_162(self):
         """Test bug 162
         http://code.google.com/p/django-page-cms/issues/detail?id=162"""
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'test-162-title'
@@ -83,7 +83,7 @@ class RegressionTestCase(TestCase):
     def test_bug_172(self):
         """Test bug 167
         http://code.google.com/p/django-page-cms/issues/detail?id=172"""
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'title-en-us'
@@ -143,7 +143,7 @@ class RegressionTestCase(TestCase):
         )
 
     def test_bug_156(self):
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -155,7 +155,7 @@ class RegressionTestCase(TestCase):
         self.assertEqual(c, page_data['title'])
 
     def test_bug_181(self):
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data(draft=True)
         page_data['slug'] = 'page1'

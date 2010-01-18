@@ -18,8 +18,8 @@ class PagesTestCase(TestCase):
     def test_add_page(self):
         """Test that the add admin page could be displayed via the
         admin"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        
         response = c.get('/admin/pages/page/add/')
         self.assertEqual(response.status_code, 200)
 
@@ -27,8 +27,8 @@ class PagesTestCase(TestCase):
     def test_create_page(self):
         """Test that a page can be created via the admin."""
         #setattr(settings, "SITE_ID", 2)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -45,8 +45,8 @@ class PagesTestCase(TestCase):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -65,8 +65,8 @@ class PagesTestCase(TestCase):
     def test_details_view(self):
         """Test the details view"""
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+
         try:
             response = c.get('/pages/')
         except TemplateDoesNotExist, e:
@@ -94,8 +94,8 @@ class PagesTestCase(TestCase):
 
     def test_edit_page(self):
         """Test that a page can edited via the admin"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -120,8 +120,8 @@ class PagesTestCase(TestCase):
         setattr(pages_settings, "SITE_ID", 2)
         setattr(pages_settings, "PAGE_USE_SITE_ID", True)
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data["sites"] = [2]
         response = c.post('/admin/pages/page/add/', page_data)
@@ -175,8 +175,8 @@ class PagesTestCase(TestCase):
     def test_languages(self):
         """Test post a page with different languages
         and test that the admin views works correctly."""
-        c = Client()
-        user = c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        user = c.login(username='batiste', password='b')
         
         # test that the client language setting is used in add page admin
         c.cookies["django_language"] = 'de'
@@ -215,14 +215,14 @@ class PagesTestCase(TestCase):
         # test that the frontend view use the good parameters
         # I cannot find a way of setting the accept-language HTTP 
         # header so I used django_language cookie instead
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'en-us'
         response = c.get('/pages/')
         self.assertContains(response, 'english title')
         self.assertContains(response, 'lang="en-us"')
         self.assertNotContains(response, 'french title')
         
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-ch'
         response = c.get('/pages/')
         self.assertContains(response, 'french title')
@@ -231,7 +231,7 @@ class PagesTestCase(TestCase):
         self.assertNotContains(response, 'english title')
 
         # this should be mapped to the fr-ch content
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-fr'
         response = c.get('/pages/')
         self.assertContains(response, 'french title')
@@ -239,8 +239,8 @@ class PagesTestCase(TestCase):
         
     def test_revision(self):
         """Test that a page can edited several times."""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
@@ -266,8 +266,8 @@ class PagesTestCase(TestCase):
         the admin
         """
         setattr(settings, "SITE_ID", 2)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['template'] = 'pages/nice.html'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -282,8 +282,8 @@ class PagesTestCase(TestCase):
         Test diretory slugs
         """
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
 
         page_data = self.get_new_page_data()
         page_data['title'] = 'parent title'
@@ -321,8 +321,8 @@ class PagesTestCase(TestCase):
         """
         Test the {% show_content %} template tag
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
@@ -342,8 +342,8 @@ class PagesTestCase(TestCase):
         """
         Test the {% get_content %} template tag
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
@@ -371,8 +371,8 @@ class PagesTestCase(TestCase):
         Test that moving/creating page in the tree is working properly
         using the admin interface
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
 
@@ -451,8 +451,8 @@ class PagesTestCase(TestCase):
         """
         Test that the navigation tree works properly with mptt
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -498,8 +498,8 @@ class PagesTestCase(TestCase):
     
     def test_ajax_language(self):
         """Test that language is working properly"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
         self.assertEqual(c.session.get('django_language', False), 'fr-ch')
@@ -558,8 +558,8 @@ class PagesTestCase(TestCase):
         Test that the default view can only return the context
         """
         
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
@@ -574,8 +574,8 @@ class PagesTestCase(TestCase):
 
     def test_page_valid_targets(self):
         """Test page valid_targets method"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -594,8 +594,8 @@ class PagesTestCase(TestCase):
 
     def test_page_admin_view(self):
         """Test page admin view"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page-1'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -626,8 +626,8 @@ class PagesTestCase(TestCase):
     def test_page_alias(self):
         """Test page aliasing system"""
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         
         # create some pages
         page_data = self.get_new_page_data()
@@ -668,8 +668,7 @@ class PagesTestCase(TestCase):
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""
 
-        client = Client()
-        client.login(username= 'batiste', password='b')
+        client = self.get_admin_client()
 
         # create some pages
         page1 = self.create_new_page(client)
@@ -685,8 +684,8 @@ class PagesTestCase(TestCase):
     def test_page_redirect_to_url(self):
         """Test page redirected to external url."""
 
-        client = Client()
-        client.login(username= 'batiste', password='b')
+        client = self.get_admin_client()
+        
         page1 = self.create_new_page(client)
         url = 'http://code.google.com/p/django-page-cms/'
         page1.redirect_to_url = url
@@ -699,8 +698,7 @@ class PagesTestCase(TestCase):
 
     def test_page_freeze_date(self):
         """Test page freezing feature."""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
         page_data = self.get_new_page_data()
         page_data['title'] = 'before'
         page_data['slug'] = 'before'

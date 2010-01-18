@@ -7,6 +7,11 @@ class TestCase(TestCase):
     fixtures = ['tests.json']
     counter = 1
 
+    def get_admin_client(self):
+        client = Client()
+        client.login(username='admin', password='b')
+        return client
+
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
         page_data = {'title':'test page %d' % self.counter,
@@ -20,8 +25,7 @@ class TestCase(TestCase):
 
     def create_new_page(self, client=None, draft=False):
         if not client:
-            client = Client()
-            client.login(username= 'batiste', password='b')
+            client = self.get_admin_client()
         page_data = self.get_new_page_data(draft=draft)
         response = client.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')

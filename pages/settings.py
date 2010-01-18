@@ -42,10 +42,6 @@ def get_page_templates():
     else:
         return PAGE_TEMPLATES
 
-# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable 
-# advanced hierarchic permissions on your pages.
-PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
-
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
 # ``django-tagging`` application. 
 PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', True)
@@ -85,9 +81,23 @@ PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 
 # Defines which language should be used by default.  If 
 # ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
-# ``settings.LANGUAGE_CODE`` is used 
+# ``settings.LANGUAGE_CODE`` is used
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
                                 settings.LANGUAGE_CODE)
+
+
+# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable
+# advanced hierarchic permissions on your pages.
+PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
+
+extra = [('can_freeze', 'Can freeze page',)]
+for lang in PAGE_LANGUAGES:
+    extra.append(
+        ('can_manage_' + lang[0].replace('-', '_'),
+        'Manage' + ' ' + lang[1])
+    )
+
+PAGE_EXTRA_PERMISSIONS = getattr(settings, 'PAGE_EXTRA_PERMISSIONS', extra)
 
 # PAGE_LANGUAGE_MAPPING should be assigned a function that takes a single
 # argument, the language code of the incoming browser request.  This function

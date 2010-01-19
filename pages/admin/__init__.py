@@ -341,8 +341,8 @@ class PageAdmin(admin.ModelAdmin):
                     template_name='admin/pages/page/change_list_table.html')
         return HttpResponseRedirect('../../')
 
-for model, options in get_connected():
-    PageAdmin.inlines.append(make_inline_admin(model, options))
+for admin_class, model, options in get_connected():
+    PageAdmin.inlines.append(make_inline_admin(admin_class, model, options))
 
 try:
     admin.site.register(Page, PageAdmin)

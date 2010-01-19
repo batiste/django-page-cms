@@ -58,13 +58,6 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 var add_form = {% if add %}1{% else %}0{% endif %};
-(function() {
-    /* Hide the Sites options if not needed */
-    {% if not PAGE_USE_SITE_ID %}
-        $('.form-row.sites').hide();
-        $('#id_sites')[0].selectedIndex = 0;
-    {% endif %}
-})();
 -->
 </script>
 <!-- END Content -->

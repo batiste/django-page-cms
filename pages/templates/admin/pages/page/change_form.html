@@ -24,7 +24,7 @@
         <div class="sidebar">
         {% for fieldset in adminform %}
             {% include "admin/pages/page/includes/fieldset.html" %}
-            
+
             {% if forloop.first %}
                 {% if not add and traduction_languages %}
                 <fieldset class="module module-translation-helper aligned">
@@ -43,10 +43,13 @@
                 </fieldset>
                 {% endif %}
                 
-                </div><div class="content">
+                {% comment %}Close sidebar, open content{% endcomment %}
+                </div>
+                <div class="content">
             {% endif %}
+            
         {% endfor %}
-        </div>
+        </div>{% comment %}Close content{% endcomment %}
 
         {% for inline_admin_formset in inline_admin_formsets %}
             {% include inline_admin_formset.opts.template %}

@@ -1,19 +1,8 @@
 # -*- coding: utf-8 -*-
 """Page Admin module."""
-from os.path import join
-
-from django.contrib import admin
-from django.utils.translation import ugettext as _, ugettext_lazy
-from django.utils.encoding import force_unicode
-from django.conf import settings as global_settings
-from django.http import HttpResponseRedirect
-from django.contrib.admin.util import unquote
-from django.contrib.admin.sites import AlreadyRegistered
-
 from pages import settings
 from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
-
 from pages.utils import get_placeholders
 from pages.utils import get_language_from_request
 from pages.templatetags.pages_tags import PlaceholderNode
@@ -24,6 +13,21 @@ from pages.admin.views import change_status, modify_content, delete_content
 from pages.permissions import PagePermission
 import pages.admin.widgets
 
+from django.contrib import admin
+from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.encoding import force_unicode
+from django.conf import settings as global_settings
+from django.http import HttpResponseRedirect
+from django.contrib.admin.util import unquote
+from django.contrib.admin.sites import AlreadyRegistered
+if global_settings.USE_I18N:
+    from django.views.i18n import javascript_catalog
+else:
+    from django.views.i18n import null_javascript_catalog as javascript_catalog
+
+from os.path import join
+
+
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
 
@@ -31,7 +35,8 @@ class PageAdmin(admin.ModelAdmin):
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
-    general_fields = ['title', 'slug', 'status', 'target', 'position']
+    general_fields = ['title', 'slug', 'status', 'target',
+        'position', 'freeze_date']
 
     if settings.PAGE_USE_SITE_ID:
         general_fields.append('sites')
@@ -62,10 +67,10 @@ class PageAdmin(admin.ModelAdmin):
     normal_fields.append('redirect_to')
     normal_fields.append('redirect_to_url')
     fieldsets = (
-        (_('General'), {
+        [_('General'), {
             'fields': general_fields,
             'classes': ('module-general',),
-        }),
+        }],
         (_('Options'), {
             'fields': normal_fields,
             'classes': ('module-options',),
@@ -121,17 +126,12 @@ class PageAdmin(admin.ModelAdmin):
         This takes into account the ``USE_I18N`` setting. If it's set to False, the
         generated JavaScript will be leaner and faster.
         """
-        if global_settings.USE_I18N:
-            from django.views.i18n import javascript_catalog
-        else:
-            from django.views.i18n import null_javascript_catalog as javascript_catalog
         return javascript_catalog(request, packages='pages')
 
     def save_model(self, request, page, form, change):
         """Move the page in the tree if necessary and save every
         placeholder :class:`Content <pages.models.Content>`.
         """
-
         language = form.cleaned_data['language']
         target = form.data.get('target', None)
         position = form.data.get('position', None)
@@ -165,7 +165,21 @@ class PageAdmin(admin.ModelAdmin):
         Add fieldsets of placeholders to the list of already
         existing fieldsets.
         """
-        additional_fieldsets = []
+        general_fields = list(self.general_fields)
+        perms = PagePermission(request.user)
+
+        # some ugly business to remove freeze_date
+        # from the field list
+        general_module = {
+            'fields': list(self.general_fields),
+            'classes': ('module-general',),
+        }
+        
+        default_fieldsets = list(self.fieldsets)
+        if not perms.check('freeze'):
+            general_module['fields'].remove('freeze_date')
+
+        default_fieldsets[0][1] = general_module
 
         placeholder_fieldsets = []
         template = get_template_from_request(request, obj)
@@ -173,16 +187,13 @@ class PageAdmin(admin.ModelAdmin):
             if placeholder.name not in self.mandatory_placeholders:
                 placeholder_fieldsets.append(placeholder.name)
 
+        additional_fieldsets = []
         additional_fieldsets.append((_('Content'), {
             'fields': placeholder_fieldsets,
             'classes': ('module-content',),
         }))
 
-        # deactived for now, create bugs with page with same slug title
-
-        given_fieldsets = list(self.declared_fieldsets)
-
-        return given_fieldsets + additional_fieldsets
+        return default_fieldsets + additional_fieldsets
 
     def save_form(self, request, form, change):
         """Given a ModelForm return an unsaved instance. ``change`` is True if
@@ -223,7 +234,8 @@ class PageAdmin(admin.ModelAdmin):
                 initial = Content.objects.get_content(obj, language, name)
             else:
                 initial = None
-            form.base_fields[name] = placeholder.get_field(obj, language, initial=initial)
+            form.base_fields[name] = placeholder.get_field(obj,
+                language, initial=initial)
 
         return form
 
@@ -290,10 +302,11 @@ class PageAdmin(admin.ModelAdmin):
             return admin.site.login(request)
         language = get_language_from_request(request)
 
-        q=request.POST.get('q', '').strip()
+        query = request.POST.get('q', '').strip()
 
-        if q:
-            page_ids = list(set([c.page.pk for c in Content.objects.filter(body__icontains=q)]))
+        if query:
+            page_ids = list(set([c.page.pk for c in
+                Content.objects.filter(body__icontains=q)]))
             pages = Page.objects.filter(pk__in=page_ids)
         else:
             pages = Page.objects.root()
@@ -303,7 +316,7 @@ class PageAdmin(admin.ModelAdmin):
             'name': _("page"),
             'pages': pages,
             'opts': self.model._meta,
-            'q': q
+            'q': query
         }
 
         context.update(extra_context or {})

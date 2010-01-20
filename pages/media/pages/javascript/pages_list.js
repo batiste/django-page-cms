@@ -113,7 +113,9 @@ $(function () {
                 action = 'move';
                 selected_page = link.attr('id').split('move-link-')[1];
                 changelist.addClass('insert-move');
-                $('#page-row-'+selected_page).addClass('selected').add(get_children(selected_page)).addClass('highlighted');
+                $('#page-row-'+selected_page).addClass('selected').add(
+                    get_children(selected_page)
+                ).addClass('highlighted');
                 $('tr:not(.highlighted)', changelist).addClass('insertable');
                 return false;
             }

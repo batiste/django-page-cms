@@ -11,6 +11,7 @@ from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.permissions import PagePermission
+from pages.http import auto_render
 import pages.admin.widgets
 
 from django.contrib import admin
@@ -302,6 +303,7 @@ class PageAdmin(admin.ModelAdmin):
             return admin.site.login(request)
         language = get_language_from_request(request)
 
+
         query = request.POST.get('q', '').strip()
 
         if query:
@@ -319,8 +321,13 @@ class PageAdmin(admin.ModelAdmin):
             'q': query
         }
 
+        # sad hack for ajax
+        if template_name:
+            self.change_list_template = template_name
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)
+        self.change_list_template = 'admin/pages/page/change_list.html'
+        
         return change_list
 
     def move_page(self, request, page_id, extra_context=None):
@@ -343,7 +350,7 @@ class PageAdmin(admin.ModelAdmin):
                 target.invalidate()
                 page.move_to(target, position)
                 return self.list_pages(request,
-                    template_name='admin/pages/page/change_list_table.html')
+                    template_name="admin/pages/page/change_list_table.html")
         return HttpResponseRedirect('../../')
 
 for admin_class, model, options in get_connected():

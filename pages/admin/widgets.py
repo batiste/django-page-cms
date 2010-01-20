@@ -308,3 +308,23 @@ class VideoWidget(MultiWidget):
 
 
 register_widget(VideoWidget)
+
+
+class LanguageChoiceWidget(TextInput):
+
+    def __init__(self, language=None, attrs=None, **kwargs):
+        self.language = language
+        self.page = kwargs.get('page')
+        # page is None
+        super(LanguageChoiceWidget, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None, **kwargs):
+        context = {
+            'name': name,
+            'value':value,
+            'page':self.page,
+            'language': value,
+            'page_languages':settings.PAGE_LANGUAGES
+        }
+        return mark_safe(render_to_string(
+            'admin/pages/page/widgets/languages.html', context))

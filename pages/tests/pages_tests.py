@@ -730,19 +730,39 @@ class PagesTestCase(TestCase):
 
     def test_date_ordering(self):
         """Test page date ordering feature."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
         author = User.objects.all()[0]
+        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
         now = datetime.datetime.now()
-        p1 = Page(author=author, status=Page.PUBLISHED)
+        p1 = Page(author=author, status=Page.PUBLISHED, publication_date=now)
         p1.save()
-        p2 = Page(author=author, parent=p1, status=Page.PUBLISHED)
+        p2 = Page(
+            author=author,
+            publication_date=now,
+            status=Page.PUBLISHED
+        )
         p2.save()
-        p3 = Page(author=author, parent=p1, status=Page.PUBLISHED)
+        p3 = Page(
+            author=author,
+            publication_date=yesterday,
+            status=Page.PUBLISHED
+        )
         p3.save()
-        p1.invalidate()
-        p1.save()
-        
-        #print p1.get_children_for_frontend()
-        #print p1.publication_date
-        #print p2.parent
-        #print p3.parent
+
+        p2.move_to(p1, position='first-child')
+        p3.move_to(p1, position='first-child')
+
+        p1 = Page.objects.get(pk=p1.id)
+        p2 = Page.objects.get(pk=p2.id)
+        p3 = Page.objects.get(pk=p3.id)
+        self.assertEqual(
+            [p.id for p in p1.get_children_for_frontend()],
+            [p3.id, p2.id]
+        )
+
+        self.assertEqual(
+            [p.id for p in p1.get_date_ordered_children_for_frontend()],
+            [p2.id, p3.id]
+        )
         

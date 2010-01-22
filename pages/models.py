@@ -162,10 +162,10 @@ class Page(models.Model):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())
 
-    def get_ordered_children_for_frontend(self):
+    def get_date_ordered_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page ordered
         by publication date."""
-        return self.children_for_frontend().order_by('-publication_date')
+        return self.get_children_for_frontend().order_by('-publication_date')
 
     def invalidate(self):
         """Invalidate cached data for this page."""

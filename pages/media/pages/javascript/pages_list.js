@@ -137,12 +137,12 @@ $(function () {
                 changelist.removeClass('insert-add insert-move');
                 $('tr', changelist).removeClass('selected insertable');
                 $('.expand-collapse', row).remove();
-                $('.insert', row).after('<img class="insert-loading" src="'+media_url+'pages/images/loading.gif" alt="Loading" />');
-                
+                $('.insert', row).after('<img class="insert-loading" src="'+page_media_url+'images/loading.gif" alt="Loading" />');
+
                 if (action == 'move') {
                     $.post(selected_page+'/move-page/', { position: position, target: id },
                         function (html) {
-                            changelist.html(html);
+                            $('#page-list').html(html);
                             init_publish_hanlder(changelist);
                             pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                             action = selected_page = '';

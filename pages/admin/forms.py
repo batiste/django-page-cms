@@ -8,7 +8,7 @@ from django.contrib.admin import widgets
 from pages import settings
 from pages.models import Page, Content
 from pages.urlconf_registry import get_choices
-from pages.admin.widgets import LanguageChoiceWidget
+from pages.widgets import LanguageChoiceWidget
 
 # error messages
 another_page_error = _('Another page with this slug already exists')
@@ -62,7 +62,7 @@ it must be unique among the other pages of the same level.')
     
     if settings.PAGE_TAGGING:
         from tagging.forms import TagField
-        from pages.admin.widgets import AutoCompleteTagInput
+        from pages.widgets import AutoCompleteTagInput
         tags = TagField(widget=AutoCompleteTagInput(), required=False)
 
     class Meta:

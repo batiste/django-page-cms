@@ -9,9 +9,9 @@ from django.utils.safestring import SafeUnicode, mark_safe
 from django.template.loader import render_to_string
 
 from pages.widgets_registry import get_widget
-from pages.admin.widgets import VideoWidget
 from pages import settings
 from pages.models import Content, Page
+from pages.widgets import ImageInput, VideoWidget
 import os
 import time
 import re
@@ -57,7 +57,7 @@ class PlaceholderNode(template.Node):
     :param name: the name of the placeholder you want to show/create
     :param page: the optional page object
     :param widget: the widget you want to use in the admin interface. Take
-        a look into :mod:`pages.admin.widgets` to see which widgets
+        a look into :mod:`pages.widgets` to see which widgets
         are available.
     :param parsed: if the ``parsed`` word is given, the content of the
         placeholder is evaluated as template code, within the current
@@ -187,7 +187,6 @@ class ImagePlaceholderNode(PlaceholderNode):
 
     def get_field(self, page, language, initial=None):
         help_text = ""
-        from pages.admin.widgets import ImageInput
         widget = ImageInput(page, language)
         return ImageField(
             widget=widget,

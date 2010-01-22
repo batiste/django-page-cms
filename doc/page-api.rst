@@ -22,7 +22,7 @@ Template tags
 Widgets
 =======
 
-.. automodule:: pages.admin.widgets
+.. automodule:: pages.widgets
     :members:
     :undoc-members:
 

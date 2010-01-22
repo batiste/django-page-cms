@@ -3,6 +3,7 @@
 import datetime
 
 import django
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.test.client import Client
 from django.template import Template, RequestContext, TemplateDoesNotExist
@@ -726,5 +727,22 @@ class PagesTestCase(TestCase):
         page.freeze_date = limit
         page.save()
         self.assertEqual(page.slug(), 'before')
+
+    def test_date_ordering(self):
+        """Test page date ordering feature."""
+        author = User.objects.all()[0]
+        now = datetime.datetime.now()
+        p1 = Page(author=author, status=Page.PUBLISHED)
+        p1.save()
+        p2 = Page(author=author, parent=p1, status=Page.PUBLISHED)
+        p2.save()
+        p3 = Page(author=author, parent=p1, status=Page.PUBLISHED)
+        p3.save()
+        p1.invalidate()
+        p1.save()
         
+        #print p1.get_children_for_frontend()
+        #print p1.publication_date
+        #print p2.parent
+        #print p3.parent
         

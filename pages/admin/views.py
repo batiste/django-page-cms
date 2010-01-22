@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Admin views"""
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.contrib.admin.views.decorators import staff_member_required
-
+"""Pages admin views"""
 from pages import settings
 from pages.models import Page, Content
 from pages.utils import get_placeholders
-from pages.http import auto_render
+from pages.http import auto_render, get_language_from_request
 from pages.permissions import PagePermission
+
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.contrib.admin.views.decorators import staff_member_required
 
 def change_status(request, page_id):
     """
@@ -22,6 +22,18 @@ def change_status(request, page_id):
         return HttpResponse(unicode(page.status))
     raise Http404
 change_status = staff_member_required(change_status)
+
+def list_pages_ajax(request):
+    """Render pages table for ajax function."""
+    language = get_language_from_request(request)
+    pages = Page.objects.root()
+    context = {
+        'language': language,
+        'pages': pages,
+    }
+    return "admin/pages/page/change_list_table.html", context
+list_pages_ajax = staff_member_required(list_pages_ajax)
+list_pages_ajax = auto_render(list_pages_ajax)
 
 def modify_content(request, page_id, content_id, language_id):
     """Modify the content of a page."""

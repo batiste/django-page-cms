@@ -8,7 +8,7 @@ from pages.utils import get_language_from_request
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
-from pages.admin.views import traduction, get_content, sub_menu
+from pages.admin.views import traduction, get_content, sub_menu, list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.permissions import PagePermission
 from pages.http import auto_render
@@ -303,7 +303,6 @@ class PageAdmin(admin.ModelAdmin):
             return admin.site.login(request)
         language = get_language_from_request(request)
 
-
         query = request.POST.get('q', '').strip()
 
         if query:
@@ -322,12 +321,12 @@ class PageAdmin(admin.ModelAdmin):
         }
 
         # sad hack for ajax
-        if template_name:
-            self.change_list_template = template_name
+        # if template_name:
+        #    self.change_list_template = template_name
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)
-        self.change_list_template = 'admin/pages/page/change_list.html'
-        
+        #self.change_list_template = 'admin/pages/page/change_list.html'
+        #
         return change_list
 
     def move_page(self, request, page_id, extra_context=None):
@@ -349,8 +348,7 @@ class PageAdmin(admin.ModelAdmin):
                 page.invalidate()
                 target.invalidate()
                 page.move_to(target, position)
-                return self.list_pages(request,
-                    template_name="admin/pages/page/change_list_table.html")
+                return list_pages_ajax(request)
         return HttpResponseRedirect('../../')
 
 for admin_class, model, options in get_connected():
@@ -367,13 +365,6 @@ class ContentAdmin(admin.ModelAdmin):
     search_fields = ('body',)
 
 #admin.site.register(Content, ContentAdmin)
-
-'''if settings.PAGE_PERMISSION:
-    from pages.models import PagePermission
-    try:
-        admin.site.register(PagePermission)
-    except AlreadyRegistered:
-        pass'''
 
 class AliasAdmin(admin.ModelAdmin):
     list_display = ('page', 'url',)

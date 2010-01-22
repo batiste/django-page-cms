@@ -366,31 +366,6 @@ try:
 except mptt.AlreadyRegistered:
     pass
 
-'''if settings.PAGE_PERMISSION:
-    class DeprecatedPagePermission(models.Model):
-        """
-        :class:`Page <pages.models.Page>` permission object
-        """
-        TYPES = (
-            (0, _('All')),
-            (1, _('This page only')),
-            (2, _('This page and all children')),
-        )
-        page = models.ForeignKey(Page, null=True, blank=True,
-                verbose_name=_('page'))
-        user = models.ForeignKey(User, verbose_name=_('user'))
-        type = models.IntegerField(_('type'), choices=TYPES, default=0)
-
-        objects = PagePermissionManager()
-
-        class Meta:
-            verbose_name = _('page permission')
-            verbose_name_plural = _('page permissions')
-
-        def __unicode__(self):
-            return "%s :: %s" % (self.user,
-                    unicode(DeprecatedPagePermission.TYPES[self.type][1]))'''
-
 
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,

@@ -117,6 +117,7 @@ class Page(models.Model):
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
+        get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
         permissions = settings.PAGE_EXTRA_PERMISSIONS
@@ -160,6 +161,11 @@ class Page(models.Model):
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())
+
+    def get_ordered_children_for_frontend(self):
+        """Return a :class:`QuerySet` of published children page ordered
+        by publication date."""
+        return self.children_for_frontend().order_by('-publication_date')
 
     def invalidate(self):
         """Invalidate cached data for this page."""
@@ -356,9 +362,10 @@ class Page(models.Model):
     def __unicode__(self):
         if self.id:
             slug = self.slug()
-        else:
-            return "Page %s" % self.id
-        return slug
+            if slug:
+                return slug
+            return "Page %d" % self.id
+        return "Page without id"
 
 # Don't register the Page model twice.
 try:

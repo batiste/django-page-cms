@@ -12,7 +12,7 @@ from pages.admin.views import traduction, get_content, sub_menu, list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.permissions import PagePermission
 from pages.http import auto_render
-import pages.admin.widgets
+import pages.widgets
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy

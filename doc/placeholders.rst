@@ -138,7 +138,7 @@ and then you can simply use the placeholder syntax::
 
     {% placeholder custom_widget_example CustomTextarea parsed  %}
 
-More examples of custom widgets are available in :mod:`pages/admin/widgets.py <pages.admin.widgets>`.
+More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
 
 .. _placeholder-widgets-list:
 

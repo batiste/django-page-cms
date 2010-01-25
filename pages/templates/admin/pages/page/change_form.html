@@ -51,9 +51,11 @@
         {% endfor %}
         </div>{% comment %}Close content{% endcomment %}
 
+        <div style="clear:both">
         {% for inline_admin_formset in inline_admin_formsets %}
             {% include inline_admin_formset.opts.template %}
         {% endfor %}
+        </div>
         
         {% submit_row %}
     </form>

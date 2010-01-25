@@ -232,7 +232,7 @@ class Page(models.Model):
 
         :param language: the wanted url language.
         """
-        return self.get_url_path(self, language=language)
+        return self.get_url_path(language=language)
 
     def get_complete_slug(self, language=None):
         """Return the complete slug of this page by concatenating
@@ -261,7 +261,7 @@ class Page(models.Model):
 
         :param language: the wanted url language.
         """
-        return self.get_complete_slug(self, language=language)
+        return self.get_complete_slug(language=language)
 
     def slug(self, language=None, fallback=True):
         """

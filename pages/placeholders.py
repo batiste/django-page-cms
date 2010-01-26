@@ -30,7 +30,7 @@ def parse_placeholder(parser, token):
     params = {}
     while remaining:
         bit = remaining[0]
-        if bit not in ('as', 'on', 'with', 'parsed'):
+        if bit not in ('as', 'on', 'with', 'parsed', 'inherited'):
             raise template.TemplateSyntaxError(
                 "%r is not an correct option for a placeholder" % bit)
         if bit in ('as', 'on', 'with'):
@@ -44,8 +44,11 @@ def parse_placeholder(parser, token):
             if bit == 'on':
                 params['page'] = remaining[1]
             remaining = remaining[2:]
-        else:
+        elif bit == 'parsed':
             params['parsed'] = True
+            remaining = remaining[1:]
+        elif bit == 'inherited':
+            params['inherited'] = True
             remaining = remaining[1:]
     return name, params
 
@@ -71,7 +74,7 @@ class PlaceholderNode(template.Node):
     widget = TextInput
 
     def __init__(self, name, page=None, widget=None, parsed=False,
-            as_varname=None):
+            as_varname=None, inherited=False):
         """Gather basic values for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -80,6 +83,7 @@ class PlaceholderNode(template.Node):
         if widget:
             self.widget = widget
         self.parsed = parsed
+        self.inherited = inherited
         self.as_varname = as_varname
         self.found_in_block = None
 
@@ -144,9 +148,14 @@ class PlaceholderNode(template.Node):
         if not context[self.page]:
             return ''
 
+        page_obj = context[self.page]
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-        content = Content.objects.get_content(context[self.page], lang,
-                                              self.name, True)
+        content = Content.objects.get_content(page_obj, lang, self.name, True)
+        if self.inherited:
+            while not content and page_obj.parent:
+                page_obj = page_obj.parent
+                content = Content.objects.get_content(page_obj, lang,
+                    self.name, True)
         return content
 
     def render(self, context):

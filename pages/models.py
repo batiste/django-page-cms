@@ -381,11 +381,12 @@ class Content(models.Model):
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
     body = models.TextField(_('body'))
-    type = models.CharField(_('type'), max_length=100, blank=False)
+    type = models.CharField(_('type'), max_length=100, blank=False,
+        db_index=True)
     page = models.ForeignKey(Page, verbose_name=_('page'))
 
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-            default=datetime.now)
+        default=datetime.now)
     objects = ContentManager()
 
     class Meta:

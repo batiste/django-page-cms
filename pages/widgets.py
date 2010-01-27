@@ -121,6 +121,30 @@ if PAGE_TINYMCE:
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
     register_widget(TinyMCE)
 
+class CKEditor(Textarea):
+    """CKEditor widget."""
+
+    class Media:
+        js = [join(PAGES_MEDIA_URL, 'ckeditor/ckeditor.js')]
+
+    def __init__(self, language=None, attrs=None, **kwargs):
+        self.language = language
+        self.filebrowser = "filebrowser" in getattr(settings, 'INSTALLED_APPS', [])
+        self.attrs = {'class': 'ckeditor'}
+        if attrs:
+            self.attrs.update(attrs)
+        super(CKEditor, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None, **kwargs):
+        rendered = super(CKEditor, self).render(name, value, attrs)
+        context = {
+            'name': name,
+            'filebrowser': self.filebrowser,
+        }
+        return rendered + mark_safe(render_to_string(
+            'admin/pages/page/widgets/ckeditor.html', context))
+
+
 class WYMEditor(Textarea):
     """WYMEditor widget."""
 

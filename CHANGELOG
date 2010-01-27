@@ -7,10 +7,11 @@ This file describe new features and incompatibilites between released version of
 Release 1.2.0
 =============
 
-    * PagePermission object is gone in favor of django-authority
-    * New permission by language
-    * New permission for freezing page content
-    * Add a get_date_ordered_children_for_frontend Page's method
+    * Add new inherited placeholder option to inherit content from a parent page.
+    * PagePermission object is gone in favor of django-authority.
+    * New permission by language.
+    * New permission for freezing page content.
+    * Add a get_date_ordered_children_for_frontend Page's method.
 
 Release 1.1.0
 =============

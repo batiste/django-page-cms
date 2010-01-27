@@ -14,7 +14,7 @@ use the Django template inheritance, and then CMS will still behave as intended.
 
 The syntax for a placeholder tag is the following::
 
-    {% placeholder <name> [on <page>] [with <widget>] [parsed] [as <varname>] %}
+    {% placeholder <name> [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
 A few explanations of these options:
 
@@ -26,11 +26,14 @@ A few explanations of these options:
   Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
   before you can use them in the CMS.
 
-* If you use the keyword **parsed** the content of the placeholder
+* If you add the keyword **parsed** the content of the placeholder
   will be evaluated as Django template, within the current context.
-
-* Each placeholder with the **parsed** keyword defined will also have
+  Each placeholder with the **parsed** keyword will also have
   a note in the admin interface noting its ability to be evaluated as template.
+
+* If you add the keyword **inherited** the placeholder's content
+  will be retrieved from the closest parent. But only if there is no
+  content for the current page.
 
 * If you use the option **as** the content of the placeholder will not be displayed but
   a variable will be defined within the template's context instead.
@@ -43,10 +46,10 @@ To clarify, here is a list of different possible syntaxes for this template tag:
     {% placeholder right-column on another_page_object %}
     
     {% placeholder body parsed %}
-    {% placeholder right-column as right_column %}
+    {% placeholder right-column inherited as right_column %}
 
     ...
-
+    
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 

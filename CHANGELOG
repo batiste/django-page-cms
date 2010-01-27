@@ -4,7 +4,7 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release 1.2.0
+Release 1.1.1
 =============
 
     * Add new inherited placeholder option to inherit content from a parent page.

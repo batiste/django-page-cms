@@ -6,7 +6,7 @@ import django
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.test.client import Client
-from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context, TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 
@@ -765,4 +765,28 @@ class PagesTestCase(TestCase):
             [p.id for p in p1.get_date_ordered_children_for_frontend()],
             [p2.id, p3.id]
         )
+
+    def test_placeholder_inherit_content(self):
+        """Test placeholder content inheritance between pages."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        p1 = Page(author=author, status=Page.PUBLISHED)
+        p1.save()
+        Content(page=p1, language='en-us', type='toto',
+            body='parent-content').save()
+        p2 = Page(
+            author=author,
+            status=Page.PUBLISHED
+        )
+        p2.save()
+        template = django.template.loader.get_template('pages/tests/test7.html')
+        context = Context({'current_page': p2, 'lang':'en-us'})
+        self.assertEqual(template.render(context), '')
+        
+        p2.move_to(p1, position='first-child')
+        self.assertEqual(template.render(context), 'parent-content')
+
+        
+        
         

@@ -12,6 +12,7 @@ Release 1.2.0
     * New permission by language.
     * New permission for freezing page content.
     * Add a get_date_ordered_children_for_frontend Page's method.
+    * Add missing templates to the package.
 
 Release 1.1.0
 =============

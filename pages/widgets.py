@@ -144,6 +144,7 @@ class CKEditor(Textarea):
         return rendered + mark_safe(render_to_string(
             'admin/pages/page/widgets/ckeditor.html', context))
 
+register_widget(CKEditor)
 
 class WYMEditor(Textarea):
     """WYMEditor widget."""

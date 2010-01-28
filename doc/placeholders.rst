@@ -208,6 +208,15 @@ A complete jQuery Rich Text Editor called `wymeditor <http://www.wymeditor.org/>
 
 .. image:: http://drupal.org/files/images/wymeditor.preview.jpg
 
+CKEditor
+---------
+
+A complete JavaScript Rich Text Editor called `CKEditor <http://ckeditor.com/>`_::
+
+    {% placeholder [name] with CKEditor %}
+
+.. image:: http://drupal.org/files/images/ckeditor_screenshot.png
+
 markItUpMarkdown
 ----------------
 

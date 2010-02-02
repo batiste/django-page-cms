@@ -19,8 +19,7 @@ registry = []
 def register_widget(widget):
 
     if widget in registry:
-        raise AlreadyRegistered(
-            _('The widget %s has already been registered.') % widget.__name__)
+        raise WidgetAlreadyRegistered(_('The widget %s has already been registered.') % widget.__name__)
     registry.append(widget)
 
 def get_widget(name):

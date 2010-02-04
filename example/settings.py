@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'mptt',
     'staticfiles',
     'tinymce',
-    #'south',
+    'south',
     'authority',
 )
 
@@ -165,9 +165,6 @@ PAGE_TEMPLATES = (
 PAGE_SANITIZE_USER_INPUT = True
 
 PAGE_USE_SITE_ID = True
-PAGE_PERMISSION = False
-
-PAGE_PERMISSION = False
 
 # A test runner that use the test coverage module
 TEST_RUNNER = "test_runner.run_tests"

@@ -16,29 +16,48 @@ The syntax for a placeholder tag is the following::
 
     {% placeholder <name> [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
-A few explanations of these options:
+Detailed explanations on placeholder options
+============================================
 
-* If the **on** option is omitted the CMS will automatically
-  take the current page (by using the `current_page` context variable)
-  to get the content of the placeholder.
+the **on** option
+------------------
 
-* If the **widget** option is omitted the CMS will render a simple `TextInput`.
-  Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
-  before you can use them in the CMS.
+If the **on** option is omitted the CMS will automatically
+take the current page (by using the `current_page` context variable)
+to get the content of the placeholder.
 
-* If you add the keyword **parsed** the content of the placeholder
-  will be evaluated as Django template, within the current context.
-  Each placeholder with the **parsed** keyword will also have
-  a note in the admin interface noting its ability to be evaluated as template.
+the **widget** option
+----------------------
 
-* If you add the keyword **inherited** the placeholder's content
-  will be retrieved from the closest parent. But only if there is no
-  content for the current page.
+If the **widget** option is omitted the CMS will render a simple `TextInput`.
+Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
+before you can use them in the CMS.
 
-* If you use the option **as** the content of the placeholder will not be displayed but
-  a variable will be defined within the template's context instead.
+The **as** option
+------------------
 
-To clarify, here is a list of different possible syntaxes for this template tag::
+If you use the option **as** the content of the placeholder will not be displayed but
+a variable will be defined within the template's context instead.
+
+The **parsed** keyword
+-----------------------
+
+If you add the keyword **parsed** the content of the placeholder
+will be evaluated as Django template, within the current context.
+Each placeholder with the **parsed** keyword will also have
+a note in the admin interface noting its ability to be evaluated as template.
+
+The **inherited** keyword
+-------------------------
+
+If you add the keyword **inherited** the placeholder's content
+will be retrieved from the closest parent. But only if there is no
+content for the current page.
+
+Example of valid syntaxes
+--------------------------
+
+This is a list of different possible syntaxes for this template tag::
 
     {% placeholder title %}
     {% placeholder title with TextIntput %}
@@ -97,10 +116,10 @@ you can simple subclass the :class:`PlaceholderNode <pages.placeholders.Placehol
             """Output the content of the node in the template."""
             ...
 
-    def do_imageplaceholder(parser, token):
+    def do_contactplaceholder(parser, token):
         name, params = parse_placeholder(parser, token)
-        return ContactForm(name, **params)
-    register.tag('contactplaceholder', do_imageplaceholder)
+        return ContactFormPlaceholderNode(name, **params)
+    register.tag('contactplaceholder', do_contactplaceholder)
 
 And use it your templates as a normal placeholder::
 

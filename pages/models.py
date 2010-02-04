@@ -24,24 +24,24 @@ class Page(models.Model):
     :class:`Content <pages.models.Content>` model.
 
     .. attribute:: creation_date
-    When the page has been created.
+       When the page has been created.
 
     .. attribute:: publication_date
-    When the page should be visible.
+       When the page should be visible.
 
     .. attribute:: publication_end_date
-    When the publication of this page end.
+       When the publication of this page end.
 
     .. attribute:: last_modification_date
-    Last time this page has been modified.
+       Last time this page has been modified.
 
     .. attribute:: status
-    The current status of the page. Could be DRAFT, PUBLISHED,
-    EXPIRED or HIDDEN. You should the property :attr:`calculated_status` if
-    you want that the dates are taken in account.
+       The current status of the page. Could be DRAFT, PUBLISHED,
+       EXPIRED or HIDDEN. You should the property :attr:`calculated_status` if
+       you want that the dates are taken in account.
 
     .. attribute:: template
-    A string containing the name of the template file for this page.
+       A string containing the name of the template file for this page.
     """
     
     # some class constants to refer to, e.g. Page.DRAFT

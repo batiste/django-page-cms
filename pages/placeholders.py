@@ -151,11 +151,12 @@ class PlaceholderNode(template.Node):
         page_obj = context[self.page]
         lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
         content = Content.objects.get_content(page_obj, lang, self.name, True)
-        if self.inherited:
-            while not content and page_obj.parent:
-                page_obj = page_obj.parent
-                content = Content.objects.get_content(page_obj, lang,
+        if self.inherited and not content:
+            for ancestor in page_obj.get_ancestors():
+                content = Content.objects.get_content(ancestor, lang,
                     self.name, True)
+                if content:
+                    break
         return content
 
     def render(self, context):

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-import datetime
+from pages.models import Page, Content, PageAlias
+from pages.placeholders import PlaceholderNode
+from pages.tests.testcase import TestCase
 
 import django
 from django.contrib.auth.models import User
@@ -10,8 +12,7 @@ from django.template import Template, RequestContext, Context, TemplateDoesNotEx
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 
-from pages.models import Page, Content, PageAlias
-from pages.tests.testcase import TestCase
+import datetime
 
 class PagesTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -773,7 +774,7 @@ class PagesTestCase(TestCase):
         author = User.objects.all()[0]
         p1 = Page(author=author, status=Page.PUBLISHED)
         p1.save()
-        Content(page=p1, language='en-us', type='toto',
+        Content(page=p1, language='en-us', type='inher',
             body='parent-content').save()
         p2 = Page(
             author=author,
@@ -787,6 +788,20 @@ class PagesTestCase(TestCase):
         p2.move_to(p1, position='first-child')
         self.assertEqual(template.render(context), 'parent-content')
 
-        
-        
-        
+
+    def test_placeholder_untranslated_content(self):
+        """Test placeholder untranslated content."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        page = Page(author=author, status=Page.PUBLISHED)
+        page.save()
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=True)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        placeholder.save(page, 'en-us', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 1)
+        self.assertEqual(Content.objects.all()[0].language, 'en-us')
+
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 2)

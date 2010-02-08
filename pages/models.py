@@ -16,6 +16,8 @@ from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager
 from pages import settings
 
+PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
+
 
 class Page(models.Model):
     """
@@ -59,7 +61,6 @@ class Page(models.Model):
     PAGE_URL_KEY = "page_%d_language_%s_url"
     #PAGE_TEMPLATE_KEY = "page_%d_template"
     #PAGE_CHILDREN_KEY = "page_children_%d_%d"
-    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
@@ -181,9 +182,9 @@ class Page(models.Model):
         #frozen = int(bool(self.freeze_date))
         # delete content cache, frozen or not
         for name in p_names:
-            cache.delete(self.PAGE_CONTENT_DICT_KEY %
+            cache.delete(PAGE_CONTENT_DICT_KEY %
                 (self.id, name, 1))
-            cache.delete(self.PAGE_CONTENT_DICT_KEY %
+            cache.delete(PAGE_CONTENT_DICT_KEY %
                 (self.id, name, 0))
 
         for lang in settings.PAGE_LANGUAGES:

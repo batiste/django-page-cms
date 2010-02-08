@@ -54,6 +54,13 @@ If you add the keyword **inherited** the placeholder's content
 will be retrieved from the closest parent. But only if there is no
 content for the current page.
 
+The **unstranslated** keyword
+-----------------------------
+
+If you add the keyword **unstranslated** the placeholder's content
+will be the same whatever language your work with. It's useful for an image
+placeholder that should remain the same in every language.
+
 Example of valid syntaxes
 --------------------------
 

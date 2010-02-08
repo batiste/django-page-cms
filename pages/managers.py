@@ -119,6 +119,8 @@ class PageManager(models.Manager):
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""
 
+    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
+
     def sanitize(self, content):
         """Sanitize a string in order to avoid possible XSS using
         ``html5lib``."""
@@ -182,12 +184,12 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
-        PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
         frozen = int(bool(page.freeze_date))
-        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen))
+        content_dict = cache.get(self.PAGE_CONTENT_DICT_KEY %
+            (page.id, ctype, frozen))
 
         # fill a dict object for each language
         if not content_dict:
@@ -206,7 +208,7 @@ class ContentManager(models.Manager):
                     content_dict[language] = content.body
                 except self.model.DoesNotExist:
                     content_dict[language] = ''
-            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
+            cache.set(self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
                 content_dict)
 
         if language in content_dict and content_dict[language]:

@@ -10,7 +10,8 @@ from django.db.models import get_app, get_apps
 test_dir = os.path.dirname(__file__)
 sys.path.insert(0, test_dir)
 
-def get_all_coverage_modules(app_module, exclude_files=[]):
+def get_all_coverage_modules(app_module, exclude_files=[],
+        exclude_directories=[]):
     """Returns all possible modules to report coverage on, even if they
     aren't loaded.
     """
@@ -23,7 +24,11 @@ def get_all_coverage_modules(app_module, exclude_files=[]):
     mod_list = []
     for root, dirs, files in os.walk(app_dirpath):
         root_path = app_path + root[len(app_dirpath):].split(os.path.sep)[1:]
-        if not '.svn' in root_path and not 'tests' in root_path:
+        exclude = False
+        for dirname in exclude_directories:
+            if dirname in root_path:
+                exclude = True
+        if not exclude:
             for file in files:
                 if file not in exclude_files:
                     if file.lower().endswith('.py'):
@@ -42,11 +47,13 @@ def get_all_coverage_modules(app_module, exclude_files=[]):
 def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         extra_tests=[]):
     cov = coverage()
-    cov.erase()
-    cov.use_cache(0)
     cov.start()
     app = get_app('pages')
-    modules = get_all_coverage_modules(app, exclude_files=['auto_render.py'])
+    modules = get_all_coverage_modules(
+        app,
+        exclude_files=['auto_render.py', 'search_indexes.py'],
+        exclude_directories=['tests', '.svn', 'migrations']
+    )
     results = django_test_runner(test_labels, verbosity, interactive,
         extra_tests)
     cov.stop()

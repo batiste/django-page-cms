@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
-import mptt
+from pages.utils import get_placeholders, normalize_url
+from pages.managers import PageManager, ContentManager
+from pages.managers import PagePermissionManager, PageAliasManager
+from pages import settings
 
 from datetime import datetime
 from django.db import models
@@ -11,10 +14,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
-from pages.utils import get_placeholders, normalize_url
-from pages.managers import PageManager, ContentManager
-from pages.managers import PagePermissionManager, PageAliasManager
-from pages import settings
+import mptt
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 

@@ -810,3 +810,23 @@ class PagesTestCase(TestCase):
         placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
         placeholder.save(page, 'fr-ch', 'test-content', True)
         self.assertEqual(len(Content.objects.all()), 2)
+
+    def test_urlconf_registry(self):
+        """Test urlconf_registry basic functions."""
+        from pages import urlconf_registry as reg
+        reg.get_urlconf('Documents')
+        try:
+            reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
+        except reg.UrlconfAlreadyRegistered:
+            pass
+        reg.registry = []
+        try:
+            reg.get_urlconf('Documents')
+        except reg.UrlconfNotFound:
+            pass
+        
+        reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
+
+        

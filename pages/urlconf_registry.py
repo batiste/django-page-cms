@@ -1,5 +1,5 @@
 """Django page CMS urlconf registry."""
-__all__ = ('register_urlconf',)
+
 from django.utils.translation import ugettext as _
 
 class UrlconfAlreadyRegistered(Exception):
@@ -7,13 +7,11 @@ class UrlconfAlreadyRegistered(Exception):
     An attempt was made to register a widget for Django page CMS more
     than once.
     """
-    pass
 
 class UrlconfNotFound(Exception):
     """
     The requested widget was not found
     """
-    pass
 
 registry = []
 

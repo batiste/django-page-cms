@@ -1,12 +1,13 @@
+"""Django haystack `SearchIndex` module."""
 from pages.models import Page, Content
 
-from haystack.indexes import *
+from haystack.indexes import SearchIndex, CharField, DateTimeField
 from haystack import site
 
 import datetime
 
 class PageIndex(SearchIndex):
-    """Index the pages with haystack."""
+    """Search index for pages content."""
     text = CharField(document=True, use_template=True)
     publication_date = DateTimeField(model_attr='publication_date')
 

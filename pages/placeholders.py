@@ -1,20 +1,25 @@
-from django import template
-from django.template import Template, TemplateSyntaxError
-from django.core.files.storage import FileSystemStorage
-from django.forms import Widget, Textarea, ImageField, CharField
-from django.forms import TextInput
-from django.conf import settings as global_settings
-from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import SafeUnicode, mark_safe
-from django.template.loader import render_to_string
+"""Placeholder module, that's where the smart things appened."""
 
 from pages.widgets_registry import get_widget
 from pages import settings
-from pages.models import Content, Page
+from pages.models import Content
 from pages.widgets import ImageInput, VideoWidget
+
+from django import template
+from django.template import Template, TemplateSyntaxError
+from django.core.files.storage import FileSystemStorage
+from django.forms import Textarea, ImageField, CharField
+from django.forms import TextInput
+from django.conf import settings as global_settings
+from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.template.loader import render_to_string
+
 import os
 import time
 import re
+
+PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.

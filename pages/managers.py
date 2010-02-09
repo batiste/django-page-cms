@@ -5,12 +5,10 @@ from pages.utils import normalize_url, filter_link
 from pages.http import get_slug_and_relative_path
 
 from django.db import models, connection
-from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-import itertools, re
 from datetime import datetime
 
 
@@ -25,7 +23,7 @@ class PageManager(models.Manager):
         for testing purpose."""
         from pages.models import Content
         author = User.objects.all()[0]
-        if depth==0:
+        if depth == 0:
             return
         p = self.model(parent=parent, author=author,
             status=self.model.PUBLISHED)
@@ -206,7 +204,7 @@ class ContentManager(models.Manager):
                 }
                 if page.freeze_date:
                     params['creation_date__lte'] = page.freeze_date
-                language=lang[0]
+                language = lang[0]
                 try:
                     content = self.filter(**params).latest()
                     content_dict[language] = content.body

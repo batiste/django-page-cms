@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS test suite module"""
+"""Django page CMS test suite module."""
 from pages.models import Page, Content, PageAlias
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase
@@ -8,7 +8,8 @@ import django
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.test.client import Client
-from django.template import Template, RequestContext, Context, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context
+from django.template import TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 
@@ -250,18 +251,21 @@ class PagesTestCase(TestCase):
         
         page_data['body'] = 'changed body'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body')
 
         page_data['body'] = 'changed body 2'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
         response = c.get('/pages/')
         self.assertContains(response, 'changed body 2', 1)
         
         setattr(settings, "PAGE_CONTENT_REVISION", False)
         
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
     def test_placeholder(self):
         """
@@ -544,11 +548,12 @@ class PagesTestCase(TestCase):
         AJAX request *but* django.utils.translation caches the active
         language on a per thread basis.
         
-        This means that the first "bogus" call to LocaleMiddleware.process_request
-        will "kill" the localization data for the AJAX request.
+        This means that the first "bogus" call to
+        LocaleMiddleware.process_request will "kill" the localization
+        data for the AJAX request.
         
-        Rev. 501 fixes this by passing in the language code from the original request.
-        
+        Rev. 501 fixes this by passing in the language code from the original
+        request.
         """
         response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
             {'position':'first-child', 'target':root_page.id})

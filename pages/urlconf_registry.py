@@ -1,3 +1,4 @@
+"""Django page CMS urlconf registry."""
 __all__ = ('register_urlconf',)
 from django.utils.translation import ugettext as _
 
@@ -29,7 +30,7 @@ def get_choices():
 def register_urlconf(name, urlconf, label=None):
     for urlconf_tuple in registry:
         if urlconf_tuple[0] == name:
-            raise urlconfAlreadyRegistered(
+            raise UrlconfAlreadyRegistered(
                 _('The urlconf %s has already been registered.') % name)
     urlconf_tuple = (name, urlconf, label, urlconf)
     registry.append(urlconf_tuple)
@@ -38,5 +39,5 @@ def get_urlconf(name):
     for urlconf_tuple in registry:
         if urlconf_tuple[0] == name:
             return urlconf_tuple[1]
-    raise urlconfNotFound(
+    raise UrlconfNotFound(
         _('The urlconf %s has not been registered.') % name)

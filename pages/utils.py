@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
-import sys, re, logging, pprint, traceback
+from pages import settings
+from pages.http import get_request_mock, get_language_from_request
+
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext
 from django.core.cache import cache
-from pages import settings
-from pages.http import get_request_mock, get_language_from_request
+
+import re
 
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
@@ -54,8 +56,8 @@ def _placeholders_recursif(nodelist, plist, blist):
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
                 hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False
-            for pl in plist:
-                if pl.name == node.name:
+            for placeholder in plist:
+                if placeholder.name == node.name:
                     already_in_plist = True
             if not already_in_plist:
                 if len(blist):

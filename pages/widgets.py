@@ -1,27 +1,23 @@
 # -*- coding: utf-8 -*-
 """Django CMS come with a set of ready to use widgets that you can enable
 in the admin via a placeholder tag in your template."""
-from os.path import join
-
-from django.conf import settings
-from django.forms import MultiWidget
-from django.forms import TextInput, Textarea, HiddenInput
-from django.forms import MultiWidget, FileInput
-from django.contrib.admin.widgets import AdminTextInputWidget, AdminTextareaWidget
-from django.utils.safestring import mark_safe
-from django.template.loader import render_to_string
-from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from django.forms.forms import pretty_name
-from django.utils.translation import ugettext as _
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
-from pages.settings import PAGE_TINYMCE, PAGE_LINK_FILTER
+from pages.settings import PAGE_TINYMCE
 from pages.models import Page
-from pages.utils import get_language_from_request
 from pages.widgets_registry import register_widget
 
+from django.conf import settings
+from django.forms import TextInput, Textarea, HiddenInput
+from django.forms import MultiWidget, FileInput
+from django.contrib.admin.widgets import AdminTextInputWidget
+from django.contrib.admin.widgets import AdminTextareaWidget
+from django.utils.safestring import mark_safe
+from django.template.loader import render_to_string
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
+
+from os.path import join
 
 register_widget(TextInput)
 register_widget(Textarea)
@@ -57,14 +53,16 @@ if PAGE_TAGGING:
             super(AutoCompleteTagInput, self).__init__(attrs)
 
         def render(self, name, value, language=None, attrs=None, **kwargs):
-            rendered = super(AutoCompleteTagInput, self).render(name, value, attrs)
+            rendered = super(AutoCompleteTagInput, self).render(
+                name, value, attrs)
             page_tags = Tag.objects.usage_for_model(Page)
             context = {
                 'name': name,
-                'tags': simplejson.dumps([tag.name for tag in page_tags], ensure_ascii=False),
+                'tags': simplejson.dumps([tag.name for tag in page_tags],
+                    ensure_ascii=False),
             }
             return rendered + mark_safe(render_to_string(
-                'admin/pages/page/widgets/autocompletetaginput.html', context))
+            'admin/pages/page/widgets/autocompletetaginput.html', context))
 
     register_widget(AutoCompleteTagInput)
 
@@ -100,7 +98,8 @@ if PAGE_TINYMCE:
 
     class TinyMCE(tinymce_widgets.TinyMCE):
         """TinyMCE widget."""
-        def __init__(self, language=None, attrs=None, mce_attrs=None, **kwargs):
+        def __init__(self, language=None, attrs=None, mce_attrs=None,
+                                                                **kwargs):
             self.language = language
 
             if mce_attrs is None:
@@ -117,7 +116,8 @@ if PAGE_TINYMCE:
             })
             # take into account the default settings, don't allow
             # the above hard coded ones overriding them
-            self.mce_attrs.update(getattr(settings, 'TINYMCE_DEFAULT_CONFIG', {}))
+            self.mce_attrs.update(
+                getattr(settings, 'TINYMCE_DEFAULT_CONFIG', {}))
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
     register_widget(TinyMCE)
 
@@ -129,7 +129,8 @@ class CKEditor(Textarea):
 
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
-        self.filebrowser = "filebrowser" in getattr(settings, 'INSTALLED_APPS', [])
+        self.filebrowser = "filebrowser" in getattr(settings,
+            'INSTALLED_APPS', [])
         self.attrs = {'class': 'ckeditor'}
         if attrs:
             self.attrs.update(attrs)
@@ -159,7 +160,8 @@ class WYMEditor(Textarea):
         )]
 
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
-            js.append(join(PAGES_MEDIA_URL, 'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
+            js.append(join(PAGES_MEDIA_URL,
+            'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
 
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
@@ -176,9 +178,6 @@ class WYMEditor(Textarea):
             'language': self.language,
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
-        context['page_link_wymeditor'] = 0
-        #if [editor for editor in PAGE_LINK_EDITOR if editor.endswith('WYMEditor')]:
-        # let's enable that by default
         context['page_link_wymeditor'] = 1
         context['page_list'] = Page.objects.all().order_by('tree_id','lft')
 
@@ -251,7 +250,7 @@ class EditArea(Textarea):
 
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language
-        self.attrs = {'class': 'editarea',}
+        self.attrs = {'class': 'editarea'}
         if attrs:
             self.attrs.update(attrs)
         super(EditArea, self).__init__(attrs)
@@ -289,7 +288,7 @@ register_widget(ImageInput)
 class VideoWidget(MultiWidget):
     '''A youtube `Widget` for the admin.'''
     def __init__(self, attrs=None, page=None, language=None,
-                video_url=None, weight=None, height=None):
+        video_url=None, weight=None, height=None):
             widgets = [
                 TextInput(attrs=attrs),
                 TextInput(attrs=attrs),
@@ -304,10 +303,10 @@ class VideoWidget(MultiWidget):
         return (None, None, None)
 
     def value_from_datadict(self, data, files, name):
-        value = [u'',u'',u'']
-        for d in filter(lambda x: x.startswith(name), data):
-            index = int(d[len(name)+1:])
-            value[index] = data[d]
+        value = [u'', u'', u'']
+        for da in filter(lambda x: x.startswith(name), data):
+            index = int(da[len(name)+1:])
+            value[index] = data[da]
         if value[0] == value[1] == value[2] == u'':
             return None
         return u'%s\\%s\\%s' % tuple(value)

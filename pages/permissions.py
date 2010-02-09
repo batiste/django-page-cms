@@ -1,13 +1,13 @@
+"""Django page CMS permissions management using django-authority."""
+
 from pages.models import Page
 from pages import settings
-
-from django.utils.translation import ugettext_lazy as _
 
 import authority
 
 permission_checks = []
-for lang in settings.PAGE_LANGUAGES:
-    permission_checks.append('manage ('+lang[0]+')')
+for perm_lang in settings.PAGE_LANGUAGES:
+    permission_checks.append('manage ('+perm_lang[0]+')')
 
 permission_checks = permission_checks + ['freeze', 'manage hierarchy']
 
@@ -21,7 +21,7 @@ class PagePermission(authority.permissions.BasePermission):
         if self.user.is_superuser:
             return True
         
-        if action=='change':
+        if action == 'change':
             # the user has always the right to look at a page content
             # if he doesn't try to modify it
             if method == 'POST':

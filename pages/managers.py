@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
-import itertools, re
-from datetime import datetime
+from pages import settings
+from pages.utils import normalize_url, filter_link
+from pages.http import get_slug_and_relative_path
 
 from django.db import models, connection
 from django.contrib.sites.models import Site
@@ -9,18 +10,19 @@ from django.db.models import Q
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-from pages import settings
-from pages.utils import normalize_url, filter_link
-from pages.http import get_slug_and_relative_path
+import itertools, re
+from datetime import datetime
+
 
 class PageManager(models.Manager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
-    that respect the page settings.
+    that respect the page attributes and project settings.
     """
 
     def populate_pages(self, parent=None, child=5, depth=5):
-        """Create a population of pages for testing purpose."""
+        """Create a population of :class:`Page <pages.models.Page>`
+        for testing purpose."""
         from pages.models import Content
         author = User.objects.all()[0]
         if depth==0:
@@ -80,7 +82,8 @@ class PageManager(models.Manager):
         return queryset
 
     def published(self):
-        """Creates a :class:`QuerySet` of published filter."""
+        """Creates a :class:`QuerySet` of published
+        :class:`Page <pages.models.Page>`."""
         return self.filter_published(self)
 
     def drafts(self):
@@ -115,6 +118,7 @@ class PageManager(models.Manager):
                 if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
+
 
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""
@@ -251,6 +255,7 @@ class ContentManager(models.Manager):
         cursor = connection.cursor()
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
+
 
 class PagePermissionManager(models.Manager):
     """Hierachic page permission manager."""

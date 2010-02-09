@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'tinymce',
     'south',
     'authority',
+    'haystack',
 )
 
 PAGE_TINYMCE = True
@@ -165,6 +166,10 @@ PAGE_TEMPLATES = (
 PAGE_SANITIZE_USER_INPUT = True
 
 PAGE_USE_SITE_ID = True
+
+HAYSTACK_SITECONF = 'example.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
 # A test runner that use the test coverage module
 TEST_RUNNER = "test_runner.run_tests"

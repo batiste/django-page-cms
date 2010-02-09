@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
+
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
 from pages.managers import PagePermissionManager, PageAliasManager

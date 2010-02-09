@@ -171,8 +171,17 @@ HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
-# A test runner that use the test coverage module
-TEST_RUNNER = "test_runner.run_tests"
+COVERAGE_EXCLUDE_MODULES = ("pages.migrations.*",
+                            "pages.tests.*",)
+COVERAGE_HTML_REPORT = True
+COVERAGE_BRANCH_COVERAGE = False
+
+try:
+    import test_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ("test_extensions", )
 
 try:
     from local_settings import *

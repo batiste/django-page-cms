@@ -4,6 +4,14 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.1.2
+=============
+
+    * Implement haystack SearchIndex for page content search.
+    * Add the untranslated placeholder keyword. Enable the user to have a single
+      placeholder content accross all languages.
+    * Add back the hierarchical change rights management for every page.
+
 Release 1.1.1
 =============
 

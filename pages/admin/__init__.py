@@ -307,7 +307,7 @@ class PageAdmin(admin.ModelAdmin):
 
         if query:
             page_ids = list(set([c.page.pk for c in
-                Content.objects.filter(body__icontains=q)]))
+                Content.objects.filter(body__icontains=query)]))
             pages = Page.objects.filter(pk__in=page_ids)
         else:
             pages = Page.objects.root()
@@ -347,8 +347,13 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 page.invalidate()
                 target.invalidate()
-                page.move_to(target, position)
-                return list_pages_ajax(request)
+                from mptt.exceptions import InvalidMove
+                invalid_move = False
+                try:
+                    page.move_to(target, position)
+                except InvalidMove:
+                    invalid_move = True
+                return list_pages_ajax(request, invalid_move)
         return HttpResponseRedirect('../../')
 
 for admin_class, model, options in get_connected():

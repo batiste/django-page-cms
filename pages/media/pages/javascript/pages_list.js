@@ -95,6 +95,19 @@ $(function () {
     }
     
     init_publish_hanlder(changelist);
+
+    function move_page(selected_page, position, id) {
+        $.post(selected_page+'/move-page/',
+            { position: position, target: id },
+            function (html) {
+                $('#page-list').html(html);
+                init_publish_hanlder(changelist);
+                pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
+                action = selected_page = '';
+                bind_sortable()
+            }
+        );
+    };
     
     // let's start event delegation
     changelist.click(function (e) {
@@ -140,14 +153,7 @@ $(function () {
                 $('.insert', row).after('<img class="insert-loading" src="'+page_media_url+'images/loading.gif" alt="Loading" />');
 
                 if (action == 'move') {
-                    $.post(selected_page+'/move-page/', { position: position, target: id },
-                        function (html) {
-                            $('#page-list').html(html);
-                            init_publish_hanlder(changelist);
-                            pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
-                            action = selected_page = '';
-                        }
-                    );
+                    move_page(selected_page, position, id);
                 } else if (action == 'add') {
                     window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
                 }
@@ -162,7 +168,10 @@ $(function () {
                         init_publish_hanlder(children);
                         // Update the move and add links of the inserted rows
                         if (action == 'move') {
-                            $('#page-row-'+selected_page).addClass('selected').add(get_children(selected_page)).addClass('highlighted');
+                            var selected_row = $('#page-row-'+selected_page)
+                            selected_row.addClass('selected')
+                            selected_row.add(get_children(selected_page))
+                            selected_row.addClass('highlighted');
                             // this could become quite slow with a lot of pages
                             $('tr:not(.highlighted)', changelist).addClass('insertable');
                         } else if (action == 'add') {
@@ -177,4 +186,28 @@ $(function () {
             }
         }
     });
+
+    
+    // will be better of not rewritting the table everytime
+    function bind_sortable() {
+        // Initialise the table for drag and drop
+        $("#page-table-dnd tbody").sortable({
+            axis:'y',
+            handle: '.movelink',
+            revert: true,
+            update:function(event, ui) {
+                $("#page-table-dnd tbody").addClass('ui-sortable');
+            },
+            start:function(event, ui) {
+                //selected_page = $(ui.item[0]).closest('tr').attr('id').split('page-row-')[1];
+            },
+            stop:function(event, ui) {
+                selected_page = $(ui.item[0]).closest('tr').attr('id').split('page-row-')[1];
+                var id = $($(ui.item[0]).prev()).closest('tr').attr('id').split('page-row-')[1];
+                if(id)
+                    move_page(selected_page, 'first-child', id);
+            },
+        });
+    }
+    bind_sortable();
 });

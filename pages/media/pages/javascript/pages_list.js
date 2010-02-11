@@ -5,6 +5,12 @@ $(function () {
     var action = false;
     var selected_page = false;
     var changelist = $('#changelist');
+
+    if(!window.gettext) {
+        window.gettext = function(str) {
+            return str;
+        }
+    }
     
     function reset_states() {
         action = selected_page = '';
@@ -104,7 +110,7 @@ $(function () {
                 init_publish_hanlder(changelist);
                 pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                 action = selected_page = '';
-                bind_sortable()
+                //bind_sortable()
             }
         );
     };
@@ -187,34 +193,61 @@ $(function () {
         }
     });
 
-    
+
+    var drag_clientx = false;
+    var insert_position = 'right';
     // will be better of not rewritting the table everytime
     function bind_sortable() {
         // Initialise the table for drag and drop
-        $("#page-table-dnd tbody").sortable({
+        $("#page-list").sortable({
+            scroll:true,
             axis:'y',
+            items:'.draggable',
             handle: '.movelink',
             revert: true,
             update:function(event, ui) {
                 $("#page-table-dnd tbody").addClass('ui-sortable');
             },
             start:function(event, ui) {
-                //selected_page = $(ui.item[0]).closest('tr').attr('id').split('page-row-')[1];
+                drag_clientx = event.clientX;
+                $(ui.item).find('.title-cell-container').text(gettext('Insert above'));
+                insert_position = 'right';
             },
             stop:function(event, ui) {
-                selected_page = $(ui.item[0]).closest('tr').attr('id').split('page-row-')[1];
+                selected_page = $(ui.item[0]).closest('.draggable').attr('id').split('page-row-')[1];
                 var prev = $(ui.item[0]).prev();
                 var next = $(ui.item[0]).next();
+                var id = false;
                 if(prev.length) {
                     var id = prev.closest('tr').attr('id').split('page-row-')[1];
-                    move_page(selected_page, 'right', id);
                 } else if(next.length) {
                     var id = next.closest('tr').attr('id').split('page-row-')[1];
-                    move_page(selected_page, 'left', id);
+                    if(insert_position == 'right')
+                        insert_position = 'left';
                 } else {
                     alert(gettext("Invalid move"));
+                    return;
                 }
+                move_page(selected_page, insert_position, id);
             },
+            change:function(event, ui) {
+                var prev = $(ui.placeholder).prev();
+                var line = $(ui.item);
+                var cell = line.find('.title-cell-container');
+                var mal = prev.find('.title-cell-container').css('margin-left');
+                cell.css('margin-left', mal);
+            },
+            sort:function(event, ui) {
+                var line = $(ui.item);
+                var cell = line.find('.title-cell-container');
+                if(drag_clientx < event.clientX) {
+                    cell.text(gettext('Insert as child'));
+                    insert_position = 'first-child';
+                } else {
+                    cell.text(gettext('Insert above'));
+                    insert_position = 'right';
+                }
+            }
         });
     }
     bind_sortable();

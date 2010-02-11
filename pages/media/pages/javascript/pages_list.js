@@ -203,9 +203,17 @@ $(function () {
             },
             stop:function(event, ui) {
                 selected_page = $(ui.item[0]).closest('tr').attr('id').split('page-row-')[1];
-                var id = $($(ui.item[0]).prev()).closest('tr').attr('id').split('page-row-')[1];
-                if(id)
-                    move_page(selected_page, 'first-child', id);
+                var prev = $(ui.item[0]).prev();
+                var next = $(ui.item[0]).next();
+                if(prev.length) {
+                    var id = prev.closest('tr').attr('id').split('page-row-')[1];
+                    move_page(selected_page, 'right', id);
+                } else if(next.length) {
+                    var id = next.closest('tr').attr('id').split('page-row-')[1];
+                    move_page(selected_page, 'left', id);
+                } else {
+                    alert(gettext("Invalid move"));
+                }
             },
         });
     }

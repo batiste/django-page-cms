@@ -420,7 +420,8 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-    width: 288px;
+    
+    width: 305px;
     float: left;
     display: inline; /* IE6 fix */
     margin-right: 1em;

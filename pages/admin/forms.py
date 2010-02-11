@@ -52,7 +52,8 @@ it must be unique among the other pages of the same level.')
     freeze_date = forms.DateTimeField(
         required=False,
         label=_('Freeze'),
-        help_text=_("Don't publish any content after this date."),
+        help_text=_("Don't publish any content after this date. Format is 'Y-m-d H:M:S'")
+        # those make tests fail miserably
         #widget=widgets.AdminSplitDateTime()
         #widget=widgets.AdminTimeWidget()
     )

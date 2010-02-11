@@ -62,7 +62,7 @@ if PAGE_TAGGING:
                     ensure_ascii=False),
             }
             return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/autocompletetaginput.html', context))
+            'pages/widgets/autocompletetaginput.html', context))
 
     register_widget(AutoCompleteTagInput)
 
@@ -90,7 +90,7 @@ class RichTextarea(Textarea):
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/richtextarea.html', context))
+            'pages/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
 
 if PAGE_TINYMCE:
@@ -143,7 +143,7 @@ class CKEditor(Textarea):
             'filebrowser': self.filebrowser,
         }
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/ckeditor.html', context))
+            'pages/widgets/ckeditor.html', context))
 
 register_widget(CKEditor)
 
@@ -186,7 +186,7 @@ class WYMEditor(Textarea):
             context['filebrowser'] = 1
 
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/wymeditor.html', context))
+            'pages/widgets/wymeditor.html', context))
 
 register_widget(WYMEditor)
 
@@ -212,7 +212,7 @@ class markItUpMarkdown(Textarea):
             'name': name,
         }
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/markitupmarkdown.html', context))
+            'pages/widgets/markitupmarkdown.html', context))
 register_widget(markItUpMarkdown)
 
 class markItUpHTML(Textarea):
@@ -237,7 +237,7 @@ class markItUpHTML(Textarea):
             'name': name,
         }
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/markituphtml.html', context))
+            'pages/widgets/markituphtml.html', context))
 register_widget(markItUpHTML)
 
 
@@ -263,7 +263,7 @@ class EditArea(Textarea):
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         return rendered + mark_safe(render_to_string(
-            'admin/pages/page/widgets/editarea.html', context))
+            'pages/widgets/editarea.html', context))
 register_widget(EditArea)
 
 class ImageInput(FileInput):
@@ -351,4 +351,4 @@ class LanguageChoiceWidget(TextInput):
             'page_languages':settings.PAGE_LANGUAGES
         }
         return mark_safe(render_to_string(
-            'admin/pages/page/widgets/languages.html', context))
+            'pages/widgets/languages.html', context))

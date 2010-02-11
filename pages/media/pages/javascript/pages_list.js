@@ -210,7 +210,7 @@ $(function () {
             },
             start:function(event, ui) {
                 drag_clientx = event.clientX;
-                $(ui.item).find('.title-cell-container').text(gettext('Insert above'));
+                $(ui.item).find('.message').text(gettext('Insert as sibling'));
                 insert_position = 'right';
             },
             stop:function(event, ui) {
@@ -241,10 +241,10 @@ $(function () {
                 var line = $(ui.item);
                 var cell = line.find('.title-cell-container');
                 if(drag_clientx < event.clientX) {
-                    cell.text(gettext('Insert as child'));
+                    cell.find('.message').text(gettext('Insert as child'));
                     insert_position = 'first-child';
                 } else {
-                    cell.text(gettext('Insert above'));
+                    cell.find('.message').text(gettext('Insert as sibling'));
                     insert_position = 'right';
                 }
             }

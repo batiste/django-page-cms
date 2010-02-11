@@ -120,6 +120,16 @@ a.popup:hover .help,
     padding: 5px 10px;
 }
 
+.change-list .title-cell .message {
+    /* improve behavior with drag-drop */
+    position:absolute;
+}
+
+.change-list .selection-cell {
+    /* improve behavior with drag-drop */
+    width:22px;
+}
+
 /* Title cell tbody */
 .change-list tbody .title-cell-container {
     position: relative;

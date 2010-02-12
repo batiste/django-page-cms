@@ -3,6 +3,7 @@
 from pages.models import Page, Content, PageAlias
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase
+from pages import urlconf_registry as reg
 
 import django
 from django.contrib.auth.models import User
@@ -813,7 +814,7 @@ class PagesTestCase(TestCase):
 
     def test_urlconf_registry(self):
         """Test urlconf_registry basic functions."""
-        from pages import urlconf_registry as reg
+        
         reg.get_urlconf('Documents')
         try:
             reg.register_urlconf('Documents', 'example.documents.urls',

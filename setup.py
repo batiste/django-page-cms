@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+version = __import__('pages').__version__
+package_name = 'django-page-cms'
 
 import os
 templates_dirs = []
 for directory in os.walk('pages/templates'):
     templates_dirs.append(directory[0][6:]+'/*.*')
 
+url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
+download_url = url_schema % (package_name, package_name, version)
+
 setup(
-    name='django-page-cms',
+    name=package_name,
     test_suite='example.test_runner.run_tests',
-    version=__import__('pages').__version__,
+    version=version,
     description='A tree based Django CMS application',
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
-    url='http://code.google.com/p/django-page-cms/',
-    download_url='http://code.google.com/p/django-page-cms/downloads/list',
+    url='http://packages.python.org/django-page-cms/',
+    download_url=download_url,
     requires=(
         'BeautifulSoup',
         'Django',

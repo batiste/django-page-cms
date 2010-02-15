@@ -20,7 +20,8 @@ setup(
     author_email='batiste.bieler@gmail.com',
     url='http://packages.python.org/django-page-cms/',
     license='BSD',
-    long_description=read('README.rst'),
+    long_description='This Django CMS enable you to create and administrate '
+                     'hierarchical pages in a simple and powerful way.',
     download_url=download_url,
     requires=(
         'BeautifulSoup',

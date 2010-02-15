@@ -125,7 +125,9 @@ class CKEditor(Textarea):
     """CKEditor widget."""
 
     class Media:
-        js = [join(PAGES_MEDIA_URL, 'ckeditor/ckeditor.js')]
+        js = [join(PAGES_MEDIA_URL, 'ckeditor/ckeditor.js'),
+            join(settings.MEDIA_URL, 'filebrowser/js/FB_CKEditor.js'),
+        ]
 
     def __init__(self, language=None, attrs=None, **kwargs):
         self.language = language

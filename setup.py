@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 version = __import__('pages').__version__
 package_name = 'django-page-cms'
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+def local_open(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname))
 
 import os
 templates_dirs = []
@@ -23,8 +23,7 @@ setup(
     author_email='batiste.bieler@gmail.com',
     url='http://packages.python.org/django-page-cms/',
     license='BSD',
-    long_description='This Django CMS enable you to create and administrate '
-                     'hierarchical pages in a simple and powerful way.',
+    long_description=local_open('README.rst').read(),
     download_url=download_url,
     requires=(
         'BeautifulSoup',

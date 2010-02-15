@@ -19,6 +19,8 @@ setup(
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
     url='http://packages.python.org/django-page-cms/',
+    license='BSD',
+    long_description=read('README.rst'),
     download_url=download_url,
     requires=(
         'BeautifulSoup',
@@ -26,6 +28,7 @@ setup(
         'html5lib (>=0.10)',
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
+        'authority', # known as django-authority
     ),
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

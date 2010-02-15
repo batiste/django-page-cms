@@ -27,7 +27,8 @@ Key features
     (content area) in admin by adding placeholders tags into page templates.
   * Django admin application integration.
   * Multilingual support.
-  * `Search indexation with Django haystack <http://haystacksearch.org/>`_
+  * `Search indexation with Django haystack <http://haystacksearch.org/>`_.
+  * Fine grained rights management.
   * :ref:`Rich Text Editors <placeholder-widgets-list>` are directly available.
   * Page can be moved in the tree in a visual way.
   * The tree can be expanded/collapsed. A cookie remember your preferences.
@@ -35,7 +36,7 @@ Key features
   * The frontend example provide a basic "edit in place" feature.
   * Directory-like page hierarchy (page can have the same name if they are not in the same directory)
   * Every page can have multiple alias URLs. It's especially useful to migrate websites.
-  * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`
+  * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`.
   
 
 Other features
@@ -60,6 +61,7 @@ Dependencies & Compatibility
   * Django 1.1.1, Django 1.0 with older release (1.0.5)
   * Python 2.3.
   * `django-haystack if used <http://haystacksearch.org/>`_
+  * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt <http://code.google.com/p/django-mptt/>`_
   * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)

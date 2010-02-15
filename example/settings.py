@@ -106,7 +106,8 @@ INSTALLED_APPS = (
     'mptt',
     'staticfiles',
     'tinymce',
-    'south',
+    # disabled to make "setup.py test" to work properly
+    #'south',
     'authority',
     'haystack',
 )

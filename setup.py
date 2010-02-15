@@ -3,6 +3,9 @@ from setuptools import setup, find_packages
 version = __import__('pages').__version__
 package_name = 'django-page-cms'
 
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 import os
 templates_dirs = []
 for directory in os.walk('pages/templates'):

@@ -8,6 +8,8 @@ Django page CMS is based around a placeholders concept. A placeholder is special
 you use in your page templates. Every time you add a placeholder in your template  a field
 dynamically appears in the page admin.
 
+The project repository code repository is found at this address: http://github.com/batiste/django-page-cms
+
 .. contents::
     :local:
     :depth: 1
@@ -20,6 +22,7 @@ This admin interface is no up to date, but could give you an idea of what the so
  * admin : http://pagesdemo.piquadrat.ch/admin/
  * frontend : http://pagesdemo.piquadrat.ch/pages/
 
+
 Key features
 ============
 
@@ -28,13 +31,13 @@ Key features
   * Django admin application integration.
   * Multilingual support.
   * `Search indexation with Django haystack <http://haystacksearch.org/>`_.
-  * Fine grained rights management.
+  * Fine grained rights management (publisher, hierarchy manager, language manager).
   * :ref:`Rich Text Editors <placeholder-widgets-list>` are directly available.
   * Page can be moved in the tree in a visual way.
   * The tree can be expanded/collapsed. A cookie remember your preferences.
   * Possibility to specify a different page URL for each language.
   * The frontend example provide a basic "edit in place" feature.
-  * Directory-like page hierarchy (page can have the same name if they are not in the same directory)
+  * Directory-like page hierarchy (page can have the same name if they are not in the same directory).
   * Every page can have multiple alias URLs. It's especially useful to migrate websites.
   * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`.
   
@@ -48,8 +51,6 @@ Here is the list of features you can enable/disable:
   * Image placeholder,
   * File browser with django-filebrowser,
   * Support for future publication start/end date,
-  * Each page can have special permissions that child pages inehrit,
-  * Each page can have a different that child pages inehrit,
   * Page redirection to another page,
   * Page tagging,
   * User input sanitizer (to avoid XSS),
@@ -68,7 +69,11 @@ Dependencies & Compatibility
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Django page CMS is shipped with jQuery.
   * Django page CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
-  * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle
+  * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
+
+.. note::
+
+    For install instruction go to the :doc:`Installation section </installation>`
 
 Ask for help
 ============
@@ -91,14 +96,13 @@ And then, run the development server::
 
 
 Django Page CMS try to keep the code base stable. The test coverage is higher
-than 80% and we try to keep it this way. To run the test suite:
+than 80% and we try to keep it this way. To run the test suite::
 
     python setup.py test
 
 .. note::
 
-    If you have the special page permission system enabled and you are not admin,
-    you must create a PagePermission object with all rights assigned to your user.
+    If you are not admin you have to create the appropriate permissions to modify pages.
     After that you will be able to create pages.
 
 Handling images and files

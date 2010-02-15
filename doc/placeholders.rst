@@ -4,37 +4,67 @@ Placeholders template tag
 
 .. contents::
 
-The placeholder template tag is what make Django Page CMS special. The basic workflow
-is that you design your template first, according to the design needs. You put a placeholder tag
-where you want the administration users to input data.
+The placeholder template tag is what make Django Page CMS special. The workflow
+is that you design your template first according to the page design.
+Then you put placeholder tag where you want dynamic content.
 
-For each placeholder you will have a corresponding field appearing dynamicaly in the administration interface.
-You can make as many templates as you want, use the Django template inheritance, and CMS will behave as intended.
+For each placeholder you will have a corresponding field appearing automaticaly
+in the administration interface. You can make as many templates as you want,
+use the Django template inheritance, and then CMS will still behave as intended.
 
-The syntax for placeholder is the following::
+The syntax for a placeholder tag is the following::
 
-    {% placeholder <name> [on <page>] [with <widget>] [parsed] [as <varname>] %}
+    {% placeholder <name> [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
-A few explanations of these options:
+Detailed explanations on placeholder options
+============================================
 
-* If the **on** option is omitted the CMS will automatically
-  take the current page (by using the `current_page` context variable)
-  to get the content of the placeholder.
+the **on** option
+------------------
 
-* If the **widget** option is omitted the CMS will render a simple `TextInput`.
-  Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
-  before you can use them in the CMS.
+If the **on** option is omitted the CMS will automatically
+take the current page (by using the `current_page` context variable)
+to get the content of the placeholder.
 
-* If you use the keyword **parsed** the content of the placeholder
-  will be evaluated as Django template, within the current context.
+the **widget** option
+----------------------
 
-* Each placeholder with the **parsed** keyword defined will also have
-  a note in the admin interface noting its ability to be evaluated as template.
+If the **widget** option is omitted the CMS will render a simple `TextInput`.
+Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
+before you can use them in the CMS.
 
-* If you use the option **as** the content of the placeholder will not be displayed but
-  a variable will be defined within the template's context instead.
+The **as** option
+------------------
 
-To clarify, here is a list of different possible syntaxes for this template tag::
+If you use the option **as** the content of the placeholder will not be displayed but
+a variable will be defined within the template's context instead.
+
+The **parsed** keyword
+-----------------------
+
+If you add the keyword **parsed** the content of the placeholder
+will be evaluated as Django template, within the current context.
+Each placeholder with the **parsed** keyword will also have
+a note in the admin interface noting its ability to be evaluated as template.
+
+The **inherited** keyword
+-------------------------
+
+If you add the keyword **inherited** the placeholder's content
+will be retrieved from the closest parent. But only if there is no
+content for the current page.
+
+The **untranslated** keyword
+-----------------------------
+
+If you add the keyword **untranslated** the placeholder's content
+will be the same whatever language your use. It's especialy useful for an image
+placeholder that should remain the same in every language.
+
+Example of valid syntaxes
+--------------------------
+
+This is a list of different possible syntaxes for this template tag::
 
     {% placeholder title %}
     {% placeholder title with TextIntput %}
@@ -42,10 +72,10 @@ To clarify, here is a list of different possible syntaxes for this template tag:
     {% placeholder right-column on another_page_object %}
     
     {% placeholder body parsed %}
-    {% placeholder right-column as right_column %}
+    {% placeholder right-column inherited as right_column %}
 
     ...
-
+    
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 
@@ -93,10 +123,10 @@ you can simple subclass the :class:`PlaceholderNode <pages.placeholders.Placehol
             """Output the content of the node in the template."""
             ...
 
-    def do_imageplaceholder(parser, token):
+    def do_contactplaceholder(parser, token):
         name, params = parse_placeholder(parser, token)
-        return ContactForm(name, **params)
-    register.tag('contactplaceholder', do_imageplaceholder)
+        return ContactFormPlaceholderNode(name, **params)
+    register.tag('contactplaceholder', do_contactplaceholder)
 
 And use it your templates as a normal placeholder::
 
@@ -137,7 +167,7 @@ and then you can simply use the placeholder syntax::
 
     {% placeholder custom_widget_example CustomTextarea parsed  %}
 
-More examples of custom widgets are available in :mod:`pages/admin/widgets.py <pages.admin.widgets>`.
+More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
 
 .. _placeholder-widgets-list:
 
@@ -160,6 +190,32 @@ A multi line input::
 
     {% placeholder [name] with Textarea %}
 
+AdminTextInput
+--------------
+
+A simple line input with Django admin CSS styling (better for larger input fields)::
+
+    {% placeholder [name] with AdminTextInput %}
+
+AdminTextarea
+-------------
+
+A multi line input with Django admin CSS styling::
+
+    {% placeholder [name] with AdminTextarea %}
+
+FileBrowseInput
+---------------
+
+A file browsing widget::
+
+    {% placeholder [name] with FileBrowseInput %}
+
+.. note::
+
+    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
+
+
 RichTextarea
 ------------
 
@@ -178,6 +234,15 @@ A complete jQuery Rich Text Editor called `wymeditor <http://www.wymeditor.org/>
 
 .. image:: http://drupal.org/files/images/wymeditor.preview.jpg
 
+CKEditor
+---------
+
+A complete JavaScript Rich Text Editor called `CKEditor <http://ckeditor.com/>`_::
+
+    {% placeholder [name] with CKEditor %}
+
+.. image:: http://drupal.org/files/images/ckeditor_screenshot.png
+
 markItUpMarkdown
 ----------------
 
@@ -195,6 +260,14 @@ A HTML editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
     {% placeholder [name] with markItUpHTML %}
 
 .. image:: http://t37.net/files/markitup-081127.jpg
+
+AutoCompleteTagInput
+---------------------
+
+Provide a dynamic auto complete widget for tags used on pages::
+
+    {% placeholder [name] with AutoCompleteTagInput %}
+
 
 TinyMCE
 -------
@@ -222,10 +295,10 @@ Usage::
 EditArea
 --------
 
-Allows to edit raw html code with syntax highlight based on [http://www.cdolivet.com/index.php?page=editArea editArea]
+Allows to edit raw html code with syntax highlight based on this project: http://www.cdolivet.com/index.php?page=editArea
 
-The code (Javascript, CSS) for editarea is not included into the codebase.
-To get the code you can add this into your svn external dependecies::
+Basic code (Javascript, CSS) for editarea is included into the codebase.
+If you want the full version you can get it there::
 
     pages/media/pages/edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
 

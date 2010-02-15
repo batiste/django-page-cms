@@ -1,5 +1,7 @@
 {% load cache pages_tags %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ lang }}" xml:lang="{{ lang }}" >
+{% comment %}Important to enable other applications to inherit the template{% endcomment %}
+{% load_pages %}
 <head>
 <title>
     {% show_content current_page "title" %}
@@ -103,7 +105,7 @@
 {% endif %}
 <ul>
 {% for doc in documents %}
-<li><a href="{% url document_details path=current_page.get_url document_id=doc.id %}/">{{ doc.title }}</a></li>
+<li><a href="{% url document_details path=current_page.get_complete_slug document_id=doc.id %}">{{ doc.title }}</a></li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -128,10 +130,11 @@
             {% endif %}
         </div>
 
-        {% placeholder content2 with TinyMCE %}
+        {% videoplaceholder video %}
+        
+        {% placeholder content2 %}
 
-        <div>
-        </div>
+
     </div>
     {% endif %}
 {% endblock %}

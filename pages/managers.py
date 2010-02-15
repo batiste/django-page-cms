@@ -1,27 +1,29 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
-import itertools, re
-from datetime import datetime
-from django.db import models, connection
-from django.contrib.sites.models import Site
-from django.db.models import Q
-from django.core.cache import cache
-
 from pages import settings
 from pages.utils import normalize_url, filter_link
+from pages.http import get_slug_and_relative_path
+
+from django.db import models, connection
+from django.db.models import Q
+from django.core.cache import cache
 from django.contrib.auth.models import User
+
+from datetime import datetime
+
 
 class PageManager(models.Manager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
-    that respect the page settings.
+    that respect the page attributes and project settings.
     """
 
     def populate_pages(self, parent=None, child=5, depth=5):
-        """Create a population of pages for testing purpose."""
+        """Create a population of :class:`Page <pages.models.Page>`
+        for testing purpose."""
         from pages.models import Content
         author = User.objects.all()[0]
-        if depth==0:
+        if depth == 0:
             return
         p = self.model(parent=parent, author=author,
             status=self.model.PUBLISHED)
@@ -74,10 +76,12 @@ class PageManager(models.Manager):
                 Q(publication_end_date__gt=datetime.now()) |
                 Q(publication_end_date__isnull=True)
             )
+
         return queryset
 
     def published(self):
-        """Creates a :class:`QuerySet` of published filter."""
+        """Creates a :class:`QuerySet` of published
+        :class:`Page <pages.models.Page>`."""
         return self.filter_published(self)
 
     def drafts(self):
@@ -98,7 +102,6 @@ class PageManager(models.Manager):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
         from pages.models import Content, Page
-        from pages.http import get_slug_and_relative_path
         slug, path, lang = get_slug_and_relative_path(complete_path, lang)
         page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)
@@ -110,12 +113,15 @@ class PageManager(models.Manager):
         # more than one page matching the slug, let's use the full url
         if len(pages_list) > 1:
             for page in pages_list:
-                if page.get_url(lang) == complete_path:
+                if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
 
+
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""
+
+    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
 
     def sanitize(self, content):
         """Sanitize a string in order to avoid possible XSS using
@@ -123,6 +129,7 @@ class ContentManager(models.Manager):
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
+        # TODO: that's a bit of a hack there
         # we need to remove <html><head/><body>...</body></html>
         return p.parse(content).toxml()[19:-14]
 
@@ -179,26 +186,32 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
-        PAGE_CONTENT_DICT_KEY = "page_content_dict_%s_%s"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
-        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (str(page.id), ctype))
-        #content_dict = None
+        frozen = int(bool(page.freeze_date))
+        content_dict = cache.get(self.PAGE_CONTENT_DICT_KEY %
+            (page.id, ctype, frozen))
 
+        # fill a dict object for each language
         if not content_dict:
             content_dict = {}
             for lang in settings.PAGE_LANGUAGES:
+                params = {
+                    'language':lang[0],
+                    'type':ctype,
+                    'page':page
+                }
+                if page.freeze_date:
+                    params['creation_date__lte'] = page.freeze_date
+                language = lang[0]
                 try:
-                    content = self.filter(
-                        language=lang[0],
-                        type=ctype,
-                        page=page
-                    ).latest()
-                    content_dict[lang[0]] = content.body
+                    content = self.filter(**params).latest()
+                    content_dict[language] = content.body
                 except self.model.DoesNotExist:
-                    content_dict[lang[0]] = ''
-            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype), content_dict)
+                    content_dict[language] = ''
+            cache.set(self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
+                content_dict)
 
         if language in content_dict and content_dict[language]:
             return filter_link(content_dict[language], page, language, ctype)
@@ -206,7 +219,8 @@ class ContentManager(models.Manager):
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
                 if lang[0] in content_dict and content_dict[lang[0]]:
-                    return filter_link(content_dict[lang[0]], page, lang[0], ctype)
+                    return filter_link(content_dict[lang[0]], page, lang[0],
+                        ctype)
         return ''
 
     def get_content_slug_by_slug(self, slug):
@@ -240,6 +254,7 @@ class ContentManager(models.Manager):
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
 
+
 class PagePermissionManager(models.Manager):
     """Hierachic page permission manager."""
 
@@ -269,8 +284,9 @@ class PageAliasManager(models.Manager):
     
     def from_path(self, request, path, lang):
         """
-        Resolve a request to an alias. returns a :class:`PageAlias <pages.models.PageAlias>`
-        if the url matches no page at all. The aliasing system supports plain
+        Resolve a request to an alias. returns a
+        :class:`PageAlias <pages.models.PageAlias>` if the url matches
+        no page at all. The aliasing system supports plain
         aliases (``/foo/bar``) as well as aliases containing GET parameters
         (like ``index.php?page=foo``).
 

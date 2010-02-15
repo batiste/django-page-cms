@@ -1,26 +1,38 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+version = __import__('pages').__version__
+package_name = 'django-page-cms'
+
+import os
+templates_dirs = []
+for directory in os.walk('pages/templates'):
+    templates_dirs.append(directory[0][6:]+'/*.*')
+
+url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
+download_url = url_schema % (package_name, package_name, version)
 
 setup(
-    name='django-page-cms',
-    test_suite = "example.test_runner.run_tests",
-    test_requires = (
-        'coverage',
-    ),
-    version=__import__('pages').__version__,
+    name=package_name,
+    test_suite='example.test_runner.run_tests',
+    version=version,
     description='A tree based Django CMS application',
     author='Batiste Bieler',
     author_email='batiste.bieler@gmail.com',
-    url='http://code.google.com/p/django-page-cms/',
-    download_url='http://code.google.com/p/django-page-cms/downloads/list',
+    url='http://packages.python.org/django-page-cms/',
+    license='BSD',
+    long_description=read('README.rst'),
+    download_url=download_url,
     requires=(
         'BeautifulSoup',
         'Django',
         'html5lib (>=0.10)',
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
+        'authority', # known as django-authority
     ),
     packages=find_packages(exclude=['example', 'example.*']),
+    # very important for the binary distribution to include the templates.
+    package_data={'pages': templates_dirs},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

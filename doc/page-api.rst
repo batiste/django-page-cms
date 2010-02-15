@@ -22,7 +22,7 @@ Template tags
 Widgets
 =======
 
-.. automodule:: pages.admin.widgets
+.. automodule:: pages.widgets
     :members:
     :undoc-members:
 
@@ -64,20 +64,6 @@ PageAlias Manager
 =================
 
 .. autoclass:: pages.managers.PageAliasManager
-    :members:
-    :undoc-members:
-
-PagePermission Model
-====================
-
-.. autoclass:: pages.models.PagePermission
-    :members:
-    :undoc-members:
-
-PagePermission Manager
-======================
-
-.. autoclass:: pages.managers.PagePermissionManager
     :members:
     :undoc-members:
 

@@ -12,40 +12,58 @@ This application works out of the box and will certainly help you to get started
     :local:
     :depth: 1
 
+Evaluate quickly the application
+=================================
 
-Step by step installation
-=========================
+After you have installed all the dependencies you can simply checkout the code with git::
 
-For a step by step installation there is `a complete OpenOffice
-document <http://django-page-cms.googlegroups.com/web/gpc-install-instructions.odt>`_. 
+    git clone git://github.com/batiste/django-page-cms.git django-page-cms
 
-Install by using pip
-====================
+And then, run the example project:
+
+    cd django-page-cms/example/
+    python manage.py syncdb
+    python manage.py build_media pages
+    python manage.py runserver
+
+Then visit http://127.0.0.1:8000/admin/ and create a few pages.
+
+
+Install dependencies by using pip
+==================================
 
 The pip install is the easiest and the recommended installation method. Use::
 
     $ sudo easy_install pip
-    $ wget -c http://django-page-cms.googlecode.com/svn/trunk/requirements/external_apps.txt
+    $ wget -c http://github.com/batiste/django-page-cms/blob/master/requirements/external_apps.txt
     $ sudo pip install -r external_apps.txt
 
 Every package listed in the ``external_app.txt`` should be downloaded and installed.
 
-Install by using easy_install
-=============================
+If you are not using the source code version of the application then install it using::
+
+    $ sudo pip install django-page-cms
+
+Install dependencies by using easy_install
+==========================================
 
 On debian linux you can do::
 
     $ sudo easy_install django
     $ sudo easy_install html5lib
+    $ sudo easy_install django-staticfiles
+
+If you are not using the source code version of the application then install it using::
+
     $ sudo easy_install django-page-cms
 
 .. note::
 
-    Django-Tagging and Django-mptt must be installed by hand or with subversion because the available package is not
-    compatible with django 1.0.
+    Django-Tagging and Django-mptt maybe required to be installed by hand or with subversion
+    because the available packages are not compatible with django 1.0.
 
 Install by using subversion externals
-=====================================
+======================================
 
 You can also use the trunk version of the Django Page CMS by using subversion externals::
 
@@ -206,6 +224,32 @@ In the the example application you have actually this::
         ('pages/nice.html', 'nice one'),
         ('pages/cool.html', 'cool one'),
     )
+
+One can also assign a callable (which should return the tuple) to this
+setting to achieve dynamic template list e.g.::
+
+    def _get_templates():
+        # to avoid any import issues
+        from app.models import PageTemplate
+        return PageTemplate.get_page_templates()
+
+    PAGE_TEMPLATES = _get_templates
+
+Where the model might look like this::
+
+    class PageTemplate(OrderedModel):
+        name = models.CharField(unique=True, max_length=100)
+        template = models.CharField(unique=True, max_length=260)
+
+        @staticmethod
+        def get_page_templates():
+            return PageTemplate.objects.values_list('template', 'name')
+
+        class Meta:
+            ordering = ["order"]
+
+        def __unicode__(self):
+            return self.name
 
 The sites framework
 -------------------
@@ -398,6 +442,9 @@ and directly link a new instance of this model with your page in the admin::
             'form':'documents.models.DocumentForm'},
     ]
 
+.. note::
+
+    :ref:`Complete documentation on how to use this setting <3rd-party-apps>`
 
 PAGE_LINK_FILTER
 ----------------

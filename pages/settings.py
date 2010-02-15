@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Convenience module that provides access to custom settings for the
-# ``pages`` application.  Provides default settings for the ``pages``
-# application when the project ``settings`` module does not contain
-# the appropriate settings.
+"""Convenience module that provides default settings for the ``pages``
+application when the project ``settings`` module does not contain
+the appropriate settings."""
 from os.path import join
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -21,13 +20,27 @@ if DEFAULT_PAGE_TEMPLATE is None:
 #    ('pages/nice.html', 'nice one'),
 #    ('pages/cool.html', 'cool one'),
 # )
+#
+# One can also assign a callable (which should return the tuple) to this
+# variable to achieve dynamic template list e.g.:
+#
+# def _get_templates():
+#    ...
+#
+# PAGE_TEMPLATES = _get_templates
+
 PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
-if PAGE_TEMPLATES is None:
+if (PAGE_TEMPLATES is None and 
+    not (isinstance(PAGE_TEMPLATES, str) or
+         isinstance(PAGE_TEMPLATES, unicode))):
     PAGE_TEMPLATES = ()
 
-# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable 
-# advanced hierarchic permissions on your pages.
-PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
+# The callable that is used by the CMS
+def get_page_templates():
+    if callable(PAGE_TEMPLATES):
+        return PAGE_TEMPLATES()
+    else:
+        return PAGE_TEMPLATES
 
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
 # ``django-tagging`` application. 
@@ -68,9 +81,23 @@ PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 
 # Defines which language should be used by default.  If 
 # ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
-# ``settings.LANGUAGE_CODE`` is used 
+# ``settings.LANGUAGE_CODE`` is used
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
                                 settings.LANGUAGE_CODE)
+
+
+# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable
+# advanced hierarchic permissions on your pages.
+PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
+
+extra = [('can_freeze', 'Can freeze page',)]
+for lang in PAGE_LANGUAGES:
+    extra.append(
+        ('can_manage_' + lang[0].replace('-', '_'),
+        'Manage' + ' ' + lang[1])
+    )
+
+PAGE_EXTRA_PERMISSIONS = getattr(settings, 'PAGE_EXTRA_PERMISSIONS', extra)
 
 # PAGE_LANGUAGE_MAPPING should be assigned a function that takes a single
 # argument, the language code of the incoming browser request.  This function
@@ -118,7 +145,8 @@ PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
 # URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
 _media_url = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
-PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(_media_url, 'pages/'))
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL',
+    join(_media_url, 'pages/'))
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)

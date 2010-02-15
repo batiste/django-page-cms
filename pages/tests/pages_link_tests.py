@@ -25,7 +25,7 @@ class LinkTestCase(TestCase):
         content.save()
         self.assertEqual(
             Content.objects.get_content(page2, 'en-us', 'body'),
-            content_string % (page1.get_absolute_url(), page1.id)
+            content_string % (page1.get_url_path(), page1.id)
         )
         self.assertFalse(page2.has_broken_link())
         page1.delete()

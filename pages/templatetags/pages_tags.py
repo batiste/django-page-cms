@@ -15,7 +15,6 @@ from pages.placeholders import parse_placeholder
 
 register = template.Library()
 
-PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def get_page_from_string_or_id(page_string, lang):
     """Return a Page object from a slug or an id."""
@@ -42,8 +41,8 @@ def _get_content(context, page, content_type, lang, fallback=True):
     if not page:
         return ''
 
-    c = Content.objects.get_content(page, lang, content_type, fallback)
-    return c
+    content = Content.objects.get_content(page, lang, content_type, fallback)
+    return content
 
 """Filters"""
 
@@ -57,14 +56,14 @@ def has_content_in(page, language):
     return Content.objects.filter(page=page, language=language).count() > 0
 register.filter(has_content_in)
 
-def has_permission(page, request):
+'''def has_permission(page, request):
     """Tell if a user has permissions on the page.
 
     :param page: the current page
     :param request: the request object where the user is extracted
     """
     return page.has_page_permission(request)
-register.filter(has_permission)
+register.filter(has_permission)'''
 
 """Inclusion tags"""
 
@@ -120,7 +119,7 @@ def pages_admin_menu(context, page, url='', level=None):
                 expanded = True
     
     page_languages = settings.PAGE_LANGUAGES
-    has_permission = page.has_page_permission(request)
+    #has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
     lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
     LANGUAGE_BIDI = context.get('LANGUAGE_BIDI', False)
@@ -189,7 +188,7 @@ def show_absolute_url(context, page, lang=None):
     page = get_page_from_string_or_id(page, lang)
     if not page:
         return {'content':''}
-    url = page.get_absolute_url(language=lang)
+    url = page.get_url_path(language=lang)
     if url:
         return {'content':url}
     return {'content':''}
@@ -252,7 +251,7 @@ def pages_breadcrumb(context, page, url='/'):
     request = context['request']
     site_id = None
     if page:
-        pages = page.get_ancestors()
+        pages_navigation = page.get_ancestors()
     return locals()
 pages_breadcrumb = register.inclusion_tag(
     'pages/breadcrumb.html',
@@ -317,7 +316,7 @@ do_get_content = register.tag('get_content', do_get_content)
 class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
-        if 'pages' not in context:
+        if 'pages_navigation' not in context:
             pages = Page.objects.navigation().order_by("tree_id")
             context.update({'pages_navigation': pages})
         if 'current_page' not in context:
@@ -332,7 +331,7 @@ def do_load_pages(parser, token):
     
         <ul>
             {% load_pages %}
-            {% for page in pages %}
+            {% for page in pages_navigation %}
                 {% pages_menu page %}
             {% endfor %}
         </ul>

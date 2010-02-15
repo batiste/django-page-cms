@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS test suite module"""
+"""Django page CMS test suite module."""
+from pages.models import Page, Content, PageAlias
+from pages.placeholders import PlaceholderNode
+from pages.tests.testcase import TestCase
+from pages import urlconf_registry as reg
+
 import django
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.test.client import Client
-from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context
+from django.template import TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 
-from pages.models import Page, Content, PageAlias
-from pages.tests.testcase import TestCase
+import datetime
 
 class PagesTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -16,8 +22,8 @@ class PagesTestCase(TestCase):
     def test_add_page(self):
         """Test that the add admin page could be displayed via the
         admin"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        
         response = c.get('/admin/pages/page/add/')
         self.assertEqual(response.status_code, 200)
 
@@ -25,8 +31,8 @@ class PagesTestCase(TestCase):
     def test_create_page(self):
         """Test that a page can be created via the admin."""
         #setattr(settings, "SITE_ID", 2)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -43,8 +49,8 @@ class PagesTestCase(TestCase):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -63,8 +69,8 @@ class PagesTestCase(TestCase):
     def test_details_view(self):
         """Test the details view"""
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+
         try:
             response = c.get('/pages/')
         except TemplateDoesNotExist, e:
@@ -92,8 +98,8 @@ class PagesTestCase(TestCase):
 
     def test_edit_page(self):
         """Test that a page can edited via the admin"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
@@ -118,8 +124,8 @@ class PagesTestCase(TestCase):
         setattr(pages_settings, "SITE_ID", 2)
         setattr(pages_settings, "PAGE_USE_SITE_ID", True)
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data["sites"] = [2]
         response = c.post('/admin/pages/page/add/', page_data)
@@ -173,16 +179,17 @@ class PagesTestCase(TestCase):
     def test_languages(self):
         """Test post a page with different languages
         and test that the admin views works correctly."""
-        c = Client()
-        user = c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        user = c.login(username='batiste', password='b')
         
         # test that the client language setting is used in add page admin
         c.cookies["django_language"] = 'de'
         response = c.get('/admin/pages/page/add/')
-        self.assertContains(response, 'value="de" selected="selected"')
+        
+        self.assertContains(response, 'value="de"')
         c.cookies["django_language"] = 'fr-ch'
         response = c.get('/admin/pages/page/add/')
-        self.assertContains(response, 'value="fr-ch" selected="selected"')
+        self.assertContains(response, 'value="fr-ch"')
 
         page_data = self.get_new_page_data()
         page_data["title"] = 'english title'
@@ -200,7 +207,7 @@ class PagesTestCase(TestCase):
             major, middle = [int(v) for v in django_version]
         if major >= 1 and middle > 0:
             response = c.get('/admin/pages/page/%d/?language=de' % page.id)
-            self.assertContains(response, 'value="de" selected="selected"')
+            self.assertContains(response, 'value="de"')
 
         # add a french version of the same page
         page_data["language"] = 'fr-ch'
@@ -213,14 +220,14 @@ class PagesTestCase(TestCase):
         # test that the frontend view use the good parameters
         # I cannot find a way of setting the accept-language HTTP 
         # header so I used django_language cookie instead
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'en-us'
         response = c.get('/pages/')
         self.assertContains(response, 'english title')
         self.assertContains(response, 'lang="en-us"')
         self.assertNotContains(response, 'french title')
         
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-ch'
         response = c.get('/pages/')
         self.assertContains(response, 'french title')
@@ -229,7 +236,7 @@ class PagesTestCase(TestCase):
         self.assertNotContains(response, 'english title')
 
         # this should be mapped to the fr-ch content
-        c = Client()
+        c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-fr'
         response = c.get('/pages/')
         self.assertContains(response, 'french title')
@@ -237,26 +244,29 @@ class PagesTestCase(TestCase):
         
     def test_revision(self):
         """Test that a page can edited several times."""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
         
         page_data['body'] = 'changed body'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body')
 
         page_data['body'] = 'changed body 2'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
         response = c.get('/pages/')
         self.assertContains(response, 'changed body 2', 1)
         
         setattr(settings, "PAGE_CONTENT_REVISION", False)
         
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
     def test_placeholder(self):
         """
@@ -264,8 +274,8 @@ class PagesTestCase(TestCase):
         the admin
         """
         setattr(settings, "SITE_ID", 2)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['template'] = 'pages/nice.html'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -280,8 +290,8 @@ class PagesTestCase(TestCase):
         Test diretory slugs
         """
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
 
         page_data = self.get_new_page_data()
         page_data['title'] = 'parent title'
@@ -319,8 +329,8 @@ class PagesTestCase(TestCase):
         """
         Test the {% show_content %} template tag
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
@@ -340,8 +350,8 @@ class PagesTestCase(TestCase):
         """
         Test the {% get_content %} template tag
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
@@ -369,8 +379,8 @@ class PagesTestCase(TestCase):
         Test that moving/creating page in the tree is working properly
         using the admin interface
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
 
@@ -449,8 +459,8 @@ class PagesTestCase(TestCase):
         """
         Test that the navigation tree works properly with mptt
         """
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -496,8 +506,8 @@ class PagesTestCase(TestCase):
     
     def test_ajax_language(self):
         """Test that language is working properly"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
         self.assertEqual(c.session.get('django_language', False), 'fr-ch')
@@ -539,11 +549,12 @@ class PagesTestCase(TestCase):
         AJAX request *but* django.utils.translation caches the active
         language on a per thread basis.
         
-        This means that the first "bogus" call to LocaleMiddleware.process_request
-        will "kill" the localization data for the AJAX request.
+        This means that the first "bogus" call to
+        LocaleMiddleware.process_request will "kill" the localization
+        data for the AJAX request.
         
-        Rev. 501 fixes this by passing in the language code from the original request.
-        
+        Rev. 501 fixes this by passing in the language code from the original
+        request.
         """
         response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
             {'position':'first-child', 'target':root_page.id})
@@ -556,8 +567,8 @@ class PagesTestCase(TestCase):
         Test that the default view can only return the context
         """
         
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
@@ -572,8 +583,8 @@ class PagesTestCase(TestCase):
 
     def test_page_valid_targets(self):
         """Test page valid_targets method"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -592,8 +603,8 @@ class PagesTestCase(TestCase):
 
     def test_page_admin_view(self):
         """Test page admin view"""
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page-1'
         response = c.post('/admin/pages/page/add/', page_data)
@@ -624,8 +635,8 @@ class PagesTestCase(TestCase):
     def test_page_alias(self):
         """Test page aliasing system"""
 
-        c = Client()
-        c.login(username= 'batiste', password='b')
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
         
         # create some pages
         page_data = self.get_new_page_data()
@@ -666,8 +677,7 @@ class PagesTestCase(TestCase):
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""
 
-        client = Client()
-        client.login(username= 'batiste', password='b')
+        client = self.get_admin_client()
 
         # create some pages
         page1 = self.create_new_page(client)
@@ -677,22 +687,147 @@ class PagesTestCase(TestCase):
         page1.save()
 
         # now check whether you go to the target page.
-        response = client.get(page1.get_absolute_url())
-        self.assertRedirects(response, page2.get_absolute_url(), 301)
+        response = client.get(page1.get_url_path())
+        self.assertRedirects(response, page2.get_url_path(), 301)
 
     def test_page_redirect_to_url(self):
         """Test page redirected to external url."""
 
-        client = Client()
-        client.login(username= 'batiste', password='b')
+        client = self.get_admin_client()
+        
         page1 = self.create_new_page(client)
         url = 'http://code.google.com/p/django-page-cms/'
         page1.redirect_to_url = url
         page1.save()
 
         # now check whether we can retrieve the page.
-        response = client.get(page1.get_absolute_url())
+        response = client.get(page1.get_url_path())
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
+
+    def test_page_freeze_date(self):
+        """Test page freezing feature."""
+        c = self.get_admin_client()
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'before'
+        page_data['slug'] = 'before'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.from_path('before', None)
+        self.assertEqual(page.freeze_date, None)
+        limit = datetime.datetime.now()
+        page.freeze_date = limit
+        page.save()
+    
+        page_data['title'] = 'after'
+        page_data['slug'] = 'after'
+        # this post erase the limit
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        page = Page.objects.from_path('after', None)
+        page.freeze_date = limit
+        self.assertEqual(page.slug(), 'before')
+        page.freeze_date = None
+        page.save()
+        self.assertEqual(page.slug(), 'after')
+        page.freeze_date = limit
+        page.save()
+        self.assertEqual(page.slug(), 'before')
+
+    def test_date_ordering(self):
+        """Test page date ordering feature."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+        now = datetime.datetime.now()
+        p1 = Page(author=author, status=Page.PUBLISHED, publication_date=now)
+        p1.save()
+        p2 = Page(
+            author=author,
+            publication_date=now,
+            status=Page.PUBLISHED
+        )
+        p2.save()
+        p3 = Page(
+            author=author,
+            publication_date=yesterday,
+            status=Page.PUBLISHED
+        )
+        p3.save()
+
+        p2.move_to(p1, position='first-child')
+        p3.move_to(p1, position='first-child')
+
+        p1 = Page.objects.get(pk=p1.id)
+        p2 = Page.objects.get(pk=p2.id)
+        p3 = Page.objects.get(pk=p3.id)
+        self.assertEqual(
+            [p.id for p in p1.get_children_for_frontend()],
+            [p3.id, p2.id]
+        )
+
+        self.assertEqual(
+            [p.id for p in p1.get_date_ordered_children_for_frontend()],
+            [p2.id, p3.id]
+        )
+
+    def test_placeholder_inherit_content(self):
+        """Test placeholder content inheritance between pages."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        p1 = Page(author=author, status=Page.PUBLISHED)
+        p1.save()
+        Content(page=p1, language='en-us', type='inher',
+            body='parent-content').save()
+        p2 = Page(
+            author=author,
+            status=Page.PUBLISHED
+        )
+        p2.save()
+        template = django.template.loader.get_template('pages/tests/test7.html')
+        context = Context({'current_page': p2, 'lang':'en-us'})
+        self.assertEqual(template.render(context), '')
+        
+        p2.move_to(p1, position='first-child')
+        self.assertEqual(template.render(context), 'parent-content')
+
+
+    def test_placeholder_untranslated_content(self):
+        """Test placeholder untranslated content."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        page = Page(author=author, status=Page.PUBLISHED)
+        page.save()
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=True)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        placeholder.save(page, 'en-us', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 1)
+        self.assertEqual(Content.objects.all()[0].language, 'en-us')
+
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 2)
+
+    def test_urlconf_registry(self):
+        """Test urlconf_registry basic functions."""
+        
+        reg.get_urlconf('Documents')
+        try:
+            reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
+        except reg.UrlconfAlreadyRegistered:
+            pass
+        reg.registry = []
+        try:
+            reg.get_urlconf('Documents')
+        except reg.UrlconfNotFound:
+            pass
+        
+        reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
 
         

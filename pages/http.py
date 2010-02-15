@@ -1,16 +1,16 @@
 """Page CMS functions related to the ``request`` object."""
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.template import loader, Context, RequestContext
+from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from pages import settings
 
 def get_request_mock():
     """Build a ``request`` mock that can be used for testing."""
-    bh = BaseHandler()
-    bh.load_middleware()
+    basehandler = BaseHandler()
+    basehandler.load_middleware()
     request = WSGIRequest({
         'REQUEST_METHOD': 'GET',
         'SERVER_NAME': 'test',
@@ -18,7 +18,7 @@ def get_request_mock():
         'HTTP_HOST': 'testhost',
     })
     # Apply request middleware
-    for middleware_method in bh._request_middleware:
+    for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because
         # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.im_class):
@@ -39,9 +39,12 @@ def auto_render(func):
     def _dec(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
         only_context = kwargs.pop('only_context', False)
-        if only_context:
-            # return only context dictionary
+        only_response = kwargs.pop('only_response', False)
+        if only_context or only_response:
+            # return only context dictionary or response
             response = func(request, *args, **kwargs)
+            if only_response:
+                return response
             if isinstance(response, HttpResponse):
                 raise AutoRenderHttpError
             (template_name, context) = response
@@ -50,8 +53,8 @@ def auto_render(func):
         if isinstance(response, HttpResponse):
             return response
         (template_name, context) = response
-        t = context['template_name'] = template_override or template_name
-        return render_to_response(t, context,
+        template_name = context['template_name'] = template_override or template_name
+        return render_to_response(template_name, context,
                             context_instance=RequestContext(request))
     return _dec
 
@@ -90,11 +93,12 @@ def get_template_from_request(request, page=None):
     Gets a valid template from different sources or falls back to the
     default template.
     """
-    if settings.PAGE_TEMPLATES is None:
+    page_templates = settings.get_page_templates()
+    if len(page_templates) == 0:
         return settings.DEFAULT_PAGE_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \
-            (template in dict(settings.PAGE_TEMPLATES).keys() or
+            (template in dict(page_templates).keys() or
             template == settings.DEFAULT_PAGE_TEMPLATE):
         return template
     if page is not None:

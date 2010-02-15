@@ -1,16 +1,6 @@
 {% load i18n pages_tags %}
 
-<div id="toolbar">
-<form id="changelist-search" action="" method="post">
-    <div>
-        <label for="searchbar"><img src="{% load adminmedia %}{% admin_media_prefix %}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
-        <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
-        <input type="submit" name="g" value="{% trans "Go" %}" />
-    </div>
-</form>
-</div>
-
-<table cellspacing="0" id="page-list">
+<table cellspacing="0" id="page-table-dnd">
     <thead>
         <tr>
             <th>
@@ -30,3 +20,9 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+</script>

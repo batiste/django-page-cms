@@ -54,9 +54,11 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    # this syntax is deprecated with django 1.2
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    # could help
+    'django.template.loaders.eggs.load_template_source',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -104,6 +106,10 @@ INSTALLED_APPS = (
     'mptt',
     'staticfiles',
     'tinymce',
+    # disabled to make "setup.py test" to work properly
+    #'south',
+    'authority',
+    'haystack',
 )
 
 PAGE_TINYMCE = True
@@ -160,8 +166,23 @@ PAGE_TEMPLATES = (
 
 PAGE_SANITIZE_USER_INPUT = True
 
-# A test runner that use the test coverage module
-TEST_RUNNER = "test_runner.run_tests"
+PAGE_USE_SITE_ID = True
+
+HAYSTACK_SITECONF = 'example.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+
+COVERAGE_EXCLUDE_MODULES = ("pages.migrations.*",
+                            "pages.tests.*",)
+COVERAGE_HTML_REPORT = True
+COVERAGE_BRANCH_COVERAGE = False
+
+try:
+    import test_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ("test_extensions", )
 
 try:
     from local_settings import *

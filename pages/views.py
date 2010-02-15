@@ -51,18 +51,18 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
         current_page = Page.objects.from_path(path, lang,
             exclude_drafts=exclude_drafts)
     elif pages_navigation:
-        current_page = Page.objects.published().order_by("tree_id")[0]
+        current_page = Page.objects.root()[0]
 
     # if no pages has been found, we will try to find it via an Alias
     if not current_page:
         alias = PageAlias.objects.from_path(request, path, lang)
         if alias:
-            url = alias.page.get_absolute_url(lang)
+            url = alias.page.get_url_path(lang)
             return HttpResponsePermanentRedirect(url)
         raise Http404
 
-    if not (request.user.is_authenticated() and request.user.is_staff) and \
-            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED):
+    if (not (request.user.is_authenticated() and request.user.is_staff) and
+            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED)):
         raise Http404
 
     if current_page.redirect_to_url:
@@ -70,7 +70,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     
     if current_page.redirect_to:
         return HttpResponsePermanentRedirect(
-            current_page.redirect_to.get_absolute_url(lang))
+            current_page.redirect_to.get_url_path(lang))
     
     template_name = current_page.get_template()
     
@@ -88,13 +88,13 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
         result = resolve('/', urlconf)
         if len(result):
             view, args, kwargs = result
+            kwargs['current_page'] = current_page
+            kwargs['path'] = path
+            kwargs['lang'] = lang
+            kwargs['pages_navigation'] = pages_navigation
             return view(
                 request,
                 *args,
-                current_page=current_page,
-                path=path,
-                lang=lang,
-                pages_navigation=pages_navigation,
                 **kwargs
             )
 

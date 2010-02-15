@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-page-cms',
-    test_suite = "example.test_runner.run_tests",
+    test_suite='example.test_runner.run_tests',
     version=__import__('pages').__version__,
     description='A tree based Django CMS application',
     author='Batiste Bieler',
@@ -25,6 +25,7 @@ setup(
         'templates/admin/pages/page/includes/*.html',
         'templates/pages/*.html',
         'templates/pages/tests/*.html'
+        'templates/pages/widgets/*.html',
     ]},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,

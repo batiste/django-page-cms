@@ -6,8 +6,8 @@
         lang: '{{ lang }}',
         skin: 'django',
         skinPath: "{{ PAGES_MEDIA_URL }}javascript/wymeditor/skins/django/",
-        updateSelector: '.submit-row input[type=submit]',
-        updateEvent: 'click',
+        updateSelector: 'form',
+        updateEvent: 'submit',
         containersItems: [
             {'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'},
             {'name': 'H3', 'title': 'Heading_3', 'css': 'wym_containers_h3'},

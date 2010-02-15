@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
+import os
+templates_dirs = []
+for directory in os.walk('pages/templates'):
+    templates_dirs.append(directory[0][6:]+'/*.*')
+
 setup(
     name='django-page-cms',
     test_suite='example.test_runner.run_tests',
@@ -18,15 +23,8 @@ setup(
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
     ),
     packages=find_packages(exclude=['example', 'example.*']),
-    # very important for the egg to work properly
-    package_data={'pages': [
-        'templates/admin/pages/page/*.html',
-        'templates/admin/pages/page/widgets/*.html',
-        'templates/admin/pages/page/includes/*.html',
-        'templates/pages/*.html',
-        'templates/pages/tests/*.html'
-        'templates/pages/widgets/*.html',
-    ]},
+    # very important for the binary distribution to include the templates.
+    package_data={'pages': templates_dirs},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

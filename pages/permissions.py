@@ -1,8 +1,9 @@
 """Django page CMS permissions management using django-authority."""
 
+import authority
+
 from pages.models import Page
 from pages import settings
-
 
 permission_checks = []
 for perm_lang in settings.PAGE_LANGUAGES:

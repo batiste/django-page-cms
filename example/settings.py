@@ -111,7 +111,7 @@ INSTALLED_APPS = (
 
     # these 2 package don't create any dependecies
     'authority',
-    # haystack kill the coverage score report
+    # haystack change coverage score report by importing modules
     #'haystack',
 )
 
@@ -176,8 +176,12 @@ HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
-COVERAGE_EXCLUDE_MODULES = ("pages.migrations.*",
-                            "pages.tests.*",)
+COVERAGE_EXCLUDE_MODULES = (
+    "pages.migrations.*",
+    "pages.tests.*",
+    "pages.urls",
+    "pages.__init__",
+)
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
@@ -192,3 +196,4 @@ try:
     from local_settings import *
 except ImportError:
     pass
+

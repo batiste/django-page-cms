@@ -817,6 +817,8 @@ class PagesTestCase(TestCase):
 
     def test_urlconf_registry(self):
         """Test urlconf_registry basic functions."""
+        reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
         
         reg.get_urlconf('Documents')
         try:
@@ -833,8 +835,10 @@ class PagesTestCase(TestCase):
         reg.register_urlconf('Documents', 'example.documents.urls',
             label='Display documents')
 
-        
-    def test_permission(self):
+        self.assertEqual(reg.get_choices(),
+            [('', 'No delegation'), ('Documents', 'Display documents')])
+
+    def test_permissions(self):
         """Test the permissions lightly."""
         
         from pages.permissions import PagePermission

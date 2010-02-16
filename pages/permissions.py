@@ -3,7 +3,6 @@
 from pages.models import Page
 from pages import settings
 
-import authority
 
 permission_checks = []
 for perm_lang in settings.PAGE_LANGUAGES:

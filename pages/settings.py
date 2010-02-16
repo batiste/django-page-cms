@@ -44,7 +44,7 @@ def get_page_templates():
 
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
 # ``django-tagging`` application. 
-PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', True)
+PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
 if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
     raise ImproperlyConfigured('django-tagging could not be found.\n'
                                'Please make sure you\'ve installed it '
@@ -84,11 +84,6 @@ PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 # ``settings.LANGUAGE_CODE`` is used
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
                                 settings.LANGUAGE_CODE)
-
-
-# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable
-# advanced hierarchic permissions on your pages.
-PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
 
 extra = [('can_freeze', 'Can freeze page',)]
 for lang in PAGE_LANGUAGES:

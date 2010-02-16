@@ -105,14 +105,17 @@ INSTALLED_APPS = (
     'pages',
     'mptt',
     'staticfiles',
-    'tinymce',
+    #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',
+
+    # these 2 package don't create any dependecies
     'authority',
     'haystack',
 )
 
-PAGE_TINYMCE = True
+PAGE_TINYMCE = False
+PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
     'model':'documents.models.Document',

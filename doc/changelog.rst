@@ -7,6 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.2
 =============
 
+    * Change the default value of PAGE_TAGGING and PAGE_TINYMCE to `False`
     * Implement drag and drop within the admin interface.
     * Implement haystack SearchIndex for page content search.
     * Add the untranslated placeholder keyword. Enable the user to have a single

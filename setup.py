@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-version = __import__('pages').__version__
+import pages
 package_name = 'django-page-cms'
 
 def local_open(fname):
@@ -12,17 +12,17 @@ for directory in os.walk('pages/templates'):
     templates_dirs.append(directory[0][6:]+'/*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
-download_url = url_schema % (package_name, package_name, version)
+download_url = url_schema % (package_name, package_name, pages.__version__)
 
 setup(
     name=package_name,
     test_suite='example.test_runner.run_tests',
-    version=version,
-    description='A tree based Django CMS application',
-    author='Batiste Bieler',
-    author_email='batiste.bieler@gmail.com',
-    url='http://packages.python.org/django-page-cms/',
-    license='BSD',
+    version=pages.__version__,
+    description=pages.__doc__,
+    author=pages.__author__,
+    author_email=pages.__contact__,
+    url=pages.__homepage__,
+    license=pages.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     requires=(

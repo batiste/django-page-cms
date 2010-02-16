@@ -111,7 +111,8 @@ INSTALLED_APPS = (
 
     # these 2 package don't create any dependecies
     'authority',
-    'haystack',
+    # haystack kill the coverage score report
+    #'haystack',
 )
 
 PAGE_TINYMCE = False

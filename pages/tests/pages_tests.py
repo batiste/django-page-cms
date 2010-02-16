@@ -199,6 +199,9 @@ class PagesTestCase(TestCase):
         page = Page.objects.all()[0]
         self.assertEqual(page.get_languages(), ['en-us'])
 
+        # test the language cache
+        self.assertEqual(page.get_languages(), ['en-us'])
+
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
         if len(django_version) > 2:
@@ -831,3 +834,21 @@ class PagesTestCase(TestCase):
             label='Display documents')
 
         
+    def test_permission(self):
+        """Test the permissions lightly."""
+        
+        from pages.permissions import PagePermission
+        admin = User.objects.get(username='admin')
+        page = Page(author=admin, status=Page.PUBLISHED)
+        page.save()
+        pp = PagePermission(user=admin)
+        self.assertTrue(pp.check('change', page=page, method='GET'))
+        self.assertTrue(pp.check('change', page=page, method='POST'))
+        
+        staff = User.objects.get(username='staff')
+        pp = PagePermission(user=staff)
+        # weird because nonstaff?
+        self.assertTrue(pp.check('change', page=page, method='GET',
+            lang='en-us'))
+        self.assertFalse(pp.check('change', page=page, method='POST',
+            lang='en-us'))

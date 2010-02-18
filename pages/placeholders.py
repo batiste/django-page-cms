@@ -1,20 +1,25 @@
-from django import template
-from django.template import Template, TemplateSyntaxError
-from django.core.files.storage import FileSystemStorage
-from django.forms import Widget, Textarea, ImageField, CharField
-from django.forms import TextInput
-from django.conf import settings as global_settings
-from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import SafeUnicode, mark_safe
-from django.template.loader import render_to_string
+"""Placeholder module, that's where the smart things appened."""
 
 from pages.widgets_registry import get_widget
 from pages import settings
-from pages.models import Content, Page
+from pages.models import Content
 from pages.widgets import ImageInput, VideoWidget
+
+from django import template
+from django.template import Template, TemplateSyntaxError
+from django.core.files.storage import FileSystemStorage
+from django.forms import Textarea, ImageField, CharField
+from django.forms import TextInput
+from django.conf import settings as global_settings
+from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.template.loader import render_to_string
+
 import os
 import time
 import re
+
+PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.
@@ -50,6 +55,9 @@ def parse_placeholder(parser, token):
         elif bit == 'inherited':
             params['inherited'] = True
             remaining = remaining[1:]
+        elif bit == 'untranslated':
+            params['untranslated'] = True
+            remaining = remaining[1:]
     return name, params
 
 
@@ -68,14 +76,17 @@ class PlaceholderNode(template.Node):
     :param as_varname: if ``as_varname`` is defined, no value will be
         returned. A variable will be created in the context
         with the defined name.
+    :param inherited: inherit content from parent's pages.
+    :param untranslated: the placeholder's content is the same for
+        every language.
     """
 
     field = CharField
     widget = TextInput
 
     def __init__(self, name, page=None, widget=None, parsed=False,
-            as_varname=None, inherited=False):
-        """Gather basic values for the `PlaceholderNode`.
+            as_varname=None, inherited=False, untranslated=False):
+        """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
         self.page = page or 'current_page'
@@ -84,6 +95,7 @@ class PlaceholderNode(template.Node):
             self.widget = widget
         self.parsed = parsed
         self.inherited = inherited
+        self.untranslated = untranslated
         self.as_varname = as_varname
         self.found_in_block = None
 
@@ -114,6 +126,11 @@ class PlaceholderNode(template.Node):
 
     def save(self, page, language, data, change):
         """Actually save the placeholder data into the Content object."""
+        # if this placeholder is untranslated, we save everything
+        # in the default language
+        if self.untranslated:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+        
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
@@ -141,26 +158,36 @@ class PlaceholderNode(template.Node):
                 data
             )
 
-    def get_content(self, context):
+    def get_content(self, page_obj, lang, lang_fallback=True):
+        content = Content.objects.get_content(page_obj, lang, self.name,
+            lang_fallback)
+        if self.inherited and not content:
+            for ancestor in page_obj.get_ancestors():
+                content = Content.objects.get_content(ancestor, lang,
+                    self.name, lang_fallback)
+                if content:
+                    break
+        return content
+
+    def get_content_from_context(self, context):
         if not self.page in context:
             return ''
         # current_page can be set to None
         if not context[self.page]:
             return ''
 
-        page_obj = context[self.page]
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-        content = Content.objects.get_content(page_obj, lang, self.name, True)
-        if self.inherited:
-            while not content and page_obj.parent:
-                page_obj = page_obj.parent
-                content = Content.objects.get_content(page_obj, lang,
-                    self.name, True)
-        return content
+        if self.untranslated:
+            lang_fallback = False
+            lang = settings.PAGE_DEFAULT_LANGUAGE
+        else:
+            lang_fallback = True
+            lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+        return self.get_content(context[self.page], lang, lang_fallback)
 
     def render(self, context):
-        """Output the content of the node in the template."""
-        content = self.get_content(context)
+        """Output the content of the `PlaceholdeNode` in the template."""
+
+        content = self.get_content_from_context(context)
         if not content:
             return ''
         if self.parsed:
@@ -232,7 +259,7 @@ class VideoPlaceholderNode(PlaceholderNode):
     widget = VideoWidget
 
     def render(self, context):
-        content = self.get_content(context)
+        content = self.get_content_from_context(context)
         if not content:
             return ''
         if content:

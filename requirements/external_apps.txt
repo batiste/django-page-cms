@@ -5,3 +5,4 @@ django>=1.1.0
 django-page-cms
 BeautifulSoup
 django-staticfiles
+authority

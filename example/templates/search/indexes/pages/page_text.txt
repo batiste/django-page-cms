@@ -1,0 +1,1 @@
+{{ object.expose_content }}

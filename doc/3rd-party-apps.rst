@@ -50,11 +50,6 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
     If the field doesn't appear within the admin interface make sure that
     your registry code is executed properly.
 
-.. note::
-
-    The children pages will not be resolved by the URL module, but all the URL that don't
-    have any corresponding pages will.
-
 .. _3rd-party-apps:
 
 Integrate application models and forms into the page admin

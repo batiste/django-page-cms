@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
-import sys, re, logging, pprint, traceback
+from pages import settings
+from pages.http import get_request_mock, get_language_from_request
+
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext
 from django.core.cache import cache
-from pages import settings
-from pages.http import get_request_mock, get_language_from_request
+
+import re
 
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
@@ -54,8 +56,8 @@ def _placeholders_recursif(nodelist, plist, blist):
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
                 hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False
-            for pl in plist:
-                if pl.name == node.name:
+            for placeholder in plist:
+                if placeholder.name == node.name:
                     already_in_plist = True
             if not already_in_plist:
                 if len(blist):
@@ -80,30 +82,6 @@ def _placeholders_recursif(nodelist, plist, blist):
                     pass
             if isinstance(node, BlockNode):
                 blist.pop()
-
-def has_page_add_permission(request, page=None):
-    """Return true if the current user has permission to add a new page.
-
-    :param page: not used
-    """
-    if not settings.PAGE_PERMISSION:
-        return True
-    else:
-        from pages.models import PagePermission
-        permission = PagePermission.objects.get_page_id_list(request.user)
-        if permission == "All":
-            return True
-        # the user has the right to add a page under a page he control
-        target = request.GET.get('target', None)
-        if target is not None:
-            try:
-                target = int(target)
-                if target in permission:
-                    return True
-            except:
-                pass
-    return False
-
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

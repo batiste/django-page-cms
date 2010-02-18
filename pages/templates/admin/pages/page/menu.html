@@ -1,7 +1,7 @@
 {% load pages_tags i18n adminmedia cache %}
 
-<tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }}">
-    <td><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
+<tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }} draggable">
+    <td class="selection-cell"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
     <th class="title-cell">
         <div class="title-cell-container" style="margin-{{LANGUAGE_BIDI|yesno:"right,left"}}:{{ page.margin_level }}em">
             {% if page.children.count %}
@@ -15,6 +15,8 @@
             {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
             {% show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
             <img class="redirected" src="{{ PAGES_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
+
+            <span class="message"></span>
 
             {% if page.has_broken_link %}
                 <span title="{% trans "This page contain broken links" %}" class="pagelink-broken">PL</span>

@@ -23,11 +23,12 @@ def change_status(request, page_id):
     raise Http404
 change_status = staff_member_required(change_status)
 
-def list_pages_ajax(request):
+def list_pages_ajax(request, invalid_move=False):
     """Render pages table for ajax function."""
     language = get_language_from_request(request)
     pages = Page.objects.root()
     context = {
+        'invalid_move':invalid_move,
         'language': language,
         'pages': pages,
     }

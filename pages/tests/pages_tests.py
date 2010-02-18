@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS test suite module"""
-import datetime
+"""Django page CMS test suite module."""
+from pages.models import Page, Content, PageAlias
+from pages.placeholders import PlaceholderNode
+from pages.tests.testcase import TestCase
+from pages import urlconf_registry as reg
 
 import django
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.test.client import Client
-from django.template import Template, RequestContext, Context, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context
+from django.template import TemplateDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 
-from pages.models import Page, Content, PageAlias
-from pages.tests.testcase import TestCase
+import datetime
 
 class PagesTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -196,6 +199,9 @@ class PagesTestCase(TestCase):
         page = Page.objects.all()[0]
         self.assertEqual(page.get_languages(), ['en-us'])
 
+        # test the language cache
+        self.assertEqual(page.get_languages(), ['en-us'])
+
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
         if len(django_version) > 2:
@@ -249,18 +255,21 @@ class PagesTestCase(TestCase):
         
         page_data['body'] = 'changed body'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body')
 
         page_data['body'] = 'changed body 2'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
         response = c.get('/pages/')
         self.assertContains(response, 'changed body 2', 1)
         
         setattr(settings, "PAGE_CONTENT_REVISION", False)
         
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'), 'changed body 2')
+        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+            'changed body 2')
 
     def test_placeholder(self):
         """
@@ -543,11 +552,12 @@ class PagesTestCase(TestCase):
         AJAX request *but* django.utils.translation caches the active
         language on a per thread basis.
         
-        This means that the first "bogus" call to LocaleMiddleware.process_request
-        will "kill" the localization data for the AJAX request.
+        This means that the first "bogus" call to
+        LocaleMiddleware.process_request will "kill" the localization
+        data for the AJAX request.
         
-        Rev. 501 fixes this by passing in the language code from the original request.
-        
+        Rev. 501 fixes this by passing in the language code from the original
+        request.
         """
         response = c.post('/admin/pages/page/%d/move-page/' % child_1.id,
             {'position':'first-child', 'target':root_page.id})
@@ -773,7 +783,7 @@ class PagesTestCase(TestCase):
         author = User.objects.all()[0]
         p1 = Page(author=author, status=Page.PUBLISHED)
         p1.save()
-        Content(page=p1, language='en-us', type='toto',
+        Content(page=p1, language='en-us', type='inher',
             body='parent-content').save()
         p2 = Page(
             author=author,
@@ -787,6 +797,62 @@ class PagesTestCase(TestCase):
         p2.move_to(p1, position='first-child')
         self.assertEqual(template.render(context), 'parent-content')
 
+
+    def test_placeholder_untranslated_content(self):
+        """Test placeholder untranslated content."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        author = User.objects.all()[0]
+        page = Page(author=author, status=Page.PUBLISHED)
+        page.save()
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=True)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        placeholder.save(page, 'en-us', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 1)
+        self.assertEqual(Content.objects.all()[0].language, 'en-us')
+
+        placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
+        placeholder.save(page, 'fr-ch', 'test-content', True)
+        self.assertEqual(len(Content.objects.all()), 2)
+
+    def test_urlconf_registry(self):
+        """Test urlconf_registry basic functions."""
+        reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
         
+        reg.get_urlconf('Documents')
+        try:
+            reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
+        except reg.UrlconfAlreadyRegistered:
+            pass
+        reg.registry = []
+        try:
+            reg.get_urlconf('Documents')
+        except reg.UrlconfNotFound:
+            pass
         
+        reg.register_urlconf('Documents', 'example.documents.urls',
+            label='Display documents')
+
+        self.assertEqual(reg.get_choices(),
+            [('', 'No delegation'), ('Documents', 'Display documents')])
+
+    def test_permissions(self):
+        """Test the permissions lightly."""
         
+        from pages.permissions import PagePermission
+        admin = User.objects.get(username='admin')
+        page = Page(author=admin, status=Page.PUBLISHED)
+        page.save()
+        pp = PagePermission(user=admin)
+        self.assertTrue(pp.check('change', page=page, method='GET'))
+        self.assertTrue(pp.check('change', page=page, method='POST'))
+        
+        staff = User.objects.get(username='staff')
+        pp = PagePermission(user=staff)
+        # weird because nonstaff?
+        self.assertTrue(pp.check('change', page=page, method='GET',
+            lang='en-us'))
+        self.assertFalse(pp.check('change', page=page, method='POST',
+            lang='en-us'))

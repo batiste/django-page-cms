@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
-import itertools, re
-from datetime import datetime
-
-from django.db import models, connection
-from django.contrib.sites.models import Site
-from django.db.models import Q
-from django.core.cache import cache
-from django.contrib.auth.models import User
-
 from pages import settings
 from pages.utils import normalize_url, filter_link
 from pages.http import get_slug_and_relative_path
 
+from django.db import models, connection
+from django.db.models import Q
+from django.core.cache import cache
+from django.contrib.auth.models import User
+
+from datetime import datetime
+
+
 class PageManager(models.Manager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
-    that respect the page settings.
+    that respect the page attributes and project settings.
     """
 
     def populate_pages(self, parent=None, child=5, depth=5):
-        """Create a population of pages for testing purpose."""
+        """Create a population of :class:`Page <pages.models.Page>`
+        for testing purpose."""
         from pages.models import Content
         author = User.objects.all()[0]
-        if depth==0:
+        if depth == 0:
             return
         p = self.model(parent=parent, author=author,
             status=self.model.PUBLISHED)
@@ -80,7 +80,8 @@ class PageManager(models.Manager):
         return queryset
 
     def published(self):
-        """Creates a :class:`QuerySet` of published filter."""
+        """Creates a :class:`QuerySet` of published
+        :class:`Page <pages.models.Page>`."""
         return self.filter_published(self)
 
     def drafts(self):
@@ -116,8 +117,11 @@ class PageManager(models.Manager):
                     return page
         return None
 
+
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""
+
+    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
 
     def sanitize(self, content):
         """Sanitize a string in order to avoid possible XSS using
@@ -182,12 +186,12 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
-        PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
         frozen = int(bool(page.freeze_date))
-        content_dict = cache.get(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen))
+        content_dict = cache.get(self.PAGE_CONTENT_DICT_KEY %
+            (page.id, ctype, frozen))
 
         # fill a dict object for each language
         if not content_dict:
@@ -200,13 +204,13 @@ class ContentManager(models.Manager):
                 }
                 if page.freeze_date:
                     params['creation_date__lte'] = page.freeze_date
-                language=lang[0]
+                language = lang[0]
                 try:
                     content = self.filter(**params).latest()
                     content_dict[language] = content.body
                 except self.model.DoesNotExist:
                     content_dict[language] = ''
-            cache.set(PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
+            cache.set(self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
                 content_dict)
 
         if language in content_dict and content_dict[language]:
@@ -249,6 +253,7 @@ class ContentManager(models.Manager):
         cursor = connection.cursor()
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
+
 
 class PagePermissionManager(models.Manager):
     """Hierachic page permission manager."""

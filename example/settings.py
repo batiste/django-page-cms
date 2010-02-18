@@ -105,12 +105,18 @@ INSTALLED_APPS = (
     'pages',
     'mptt',
     'staticfiles',
-    'tinymce',
+    #'tinymce',
+    # disabled to make "setup.py test" to work properly
     #'south',
+
+    # these 2 package don't create any dependecies
     'authority',
+    # haystack change coverage score report by importing modules
+    #'haystack',
 )
 
-PAGE_TINYMCE = True
+PAGE_TINYMCE = False
+PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
     'model':'documents.models.Document',
@@ -165,12 +171,29 @@ PAGE_TEMPLATES = (
 PAGE_SANITIZE_USER_INPUT = True
 
 PAGE_USE_SITE_ID = True
-PAGE_PERMISSION = False
 
-# A test runner that use the test coverage module
-TEST_RUNNER = "test_runner.run_tests"
+HAYSTACK_SITECONF = 'example.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+
+COVERAGE_EXCLUDE_MODULES = (
+    "pages.migrations.*",
+    "pages.tests.*",
+    "pages.urls",
+    "pages.__init__",
+)
+COVERAGE_HTML_REPORT = True
+COVERAGE_BRANCH_COVERAGE = False
+
+try:
+    import test_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ("test_extensions", )
 
 try:
     from local_settings import *
 except ImportError:
     pass
+

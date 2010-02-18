@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Convenience module that provides access to custom settings for the
-# ``pages`` application.  Provides default settings for the ``pages``
-# application when the project ``settings`` module does not contain
-# the appropriate settings.
+"""Convenience module that provides default settings for the ``pages``
+application when the project ``settings`` module does not contain
+the appropriate settings."""
 from os.path import join
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -36,6 +35,7 @@ if (PAGE_TEMPLATES is None and
          isinstance(PAGE_TEMPLATES, unicode))):
     PAGE_TEMPLATES = ()
 
+# The callable that is used by the CMS
 def get_page_templates():
     if callable(PAGE_TEMPLATES):
         return PAGE_TEMPLATES()
@@ -44,7 +44,7 @@ def get_page_templates():
 
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
 # ``django-tagging`` application. 
-PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', True)
+PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
 if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
     raise ImproperlyConfigured('django-tagging could not be found.\n'
                                'Please make sure you\'ve installed it '
@@ -84,11 +84,6 @@ PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
 # ``settings.LANGUAGE_CODE`` is used
 PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
                                 settings.LANGUAGE_CODE)
-
-
-# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable
-# advanced hierarchic permissions on your pages.
-PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
 
 extra = [('can_freeze', 'Can freeze page',)]
 for lang in PAGE_LANGUAGES:
@@ -145,7 +140,8 @@ PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
 # URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
 _media_url = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
-PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(_media_url, 'pages/'))
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL',
+    join(_media_url, 'pages/'))
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)

@@ -15,7 +15,6 @@ from pages.placeholders import parse_placeholder
 
 register = template.Library()
 
-PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
 def get_page_from_string_or_id(page_string, lang):
     """Return a Page object from a slug or an id."""
@@ -42,8 +41,8 @@ def _get_content(context, page, content_type, lang, fallback=True):
     if not page:
         return ''
 
-    c = Content.objects.get_content(page, lang, content_type, fallback)
-    return c
+    content = Content.objects.get_content(page, lang, content_type, fallback)
+    return content
 
 """Filters"""
 

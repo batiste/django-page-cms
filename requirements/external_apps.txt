@@ -6,3 +6,4 @@ django-page-cms
 BeautifulSoup
 django-staticfiles
 django-authority
+django-haystack

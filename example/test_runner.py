@@ -1,11 +1,9 @@
 import os, sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
-from inspect import getmembers, ismodule
 
-from django.conf import settings
 from django.test.simple import run_tests as django_test_runner
-from django.db.models import get_app, get_apps
 
+# necessary for "python setup.py test"
 test_dir = os.path.dirname(__file__)
 sys.path.insert(0, test_dir)
 

@@ -32,6 +32,7 @@ setup(
         'tagging (>0.2.1)', # please use the trunk version of tagging
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
         'authority', # known as django-authority
+        'django-staticfiles',
     ),
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

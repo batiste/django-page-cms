@@ -17,7 +17,8 @@ urlpatterns = patterns('',
     # We redefine urls down there to be able to use the document application
     #(r'^pages/', include('pages.urls')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^search/', include('haystack.urls')),
+    # make tests fail if a backend is not present on the system
+    #(r'^search/', include('haystack.urls')),
 )
 
 if pages_settings.PAGE_USE_LANGUAGE_PREFIX:

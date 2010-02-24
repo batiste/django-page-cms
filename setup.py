@@ -28,11 +28,10 @@ setup(
     install_requires=[
         'BeautifulSoup',
         'Django',
-        'html5lib (>=0.10)',
-        'tagging (>0.2.1)', # please use the trunk version of tagging
-        'django_mptt (>0.2.1)', # please use the trunk version of django mptt
+        'html5lib>=0.10',
+        'tagging>0.2.1', # please use the trunk version of tagging
+        'django_mptt>0.2.1', # please use the trunk version of django mptt
         'authority', # known as django-authority
-        'django_staticfiles',
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

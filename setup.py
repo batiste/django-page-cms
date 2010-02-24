@@ -29,7 +29,7 @@ setup(
         'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'tagging>0.2.1', # please use the trunk version of tagging
+        'django-tagging>0.2.1', # please use the trunk version of tagging
         'django-mptt>0.2.1', # please use the trunk version of django mptt
         'django-authority', # known as django-authority
     ],

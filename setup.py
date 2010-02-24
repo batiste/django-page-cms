@@ -25,7 +25,7 @@ setup(
     license=pages.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
-    install_requires=(
+    install_requires=[
         'BeautifulSoup',
         'Django',
         'html5lib (>=0.10)',
@@ -33,7 +33,7 @@ setup(
         'django_mptt (>0.2.1)', # please use the trunk version of django mptt
         'authority', # known as django-authority
         'django_staticfiles',
-    ),
+    ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
     package_data={'pages': templates_dirs},

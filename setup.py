@@ -25,7 +25,7 @@ setup(
     license=pages.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
-    requires=(
+    install_requires=(
         'BeautifulSoup',
         'Django',
         'html5lib (>=0.10)',

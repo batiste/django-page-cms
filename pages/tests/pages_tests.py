@@ -6,6 +6,7 @@ from pages.tests.testcase import TestCase
 from pages import urlconf_registry as reg
 
 import django
+from django.conf import settings as global_settings
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.template import Template, RequestContext, Context
@@ -74,20 +75,23 @@ class PagesTestCase(TestCase):
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
+        context = Context({'current_page': page, 'lang':'en-us'})
+        
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
         template = get_template_from_string(pl1)
-        context = Context({'current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
+        
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}{{ hello }}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), page.title())
 
 
         # error in parse template content
-        from django.conf import settings as global_settings
         setattr(global_settings, "DEBUG", True)
+        
         page = self.new_page({'wrong': '{% wrong %}'})
         context = Context({'current_page': page, 'lang':'en-us'})
+        
         pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
         template = get_template_from_string(pl2)
         from pages.placeholders import PLACEHOLDER_ERROR
@@ -116,7 +120,26 @@ class PagesTestCase(TestCase):
         except TemplateSyntaxError:
             pass
 
+    def test_video(self):
+        """Test video placeholder."""
+        page = self.new_page(content={
+            'title':'video-page',
+            'video':'http://www.youtube.com/watch?v=oHg5SJYRHA0\\\\'
+        })
+        context = Context({'current_page': page, 'lang':'en-us'})
+        pl1 = """{% load pages_tags %}{% videoplaceholder video %}"""
+        template = get_template_from_string(pl1)
+        self.assertNotEqual(template.render(context), '')
+        self.assertTrue(len(template.render(context)) > 10)
 
+
+    def test_widgets(self):
+        """Test placeholder syntaxes."""
+        page = self.new_page()
+        pl1 = """{% load pages_tags %}{% placeholder title with CKEditor %}"""
+        template = get_template_from_string(pl1)
+        context = Context({'current_page': page, 'lang':'en-us'})
+        #self.assertEqual(template.render(context), '')
 
 
     def test_placeholder_untranslated_content(self):

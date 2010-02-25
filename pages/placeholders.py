@@ -33,12 +33,15 @@ def parse_placeholder(parser, token):
     name = bits[1]
     remaining = bits[2:]
     params = {}
+    simple_options = ['parsed', 'inherited', 'untranslated']
+    param_options = ['as', 'on', 'with']
+    all_options = simple_options + param_options
     while remaining:
         bit = remaining[0]
-        if bit not in ('as', 'on', 'with', 'parsed', 'inherited'):
+        if bit not in all_options:
             raise template.TemplateSyntaxError(
                 "%r is not an correct option for a placeholder" % bit)
-        if bit in ('as', 'on', 'with'):
+        if bit in param_options:
             if len(remaining) < 2:
                 raise template.TemplateSyntaxError(
                 "Placeholder option '%s' need a parameter" % bit)

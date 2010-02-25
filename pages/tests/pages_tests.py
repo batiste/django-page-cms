@@ -58,15 +58,8 @@ class PagesTestCase(TestCase):
         from pages import settings as pages_settings
         setattr(pages_settings, "PAGE_USE_SITE_ID", False)
         author = User.objects.all()[0]
-        p1 = Page(author=author, status=Page.PUBLISHED)
-        p1.save()
-        Content(page=p1, language='en-us', type='inher',
-            body='parent-content').save()
-        p2 = Page(
-            author=author,
-            status=Page.PUBLISHED
-        )
-        p2.save()
+        p1 = self.new_page(content={'inher':'parent-content'})
+        p2 = self.new_page()
         template = django.template.loader.get_template('pages/tests/test7.html')
         context = Context({'current_page': p2, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
@@ -89,6 +82,12 @@ class PagesTestCase(TestCase):
         placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
         placeholder.save(page, 'fr-ch', 'test-content', True)
         self.assertEqual(len(Content.objects.all()), 2)
+
+        # test the syntax
+        page = self.new_page()
+        template = django.template.loader.get_template('pages/tests/test8.html')
+        context = Context({'current_page': page, 'lang':'en-us'})
+        self.assertEqual(template.render(context), '')
 
     def test_urlconf_registry(self):
         """Test urlconf_registry basic functions."""

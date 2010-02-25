@@ -642,7 +642,7 @@ class FunctionnalTestCase(TestCase):
 
     def test_tree(self):
         """
-        Test that the navigation tree works properly with mptt
+        Test that the navigation tree works properly with mptt.
         """
         c = self.get_admin_client()
         c.login(username='batiste', password='b')

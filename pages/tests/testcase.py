@@ -1,5 +1,6 @@
 from django.test import TestCase
 from pages.models import Page, Content, PageAlias
+from django.contrib.auth.models import User
 from django.test.client import Client
 
 class TestCase(TestCase):
@@ -22,6 +23,14 @@ class TestCase(TestCase):
             }
         self.counter = self.counter + 1
         return page_data
+
+    def new_page(self, content={'title':'test-page'}, language='en-us'):
+        author = User.objects.all()[0]
+        page = Page(author=author, status=Page.PUBLISHED)
+        page.save()
+        for key, value in content.items():
+            Content(page=page, language='en-us', type=key, body=value).save()
+        return page
 
     def create_new_page(self, client=None, draft=False):
         if not client:

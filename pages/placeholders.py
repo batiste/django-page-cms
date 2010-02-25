@@ -29,7 +29,7 @@ def parse_placeholder(parser, token):
     count = len(bits)
     error_string = '%r tag requires at least one argument' % bits[0]
     if count <= 1:
-        raise template.TemplateSyntaxError(error_string)
+        raise TemplateSyntaxError(error_string)
     name = bits[1]
     remaining = bits[2:]
     params = {}
@@ -39,11 +39,11 @@ def parse_placeholder(parser, token):
     while remaining:
         bit = remaining[0]
         if bit not in all_options:
-            raise template.TemplateSyntaxError(
+            raise TemplateSyntaxError(
                 "%r is not an correct option for a placeholder" % bit)
         if bit in param_options:
             if len(remaining) < 2:
-                raise template.TemplateSyntaxError(
+                raise TemplateSyntaxError(
                 "Placeholder option '%s' need a parameter" % bit)
             if bit == 'as':
                 params['as_varname'] = remaining[1]
@@ -197,18 +197,14 @@ class PlaceholderNode(template.Node):
             try:
                 t = template.Template(content, name=self.name)
                 content = mark_safe(t.render(context))
-            except template.TemplateSyntaxError, error:
+            except TemplateSyntaxError, error:
                 if global_settings.DEBUG:
-                    error = PLACEHOLDER_ERROR % {
+                    content = PLACEHOLDER_ERROR % {
                         'name': self.name,
                         'error': error,
                     }
-                    if self.as_varname is None:
-                        return error
-                    context[self.as_varname] = error
-                    return ''
                 else:
-                    return ''
+                    content = ''
         if self.as_varname is None:
             return content
         context[self.as_varname] = content

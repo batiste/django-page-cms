@@ -9,6 +9,8 @@ import django
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.template import Template, RequestContext, Context
+from django.template.loader import get_template_from_string
+from django.template import Template, TemplateSyntaxError
 
 import datetime
 
@@ -53,6 +55,7 @@ class PagesTestCase(TestCase):
             [p2.id, p3.id]
         )
 
+
     def test_placeholder_inherit_content(self):
         """Test placeholder content inheritance between pages."""
         from pages import settings as pages_settings
@@ -66,6 +69,54 @@ class PagesTestCase(TestCase):
         
         p2.move_to(p1, position='first-child')
         self.assertEqual(template.render(context), 'parent-content')
+
+
+    def test_placeholder_all_syntaxes(self):
+        """Test placeholder syntaxes."""
+        page = self.new_page()
+        pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
+        template = get_template_from_string(pl1)
+        context = Context({'current_page': page, 'lang':'en-us'})
+        self.assertEqual(template.render(context), '')
+        pl1 = """{% load pages_tags %}{% placeholder title as hello %}{{ hello }}"""
+        template = get_template_from_string(pl1)
+        self.assertEqual(template.render(context), page.title())
+
+
+        # error in parse template content
+        from django.conf import settings as global_settings
+        setattr(global_settings, "DEBUG", True)
+        page = self.new_page({'wrong': '{% wrong %}'})
+        context = Context({'current_page': page, 'lang':'en-us'})
+        pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
+        template = get_template_from_string(pl2)
+        from pages.placeholders import PLACEHOLDER_ERROR
+        error = PLACEHOLDER_ERROR % {
+            'name': 'wrong',
+            'error': "Invalid block tag: 'wrong'",
+        }
+        self.assertEqual(template.render(context), error)
+
+        # generate errors
+        pl3 = """{% load pages_tags %}{% placeholder %}"""
+        try:
+            template = get_template_from_string(pl3)
+        except TemplateSyntaxError:
+            pass
+
+        pl4 = """{% load pages_tags %}{% placeholder wrong wrong %}"""
+        try:
+            template = get_template_from_string(pl4)
+        except TemplateSyntaxError:
+            pass
+
+        pl5 = """{% load pages_tags %}{% placeholder wrong as %}"""
+        try:
+            template = get_template_from_string(pl5)
+        except TemplateSyntaxError:
+            pass
+
+
 
 
     def test_placeholder_untranslated_content(self):
@@ -129,3 +180,15 @@ class PagesTestCase(TestCase):
             lang='en-us'))
         self.assertFalse(pp.check('change', page=page, method='POST',
             lang='en-us'))
+
+        self.assertFalse(pp.check('delete', page=page, method='POST',
+            lang='en-us'))
+        self.assertFalse(pp.check('add', page=page, method='POST',
+            lang='en-us'))
+        self.assertFalse(pp.check('freeze', page=page, method='POST',
+            lang='en-us'))
+
+        self.assertFalse(pp.check('doesnotexist', page=page, method='POST',
+            lang='en-us'))
+
+

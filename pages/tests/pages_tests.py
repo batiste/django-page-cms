@@ -56,6 +56,41 @@ class PagesTestCase(TestCase):
             [p2.id, p3.id]
         )
 
+    def test_widgets_registry(self):
+        """Test the widget registry module."""
+        from pages import widgets_registry as wreg
+        for widget in wreg.registry:
+            w = widget()
+            w.render('name', 'value')
+
+        try:
+            wreg.register_widget(wreg.registry[0])
+            raise AssertionError("Error not raised properly.")
+        except wreg.WidgetAlreadyRegistered:
+            pass
+
+        try:
+            wreg.get_widget('wrong')
+            raise AssertionError("Error not raised properly.")
+        except wreg.WidgetNotFound:
+            pass
+
+    def test_page_caculated_status(self):
+        """Test calculated status property."""
+        from pages import settings as pages_settings
+        setattr(pages_settings, "PAGE_SHOW_START_DATE", True)
+        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+
+        page = self.new_page()
+        self.assertEqual(page.calculated_status, Page.PUBLISHED)
+        page.publication_date = tomorrow
+        self.assertEqual(page.calculated_status, Page.DRAFT)
+        page.publication_date = yesterday
+        self.assertEqual(page.calculated_status, Page.PUBLISHED)
+        setattr(pages_settings, "PAGE_SHOW_END_DATE", True)
+        page.publication_end_date = yesterday
+        self.assertEqual(page.calculated_status, Page.EXPIRED)
 
     def test_placeholder_inherit_content(self):
         """Test placeholder content inheritance between pages."""
@@ -133,15 +168,6 @@ class PagesTestCase(TestCase):
         self.assertTrue(len(template.render(context)) > 10)
 
 
-    def test_widgets(self):
-        """Test placeholder syntaxes."""
-        page = self.new_page()
-        pl1 = """{% load pages_tags %}{% placeholder title with CKEditor %}"""
-        template = get_template_from_string(pl1)
-        context = Context({'current_page': page, 'lang':'en-us'})
-        #self.assertEqual(template.render(context), '')
-
-
     def test_placeholder_untranslated_content(self):
         """Test placeholder untranslated content."""
         from pages import settings as pages_settings
@@ -214,4 +240,12 @@ class PagesTestCase(TestCase):
         self.assertFalse(pp.check('doesnotexist', page=page, method='POST',
             lang='en-us'))
 
+    def test_managers(self):
+        Page.objects.populate_pages(child=2, depth=2)
+        for p in Page.objects.all():
+            p.invalidate()
+        self.assertEqual(Page.objects.count(), 3)
+        self.assertEqual(Page.objects.published().count(), 3)
+        self.assertEqual(Page.objects.drafts().count(), 0)
+        self.assertEqual(Page.objects.expired().count(), 0)
 

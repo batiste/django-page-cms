@@ -166,7 +166,7 @@ class WYMEditor(Textarea):
             'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
 
     def __init__(self, language=None, attrs=None, **kwargs):
-        self.language = language
+        self.language = language or getattr(settings, 'LANGUAGE_CODE')
         self.attrs = {'class': 'wymeditor'}
         if attrs:
             self.attrs.update(attrs)

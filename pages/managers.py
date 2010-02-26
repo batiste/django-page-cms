@@ -204,12 +204,13 @@ class ContentManager(models.Manager):
                 }
                 if page.freeze_date:
                     params['creation_date__lte'] = page.freeze_date
-                language = lang[0]
+                # using the same variable name "language" introduce nasty bugs.
+                lang = lang[0]
                 try:
                     content = self.filter(**params).latest()
-                    content_dict[language] = content.body
+                    content_dict[lang] = content.body
                 except self.model.DoesNotExist:
-                    content_dict[language] = ''
+                    content_dict[lang] = ''
             cache.set(self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen),
                 content_dict)
 

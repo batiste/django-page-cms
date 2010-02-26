@@ -32,7 +32,7 @@ class PageManager(models.Manager):
             language='en-us', page=p).save()
         Content(body='page-'+str(p.id), type='slug',
             language='en-us', page=p).save()
-        for child in range(1, child):
+        for child in range(1, child+1):
             self.populate_pages(parent=p, child=child, depth=(depth-1))
     
     def on_site(self, site_id=None):
@@ -254,30 +254,6 @@ class ContentManager(models.Manager):
         cursor.execute(sql, ('slug', slug, ))
         return [c[0] for c in cursor.fetchall()]
 
-
-class PagePermissionManager(models.Manager):
-    """Hierachic page permission manager."""
-
-    def get_page_id_list(self, user):
-        """Give a list of :class:`Page <pages.models.Page>` ids where the
-        user has rights or the string
-        "All" if the user has all rights.
-
-        :param user: the interested user.
-        """
-        if user.is_superuser:
-            return 'All'
-        id_list = []
-        for perm in self.filter(user=user):
-            if perm.type == 0:
-                return "All"
-            if perm.page.id not in id_list:
-                id_list.append(perm.page.id)
-            if perm.type == 2:
-                for page in perm.page.get_descendants():
-                    if page.id not in id_list:
-                        id_list.append(page.id)
-        return id_list
 
 class PageAliasManager(models.Manager):
     """:class:`PageAlias <pages.models.PageAlias>` manager."""

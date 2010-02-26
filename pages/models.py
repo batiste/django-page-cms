@@ -2,7 +2,7 @@
 
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
-from pages.managers import PagePermissionManager, PageAliasManager
+from pages.managers import PageAliasManager
 from pages import settings
 
 from datetime import datetime

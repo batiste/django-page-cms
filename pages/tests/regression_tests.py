@@ -189,4 +189,17 @@ class RegressionTestCase(TestCase):
         self.assertTrue('t3_'+page.get_url_path() in render)
         self.assertTrue('t4_'+page.slug() in render)
         self.assertTrue('t5_'+page.slug() in render)
-        
+
+
+    def test_placeholder_cache_bug(self):
+        """There was an bad bug caused when the page cache was filled
+        the first time."""
+        from pages.placeholders import PlaceholderNode
+        page = self.new_page()
+        placeholder = PlaceholderNode('test', page=page)
+        placeholder.save(page, 'fr-ch', 'fr', True)
+        placeholder.save(page, 'en-us', 'en', True)
+        self.assertEqual(
+            Content.objects.get_content(page, 'fr-ch', 'test'),
+            'fr'
+        )

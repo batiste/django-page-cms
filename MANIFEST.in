@@ -3,6 +3,7 @@ include LICENSE
 include AUTHORS
 include TODO
 include README
+include README.rst
 include THANKS
 include CHANGELOG
 include MANIFEST.in

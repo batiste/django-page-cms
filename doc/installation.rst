@@ -35,7 +35,7 @@ Install dependencies by using pip
 The pip install is the easiest and the recommended installation method. Use::
 
     $ sudo easy_install pip
-    $ wget -c http://github.com/batiste/django-page-cms/blob/master/requirements/external_apps.txt
+    $ wget -c http://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
     $ sudo pip install -r external_apps.txt
 
 Every package listed in the ``external_app.txt`` should be downloaded and installed.
@@ -49,9 +49,11 @@ Install dependencies by using easy_install
 
 On debian linux you can do::
 
-    $ sudo easy_install django
-    $ sudo easy_install html5lib
-    $ sudo easy_install django-staticfiles
+    $ sudo easy_install html5lib BeautifulSoup django django-staticfiles django-authority
+
+Optionnaly::
+    
+    $ sudo easy_install django-haystack
 
 If you are not using the source code version of the application then install it using::
 

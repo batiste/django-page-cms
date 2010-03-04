@@ -23,7 +23,7 @@ And then, run the example project::
 
     cd django-page-cms/example/
     python manage.py syncdb
-    python manage.py build_media pages
+    python manage.py build_static pages
     python manage.py runserver
 
 Then visit http://127.0.0.1:8000/admin/ and create a few pages.

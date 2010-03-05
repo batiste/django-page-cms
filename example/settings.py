@@ -113,8 +113,6 @@ INSTALLED_APPS = (
     'authority',
     # haystack change coverage score report by importing modules
     #'haystack',
-
-    'django_nose',
 )
 
 PAGE_TINYMCE = False

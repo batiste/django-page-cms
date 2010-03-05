@@ -34,6 +34,8 @@ setup(
         'django-authority', # known as django-authority
         'django-staticfiles',
         'django-haystack',
+        # necessary for tests
+        'coverage',
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

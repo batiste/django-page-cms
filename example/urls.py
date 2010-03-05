@@ -14,13 +14,16 @@ authority.autodiscover()
 urlpatterns = patterns('',
     (r'^authority/', include('authority.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    # We redefine urls down there to be able to use the document application
-    #(r'^pages/', include('pages.urls')),
+    
+    (r'^pages/', include('pages.urls')),
     (r'^admin/', include(admin.site.urls)),
     # make tests fail if a backend is not present on the system
     #(r'^search/', include('haystack.urls')),
 )
 
+# An example on how to handle delegated applications:
+
+"""
 if pages_settings.PAGE_USE_LANGUAGE_PREFIX:
     urlpatterns += patterns('',
         url(r'^pages/(?P<lang>[-\w]+)/(?P<path>.*)/documents/',
@@ -34,6 +37,7 @@ else:
         url(r'^pages/(?P<path>.*)/documents/', include("example.documents.urls")),
         url(r'^pages/(?P<path>.*)$', details, name='pages-details-by-path')
     )
+"""
 
 if settings.DEBUG:
     urlpatterns += patterns('',

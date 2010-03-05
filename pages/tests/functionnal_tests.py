@@ -11,6 +11,11 @@ from django.template import TemplateDoesNotExist
 
 import datetime
 
+class MockRequest:
+    REQUEST = {'language': 'en'}
+    GET = {}
+    META = {}
+
 class FunctionnalTestCase(TestCase):
     """Django page CMS functionnal tests suite class."""
 
@@ -519,10 +524,8 @@ class FunctionnalTestCase(TestCase):
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
-        class request:
-            REQUEST = {'language': 'en'}
-            GET = {}
-        context = RequestContext(request, {'page': page, 'lang':'en-us',
+
+        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
             'path':'/page-1/'})
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" "en-us" %}')
@@ -540,10 +543,8 @@ class FunctionnalTestCase(TestCase):
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
-        class request:
-            REQUEST = {'language': 'en'}
-            GET = {}
-        context = RequestContext(request, {'page': page})
+
+        context = RequestContext(MockRequest, {'page': page})
         template = Template('{% load pages_tags %}'
                             '{% get_content page "title" "en-us" as content %}'
                             '{{ content }}')

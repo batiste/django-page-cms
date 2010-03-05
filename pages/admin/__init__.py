@@ -10,6 +10,7 @@ from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu, list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
+from pages.admin.views import move_page
 from pages.permissions import PagePermission
 from pages.http import auto_render
 import pages.widgets
@@ -110,7 +111,7 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^(?P<page_id>[0-9]+)/sub-menu/$',
                 sub_menu, name='page-sub-menu'),
             url(r'^(?P<page_id>[0-9]+)/move-page/$',
-                self.move_page, name='page-move-page'),
+                move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
         )
@@ -329,32 +330,7 @@ class PageAdmin(admin.ModelAdmin):
         #
         return change_list
 
-    def move_page(self, request, page_id, extra_context=None):
-        """Move the page to the requested target, at the given
-        position"""
-        page = Page.objects.get(pk=page_id)
 
-        target = request.POST.get('target', None)
-        position = request.POST.get('position', None)
-        if target is not None and position is not None:
-            try:
-                target = self.model.objects.get(pk=target)
-            except self.model.DoesNotExist:
-                pass
-                # TODO: should use the django message system
-                # to display this message
-                # _('Page could not been moved.')
-            else:
-                page.invalidate()
-                target.invalidate()
-                from mptt.exceptions import InvalidMove
-                invalid_move = False
-                try:
-                    page.move_to(target, position)
-                except InvalidMove:
-                    invalid_move = True
-                return list_pages_ajax(request, invalid_move)
-        return HttpResponseRedirect('../../')
 
 for admin_class, model, options in get_connected():
     PageAdmin.inlines.append(make_inline_admin(admin_class, model, options))

@@ -101,6 +101,34 @@ def get_content(request, page_id, content_id):
 get_content = staff_member_required(get_content)
 get_content = auto_render(get_content)
 
+
+def move_page(request, page_id, extra_context=None):
+    """Move the page to the requested target, at the given
+    position"""
+    page = Page.objects.get(pk=page_id)
+
+    target = request.POST.get('target', None)
+    position = request.POST.get('position', None)
+    if target is not None and position is not None:
+        try:
+            target = Page.objects.get(pk=target)
+        except Page.DoesNotExist:
+            pass
+            # TODO: should use the django message system
+            # to display this message
+            # _('Page could not been moved.')
+        else:
+            page.invalidate()
+            target.invalidate()
+            from mptt.exceptions import InvalidMove
+            invalid_move = False
+            try:
+                page.move_to(target, position)
+            except InvalidMove:
+                invalid_move = True
+            return list_pages_ajax(request, invalid_move)
+    return HttpResponseRedirect('../../')
+
 def sub_menu(request, page_id):
     """Render the children of the requested page with the sub_menu
     template."""

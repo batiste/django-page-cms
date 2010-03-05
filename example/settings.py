@@ -186,7 +186,7 @@ COVERAGE_EXCLUDE_MODULES = (
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
-TEST_RUNNER = 'pages.test_runner.run_tests'
+TEST_RUNNER = 'example.test_runner.run_tests'
 
 #here = os.path.abspath(os.path.dirname(__file__))
 #NOSE_ARGS = [os.path.join(here, os.pardir, "pages", "tests"),

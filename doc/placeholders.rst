@@ -24,7 +24,11 @@ the **on** option
 
 If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
-to get the content of the placeholder.
+to get the content of the placeholder. 
+
+Syntax example::
+
+    {% placeholder main_menu on root_page %}
 
 the **widget** option
 ----------------------
@@ -33,11 +37,20 @@ If the **widget** option is omitted the CMS will render a simple `TextInput`.
 Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
 before you can use them in the CMS.
 
+Syntax example::
+
+    {% placeholder body with RichTextarea %}
+
 The **as** option
 ------------------
 
 If you use the option **as** the content of the placeholder will not be displayed but
 a variable will be defined within the template's context instead.
+
+Syntax example::
+
+    {% placeholder image as image_src %}
+    <img src="{{ img_src }}" alt=""/>
 
 The **parsed** keyword
 -----------------------
@@ -47,12 +60,21 @@ will be evaluated as Django template, within the current context.
 Each placeholder with the **parsed** keyword will also have
 a note in the admin interface noting its ability to be evaluated as template.
 
+Syntax example::
+
+    {% placeholder image as image_src %}
+    <img src="{{ img_src }}" alt=""/>
+
 The **inherited** keyword
 -------------------------
 
 If you add the keyword **inherited** the placeholder's content
 will be retrieved from the closest parent. But only if there is no
 content for the current page.
+
+Syntax example::
+
+    {% placeholder right-column inherited %}
 
 The **untranslated** keyword
 -----------------------------
@@ -61,21 +83,20 @@ If you add the keyword **untranslated** the placeholder's content
 will be the same whatever language your use. It's especialy useful for an image
 placeholder that should remain the same in every language.
 
-Example of valid syntaxes
---------------------------
+Syntax example::
+
+    {% placeholder logo untranslated %}
+
+Examples of other valid syntaxes
+------------------------------------
 
 This is a list of different possible syntaxes for this template tag::
 
-    {% placeholder title %}
     {% placeholder title with TextIntput %}
-    {% placeholder body with Textarea %}
-    {% placeholder right-column on another_page_object %}
-    
-    {% placeholder body parsed %}
-    {% placeholder right-column inherited as right_column %}
+    {% placeholder logo untranslated on root_page %}
+    {% placeholder right-column inherited as right_column parsed %}
 
     ...
-    
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 

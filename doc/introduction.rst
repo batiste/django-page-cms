@@ -85,13 +85,13 @@ Test it
 
 To test this CMS checkout the code with subversion::
 
-    svn checkout http://django-page-cms.googlecode.com/svn/trunk/ django-page-cms
+    git clone git://github.com/batiste/django-page-cms.git django-page-cms
 
 And then, run the development server::
     
     cd example/
     python manage.py syncdb
-    python manage.py build_media
+    python manage.py build_static
     python manage.py manage.py runserver
 
 

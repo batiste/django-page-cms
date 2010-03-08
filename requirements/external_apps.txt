@@ -1,10 +1,12 @@
 -e svn+http://django-mptt.googlecode.com/svn/trunk@121#egg=django-mptt
+# the dev version doesn't pass the tests
+#-e hg+http://bitbucket.org/jezdez/django-authority/@7bc186caa7dc#egg=django-authority
+django-authority
 django-tagging>0.2.1
 html5lib>=0.10
 django>=1.1.1
-django-page-cms
 BeautifulSoup
 django-staticfiles
-django-authority
 django-haystack
+django-page-cms
 coverage

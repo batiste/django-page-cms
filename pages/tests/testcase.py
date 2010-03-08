@@ -5,7 +5,7 @@ from django.test.client import Client
 
 class TestCase(TestCase):
     """Django page CMS test suite class"""
-    fixtures = ['tests.json']
+    fixtures = ['pages_tests.json']
     counter = 1
 
     def get_admin_client(self):

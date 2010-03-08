@@ -1,0 +1,80 @@
+[
+    {
+    "pk": 1,
+    "model": "auth.user",
+    "fields": {
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2009-01-23 03:16:13",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$a30c7$77c8300adae2295829eea32ed7a928c3d43b53f8",
+        "email": "asd@asd.com",
+        "date_joined": "2009-01-23 03:01:15"
+        }
+    },
+    {
+    "pk": 2,
+    "model": "auth.user",
+    "fields": {
+        "username": "nonstaff",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2009-11-06 00:00:01",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$a30c7$77c8300adae2295829eea32ed7a928c3d43b53f8",
+        "email": "asd@asd.com",
+        "date_joined": "2009-11-06 00:00:00"
+        }
+    },
+    {
+    "pk": 3,
+    "model": "auth.user",
+    "fields": {
+        "username": "staff",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": true,
+        "last_login": "2009-11-06 00:00:01",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$a30c7$77c8300adae2295829eea32ed7a928c3d43b53f8",
+        "email": "asd@asd.com",
+        "date_joined": "2009-11-06 00:00:00"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "sites.site",
+        "fields": {
+            "domain": "127.0.0.1:8000",
+            "name": "127.0.0.1:8000"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "sites.site",
+        "fields": {
+            "domain": "testserver",
+            "name": "Test server 1"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "sites.site",
+        "fields": {
+            "domain": "testserver2",
+            "name": "Test server 2"
+        }
+    }
+]

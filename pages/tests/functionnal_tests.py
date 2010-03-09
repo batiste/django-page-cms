@@ -2,7 +2,7 @@
 """Django page CMS functionnal tests suite module."""
 from pages.models import Page, Content, PageAlias
 from pages.placeholders import PlaceholderNode
-from pages.tests.testcase import TestCase
+from pages.tests.testcase import TestCase, MockRequest
 
 import django
 from django.conf import settings
@@ -10,11 +10,6 @@ from django.template import Template, RequestContext, Context
 from django.template import TemplateDoesNotExist
 
 import datetime
-
-class MockRequest:
-    REQUEST = {'language': 'en'}
-    GET = {}
-    META = {}
 
 class FunctionnalTestCase(TestCase):
     """Django page CMS functionnal tests suite class."""
@@ -514,45 +509,6 @@ class FunctionnalTestCase(TestCase):
         request = get_request_mock()
         context = details(request, only_context=True)
         self.assertEqual(context['current_page'], page1)
-
-    def test_show_content_tag(self):
-        """
-        Test the {% show_content %} template tag.
-        """
-        c = self.get_admin_client()
-        c.login(username='batiste', password='b')
-        page_data = self.get_new_page_data()
-        response = c.post('/admin/pages/page/add/', page_data)
-        page = Page.objects.all()[0]
-
-        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
-            'path':'/page-1/'})
-        template = Template('{% load pages_tags %}'
-                            '{% show_content page "title" "en-us" %}')
-        self.assertEqual(template.render(context), page_data['title'])
-        template = Template('{% load pages_tags %}'
-                            '{% show_content page "title" %}')
-        self.assertEqual(template.render(context), page_data['title'])
-
-    def test_get_content_tag(self):
-        """
-        Test the {% get_content %} template tag
-        """
-        c = self.get_admin_client()
-        c.login(username='batiste', password='b')
-        page_data = self.get_new_page_data()
-        response = c.post('/admin/pages/page/add/', page_data)
-        page = Page.objects.all()[0]
-
-        context = RequestContext(MockRequest, {'page': page})
-        template = Template('{% load pages_tags %}'
-                            '{% get_content page "title" "en-us" as content %}'
-                            '{{ content }}')
-        self.assertEqual(template.render(context), page_data['title'])
-        template = Template('{% load pages_tags %}'
-                            '{% get_content page "title" as content %}'
-                            '{{ content }}')
-        self.assertEqual(template.render(context), page_data['title'])
 
 
     def test_request_mockup(self):

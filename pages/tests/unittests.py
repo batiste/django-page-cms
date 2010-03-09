@@ -2,7 +2,7 @@
 """Django page CMS unit test suite module."""
 from pages.models import Page, Content, PageAlias
 from pages.placeholders import PlaceholderNode
-from pages.tests.testcase import TestCase
+from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 
 import django
@@ -15,7 +15,7 @@ from django.template import Template, TemplateSyntaxError
 
 import datetime
 
-class PagesTestCase(TestCase):
+class UnitTestCase(TestCase):
     """Django page CMS unit test suite class."""
 
     def test_date_ordering(self):
@@ -249,3 +249,37 @@ class PagesTestCase(TestCase):
         self.assertEqual(Page.objects.drafts().count(), 0)
         self.assertEqual(Page.objects.expired().count(), 0)
 
+    def test_get_content_tag(self):
+        """
+        Test the {% get_content %} template tag
+        """
+        page_data = {'title':'test', 'slug':'test'}
+        page = self.new_page(page_data)
+
+        context = RequestContext(MockRequest, {'page': page})
+        template = Template('{% load pages_tags %}'
+                            '{% get_content page "title" "en-us" as content %}'
+                            '{{ content }}')
+        self.assertEqual(template.render(context), page_data['title'])
+        template = Template('{% load pages_tags %}'
+                            '{% get_content page "title" as content %}'
+                            '{{ content }}')
+        self.assertEqual(template.render(context), page_data['title'])
+
+    def test_show_content_tag(self):
+        """
+        Test the {% show_content %} template tag.
+        """
+        page_data = {'title':'test', 'slug':'test'}
+        page = self.new_page(page_data)
+        # cleanup the cache from previous tests
+        page.invalidate()
+
+        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
+            'path':'/page-1/'})
+        template = Template('{% load pages_tags %}'
+                            '{% show_content page "title" "en-us" %}')
+        self.assertEqual(template.render(context), page_data['title'])
+        template = Template('{% load pages_tags %}'
+                            '{% show_content page "title" %}')
+        self.assertEqual(template.render(context), page_data['title'])

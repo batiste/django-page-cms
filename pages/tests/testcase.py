@@ -3,6 +3,11 @@ from pages.models import Page, Content, PageAlias
 from django.contrib.auth.models import User
 from django.test.client import Client
 
+class MockRequest:
+    REQUEST = {'language': 'en'}
+    GET = {}
+    META = {}
+
 class TestCase(TestCase):
     """Django page CMS test suite class"""
     fixtures = ['pages_tests.json']

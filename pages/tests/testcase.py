@@ -31,8 +31,11 @@ class TestCase(TestCase):
 
     def new_page(self, content={'title':'test-page'}, language='en-us'):
         author = User.objects.all()[0]
-        page = Page(author=author, status=Page.PUBLISHED)
+        page = Page(author=author, status=Page.PUBLISHED,
+            template='pages/index.html')
         page.save()
+        # necessary to clear old URL cache
+        page.invalidate()
         for key, value in content.items():
             Content(page=page, language='en-us', type=key, body=value).save()
         return page

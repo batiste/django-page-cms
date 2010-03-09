@@ -15,3 +15,4 @@ def pages_navigation(request):
         'pages_navigation': pages,
         'current_page':None
     }
+  

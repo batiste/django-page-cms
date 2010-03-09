@@ -101,16 +101,16 @@ class PageManager(models.Manager):
     def from_path(self, complete_path, lang, exclude_drafts=True):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
-        from pages.models import Content, Page
         slug, path, lang = get_slug_and_relative_path(complete_path, lang)
-        page_ids = Content.objects.get_page_ids_by_slug(slug)
+        page_ids = ContentManager().get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)
         if exclude_drafts:
-            pages_list = pages_list.exclude(status=Page.DRAFT)
+            pages_list = pages_list.exclude(status=self.model.DRAFT)
         current_page = None
         if len(pages_list) == 1:
             return pages_list[0]
-        # more than one page matching the slug, let's use the full url
+        # if more than one page is matching the slug,
+        # we need to use the full URL
         if len(pages_list) > 1:
             for page in pages_list:
                 if page.get_complete_slug(lang) == complete_path:

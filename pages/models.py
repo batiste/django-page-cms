@@ -80,7 +80,7 @@ class Page(models.Model):
     template = models.CharField(_('template'), max_length=100, null=True,
             blank=True)
 
-    delegate_to = models.CharField(_('template'), max_length=100, null=True,
+    delegate_to = models.CharField(_('delegate to'), max_length=100, null=True,
             blank=True)
 
     freeze_date = models.DateTimeField(_('freeze date'),

@@ -45,11 +45,10 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
         raise Http404
 
-    exclude_drafts = not(request.user.is_authenticated()
-        and request.user.is_staff)
+    is_user_staff = request.user.is_authenticated() and request.user.is_staff
     if path:
         current_page = Page.objects.from_path(path, lang,
-            exclude_drafts=exclude_drafts)
+            exclude_drafts=(not is_user_staff))
     elif pages_navigation:
         current_page = Page.objects.root()[0]
 
@@ -61,7 +60,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
             return HttpResponsePermanentRedirect(url)
         raise Http404
 
-    if (not (request.user.is_authenticated() and request.user.is_staff) and
+    if ((not is_user_staff) and
             current_page.calculated_status in (Page.DRAFT, Page.EXPIRED)):
         raise Http404
 

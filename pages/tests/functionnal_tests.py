@@ -355,6 +355,10 @@ class FunctionnalTestCase(TestCase):
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
 
+        url = '/admin/pages/page/%d/delete-content/en-us/' % page.id
+        response = c.get(url)
+        self.assertEqual(response.status_code, 302)
+
     def test_page_alias(self):
         """Test page aliasing system"""
 
@@ -692,3 +696,22 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(page.slug(), 'before')
 
 
+    def test_delegate_to(self):
+        """Test the view delegate feature."""
+        c = self.get_admin_client()
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'delegate'
+        page_data['slug'] = 'delegate'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        page = Page.objects.from_path('delegate', None)
+
+        from pages import urlconf_registry as reg
+        reg.register_urlconf('test', 'example.documents.urls',
+            label='test')
+        page.delegate_to = 'test'
+        page.save()
+        
+        response = c.get('/pages/delegate')
+        self.assertEqual(response.status_code, 200)

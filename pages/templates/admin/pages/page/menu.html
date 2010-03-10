@@ -47,6 +47,9 @@
             {% for lang in page_languages %}
                 <li>
                     {% if page|has_content_in:lang.0 %}
+                        {% if not page|language_content_up_to_date:lang.0 %}
+                        →
+                        {% endif %}
                         <a href="{{ url }}{{ page.id }}/?language={{ lang.0 }}" class="changelink" title="{% blocktrans with lang.1|lower as lang %}edit {{ lang }} translation{% endblocktrans %}">{{ lang.0 }}</a>
                     {% else %}
                         <a href="{{ url }}{{ page.id }}/?language={{ lang.0 }}" class="changelink addlang" title="{% blocktrans with lang.1|lower as lang %}create {{ lang }} translation{% endblocktrans %}">{{ lang.0 }}</a>

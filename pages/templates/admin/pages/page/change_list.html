@@ -36,7 +36,7 @@
 
 {% block result_list %}
 <form method="post" action="">
-{% comment %}{% csrf_token %}{% endcomment %}
+{% csrf_token %}
 {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
 
 <div id="toolbar">

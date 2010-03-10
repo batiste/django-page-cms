@@ -377,3 +377,27 @@ def do_videoplaceholder(parser, token):
     return VideoPlaceholderNode(name, **params)
 register.tag('videoplaceholder', do_videoplaceholder)
 
+def language_content_up_to_date(page, language):
+    """Tell if all the page content has been updated since the last
+    change of the official version (settings.LANGUAGE_CODE)
+    
+    This is approximated by comparing the last modified date of any
+    content in the page, not comparing each content block to its
+    corresponding official language version.  That allows users to
+    easily make "do nothing" changes to any content block when no 
+    change is required for a language.
+    """
+    if settings.LANGUAGE_CODE == language:
+        # official version is always "up to date"
+        return True
+    # get the last modified date for the official version
+    last_modified = Content.objects.filter(language=settings.LANGUAGE_CODE,
+        page=page).aggregate(Max('creation_date'))['creation_date__max']
+    if last_modified is None:
+        # no official version
+        return True
+    lang_modified = Content.objects.filter(language=language,
+        page=page).aggregate(Max('creation_date'))['creation_date__max']
+    return lang_modified > last_modified
+register.filter(language_content_up_to_date)
+

@@ -106,6 +106,15 @@ class UnitTestCase(TestCase):
         p2.move_to(p1, position='first-child')
         self.assertEqual(template.render(context), 'parent-content')
 
+    def test_get_page_template_tag(self):
+        """Test get_page template tag."""
+        context = Context({})
+        pl1 = """{% load pages_tags %}{% get_page get-page-slug as toto %}{{ toto }}"""
+        template = get_template_from_string(pl1)
+        self.assertEqual(template.render(context), u'None')
+        page = self.new_page({'slug':'get-page-slug'})
+        self.assertEqual(template.render(context), u'get-page-slug')
+
 
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""

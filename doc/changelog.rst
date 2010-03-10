@@ -4,6 +4,11 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.1.3
+=============
+
+    * Add a new template tag get_page to insert page object into the context.
+
 Release 1.1.2
 =============
 

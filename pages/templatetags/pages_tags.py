@@ -16,7 +16,7 @@ from pages.placeholders import parse_placeholder
 register = template.Library()
 
 
-def get_page_from_string_or_id(page_string, lang):
+def get_page_from_string_or_id(page_string, lang=None):
     """Return a Page object from a slug or an id."""
     if type(page_string) == int:
         return Page.objects.get(pk=int(page_string))
@@ -261,6 +261,40 @@ pages_breadcrumb = register.inclusion_tag(
 
 """Tags"""
 
+class GetPageNode(template.Node):
+    """get_page Node"""
+    def __init__(self, page, varname):
+        self.page = page
+        self.varname = varname
+    
+    def render(self, context):
+        page = get_page_from_string_or_id(self.page)
+        context[self.varname] = page
+        return ''
+
+
+def do_get_page(parser, token):
+    """Retrieve a page and insert into the template's context.
+
+    Example::
+
+        {% get_page "news" as news_page %}
+
+    :param page: the page object, slug or id
+    :param name: name of the context variable to store the page in
+    """
+    bits = token.split_contents()
+    if 4 != len(bits):
+        raise TemplateSyntaxError('%r expects 4 arguments' % bits[0])
+    if bits[-2] != 'as':
+        raise TemplateSyntaxError(
+            '%r expects "as" as the second argument' % bits[0])
+    page = bits[1]
+    varname = bits[-1]
+    return GetPageNode(page, varname)
+do_get_page = register.tag('get_page', do_get_page)
+
+
 class GetContentNode(template.Node):
     """Get content node"""
     def __init__(self, page, content_type, varname, lang):
@@ -277,8 +311,9 @@ class GetContentNode(template.Node):
         )
         return ''
 
+
 def do_get_content(parser, token):
-    """Store a content type from a page into a context variable.
+    """Retrieve a Content object and insert it into the template's context.
 
     Example::
     

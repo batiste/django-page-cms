@@ -85,7 +85,10 @@ it must be unique among the other pages of the same level.')
                 raise forms.ValidationError(another_page_error)
 
         if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            site_ids = [int(x) for x in self.data.getlist('sites')]
+            if settings.PAGE_HIDE_SITES:
+                site_ids = [settings.SITE_ID]
+            else:
+                site_ids = [int(x) for x in self.data.getlist('sites')]
             def intersects_sites(sibling):
                 return sibling.sites.filter(id__in=site_ids).count() > 0
             if target and position:

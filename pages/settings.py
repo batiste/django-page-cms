@@ -123,6 +123,10 @@ SITE_ID = getattr(settings, 'SITE_ID', 1)
 # framework
 PAGE_USE_SITE_ID = getattr(settings, 'PAGE_USE_SITE_ID', False)
 
+# Set PAGE_HIDE_SITES to make the sites that appear uneditable and only allow
+# editing and creating of pages on the current site
+PAGE_HIDE_SITES = getattr(settings, 'PAGE_HIDE_SITES', False)
+
 # Set PAGE_USE_LANGUAGE_PREFIX to ``True`` to make the ``get_absolute_url``
 # method to prefix the URLs with the language code
 PAGE_USE_LANGUAGE_PREFIX = getattr(settings, 'PAGE_USE_LANGUAGE_PREFIX',

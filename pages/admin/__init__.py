@@ -40,7 +40,7 @@ class PageAdmin(admin.ModelAdmin):
     general_fields = ['title', 'slug', 'status', 'target',
         'position', 'freeze_date']
 
-    if settings.PAGE_USE_SITE_ID:
+    if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
         general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
     
@@ -312,6 +312,8 @@ class PageAdmin(admin.ModelAdmin):
             pages = Page.objects.filter(pk__in=page_ids)
         else:
             pages = Page.objects.root()
+        if settings.PAGE_HIDE_SITES:
+            pages = pages.filter(sites=settings.SITE_ID)
 
         context = {
             'language': language,

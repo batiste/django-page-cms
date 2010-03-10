@@ -145,6 +145,9 @@ class Page(models.Model):
         # let's assume there is no more broken links after a save
         cache.delete(self.PAGE_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
+        # fix sites many-to-many link when the're hidden from the form
+        if settings.PAGE_HIDE_SITES and self.sites.count() == 0:
+            self.sites.add(Site.objects.get(pk=settings.SITE_ID))
 
     def _get_calculated_status(self):
         """Get the calculated status of the page based on

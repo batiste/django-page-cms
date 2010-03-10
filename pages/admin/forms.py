@@ -12,12 +12,12 @@ from pages.widgets import LanguageChoiceWidget
 
 # error messages
 another_page_error = _('Another page with this slug already exists')
-sibling_position_error = _('A sibiling with this slug already exists at the \
+sibling_position_error = _('A sibling with this slug already exists at the \
 targeted position')
 child_error = _('A child with this slug already exists at the targeted \
 position')
-sibling_error = _('A sibiling with this slug already exists')
-sibling_root_error = _('A sibiling with this slug already exists at the root \
+sibling_error = _('A sibling with this slug already exists')
+sibling_root_error = _('A sibling with this slug already exists at the root \
 level')
 
 

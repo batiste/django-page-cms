@@ -81,7 +81,7 @@
     </td>
     <td class="author-cell">
         {% cache 10000 page_author page.author_id %}
-            {% firstof page.author.get_full_name page.author.first_name page.author.username %}
+            {% firstof page.author.user page.author.get_full_name page.author.first_name page.author.username %}
         {% endcache %}
     </td>
 </tr>

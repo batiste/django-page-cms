@@ -85,27 +85,33 @@ it must be unique among the other pages of the same level.')
                 raise forms.ValidationError(another_page_error)
 
         if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
+            site_ids = [int(x) for x in self.data.getlist('sites')]
+            def intersects_sites(sibling):
+                return sibling.sites.filter(id__in=site_ids).count() > 0
             if target and position:
                 target = Page.objects.get(pk=target)
                 if position in ['right', 'left']:
                     slugs = [sibling.slug() for sibling in
-                                                target.get_siblings()]
+                             target.get_siblings() 
+                             if intersects_sites(sibling)]
                     slugs.append(target.slug())
                     if slug in slugs:
                         raise forms.ValidationError(sibling_position_error)
                 if position == 'first-child':
                     if slug in [sibling.slug() for sibling in
-                                                target.get_children()]:
+                                target.get_children()
+                                if intersects_sites(sibling)]:
                         raise forms.ValidationError(child_error)
             else:
                 if self.instance.id:
                     if (slug in [sibling.slug() for sibling in
                         self.instance.get_siblings().exclude(
                             id=self.instance.id
-                        )]):
+                        ) if intersects_sites(sibling)]):
                         raise forms.ValidationError(sibling_error)
                 else:
                     if slug in [sibling.slug() for sibling in
-                                                        Page.objects.root()]:
+                                Page.objects.root()
+                                if intersects_sites(sibling)]:
                         raise forms.ValidationError(sibling_root_error)
         return slug

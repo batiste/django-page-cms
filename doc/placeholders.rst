@@ -124,8 +124,8 @@ A file upload field will appears into the page admin interface.
 Create your own placeholder
 ===========================
 
-If you want to create yout own new type of placeholder,
-you can simple subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
+If you want to create your own new type of placeholder,
+you can simply subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
 
     from pages.placeholders import PlaceholderNode
     from pages.templatetags.page_tags import parse_placeholder

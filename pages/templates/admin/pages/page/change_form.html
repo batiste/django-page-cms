@@ -20,7 +20,7 @@
     {% endblock %}
     
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
-        {% comment %}{% csrf_token %}{% endcomment %}
+        {% if csrf_token %}{% csrf_token %}{% endif %}
         <div class="sidebar">
         {% for fieldset in adminform %}
             {% include "admin/pages/page/includes/fieldset.html" %}

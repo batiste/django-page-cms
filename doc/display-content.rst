@@ -28,8 +28,7 @@ You can also use the id of a page::
 
 .. note::
 
-    In any of the content retrieval you can use either the page object, the slug,
-    or the id of the page.
+    You can use either the page object, the slug, or the id of the page.
 
 show_content
 ------------
@@ -38,32 +37,41 @@ Output the content of a page directly within the template::
 
     {% show_content current_page "title" %}
 
+.. note::
+
+    You can use either the page object, the slug, or the id of the page.
+
+get_page
+------------
+
+Retrieve a Page object and store it into a context variable that you can reuse after. Here is
+an example of the use of this template tag to display a list of news::
+
+    <h2>Latest news</h2>
+    {% get_page "news" news_page %}
+    <ul>
+    {% for new in news_page.get_children %}
+    <li>
+        <h3>{{ new.title }}</h3>
+        {{ new.publication_date }}
+        {% show_content new body %}
+    </li>
+    {% endfor %}
+    </ul>
+
+
+.. note::
+
+    You can use either the slug, or the id of the page.
 
 show_absolute_url
 -----------------
 
-Show the absolute url of a page in the right language::
+This tag show the absolute url of a page. The difference with the `Page.get_url_path` method is
+that the template knows which language is used within the context and display the URL accordingly::
 
     {% show_absolute_url current_page %}
 
-page_menu
----------
+.. note::
 
-Render a navigation nested list of all children of the given page::
-
-    {% pages_menu page %}
-
-You can override the template `pages/menu.html` if you need more control
-on the rendering of this menu.
-
-page_sub_menu
--------------
-
-Get the root page (the highest in the hierarchy) of the given page and render
-a navigation nested list of all root's children pages. This is typically used
-for a secondary menu that is always open::
-    
-    {% pages_sub_menu page %}
-
-You can override the template `pages/sub_menu.html` if you need more
-control on the rendering of this menu.
+    You can use either the page object, the slug, or the id of the page.

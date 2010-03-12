@@ -11,7 +11,7 @@ import fnmatch
 # necessary for "python setup.py test"
 example_dir = os.path.dirname(__file__)
 sys.path.insert(0, example_dir)
-sys.path.insert(0, example_dir+'/..')
+sys.path.insert(0, os.path.join(example_dir, '..'))
 
 patterns = (
     "pages.migrations.*",

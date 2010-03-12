@@ -26,7 +26,7 @@ If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
 to get the content of the placeholder. 
 
-Syntax example::
+Template syntax example::
 
     {% placeholder main_menu on root_page %}
 
@@ -35,11 +35,19 @@ the **widget** option
 
 If the **widget** option is omitted the CMS will render a simple `TextInput`.
 Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
-before you can use them in the CMS.
+before you can use them in the CMS::
 
-Syntax example::
+    from pages.widgets_registry import register_widget
+    from django.forms import TextInput
 
-    {% placeholder body with RichTextarea %}
+    class NewWidget(TextInput):
+        pass
+    
+    register_widget(NewWidget)
+
+Template syntax example::
+
+    {% placeholder body with NewWidget %}
 
 The **as** option
 ------------------
@@ -47,7 +55,7 @@ The **as** option
 If you use the option **as** the content of the placeholder will not be displayed but
 a variable will be defined within the template's context instead.
 
-Syntax example::
+Template syntax example::
 
     {% placeholder image as image_src %}
     <img src="{{ img_src }}" alt=""/>
@@ -60,7 +68,7 @@ will be evaluated as Django template, within the current context.
 Each placeholder with the **parsed** keyword will also have
 a note in the admin interface noting its ability to be evaluated as template.
 
-Syntax example::
+Template syntax example::
 
     {% placeholder image as image_src %}
     <img src="{{ img_src }}" alt=""/>
@@ -72,7 +80,7 @@ If you add the keyword **inherited** the placeholder's content
 will be retrieved from the closest parent. But only if there is no
 content for the current page.
 
-Syntax example::
+Template syntax example::
 
     {% placeholder right-column inherited %}
 
@@ -83,7 +91,7 @@ If you add the keyword **untranslated** the placeholder's content
 will be the same whatever language your use. It's especialy useful for an image
 placeholder that should remain the same in every language.
 
-Syntax example::
+Template syntax example::
 
     {% placeholder logo untranslated %}
 
@@ -116,8 +124,8 @@ A file upload field will appears into the page admin interface.
 Create your own placeholder
 ===========================
 
-If you want to create yout own new type of placeholder,
-you can simple subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
+If you want to create your own new type of placeholder,
+you can simply subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
 
     from pages.placeholders import PlaceholderNode
     from pages.templatetags.page_tags import parse_placeholder

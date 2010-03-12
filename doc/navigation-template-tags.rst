@@ -31,14 +31,14 @@ By default, the menu is rendered as a nested list::
     </ul>
 
 You can of course change `pages/menu.html` with the Django override mechanism
-to render things as differently.
+to render things differently.
 
 pages_dynamic_tree_menu
 =======================
 
 The pages_dynamic_tree_menu tag works similar to the pages_menu tag.
 but instead of displaying the whole navigation structure,
-only the following pages are displayed::
+only the following pages are displayed:
 
  * all "root" pages (pages which have no parent)
  * all parents of the current page
@@ -64,8 +64,8 @@ as a nested list similar to the pages_menu tag.
 pages_sub_menu
 ==============
 
-The pages_sub_menu tag shows all the children of the root of the current page.
-This can be used for example as a secondary menu.
+The pages_sub_menu tag shows all the children of the root of the current page (the highest in the hierarchy).
+This is typically used for a secondary navigation menu.
 
 Use the following snippet to display a list of all the
 children of the current root::
@@ -76,6 +76,7 @@ children of the current root::
 
 Again, the default template `pages/sub_menu.html` will render the items as a nested,
 unordered list (see above).
+
 
 pages_breadcrumb
 ================

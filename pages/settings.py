@@ -35,6 +35,11 @@ if (PAGE_TEMPLATES is None and
          isinstance(PAGE_TEMPLATES, unicode))):
     PAGE_TEMPLATES = ()
 
+PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', None)
+if not PAGES_MEDIA_URL:
+    media_url = getattr(settings, 'STATIC_URL', getattr(settings, 'MEDIA_URL', None))
+    PAGES_MEDIA_URL = media_url + 'pages/'
+
 # The callable that is used by the CMS
 def get_page_templates():
     if callable(PAGE_TEMPLATES):

@@ -6,15 +6,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import Template, TemplateSyntaxError
 #from django.forms import Widget, Textarea, ImageField, CharField
 import urllib
+from django.conf import settings
 
-from pages import settings
+from pages import settings as pages_settings
 from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode
 from pages.placeholders import VideoPlaceholderNode
 from pages.placeholders import parse_placeholder
 
 register = template.Library()
-
 
 def get_page_from_string_or_id(page_string, lang=None):
     """Return a Page object from a slug or an id."""
@@ -34,7 +34,7 @@ def _get_content(context, page, content_type, lang, fallback=True):
         return ''
 
     if not lang and 'lang' in context:
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
 
     page = get_page_from_string_or_id(page, lang)
 
@@ -74,7 +74,7 @@ def pages_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     site_id = None
@@ -94,7 +94,7 @@ def pages_sub_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     if page:
@@ -120,8 +120,8 @@ def pages_admin_menu(context, page, url='', level=None):
     
     page_languages = settings.PAGE_LANGUAGES
     #has_permission = page.has_page_permission(request)
-    PAGES_MEDIA_URL = settings.PAGES_MEDIA_URL
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    PAGES_MEDIA_URL = pages_settings.PAGES_MEDIA_URL
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     LANGUAGE_BIDI = context.get('LANGUAGE_BIDI', False)
 
     return locals()
@@ -157,7 +157,7 @@ show_content = register.inclusion_tag('pages/content.html',
 def show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
     if not lang:
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
 
     page = get_page_from_string_or_id(page, lang)
     if not page:
@@ -184,7 +184,7 @@ def show_absolute_url(context, page, lang=None):
     :param lang: the wanted language (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
     """
     if not lang:
-        lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if not page:
         return {'content':''}
@@ -198,7 +198,7 @@ show_absolute_url = register.inclusion_tag('pages/content.html',
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``pages/revisions.html`` template"""
-    if not settings.PAGE_CONTENT_REVISION:
+    if not pages_settings.PAGE_CONTENT_REVISION:
         return {'revisions':None}
     revisions = Content.objects.filter(page=page, language=lang,
                                 type=content_type).order_by('-creation_date')
@@ -219,7 +219,7 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     request = context['request']
     site_id = None
@@ -246,7 +246,7 @@ def pages_breadcrumb(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     request = context['request']
     site_id = None
@@ -260,6 +260,17 @@ pages_breadcrumb = register.inclusion_tag(
 
 
 """Tags"""
+
+class FakeCSRFNode(template.Node):
+    """Fake CSRF node for django 1.1.1"""
+    def render(self, context):
+        return ''
+def do_csrf_token(parser, token):
+    return FakeCSRFNode()
+try:
+    from django.views.decorators.csrf import csrf_protect
+except ImportError:
+    do_csrf_token = register.tag('csrf_token', do_csrf_token)
 
 class GetPageNode(template.Node):
     """get_page Node"""
@@ -422,11 +433,12 @@ def language_content_up_to_date(page, language):
     easily make "do nothing" changes to any content block when no 
     change is required for a language.
     """
-    if settings.LANGUAGE_CODE == language:
+    lang_code = getattr(settings, 'LANGUAGE_CODE', None)
+    if lang_code == language:
         # official version is always "up to date"
         return True
     # get the last modified date for the official version
-    last_modified = Content.objects.filter(language=settings.LANGUAGE_CODE,
+    last_modified = Content.objects.filter(language=lang_code,
         page=page).aggregate(Max('creation_date'))['creation_date__max']
     if last_modified is None:
         # no official version

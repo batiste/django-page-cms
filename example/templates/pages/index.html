@@ -123,7 +123,7 @@
             <div id="title" class="placeholder">{% placeholder title on current_page with TextInput %}</div>
         </h3>
         <div>body placeholder
-            <div id="body" class="placeholder">{% placeholder body on current_page with WYMEditor parsed  %}</div>
+            <div id="body" class="placeholder">{% placeholder body with RichTextarea %}</div>
             {% imageplaceholder body-image as imgsrc %}
             {% if imgsrc %}
                 <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>

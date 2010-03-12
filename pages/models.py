@@ -116,7 +116,6 @@ class Page(models.Model):
     # per instance cache
     _languages = None
     _complete_slug = None
-    
 
     class Meta:
         """Make sure the default page ordering is correct."""
@@ -179,6 +178,7 @@ class Page(models.Model):
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         self._languages = None
+        self._complete_slug = None
 
         p_names = [p.name for p in get_placeholders(self.get_template())]
         if 'slug' not in p_names:

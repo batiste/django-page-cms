@@ -41,7 +41,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
 STATIC_URL = MEDIA_URL + 'static/'
 
 # Absolute path to the directory that holds pages media.
-PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
+# PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
 # Absolute path to the directory that holds media.
 ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
@@ -91,8 +91,6 @@ TEMPLATE_DIRS = (
 )
 
 CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
-
-PAGE_CONTENT_CACHE_DURATION = 300
 
 INSTALLED_APPS = (
     'django.contrib.auth',

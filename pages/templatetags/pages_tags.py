@@ -118,7 +118,7 @@ def pages_admin_menu(context, page, url='', level=None):
             if page.id in ids:
                 expanded = True
     
-    page_languages = settings.PAGE_LANGUAGES
+    page_languages = pages_settings.PAGE_LANGUAGES
     #has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = pages_settings.PAGES_MEDIA_URL
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)

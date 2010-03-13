@@ -27,6 +27,7 @@ import django
 settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
     PAGE_DEFAULT_TEMPLATE='index.html',
     PAGE_TEMPLATES=(),
+    PAGE_LANGUAGES=(),
     TEMPLATE_DIRS=('/home/web-apps/myapp', '/home/web-apps/base'))
 
 # General configuration

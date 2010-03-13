@@ -91,10 +91,28 @@ not just those with the exact ``zh-cn`` locale.
 Enable that behavior here by assigning the following function to the
 ``PAGE_LANGUAGE_MAPPING`` variable::
 
-     def language_mapping(lang):
-         if lang.startswith('zh'):
-             return 'zh-cn'
-         return lang
+    # here is all the languages supported by the CMS
+    PAGE_LANGUAGES = (
+        ('de', gettext_noop('German')),
+        ('fr-fr', gettext_noop('Swiss french')),
+        ('en-us', gettext_noop('US English')),
+    )
+
+    # copy PAGE_LANGUAGES
+    languages = list(PAGE_LANGUAGES)
+
+    # Other languages accepted as a valid client language
+    languages.append(('fr-fr', gettext_noop('French')))
+    languages.append(('fr-be', gettext_noop('Belgium french')))
+
+    # redefine the LANGUAGES setting in order to be sure to have the correct request.LANGUAGE_CODE
+    LANGUAGES = languages
+
+    # Map every french based language to fr-fr
+    def language_mapping(lang):
+        if lang.startswith('fr'):
+            return 'fr-fr'
+        return lang
     PAGE_LANGUAGE_MAPPING = language_mapping
 
 PAGES_MEDIA_URL

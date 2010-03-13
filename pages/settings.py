@@ -43,7 +43,8 @@ PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
 #
 # PAGE_TEMPLATES = _get_templates
 
-PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES', raise_error=True)
+PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
+    default_value=(PAGE_DEFAULT_TEMPLATE,))
 
 # The callable that is used by the CMS
 def get_page_templates():
@@ -88,7 +89,7 @@ PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 #    ('en-us', gettext_noop('US English')),
 #)
 
-PAGE_LANGUAGES = get_setting('PAGE_LANGUAGES', 'LANGUAGES', raise_error=True)
+PAGE_LANGUAGES = get_setting('PAGE_LANGUAGES', raise_error=True)
 
 # Defines which language should be used by default.  If 
 # ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's

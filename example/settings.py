@@ -158,7 +158,7 @@ def language_mapping(lang):
 
 PAGE_LANGUAGE_MAPPING = language_mapping
 
-DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
+PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
 
 PAGE_TEMPLATES = (
     ('pages/nice.html', 'nice one'),

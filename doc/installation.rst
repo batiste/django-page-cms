@@ -216,11 +216,12 @@ You *must* have these middleware into your ``MIDDLEWARE_CLASSES`` setting::
 Default template
 ----------------
 
-You *must* set ``DEFAULT_PAGE_TEMPLATE`` to the name of your default CMS template::
+You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default CMS template::
 
-    DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
+    PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
 
-And you *must* copy the directory ``example/templates/pages`` into your root template directory.
+This template must exist somewhere in your project. If you want you can copy the directory
+``example/templates/pages`` into your root template directory to retrieve some example of templates.
 
 Additional templates
 --------------------
@@ -232,32 +233,6 @@ In the the example application you have actually this::
         ('pages/nice.html', 'nice one'),
         ('pages/cool.html', 'cool one'),
     )
-
-One can also assign a callable (which should return the tuple) to this
-setting to achieve dynamic template list e.g.::
-
-    def _get_templates():
-        # to avoid any import issues
-        from app.models import PageTemplate
-        return PageTemplate.get_page_templates()
-
-    PAGE_TEMPLATES = _get_templates
-
-Where the model might look like this::
-
-    class PageTemplate(OrderedModel):
-        name = models.CharField(unique=True, max_length=100)
-        template = models.CharField(unique=True, max_length=260)
-
-        @staticmethod
-        def get_page_templates():
-            return PageTemplate.objects.values_list('template', 'name')
-
-        class Meta:
-            ordering = ["order"]
-
-        def __unicode__(self):
-            return self.name
 
 The sites framework
 -------------------
@@ -283,7 +258,7 @@ You can also look at how the example project is working to make a local setup. I
 `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
 files for you. After installation in your project just run::
 
-    $ python manage.py build_media
+    $ python manage.py build_media pages
 
 And the cms media files will be copied in your project's media directory.
 

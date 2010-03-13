@@ -331,7 +331,7 @@ class Page(models.Model):
         """
         Get the :attr:`template <Page.template>` of this page if
         defined or the closer parent's one if defined
-        or :attr:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        or :attr:`pages.settings.PAGE_DEFAULT_TEMPLATE` otherwise.
         """
         if self.template:
             return self.template
@@ -343,7 +343,7 @@ class Page(models.Model):
                 break
 
         if not template:
-            template = settings.DEFAULT_PAGE_TEMPLATE
+            template = settings.PAGE_DEFAULT_TEMPLATE
 
         return template
 
@@ -351,7 +351,7 @@ class Page(models.Model):
         """
         Get the template name of this page if defined or if a closer
         parent has a defined template or
-        :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE otherwise.
         """
         template = self.get_template()
         page_templates = settings.get_page_templates()

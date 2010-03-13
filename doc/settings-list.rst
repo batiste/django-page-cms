@@ -14,36 +14,40 @@ the following format::
         ('pages/cool.html', 'cool one'),
     )
 
+One can also assign a callable (which should return the tuple) to this
+setting to achieve dynamic template list e.g.::
+
+    def _get_templates():
+        # to avoid any import issues
+        from app.models import PageTemplate
+        return PageTemplate.get_page_templates()
+
+    PAGE_TEMPLATES = _get_templates
+
+Where the model might look like this::
+
+    class PageTemplate(OrderedModel):
+        name = models.CharField(unique=True, max_length=100)
+        template = models.CharField(unique=True, max_length=260)
+
+        @staticmethod
+        def get_page_templates():
+            return PageTemplate.objects.values_list('template', 'name')
+
+        class Meta:
+            ordering = ["order"]
+
+        def __unicode__(self):
+            return self.name
 
 
-PAGE_PERMISSION
-==================================
+PAGE_DEFAULT_TEMPLATE
+==================
 
-Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable
-advanced hierarchic permissions on your pages.
+You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default template::
 
-PAGE_TAGGING
-==================================
+    PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
 
-Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
-``django-tagging`` application.
-
-PAGE_TINYMCE
-==================================
-
-Set this to ``True`` if you wish to use the ``django-tinymce`` application.
-
-PAGE_UNIQUE_SLUG_REQUIRED
-==================================
-
-Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names
-for all pages.
-
-PAGE_CONTENT_REVISION
-==================================
-
-Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of
-pages revision information in the database
 
 PAGE_LANGUAGES
 ==================================
@@ -64,7 +68,9 @@ PAGE_DEFAULT_LANGUAGE
 
 Defines which language should be used by default.  If
 ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
-``settings.LANGUAGE_CODE`` is used
+``settings.LANGUAGE_CODE`` is used::
+
+    LANGUAGE_CODE = 'en-us'
 
 PAGE_LANGUAGE_MAPPING
 ==================================
@@ -90,6 +96,25 @@ Enable that behavior here by assigning the following function to the
              return 'zh-cn'
          return lang
     PAGE_LANGUAGE_MAPPING = language_mapping
+
+PAGES_MEDIA_URL
+==================================
+
+URL that handles pages media. If not set the default value is::
+
+    <STATIC_URL|MEDIA_URL>pages/
+
+PAGE_UNIQUE_SLUG_REQUIRED
+==================================
+
+Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names
+for all pages.
+
+PAGE_CONTENT_REVISION
+==================================
+
+Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of
+pages revision information in the database
 
 SITE_ID
 ==================================
@@ -120,13 +145,8 @@ PAGE_SANITIZE_USER_INPUT
 ==================================
 
 Set ``PAGE_SANITIZE_USER_INPUT`` to ``True`` to sanitize the user input with
-``html5lib``
+``html5lib``.
 
-
-PAGES_MEDIA_URL
-==================================
-
-URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
 
 PAGE_HIDE_ROOT_SLUG
 ==================================
@@ -172,6 +192,18 @@ The page link filter enable a output filter on you content links. The goal
 is to transform special page classes into real links at the last moment.
 This ensure that even if you move a page within the CMS, the URLs pointing on it
 will remain correct.
+
+
+PAGE_TAGGING
+==================================
+
+Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
+``django-tagging`` application.
+
+PAGE_TINYMCE
+==================================
+
+Set this to ``True`` if you wish to use the ``django-tinymce`` application.
 
 PAGE_EXTRA_CONTEXT
 ==================================

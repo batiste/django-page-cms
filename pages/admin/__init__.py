@@ -225,7 +225,7 @@ class PageAdmin(admin.ModelAdmin):
         page_templates = settings.get_page_templates()
         if len(page_templates) > 0:
             template_choices = list(page_templates)
-            template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE,
+            template_choices.insert(0, (settings.PAGE_DEFAULT_TEMPLATE,
                     _('Default template')))
             form.base_fields['template'].choices = template_choices
             form.base_fields['template'].initial = force_unicode(template)

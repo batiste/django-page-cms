@@ -84,7 +84,7 @@ class FunctionnalTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['status'] = Page.PUBLISHED
         page_data['slug'] = 'test-page-2'
-        page_data['template'] = 'pages/index.html'
+        page_data['template'] = 'pages/examples/index.html'
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
@@ -275,7 +275,7 @@ class FunctionnalTestCase(TestCase):
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
-        page_data['template'] = 'pages/nice.html'
+        page_data['template'] = 'pages/examples/nice.html'
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
         response = c.get('/admin/pages/page/%d/' % page.id)
@@ -708,7 +708,7 @@ class FunctionnalTestCase(TestCase):
         page = Page.objects.from_path('delegate', None)
 
         from pages import urlconf_registry as reg
-        reg.register_urlconf('test', 'example.documents.urls',
+        reg.register_urlconf('test', 'pages.tests.documents.urls',
             label='test')
         page.delegate_to = 'test'
         page.save()

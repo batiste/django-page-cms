@@ -1,7 +1,6 @@
 from django.test import TestCase
 from pages.models import Page, Content, PageAlias
 from django.contrib.auth.models import User
-from django.test.client import Client
 
 class MockRequest:
     REQUEST = {'language': 'en'}
@@ -14,6 +13,7 @@ class TestCase(TestCase):
     counter = 1
 
     def get_admin_client(self):
+        from django.test.client import Client
         client = Client()
         client.login(username='admin', password='b')
         return client

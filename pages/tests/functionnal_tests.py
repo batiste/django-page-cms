@@ -708,7 +708,7 @@ class FunctionnalTestCase(TestCase):
         page = Page.objects.from_path('delegate', None)
 
         from pages import urlconf_registry as reg
-        reg.register_urlconf('test', 'pages.tests.documents.urls',
+        reg.register_urlconf('test', 'pages.testproj.documents.urls',
             label='test')
         page.delegate_to = 'test'
         page.save()

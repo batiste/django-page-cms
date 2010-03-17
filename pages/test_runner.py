@@ -1,6 +1,10 @@
 
 import os, sys
-os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'pages.testproj.test_settings'
+current_dirname = os.path.dirname(__file__)
+sys.path.insert(0, current_dirname)
+sys.path.insert(0, os.path.join(current_dirname, '../..'))
 
 from django.test.simple import run_tests as django_test_runner
 from django.db.models import get_app, get_apps
@@ -9,9 +13,6 @@ from coverage import coverage
 import fnmatch
 
 # necessary for "python setup.py test"
-example_dir = os.path.dirname(__file__)
-sys.path.insert(0, example_dir)
-sys.path.insert(0, os.path.join(example_dir, '..'))
 
 patterns = (
     "pages.migrations.*",

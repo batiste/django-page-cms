@@ -225,7 +225,7 @@ class PageAdmin(admin.ModelAdmin):
         page_templates = settings.get_page_templates()
         if len(page_templates) > 0:
             template_choices = list(page_templates)
-            template_choices.insert(0, (settings.DEFAULT_PAGE_TEMPLATE,
+            template_choices.insert(0, (settings.PAGE_DEFAULT_TEMPLATE,
                     _('Default template')))
             form.base_fields['template'].choices = template_choices
             form.base_fields['template'].initial = force_unicode(template)
@@ -332,6 +332,33 @@ class PageAdmin(admin.ModelAdmin):
         #
         return change_list
 
+
+class PageAdminWithDefaultContent(PageAdmin):
+    """
+    Fill in values for content blocks from official language
+    if creating a new translation
+    """
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PageAdminWithDefaultContent, self
+            ).get_form(request, obj, **kwargs)
+
+        language = get_language_from_request(request)
+
+        if global_settings.LANGUAGE_CODE == language:
+            # this is the "official" language
+            return form
+
+        if Content.objects.filter(page=obj, language=language).count():
+            return form
+
+        # this is a new page, try to find some default content
+        template = get_template_from_request(request, obj)
+        for placeholder in get_placeholders(template):
+            name = placeholder.name
+            form.base_fields[name] = placeholder.get_field(obj, language,
+                initial=Content.objects.get_content(obj,
+                    global_settings.LANGUAGE_CODE, name))
+        return form
 
 
 for admin_class, model, options in get_connected():

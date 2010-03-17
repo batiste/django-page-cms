@@ -25,8 +25,9 @@ sys.path.append(os.path.abspath('..'))
 from django.conf import settings
 import django
 settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-    DEFAULT_PAGE_TEMPLATE='index.html',
-    PAGE_TAGGING=False,
+    PAGE_DEFAULT_TEMPLATE='index.html',
+    PAGE_TEMPLATES=(),
+    PAGE_LANGUAGES=(),
     TEMPLATE_DIRS=('/home/web-apps/myapp', '/home/web-apps/base'))
 
 # General configuration

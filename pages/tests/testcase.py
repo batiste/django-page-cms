@@ -32,7 +32,7 @@ class TestCase(TestCase):
     def new_page(self, content={'title':'test-page'}, language='en-us'):
         author = User.objects.all()[0]
         page = Page(author=author, status=Page.PUBLISHED,
-            template='pages/index.html')
+            template='pages/examples/index.html')
         page.save()
         # necessary to clear old URL cache
         page.invalidate()

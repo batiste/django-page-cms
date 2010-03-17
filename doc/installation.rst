@@ -111,37 +111,43 @@ Django page CMS require several of these settings to be set. They are marked in 
     If you want a complete list of the available settings for this CMS visit
     :doc:`the list of all available settings </settings-list>`.
 
+Default template
+----------------
 
-Tagging
--------
+You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default CMS template::
 
-Tagging is optional and disabled by default. 
+    PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
 
-If you want to use it set ``PAGE_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
+This template must exist somewhere in your project. If you want you can copy the directory
+``example/templates/pages`` into your root template directory to retrieve some example of templates.
 
-    INSTALLED_APPS = (
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.admin',
-        'django.contrib.sites',
-        'mptt',
-        'tagging',
-        'pages',
-        ...
+Additional templates
+--------------------
+
+Optionally you can set ``PAGE_TEMPLATES`` if you want additional templates choices.
+In the the example application you have actually this::
+
+    PAGE_TEMPLATES = (
+        ('pages/nice.html', 'nice one'),
+        ('pages/cool.html', 'cool one'),
     )
 
-Caching
--------
+Media directory
+---------------
 
-Django page CMS use the caching framework quite intensively. You should definitely
-setting-up a cache-backend_ to have decent performance.
+The django CMS come with some javascript and CSS files.
+These files are standing in the ``pages/media/pages`` directory.
 
-.. _cache-backend: http://docs.djangoproject.com/en/dev/topics/cache/#setting-up-the-cache
+To make these files accessible to your project you can simply copy them  or make a symbolic link into
+your media directory. That's necessary to have a fully functioning administration interface.
 
-You can easily setup a local memory cache this way::
+You can also look at how the example project is working to make a local setup. It use the very good
+`django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
+files for you. After installation in your project just run::
 
-    CACHE_BACKEND = "locmem:///?max_entries=5000"
+    $ python manage.py build_media pages
+
+And the cms media files will be copied in your project's media directory.
 
 Languages
 ---------
@@ -152,12 +158,8 @@ Please first read how django handle languages
 * http://docs.djangoproject.com/en/dev/ref/settings/#language-code
 
 This CMS use the ``PAGE_LANGUAGES`` setting in order to present which language are supported by the CMS.
-By default ``PAGE_LANGUAGES`` value is set to ``settings.LANGUAGES`` value.
-So you can directly set the ``LANGUAGES`` setting if you want.
-In any case *you should set* ``PAGE_LANGUAGES`` or ``LANGUAGES``
-yourself because by default the ``LANGUAGES`` list is big.
 
-Django use ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS.
+Django itself use the ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS.
 So if the language you want to support is not present in the ``LANGUAGES``
 setting the ``request.LANGUAGE_CODE`` will not be set correctly.
 
@@ -181,10 +183,7 @@ A possible solution is to redefine ``settings.LANGUAGES``. For example you can d
     # copy PAGE_LANGUAGES
     languages = list(PAGE_LANGUAGES)
     
-    # All language accepted as a valid client language
-    languages.append(('fr-fr', gettext_noop('French')))
-    languages.append(('fr-be', gettext_noop('Belgium french')))
-    # redefine the LANGUAGES setting in order to set request.LANGUAGE_CODE correctly
+    # redefine the LANGUAGES setting in order to be sure to have the correct request.LANGUAGE_CODE
     LANGUAGES = languages
 
 Template context processors and Middlewares
@@ -213,51 +212,17 @@ You *must* have these middleware into your ``MIDDLEWARE_CLASSES`` setting::
         ...
     )
 
-Default template
-----------------
+Caching
+-------
 
-You *must* set ``DEFAULT_PAGE_TEMPLATE`` to the name of your default CMS template::
+Django page CMS use the caching framework quite intensively. You should definitely
+setting-up a cache-backend_ to have decent performance.
 
-    DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
+.. _cache-backend: http://docs.djangoproject.com/en/dev/topics/cache/#setting-up-the-cache
 
-And you *must* copy the directory ``example/templates/pages`` into your root template directory.
+You can easily setup a local memory cache this way::
 
-Additional templates
---------------------
-
-Optionally you can set ``PAGE_TEMPLATES`` if you want additional templates choices.
-In the the example application you have actually this::
-
-    PAGE_TEMPLATES = (
-        ('pages/nice.html', 'nice one'),
-        ('pages/cool.html', 'cool one'),
-    )
-
-One can also assign a callable (which should return the tuple) to this
-setting to achieve dynamic template list e.g.::
-
-    def _get_templates():
-        # to avoid any import issues
-        from app.models import PageTemplate
-        return PageTemplate.get_page_templates()
-
-    PAGE_TEMPLATES = _get_templates
-
-Where the model might look like this::
-
-    class PageTemplate(OrderedModel):
-        name = models.CharField(unique=True, max_length=100)
-        template = models.CharField(unique=True, max_length=260)
-
-        @staticmethod
-        def get_page_templates():
-            return PageTemplate.objects.values_list('template', 'name')
-
-        class Meta:
-            ordering = ["order"]
-
-        def __unicode__(self):
-            return self.name
+    CACHE_BACKEND = "locmem:///?max_entries=5000"
 
 The sites framework
 -------------------
@@ -270,21 +235,22 @@ with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID``
 
 The Site object should have the domain that match your actual domain (ie: 127.0.0.1:8000)
 
-Media directory
----------------
 
-The django CMS come with some javascript and CSS files.
-These files are standing in the ``pages/media/pages`` directory.
+Tagging
+-------
 
-To make these files accessible to your project you can simply copy them  or make a symbolic link into
-your media directory. That's necessary to have a fully functioning administration interface.
+Tagging is optional and disabled by default.
 
-You can also look at how the example project is working to make a local setup. It use the very good
-`django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
-files for you. After installation in your project just run::
+If you want to use it set ``PAGE_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
 
-    $ python manage.py build_media
-
-And the cms media files will be copied in your project's media directory.
-
-
+    INSTALLED_APPS = (
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.admin',
+        'django.contrib.sites',
+        'mptt',
+        'tagging',
+        'pages',
+        ...
+    )

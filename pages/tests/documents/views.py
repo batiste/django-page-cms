@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
-from example.documents.models import Document
+from pages.tests.documents.models import Document
 
 def document_view(request, *args, **kwargs):
     context = RequestContext(request, kwargs)
@@ -11,4 +11,4 @@ def document_view(request, *args, **kwargs):
         document = Document.objects.get(pk=int(kwargs['document_id']))
         context['document'] = document
     context['in_document_view'] = True
-    return render_to_response('pages/index.html', context)
+    return render_to_response('pages/examples/index.html', context)

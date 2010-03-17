@@ -118,7 +118,7 @@ def pages_admin_menu(context, page, url='', level=None):
             if page.id in ids:
                 expanded = True
     
-    page_languages = settings.PAGE_LANGUAGES
+    page_languages = pages_settings.PAGE_LANGUAGES
     #has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = pages_settings.PAGES_MEDIA_URL
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
@@ -439,12 +439,12 @@ def language_content_up_to_date(page, language):
         return True
     # get the last modified date for the official version
     last_modified = Content.objects.filter(language=lang_code,
-        page=page).aggregate(Max('creation_date'))['creation_date__max']
-    if last_modified is None:
+        page=page).order_by('-creation_date')
+    if not last_modified:
         # no official version
         return True
     lang_modified = Content.objects.filter(language=language,
-        page=page).aggregate(Max('creation_date'))['creation_date__max']
-    return lang_modified > last_modified
+        page=page).order_by('-creation_date')[0].creation_date
+    return lang_modified > last_modified[0].creation_date
 register.filter(language_content_up_to_date)
 

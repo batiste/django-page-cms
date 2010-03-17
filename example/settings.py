@@ -98,7 +98,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'documents',
+    'pages.tests.documents',
     'tagging',
     'pages',
     'mptt',
@@ -117,8 +117,8 @@ PAGE_TINYMCE = False
 PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
-    'model':'documents.models.Document',
-    'form':'documents.models.DocumentForm',
+    'model':'pages.tests.documents.models.Document',
+    'form':'pages.tests.documents.models.DocumentForm',
     'options':{
             'extra': 3,
             'max_num': 10,
@@ -158,12 +158,12 @@ def language_mapping(lang):
 
 PAGE_LANGUAGE_MAPPING = language_mapping
 
-DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
+PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
 PAGE_TEMPLATES = (
-    ('pages/nice.html', 'nice one'),
-    ('pages/cool.html', 'cool one'),
-    ('pages/editor.html', 'raw editor'),
+    ('pages/examples/nice.html', 'nice one'),
+    ('pages/examples/cool.html', 'cool one'),
+    ('pages/examples/editor.html', 'raw editor'),
 )
 
 PAGE_SANITIZE_USER_INPUT = True

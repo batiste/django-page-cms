@@ -3,7 +3,7 @@
 in the admin via a placeholder tag in your template."""
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
-from pages.settings import PAGE_TINYMCE
+from pages.settings import PAGE_TINYMCE, PAGE_LANGUAGES
 from pages.models import Page
 from pages.widgets_registry import register_widget
 
@@ -350,7 +350,7 @@ class LanguageChoiceWidget(TextInput):
             'value':value,
             'page':self.page,
             'language': value,
-            'page_languages':settings.PAGE_LANGUAGES
+            'page_languages':PAGE_LANGUAGES
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))

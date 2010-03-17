@@ -28,7 +28,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     
     pages_navigation = Page.objects.navigation().order_by("tree_id")
     current_page = False
-    template_name = settings.DEFAULT_PAGE_TEMPLATE
+    template_name = settings.PAGE_DEFAULT_TEMPLATE
 
     if path is None:
         slug, path, lang = get_slug_and_relative_path(request.path, lang)

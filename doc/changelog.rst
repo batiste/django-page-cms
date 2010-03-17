@@ -7,6 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.3
 =============
 
+    * DEFAULT_PAGE_TEMPLATE is rennomed into PAGE_DEFAULT_TEMPLATE. This setting will still continue to work.
     * Add a new template tag get_page to insert page object into the context.
 
 Release 1.1.2

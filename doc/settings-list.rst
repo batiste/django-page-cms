@@ -42,7 +42,7 @@ Where the model might look like this::
 
 
 PAGE_DEFAULT_TEMPLATE
-==================
+=========================
 
 You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default template::
 

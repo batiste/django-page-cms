@@ -62,7 +62,7 @@ class FunctionnalTestCase(TestCase):
         self.assertNotEqual(page1.id, page2.id)
 
     def test_details_view(self):
-        """Test the details view"""
+        """Test the details view."""
 
         c = self.get_admin_client()
 

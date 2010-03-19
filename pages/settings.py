@@ -2,7 +2,6 @@
 """Convenience module that provides default settings for the ``pages``
 application when the project ``settings`` module does not contain
 the appropriate settings."""
-from os.path import join
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 

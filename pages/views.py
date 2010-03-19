@@ -1,11 +1,10 @@
 """Default example views"""
 from django.http import Http404, HttpResponsePermanentRedirect
-from django.contrib.sites.models import SITE_CACHE
 from pages import settings
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request
 from pages.http import get_slug_and_relative_path
-from pages.urlconf_registry import registry, get_urlconf
+from pages.urlconf_registry import get_urlconf
 from django.core.urlresolvers import resolve
 
 def details(request, path=None, lang=None, delegation=True, **kwargs):

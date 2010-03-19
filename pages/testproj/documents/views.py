@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from django.template import Context, RequestContext
+from django.template import RequestContext
 from pages.testproj.documents.models import Document
 
 def document_view(request, *args, **kwargs):

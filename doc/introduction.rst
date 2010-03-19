@@ -108,11 +108,13 @@ than 80% and we try to keep it this way. To run the test suite::
 Handling images and files
 ---------------------------
 
-Django page CMS include a image placeholder for basic needs. For files browser you could use django-filebrowser:
+Django page CMS include a image placeholder for basic needs. For a more advanced
+files browser you could use django-filebrowser:
 
   * http://code.google.com/p/django-filebrowser/
 
-Once the application installed a `FileBrowseInput` will be available to use with your placeholders.
+Once the application installed try to register the `FileBrowseInput` widget to make it
+available to your placeholders.
 
 Translations
 ------------

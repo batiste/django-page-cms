@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg

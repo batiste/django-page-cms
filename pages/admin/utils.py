@@ -3,10 +3,7 @@ from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
-from django.core.cache import cache
-from pages.models import Page, Content
+from pages.models import Page
 from pages.utils import get_placeholders
 
 def get_connected():

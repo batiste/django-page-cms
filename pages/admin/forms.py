@@ -3,7 +3,6 @@
 from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin import widgets
 
 from pages import settings
 from pages.models import Page, Content

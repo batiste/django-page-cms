@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """Page CMS page_tags template tags"""
 from django import template
-from django.utils.safestring import SafeUnicode, mark_safe
-from django.utils.translation import ugettext_lazy as _
-from django.template import Template, TemplateSyntaxError
+from django.utils.safestring import SafeUnicode
+from django.template import TemplateSyntaxError
 #from django.forms import Widget, Textarea, ImageField, CharField
 import urllib
 from django.conf import settings

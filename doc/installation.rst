@@ -64,16 +64,6 @@ If you are not using the source code version of the application then install it 
     Django-Tagging and Django-mptt maybe required to be installed by hand or with subversion
     because the available packages are not compatible with django 1.0.
 
-Install by using subversion externals
-======================================
-
-You can also use the trunk version of the Django Page CMS by using subversion externals::
-
-
-    $ svn pe svn:externals .
-    pages                   http://django-page-cms.googlecode.com/svn/trunk/pages
-    mptt                    http://django-mptt.googlecode.com/svn/trunk/mptt
-    tagging                 http://django-tagging.googlecode.com/svn/trunk/tagging
 
 Urls
 ====

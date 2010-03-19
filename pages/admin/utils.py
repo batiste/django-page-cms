@@ -3,8 +3,6 @@ from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
-from pages.models import Page
-from pages.utils import get_placeholders
 
 def get_connected():
     if not settings.PAGE_CONNECTED_MODELS:

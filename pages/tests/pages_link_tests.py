@@ -3,7 +3,7 @@
 
 from pages import settings
 from pages.tests.testcase import TestCase
-from pages.models import Page, Content
+from pages.models import Content
 
 class LinkTestCase(TestCase):
     """Django page CMS link test suite class"""

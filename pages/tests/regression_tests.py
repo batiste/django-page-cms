@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
 from django.conf import settings
+from django.template import Template, RequestContext, Context 
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
-from django.http import HttpResponse
+import django
 
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from pages.tests.testcase import TestCase
 
 class RegressionTestCase(TestCase):
@@ -176,8 +177,9 @@ class RegressionTestCase(TestCase):
     def test_urls_in_templates(self):
         """Test different ways of displaying urls in templates."""
         page = self.create_new_page()
-        from pages.utils import get_request_mock
+        from pages.http import get_request_mock
         request = get_request_mock()
+        temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
         render = temp.render(RequestContext(request, {'current_page':page}))
 

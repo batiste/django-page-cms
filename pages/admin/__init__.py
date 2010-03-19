@@ -4,7 +4,6 @@ from pages import settings
 from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
-from pages.utils import get_language_from_request
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm

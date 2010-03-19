@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """Django page CMS functionnal tests suite module."""
 from pages.models import Page, Content, PageAlias
-from pages.placeholders import PlaceholderNode
-from pages.tests.testcase import TestCase, MockRequest
+from pages.tests.testcase import TestCase
 
 import django
 from django.conf import settings
-from django.template import Template, RequestContext, Context
+from django.template import Template, RequestContext
 from django.template import TemplateDoesNotExist
 
 import datetime

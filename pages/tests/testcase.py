@@ -1,5 +1,5 @@
 from django.test import TestCase
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from django.contrib.auth.models import User
 
 class MockRequest:

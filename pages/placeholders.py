@@ -6,7 +6,7 @@ from pages.models import Content
 from pages.widgets import ImageInput, VideoWidget
 
 from django import template
-from django.template import Template, TemplateSyntaxError
+from django.template import TemplateSyntaxError
 from django.core.files.storage import FileSystemStorage
 from django.forms import Textarea, ImageField, CharField
 from django.forms import TextInput

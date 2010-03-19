@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-import django
 from django.conf import settings
-from django.test.client import Client
-from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.http import HttpResponse
 
 from pages.models import Page, Content, PageAlias
 from pages.tests.testcase import TestCase

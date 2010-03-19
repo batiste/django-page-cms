@@ -1,10 +1,9 @@
 """Django haystack `SearchIndex` module."""
-from pages.models import Page, Content
+from pages.models import Page
 
 from haystack.indexes import SearchIndex, CharField, DateTimeField
 from haystack import site
 
-import datetime
 
 class PageIndex(SearchIndex):
     """Search index for pages content."""

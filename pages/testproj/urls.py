@@ -5,7 +5,6 @@ from django.conf.urls.defaults import handler404, handler500
 from django.contrib import admin
 from django.conf import settings
 
-from pages import settings as pages_settings
 from pages.views import details
 
 admin.autodiscover()

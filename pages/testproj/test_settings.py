@@ -171,8 +171,8 @@ PAGE_SANITIZE_USER_INPUT = True
 PAGE_USE_SITE_ID = True
 
 HAYSTACK_SITECONF = 'example.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+HAYSTACK_SEARCH_ENGINE = 'dummy'
+#HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
 COVERAGE_EXCLUDE_MODULES = (
     "pages.migrations.*",

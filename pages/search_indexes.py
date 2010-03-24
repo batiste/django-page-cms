@@ -9,6 +9,7 @@ import datetime
 class PageIndex(SearchIndex):
     """Search index for pages content."""
     text = CharField(document=True, use_template=True)
+    title = CharField(model_attr='title')
     publication_date = DateTimeField(model_attr='publication_date')
 
     def get_queryset(self):

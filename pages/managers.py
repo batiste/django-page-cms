@@ -49,7 +49,7 @@ class PageManager(models.Manager):
 
     def root(self):
         """Return a :class:`QuerySet` of pages without parent."""
-        return self.filter(parent__isnull=True)
+        return self.on_site().filter(parent__isnull=True)
 
     def navigation(self):
         """Creates a :class:`QuerySet` of the published root pages."""

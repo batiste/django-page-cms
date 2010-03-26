@@ -46,9 +46,9 @@ class RegressionTestCase(TestCase):
 
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
-
+        
         try:
-            response = c.get('/pages/toto/page1/')
+            response = c.get(self.get_page_url('toto/page1/'))
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -160,18 +160,20 @@ class RegressionTestCase(TestCase):
         
         # create a draft page and ensure we can view it
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/pages/page1/')
+        response = c.get(self.get_page_url('page1/'))
         self.assertEqual(response.status_code, 200)
 
         # logout and we should get a 404
         c.logout()
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
         # login as a non staff user and we should get a 404
         c.login(username= 'nonstaff', password='b')
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
 
     def test_urls_in_templates(self):

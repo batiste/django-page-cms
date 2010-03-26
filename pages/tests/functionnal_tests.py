@@ -66,7 +66,7 @@ class FunctionnalTestCase(TestCase):
         c = self.get_admin_client()
 
         try:
-            response = c.get('/pages/')
+            response = c.get(self.get_page_url())
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -75,7 +75,7 @@ class FunctionnalTestCase(TestCase):
         page_data['status'] = Page.DRAFT
         response = c.post('/admin/pages/page/add/', page_data)
         try:
-            response = c.get('/pages/')
+            response = c.get(self.get_page_url())
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -219,14 +219,14 @@ class FunctionnalTestCase(TestCase):
         # header so I used django_language cookie instead
         c = self.get_admin_client()
         c.cookies["django_language"] = 'en-us'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'english title')
         self.assertContains(response, 'lang="en-us"')
         self.assertNotContains(response, 'french title')
 
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-ch'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -235,7 +235,7 @@ class FunctionnalTestCase(TestCase):
         # this should be mapped to the fr-ch content
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-fr'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -257,7 +257,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'changed body 2', 1)
 
         setattr(settings, "PAGE_CONTENT_REVISION", False)
@@ -316,10 +316,10 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         # finaly test that we can get every page according the path
-        response = c.get('/pages/same-slug')
+        response = c.get(self.get_page_url('same-slug'))
         self.assertContains(response, "parent title", 2)
 
-        response = c.get('/pages/same-slug/same-slug')
+        response = c.get(self.get_page_url('same-slug/same-slug'))
         self.assertContains(response, "children title", 2)
 
 
@@ -389,16 +389,17 @@ class FunctionnalTestCase(TestCase):
 
         # now check whether we can retrieve the pages.
         # is the homepage available from is alias
-        response = c.get('/pages/index.php')
-        self.assertRedirects(response, '/pages/home-page', 301)
+        response = c.get(self.get_page_url('index.php'))
+        self.assertRedirects(response, self.get_page_url('home-page'), 301)
 
         # for the download page, the slug is canonical
-        response = c.get('/pages/downloads-page/')
+        response = c.get(self.get_page_url('downloads-page/'))
         self.assertContains(response, "downloads-page-title", 2)
 
         # calling via its alias must cause redirect
-        response = c.get('/pages/index.php?page=downloads')
-        self.assertRedirects(response, '/pages/downloads-page', 301)
+        response = c.get(self.get_page_url('index.php')+'?page=downloads')
+        self.assertRedirects(response,
+            self.get_page_url('downloads-page'), 301)
 
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""

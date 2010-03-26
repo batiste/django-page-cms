@@ -19,7 +19,6 @@ sibling_error = _('A sibling with this slug already exists')
 sibling_root_error = _('A sibling with this slug already exists at the root \
 level')
 
-
 class PageForm(forms.ModelForm):
     """Form for page creation"""
     
@@ -83,13 +82,18 @@ it must be unique among the other pages of the same level.')
             elif Content.objects.filter(body=slug, type="slug").count():
                 raise forms.ValidationError(another_page_error)
 
-        if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
+        if settings.PAGE_USE_SITE_ID:
             if settings.PAGE_HIDE_SITES:
                 site_ids = [settings.SITE_ID]
             else:
                 site_ids = [int(x) for x in self.data.getlist('sites')]
             def intersects_sites(sibling):
                 return sibling.sites.filter(id__in=site_ids).count() > 0
+        else:
+            def intersects_sites(sibling):
+                return True
+
+        if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if target and position:
                 target = Page.objects.get(pk=target)
                 if position in ['right', 'left']:

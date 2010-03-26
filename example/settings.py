@@ -28,8 +28,6 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -168,7 +166,8 @@ PAGE_TEMPLATES = (
 
 PAGE_SANITIZE_USER_INPUT = True
 
-PAGE_USE_SITE_ID = True
+SITE_ID = 1
+PAGE_USE_SITE_ID = False
 
 HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'

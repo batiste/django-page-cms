@@ -260,6 +260,7 @@ class FunctionnalTestCase(TestCase):
 
         page_data['body'] = 'changed body 2'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        page.invalidate()
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 

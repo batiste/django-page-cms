@@ -17,6 +17,7 @@ import fnmatch
 patterns = (
     "pages.migrations.*",
     "pages.tests.*",
+    "pages.testproj.*",
     "pages.urls",
     "pages.__init__",
     "pages.search_indexes",

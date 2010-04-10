@@ -63,7 +63,7 @@ Dependencies & Compatibility
   * Python 2.3.
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
-  * `django-mptt <http://code.google.com/p/django-mptt/>`_
+  * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
   * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)

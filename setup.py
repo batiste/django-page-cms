@@ -29,9 +29,9 @@ setup(
         'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'django-tagging>0.2.1', # please use the trunk version of tagging
-        'django-mptt>0.2.1', # please use the trunk version of django mptt
-        'django-authority', # known as django-authority
+        'django-tagging>0.2.1',
+        'django-mptt-2>0.2.1',
+        'django-authority',
         'django-staticfiles',
         'django-haystack',
         # necessary for tests

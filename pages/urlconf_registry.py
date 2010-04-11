@@ -4,13 +4,13 @@ from django.utils.translation import ugettext as _
 
 class UrlconfAlreadyRegistered(Exception):
     """
-    An attempt was made to register a widget for Django page CMS more
+    An attempt was made to register a urlconf for Django page CMS more
     than once.
     """
 
 class UrlconfNotFound(Exception):
     """
-    The requested widget was not found
+    The requested urlconf was not found
     """
 
 registry = []

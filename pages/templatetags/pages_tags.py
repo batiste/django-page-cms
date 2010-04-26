@@ -105,6 +105,25 @@ def pages_sub_menu(context, page, url='/'):
 pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
+def pages_siblings_menu(context, page, url='/'):
+    """Get the parent page of the given page and render a nested list of its
+    child pages. Good for rendering a secondary menu.
+
+    :param page: the page where to start the menu from.
+    :param url: not used anymore.
+    """
+    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
+    path = context.get('path', None)
+    if page:
+        root = page.parent
+        children = root.get_children_for_frontend()
+    if 'current_page' in context:
+        current_page = context['current_page']
+    return locals()
+pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
+                                        takes_context=True)(pages_siblings_menu)
+
 def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages."""
     request = context['request']

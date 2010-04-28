@@ -7,8 +7,16 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.3
 =============
 
+    * Improved search index (url and title are included).
     * The setup now specify django-mptt-2 instead of django-mptt.
     * New template tag for navigation called "pages_siblings_menu".
+    * New object PageAdminWithDefaultContent: copy the official language text into new
+      language page's content blocks
+    * New configuration PAGE_HIDE_SITES to hide the sites
+    * New admin template tag: language_content_up_to_date templatetag: mark the translations needing
+      updating in the admin.
+      setting and only show pages from the current site used to access the
+      admin, allows administration of separate page-cms sites with the same DB.
     * DEFAULT_PAGE_TEMPLATE is rennomed into PAGE_DEFAULT_TEMPLATE. This setting will still continue to work.
     * Add a new template tag get_page to insert page object into the context.
 

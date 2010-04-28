@@ -322,13 +322,9 @@ class PageAdmin(admin.ModelAdmin):
             'q': query
         }
 
-        # sad hack for ajax
-        # if template_name:
-        #    self.change_list_template = template_name
         context.update(extra_context or {})
         change_list = self.changelist_view(request, context)
-        #self.change_list_template = 'admin/pages/page/change_list.html'
-        #
+
         return change_list
 
 

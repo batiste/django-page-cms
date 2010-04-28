@@ -344,7 +344,7 @@ class Page(models.Model):
         """
         Get the template name of this page if defined or if a closer
         parent has a defined template or
-        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE otherwise.
+        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE` otherwise.
         """
         template = self.get_template()
         page_templates = settings.get_page_templates()

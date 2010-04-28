@@ -99,7 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sites',
     'pages.testproj.documents',
-    'tagging',
+    #'tagging',
     'pages',
     'mptt',
     'staticfiles',
@@ -114,7 +114,7 @@ INSTALLED_APPS = (
 )
 
 PAGE_TINYMCE = False
-PAGE_TAGGING = True
+#PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
     'model':'pages.testproj.documents.models.Document',

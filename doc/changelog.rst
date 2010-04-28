@@ -7,6 +7,8 @@ This file describe new features and incompatibilites between released version of
 Release 1.1.3
 =============
 
+    * The setup now specify django-mptt-2 instead of django-mptt.
+    * New template tag for navigation called "pages_siblings_menu".
     * DEFAULT_PAGE_TEMPLATE is rennomed into PAGE_DEFAULT_TEMPLATE. This setting will still continue to work.
     * Add a new template tag get_page to insert page object into the context.
 

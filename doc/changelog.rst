@@ -12,9 +12,9 @@ Release 1.1.3
     * New template tag for navigation called "pages_siblings_menu".
     * New object PageAdminWithDefaultContent: copy the official language text into new
       language page's content blocks
-    * New setting PAGE_HIDE_SITES to hide the sites. When True the CSM only
+    * New setting PAGE_HIDE_SITES to hide the sites. When True the CMS only
       show pages from the current site used to access the
-      admin, allows administration of separate page-cms sites with the same DB.
+      admin. This allows administration of separate page-cms sites with the same DB.
     * New admin template tag: language_content_up_to_date templatetag: mark the translations needing
       updating in the admin.
     * DEFAULT_PAGE_TEMPLATE is rennomed into PAGE_DEFAULT_TEMPLATE. This setting will still continue to work.

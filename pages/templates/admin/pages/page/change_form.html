@@ -20,11 +20,11 @@
     {% endblock %}
     
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
-        {% comment %}{% csrf_token %}{% endcomment %}
+        {% csrf_token %}
         <div class="sidebar">
         {% for fieldset in adminform %}
             {% include "admin/pages/page/includes/fieldset.html" %}
-            
+
             {% if forloop.first %}
                 {% if not add and traduction_languages %}
                 <fieldset class="module module-translation-helper aligned">
@@ -43,14 +43,19 @@
                 </fieldset>
                 {% endif %}
                 
-                </div><div class="content">
+                {% comment %}Close sidebar, open content{% endcomment %}
+                </div>
+                <div class="content">
             {% endif %}
+            
         {% endfor %}
-        </div>
+        </div>{% comment %}Close content{% endcomment %}
 
+        <div style="clear:both">
         {% for inline_admin_formset in inline_admin_formsets %}
             {% include inline_admin_formset.opts.template %}
         {% endfor %}
+        </div>
         
         {% submit_row %}
     </form>
@@ -58,13 +63,6 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 var add_form = {% if add %}1{% else %}0{% endif %};
-(function() {
-    /* Hide the Sites options if not needed */
-    {% if not PAGE_USE_SITE_ID %}
-        $('.form-row.sites').hide();
-        $('#id_sites')[0].selectedIndex = 0;
-    {% endif %}
-})();
 -->
 </script>
 <!-- END Content -->

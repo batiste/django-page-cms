@@ -8,13 +8,17 @@ Contents:
     :maxdepth: 2
 
     introduction.rst
+    placeholders.rst
     installation.rst
     display-content.rst
     navigation-template-tags.rst
 
-    placeholders.rst
     3rd-party-apps.rst
+
+    settings-list.rst
+    changelog.rst
     page-api.rst
+
 
 Indices and tables
 ==================

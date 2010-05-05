@@ -5,6 +5,12 @@ $(function () {
     var action = false;
     var selected_page = false;
     var changelist = $('#changelist');
+
+    if(!window.gettext) {
+        window.gettext = function(str) {
+            return str;
+        }
+    }
     
     function reset_states() {
         action = selected_page = '';
@@ -95,6 +101,19 @@ $(function () {
     }
     
     init_publish_hanlder(changelist);
+
+    function move_page(selected_page, position, id) {
+        $.post(selected_page+'/move-page/',
+            { position: position, target: id },
+            function (html) {
+                $('#page-list').html(html);
+                init_publish_hanlder(changelist);
+                pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
+                action = selected_page = '';
+                //bind_sortable()
+            }
+        );
+    };
     
     // let's start event delegation
     changelist.click(function (e) {
@@ -113,7 +132,9 @@ $(function () {
                 action = 'move';
                 selected_page = link.attr('id').split('move-link-')[1];
                 changelist.addClass('insert-move');
-                $('#page-row-'+selected_page).addClass('selected').add(get_children(selected_page)).addClass('highlighted');
+                $('#page-row-'+selected_page).addClass('selected').add(
+                    get_children(selected_page)
+                ).addClass('highlighted');
                 $('tr:not(.highlighted)', changelist).addClass('insertable');
                 return false;
             }
@@ -135,17 +156,10 @@ $(function () {
                 changelist.removeClass('insert-add insert-move');
                 $('tr', changelist).removeClass('selected insertable');
                 $('.expand-collapse', row).remove();
-                $('.insert', row).after('<img class="insert-loading" src="'+media_url+'pages/images/loading.gif" alt="Loading" />');
-                
+                $('.insert', row).after('<img class="insert-loading" src="'+page_media_url+'images/loading.gif" alt="Loading" />');
+
                 if (action == 'move') {
-                    $.post(selected_page+'/move-page/', { position: position, target: id },
-                        function (html) {
-                            changelist.html(html);
-                            init_publish_hanlder(changelist);
-                            pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
-                            action = selected_page = '';
-                        }
-                    );
+                    move_page(selected_page, position, id);
                 } else if (action == 'add') {
                     window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
                 }
@@ -160,7 +174,10 @@ $(function () {
                         init_publish_hanlder(children);
                         // Update the move and add links of the inserted rows
                         if (action == 'move') {
-                            $('#page-row-'+selected_page).addClass('selected').add(get_children(selected_page)).addClass('highlighted');
+                            var selected_row = $('#page-row-'+selected_page)
+                            selected_row.addClass('selected')
+                            selected_row.add(get_children(selected_page))
+                            selected_row.addClass('highlighted');
                             // this could become quite slow with a lot of pages
                             $('tr:not(.highlighted)', changelist).addClass('insertable');
                         } else if (action == 'add') {
@@ -175,4 +192,63 @@ $(function () {
             }
         }
     });
+
+
+    var drag_clientx = false;
+    var insert_position = 'right';
+    // will be better of not rewritting the table everytime
+    function bind_sortable() {
+        // Initialise the table for drag and drop
+        $("#page-list").sortable({
+            scroll:true,
+            axis:'y',
+            items:'.draggable',
+            handle: '.movelink',
+            revert: true,
+            update:function(event, ui) {
+                $("#page-table-dnd tbody").addClass('ui-sortable');
+            },
+            start:function(event, ui) {
+                drag_clientx = event.clientX;
+                $(ui.item).find('.message').text(gettext('Insert as sibling'));
+                insert_position = 'right';
+            },
+            stop:function(event, ui) {
+                selected_page = $(ui.item[0]).closest('.draggable').attr('id').split('page-row-')[1];
+                var prev = $(ui.item[0]).prev();
+                var next = $(ui.item[0]).next();
+                var id = false;
+                if(prev.length) {
+                    var id = prev.closest('tr').attr('id').split('page-row-')[1];
+                } else if(next.length) {
+                    var id = next.closest('tr').attr('id').split('page-row-')[1];
+                    if(insert_position == 'right')
+                        insert_position = 'left';
+                } else {
+                    alert(gettext("Invalid move"));
+                    return;
+                }
+                move_page(selected_page, insert_position, id);
+            },
+            change:function(event, ui) {
+                var prev = $(ui.placeholder).prev();
+                var line = $(ui.item);
+                var cell = line.find('.title-cell-container');
+                var mal = prev.find('.title-cell-container').css('margin-left');
+                cell.css('margin-left', mal);
+            },
+            sort:function(event, ui) {
+                var line = $(ui.item);
+                var cell = line.find('.title-cell-container');
+                if(drag_clientx < event.clientX) {
+                    cell.find('.message').text(gettext('Insert as child'));
+                    insert_position = 'first-child';
+                } else {
+                    cell.find('.message').text(gettext('Insert as sibling'));
+                    insert_position = 'right';
+                }
+            }
+        });
+    }
+    bind_sortable();
 });

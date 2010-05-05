@@ -3,11 +3,15 @@ include LICENSE
 include AUTHORS
 include TODO
 include README
+include README.rst
 include THANKS
 include CHANGELOG
 include MANIFEST.in
 recursive-include doc *
 recursive-include pages *
 recursive-include requirements *
-global-include *.py
+recursive-include pages/templates *
+global-include *.html
 global-exclude *.pyc
+prune example
+

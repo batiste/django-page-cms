@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import os, sys
 from django.core.management import execute_manager
-sys.path.insert(0, os.path.abspath('./..'))
+#sys.path.insert(0, os.path.abspath('./..'))
+example_dir = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(example_dir, '..'))
+
 try:
     import settings # Assumed to be in the same directory.
 except ImportError:

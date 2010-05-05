@@ -17,8 +17,9 @@
 {% block extrahead %}{{ block.super }}
 <link rel="stylesheet" type="text/css" href="{{ PAGES_MEDIA_URL }}css/rte.css" />
 <link rel="stylesheet" type="text/css" href="{{ PAGES_MEDIA_URL }}css/pages.css" />
-<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{PAGE_MEDIA_URL}}";</script>
+<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{PAGES_MEDIA_URL}}";</script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.js"></script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.query.js"></script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages.js"></script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages_list.js"></script>
@@ -35,15 +36,26 @@
 
 {% block result_list %}
 <form method="post" action="">
-{% comment %}{% csrf_token %}{% endcomment %}
+{% csrf_token %}
 {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
+
+<div id="toolbar">
+<form id="changelist-search" action="" method="post">
+    <div>
+        <label for="searchbar"><img src="{% load adminmedia %}{% admin_media_prefix %}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
+        <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
+        <input type="submit" name="g" value="{% trans "Go" %}" />
+    </div>
+</form>
+</div>
+
+<div id="page-list">
 {% include "admin/pages/page/change_list_table.html" %}
+</div>
 {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
 </form>
 {% endblock %}
 
 </div>
 </div>
-</div>
-
 {% endblock %}

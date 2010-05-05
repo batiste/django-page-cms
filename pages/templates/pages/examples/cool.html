@@ -1,0 +1,14 @@
+{% extends "pages/examples/index.html" %}
+{% load pages_tags %}
+
+{% block title %}Cool template{% endblock %}
+
+{% block content %}{{ block.super }}
+<div style="width:70%">
+    <div>fancy content
+        <div id="fancy-content" class="placeholder">
+            {% placeholder fancy-content with WYMEditor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

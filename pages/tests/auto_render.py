@@ -2,7 +2,6 @@
 """Auto render test suite"""
 from django.test import TestCase
 from pages.http import auto_render, AutoRenderHttpError
-from django.test.client import Client
 from django.http import HttpResponse, HttpResponseRedirect
 
 class AutoRenderTestCase(TestCase):

@@ -3,11 +3,11 @@
     {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}
     {% if fieldset.description %}<div class="description">{{ fieldset.description|safe }}</div>{% endif %}
 
-    {% comment %} TODO: This code is really pretty smelly... We should do something about it{% endcomment %}
     {% for line in fieldset %}
         <div class="form-row{% if line.errors %} errors{% endif %} {% for field in line %}{{ field.field.name }} {% endfor %} ">
             {{ line.errors }}
             {% for field in line %}
+                {{ field.errors }}
                 {% if field.field.is_hidden %}
                     {{ field.field }}
                 {% else %}
@@ -15,30 +15,7 @@
                         {% if field.is_checkbox %}
                             {{ field.field }}{{ field.label_tag }}
                         {% else %}
-                            {% ifequal field.field.name 'language' %}
-                                <label>{% trans "Language:" %}</label>
-
-                                <span style="display:none">{{ field.field }}</span>
-                                <ul class="clearfix">
-                                {% for lang in page_languages %}
-                                    {% ifequal language lang.0 %}
-                                        <li><span class="current">{{ lang.0 }}</span></li>
-                                    {% else %}
-                                        {% if page|has_content_in:lang.0 %}
-                                            <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
-                                        {% else %}
-                                            <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
-                                        {% endif %}
-                                    {% endifequal %}
-                                    </li>
-                                {% endfor %}
-                                </ul>
-                                {% if page|has_content_in:language %}
-                                <p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{ page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>
-                                {% endif %}
-                            {% else %}
-                                {{ field.label_tag }}{{ field.field }}
-                            {% endifequal %}
+                            {{ field.label_tag }}{{ field.field }}
                         {% endif %}
                         {% if field.field.field.help_text %}
                             <p class="help">{{ field.field.field.help_text|safe }}</p>

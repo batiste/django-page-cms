@@ -6,6 +6,50 @@ Page CMS reference API
     :local:
     :depth: 1
 
+The application model
+======================
+
+Django page CMS declare rather simple models: :class:`Page <pages.models.Page>`
+:class:`Content <pages.models.Content>` and :class:`PageAlias <pages.models.PageAlias>`.
+
+Those Django models have the following relations:
+
+.. aafig::
+    :aspect: 60
+    :scale: 150
+    :proportional:
+
+              +------------+
+              |PageAlias   |
+              +-----+------+
+                    |
+                foreign key
+                    |
+                +---v---+
+        +------>+ Page  +
+        |       +---+---+
+        |           |
+        |          use
+        |           |
+        |     +-----v-----+       +-------+---------------+
+        |     | Template 1+------>+ Placeholder Node title|
+        |     +-----+-----+       +-------+---------------+
+        |           |
+     foreign key  contains
+        |           |
+        |   +-------v--------------+
+        |   | Placeholder Node body|
+        |   +-------+--------------+
+        |           |
+        |           |
+        |  +--------+--------+-------------+
+        |  |                 |             |
+      +-+--v------+    +-----v-----+       v
+      | Content   |    | Content   |     SSSSS
+      | english   |    | french    |     SSSSS
+      +-----------+    +-----------+
+
+
 Placeholders
 ============
 
@@ -22,7 +66,7 @@ Template tags
 Widgets
 =======
 
-.. automodule:: pages.admin.widgets
+.. automodule:: pages.widgets
     :members:
     :undoc-members:
 
@@ -64,20 +108,6 @@ PageAlias Manager
 =================
 
 .. autoclass:: pages.managers.PageAliasManager
-    :members:
-    :undoc-members:
-
-PagePermission Model
-====================
-
-.. autoclass:: pages.models.PagePermission
-    :members:
-    :undoc-members:
-
-PagePermission Manager
-======================
-
-.. autoclass:: pages.managers.PagePermissionManager
     :members:
     :undoc-members:
 

@@ -28,8 +28,6 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -41,7 +39,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
 STATIC_URL = MEDIA_URL + 'static/'
 
 # Absolute path to the directory that holds pages media.
-PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
+# PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
 # Absolute path to the directory that holds media.
 ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
@@ -54,9 +52,11 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    # this syntax is deprecated with django 1.2
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    # could help
+    'django.template.loaders.eggs.load_template_source',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -90,27 +90,33 @@ TEMPLATE_DIRS = (
 
 CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
-PAGE_CONTENT_CACHE_DURATION = 300
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'documents',
-    'tagging',
+    'pages.testproj.documents',
+    #'tagging',
     'pages',
     'mptt',
     'staticfiles',
-    'tinymce',
+    #'tinymce',
+    # disabled to make "setup.py test" to work properly
+    #'south',
+
+    # these 2 package don't create any dependecies
+    'authority',
+    # haystack change coverage score report by importing modules
+    #'haystack',
 )
 
-PAGE_TINYMCE = True
+PAGE_TINYMCE = False
+#PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
-    'model':'documents.models.Document',
-    'form':'documents.models.DocumentForm',
+    'model':'pages.testproj.documents.models.Document',
+    'form':'pages.testproj.documents.models.DocumentForm',
     'options':{
             'extra': 3,
             'max_num': 10,
@@ -150,20 +156,42 @@ def language_mapping(lang):
 
 PAGE_LANGUAGE_MAPPING = language_mapping
 
-DEFAULT_PAGE_TEMPLATE = 'pages/index.html'
+PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
 PAGE_TEMPLATES = (
-    ('pages/nice.html', 'nice one'),
-    ('pages/cool.html', 'cool one'),
-    ('pages/editor.html', 'raw editor'),
+    ('pages/examples/nice.html', 'nice one'),
+    ('pages/examples/cool.html', 'cool one'),
+    ('pages/examples/editor.html', 'raw editor'),
 )
 
 PAGE_SANITIZE_USER_INPUT = True
 
-# A test runner that use the test coverage module
-TEST_RUNNER = "test_runner.run_tests"
+SITE_ID = 1
+PAGE_USE_SITE_ID = False
+
+HAYSTACK_SITECONF = 'example.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+
+COVERAGE_EXCLUDE_MODULES = (
+    "pages.migrations.*",
+    "pages.tests.*",
+    "pages.urls",
+    "pages.__init__",
+    "pages.search_indexes",
+)
+COVERAGE_HTML_REPORT = True
+COVERAGE_BRANCH_COVERAGE = False
+
+try:
+    import test_extensions
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ("test_extensions", )
 
 try:
     from local_settings import *
 except ImportError:
     pass
+

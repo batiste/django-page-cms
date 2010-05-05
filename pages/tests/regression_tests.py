@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-import django
 from django.conf import settings
-from django.test.client import Client
-from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context 
+from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+import django
 
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from pages.tests.testcase import TestCase
 
 class RegressionTestCase(TestCase):
@@ -20,7 +18,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=100
         """
         setattr(settings, "PAGE_SHOW_START_DATE", True)
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -39,7 +37,7 @@ class RegressionTestCase(TestCase):
         Test the issue 97
         http://code.google.com/p/django-page-cms/issues/detail?id=97
         """
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -48,9 +46,9 @@ class RegressionTestCase(TestCase):
 
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
-
+        
         try:
-            response = c.get('/pages/toto/page1/')
+            response = c.get(self.get_page_url('toto/page1/'))
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -67,7 +65,7 @@ class RegressionTestCase(TestCase):
     def test_bug_162(self):
         """Test bug 162
         http://code.google.com/p/django-page-cms/issues/detail?id=162"""
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'test-162-title'
@@ -83,7 +81,7 @@ class RegressionTestCase(TestCase):
     def test_bug_172(self):
         """Test bug 167
         http://code.google.com/p/django-page-cms/issues/detail?id=172"""
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'title-en-us'
@@ -143,7 +141,7 @@ class RegressionTestCase(TestCase):
         )
 
     def test_bug_156(self):
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
@@ -155,37 +153,54 @@ class RegressionTestCase(TestCase):
         self.assertEqual(c, page_data['title'])
 
     def test_bug_181(self):
-        c = Client()
+        c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data(draft=True)
         page_data['slug'] = 'page1'
         
         # create a draft page and ensure we can view it
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/pages/page1/')
+        response = c.get(self.get_page_url('page1/'))
         self.assertEqual(response.status_code, 200)
 
         # logout and we should get a 404
         c.logout()
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
         # login as a non staff user and we should get a 404
         c.login(username= 'nonstaff', password='b')
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
 
     def test_urls_in_templates(self):
         """Test different ways of displaying urls in templates."""
         page = self.create_new_page()
-        from pages.utils import get_request_mock
+        from pages.http import get_request_mock
         request = get_request_mock()
+        temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
         render = temp.render(RequestContext(request, {'current_page':page}))
 
-        self.assertTrue('t1_'+page.get_absolute_url() in render)
-        self.assertTrue('t2_'+page.get_absolute_url() in render)
-        self.assertTrue('t3_'+page.get_absolute_url() in render)
+        self.assertTrue('t1_'+page.get_url_path() in render)
+        self.assertTrue('t2_'+page.get_url_path() in render)
+        self.assertTrue('t3_'+page.get_url_path() in render)
         self.assertTrue('t4_'+page.slug() in render)
         self.assertTrue('t5_'+page.slug() in render)
+
+
+    def test_placeholder_cache_bug(self):
+        """There was an bad bug caused when the page cache was filled
+        the first time."""
+        from pages.placeholders import PlaceholderNode
+        page = self.new_page()
+        placeholder = PlaceholderNode('test', page=page)
+        placeholder.save(page, 'fr-ch', 'fr', True)
+        placeholder.save(page, 'en-us', 'en', True)
+        self.assertEqual(
+            Content.objects.get_content(page, 'fr-ch', 'test'),
+            'fr'
+        )

@@ -120,6 +120,16 @@ a.popup:hover .help,
     padding: 5px 10px;
 }
 
+.change-list .title-cell .message {
+    /* improve behavior with drag-drop */
+    position:absolute;
+}
+
+.change-list .selection-cell {
+    /* improve behavior with drag-drop */
+    width:22px;
+}
+
 /* Title cell tbody */
 .change-list tbody .title-cell-container {
     position: relative;
@@ -420,7 +430,8 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-    width: 288px;
+    
+    width: 305px;
     float: left;
     display: inline; /* IE6 fix */
     margin-right: 1em;

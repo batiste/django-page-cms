@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module for page links"""
-from django.test.client import Client
 
 from pages import settings
 from pages.tests.testcase import TestCase
-from pages.models import Page, Content, PageAlias
+from pages.models import Content
 
 class LinkTestCase(TestCase):
     """Django page CMS link test suite class"""
@@ -25,7 +24,7 @@ class LinkTestCase(TestCase):
         content.save()
         self.assertEqual(
             Content.objects.get_content(page2, 'en-us', 'body'),
-            content_string % (page1.get_absolute_url(), page1.id)
+            content_string % (page1.get_url_path(), page1.id)
         )
         self.assertFalse(page2.has_broken_link())
         page1.delete()

@@ -2,11 +2,12 @@
  Third party applications
 ==========================
 
+
 Delegate the rendering of a page to an application
 ===================================================
 
 By delegating the rendering of a page to another application, you will
-be able to use customize views and still get all the CMS variables
+be able to use customized views and still get all the CMS variables
 to render a proper navigation.
 
 First you need to register the urlconf module of your application to use it
@@ -49,10 +50,7 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
     If the field doesn't appear within the admin interface make sure that
     your registry code is executed properly.
 
-.. note::
-
-    The children pages will not be resolved by the URL module, but all the URL that don't
-    have any corresponding pages will.
+.. _3rd-party-apps:
 
 Integrate application models and forms into the page admin
 ==========================================================

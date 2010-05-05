@@ -25,8 +25,9 @@ sys.path.append(os.path.abspath('..'))
 from django.conf import settings
 import django
 settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-    DEFAULT_PAGE_TEMPLATE='index.html',
-    PAGE_TAGGING=False,
+    PAGE_DEFAULT_TEMPLATE='index.html',
+    PAGE_TEMPLATES=(),
+    PAGE_LANGUAGES=(),
     TEMPLATE_DIRS=('/home/web-apps/myapp', '/home/web-apps/base'))
 
 # General configuration
@@ -34,7 +35,7 @@ settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinxcontrib.aafig']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']

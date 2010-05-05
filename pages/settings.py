@@ -1,17 +1,29 @@
 # -*- coding: utf-8 -*-
-# Convenience module that provides access to custom settings for the
-# ``pages`` application.  Provides default settings for the ``pages``
-# application when the project ``settings`` module does not contain
-# the appropriate settings.
-from os.path import join
+"""Convenience module that provides default settings for the ``pages``
+application when the project ``settings`` module does not contain
+the appropriate settings."""
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
+url = 'http://packages.python.org/django-page-cms/settings-list.html#%s'
+
+def get_setting(*args, **kwargs):
+    """Get a setting and raise an appropriate user friendly error if
+    the setting is not found."""
+    for name in args:
+        if hasattr(settings, name):
+            return getattr(settings, name)
+    if kwargs.get('raise_error', False):
+        setting_url = url % args[0].lower().replace('_', '-')
+        raise ImproperlyConfigured('Please make sure you specified at '
+            'least one of these settings: %s \r\nDocumentation: %s'
+            % (args, setting_url))
+    return kwargs.get('default_value', None)
+
+
 # The path to default template 
-DEFAULT_PAGE_TEMPLATE = getattr(settings, 'DEFAULT_PAGE_TEMPLATE', None)
-if DEFAULT_PAGE_TEMPLATE is None:
-    raise ImproperlyConfigured('Please make sure you specified a '
-                               'DEFAULT_PAGE_TEMPLATE setting.')
+PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
+    'DEFAULT_PAGE_TEMPLATE', raise_error=True)
 
 # PAGE_TEMPLATES is a list of tuples that specifies the which templates 
 # are available in the ``pages`` admin.  Templates should be assigned in 
@@ -21,17 +33,28 @@ if DEFAULT_PAGE_TEMPLATE is None:
 #    ('pages/nice.html', 'nice one'),
 #    ('pages/cool.html', 'cool one'),
 # )
-PAGE_TEMPLATES = getattr(settings, 'PAGE_TEMPLATES', None)
-if PAGE_TEMPLATES is None:
-    PAGE_TEMPLATES = ()
+#
+# One can also assign a callable (which should return the tuple) to this
+# variable to achieve dynamic template list e.g.:
+#
+# def _get_templates():
+#    ...
+#
+# PAGE_TEMPLATES = _get_templates
 
-# Set ``PAGE_PERMISSION`` to ``False`` if you do not wish to enable 
-# advanced hierarchic permissions on your pages.
-PAGE_PERMISSION = getattr(settings, 'PAGE_PERMISSION', True)
+PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
+    default_value=(PAGE_DEFAULT_TEMPLATE,))
+
+# The callable that is used by the CMS
+def get_page_templates():
+    if callable(PAGE_TEMPLATES):
+        return PAGE_TEMPLATES()
+    else:
+        return PAGE_TEMPLATES
 
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
 # ``django-tagging`` application. 
-PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', True)
+PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
 if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
     raise ImproperlyConfigured('django-tagging could not be found.\n'
                                'Please make sure you\'ve installed it '
@@ -64,13 +87,26 @@ PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 #    ('fr-ch', gettext_noop('Swiss french')),
 #    ('en-us', gettext_noop('US English')),
 #)
-PAGE_LANGUAGES = getattr(settings, 'PAGE_LANGUAGES', settings.LANGUAGES)
+
+PAGE_LANGUAGES = get_setting('PAGE_LANGUAGES', raise_error=True)
 
 # Defines which language should be used by default.  If 
 # ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
-# ``settings.LANGUAGE_CODE`` is used 
-PAGE_DEFAULT_LANGUAGE = getattr(settings, 'PAGE_DEFAULT_LANGUAGE', 
-                                settings.LANGUAGE_CODE)
+# ``settings.LANGUAGE_CODE`` is used
+
+PAGE_DEFAULT_LANGUAGE = get_setting('PAGE_DEFAULT_LANGUAGE',
+    'LANGUAGE_CODE', raise_error=True)
+
+# Extra Page permission for freezing pages and manage languages
+
+extra = [('can_freeze', 'Can freeze page',)]
+for lang in PAGE_LANGUAGES:
+    extra.append(
+        ('can_manage_' + lang[0].replace('-', '_'),
+        'Manage' + ' ' + lang[1])
+    )
+
+PAGE_EXTRA_PERMISSIONS = getattr(settings, 'PAGE_EXTRA_PERMISSIONS', extra)
 
 # PAGE_LANGUAGE_MAPPING should be assigned a function that takes a single
 # argument, the language code of the incoming browser request.  This function
@@ -101,6 +137,10 @@ SITE_ID = getattr(settings, 'SITE_ID', 1)
 # framework
 PAGE_USE_SITE_ID = getattr(settings, 'PAGE_USE_SITE_ID', False)
 
+# Set PAGE_HIDE_SITES to make the sites that appear uneditable and only allow
+# editing and creating of pages on the current site
+PAGE_HIDE_SITES = getattr(settings, 'PAGE_HIDE_SITES', False)
+
 # Set PAGE_USE_LANGUAGE_PREFIX to ``True`` to make the ``get_absolute_url``
 # method to prefix the URLs with the language code
 PAGE_USE_LANGUAGE_PREFIX = getattr(settings, 'PAGE_USE_LANGUAGE_PREFIX',
@@ -117,8 +157,10 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
 # URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
-_media_url = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
-PAGES_MEDIA_URL = getattr(settings, 'PAGES_MEDIA_URL', join(_media_url, 'pages/'))
+PAGES_MEDIA_URL = get_setting('PAGES_MEDIA_URL')
+if not PAGES_MEDIA_URL:
+    media_url = get_setting('STATIC_URL', 'MEDIA_URL', raise_error=True)
+    PAGES_MEDIA_URL = media_url + 'pages/'
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)
@@ -153,7 +195,10 @@ PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 # This ensure that even if you have moved a page, the URL will remain correct.
 PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', False)
 
-
 # This setting is a function that can be defined if you need to pass extra
 # context data to the pages templates.
 PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
+
+# This setting is the name of a sub-folder where uploaded content, like
+# placeholder images, is placed.
+PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')

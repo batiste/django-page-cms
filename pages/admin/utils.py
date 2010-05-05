@@ -3,11 +3,6 @@ from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
-from django.core.cache import cache
-from pages.models import Page, Content
-from pages.utils import get_placeholders
 
 def get_connected():
     if not settings.PAGE_CONNECTED_MODELS:
@@ -28,13 +23,19 @@ def get_connected():
             mod_name, form_name = get_mod_func(capp['form'])
             f = getattr(__import__(mod_name, {}, {}, ['']), form_name)
             model['options'].update({'form': f})
+            
+        admin_class = admin.StackedInline
+        if 'admin' in capp:
+            mod_name, admin_class_name = get_mod_func(capp['admin'])
+            admin_class = getattr(__import__(mod_name, {}, {}, ['']), admin_class_name)
 
-        models.append((m, options))
+        models.append((admin_class, m, options))
 
     return models
 
-def make_inline_admin(model_class, options):
-    class ModelOptions(admin.StackedInline):
+
+def make_inline_admin(admin_class, model_class, options):
+    class ModelOptions(admin_class):
         model = model_class
         fk_name = 'page'
         form = options.get('form', ModelForm)

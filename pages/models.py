@@ -1,5 +1,10 @@
-# -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
+
+from pages.utils import get_placeholders, normalize_url
+from pages.managers import PageManager, ContentManager
+from pages.managers import PageAliasManager
+from pages import settings
+
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -8,11 +13,11 @@ from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+
 import mptt
-from pages.utils import get_placeholders, normalize_url
-from pages.managers import PageManager, ContentManager
-from pages.managers import PagePermissionManager, PageAliasManager
-from pages import settings
+
+PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
+
 
 class Page(models.Model):
     """
@@ -21,24 +26,24 @@ class Page(models.Model):
     :class:`Content <pages.models.Content>` model.
 
     .. attribute:: creation_date
-    When the page has been created.
+       When the page has been created.
 
     .. attribute:: publication_date
-    When the page should be visible.
+       When the page should be visible.
 
     .. attribute:: publication_end_date
-    When the publication of this page end.
+       When the publication of this page end.
 
     .. attribute:: last_modification_date
-    Last time this page has been modified.
+       Last time this page has been modified.
 
     .. attribute:: status
-    The current status of the page. Could be DRAFT, PUBLISHED,
-    EXPIRED or HIDDEN. You should the property :attr:`calculated_status` if
-    you want that the dates are taken in account.
+       The current status of the page. Could be DRAFT, PUBLISHED,
+       EXPIRED or HIDDEN. You should the property :attr:`calculated_status` if
+       you want that the dates are taken in account.
 
     .. attribute:: template
-    A string containing the name of the template file for this page.
+       A string containing the name of the template file for this page.
     """
     
     # some class constants to refer to, e.g. Page.DRAFT
@@ -54,20 +59,17 @@ class Page(models.Model):
 
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_language_%s_url"
-    #PAGE_TEMPLATE_KEY = "page_%d_template"
-    #PAGE_CHILDREN_KEY = "page_children_%d_%d"
-    PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
     
     parent = models.ForeignKey('self', null=True, blank=True, 
             related_name='children', verbose_name=_('parent'))
-    creation_date = models.DateTimeField(_('creation date'), editable=False, 
+    creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=datetime.now)
     publication_date = models.DateTimeField(_('publication date'), 
-            null=True, blank=True, help_text=_('''When the page should go live.
-            Status must be "Published" for page to go live.'''))
+            null=True, blank=True, help_text=_('''When the page should go
+            live. Status must be "Published" for page to go live.'''))
     publication_end_date = models.DateTimeField(_('publication end date'), 
             null=True, blank=True, help_text=_('''When to expire the page.
             Leave empty to never expire.'''))
@@ -78,13 +80,18 @@ class Page(models.Model):
     template = models.CharField(_('template'), max_length=100, null=True,
             blank=True)
 
-    delegate_to = models.CharField(_('template'), max_length=100, null=True,
+    delegate_to = models.CharField(_('delegate to'), max_length=100, null=True,
             blank=True)
+
+    freeze_date = models.DateTimeField(_('freeze date'),
+            null=True, blank=True, help_text=_('''Don't publish any content
+            after this date.'''))
     
-    # Disable could make site tests fail
-    sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
-            help_text=_('The site(s) the page is accessible at.'),
-            verbose_name=_('sites'))
+    if settings.PAGE_USE_SITE_ID:
+        sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
+                help_text=_('The site(s) the page is accessible at.'),
+                verbose_name=_('sites'))
+
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
@@ -97,11 +104,18 @@ class Page(models.Model):
         from tagging import fields
         tags = fields.TagField(null=True)
 
+    # per instance cache
+    _languages = None
+    _complete_slug = None
+    _content_dict = None
+
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
+        get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
+        permissions = settings.PAGE_EXTRA_PERMISSIONS
 
     def save(self, *args, **kwargs):
         """Override the default ``save`` method."""
@@ -113,7 +127,8 @@ class Page(models.Model):
         # Drafts should not, unless they have been set to the future
         if self.status == self.DRAFT:
             if settings.PAGE_SHOW_START_DATE:
-                if self.publication_date and self.publication_date <= datetime.now():
+                if (self.publication_date and
+                        self.publication_date <= datetime.now()):
                     self.publication_date = None
             else:
                 self.publication_date = None
@@ -121,6 +136,9 @@ class Page(models.Model):
         # let's assume there is no more broken links after a save
         cache.delete(self.PAGE_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
+        # fix sites many-to-many link when the're hidden from the form
+        if settings.PAGE_HIDE_SITES and self.sites.count() == 0:
+            self.sites.add(Site.objects.get(pk=settings.SITE_ID))
 
     def _get_calculated_status(self):
         """Get the calculated status of the page based on
@@ -142,19 +160,32 @@ class Page(models.Model):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())
 
+    def get_date_ordered_children_for_frontend(self):
+        """Return a :class:`QuerySet` of published children page ordered
+        by publication date."""
+        return self.get_children_for_frontend().order_by('-publication_date')
+
     def invalidate(self):
         """Invalidate cached data for this page."""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
-        #cache.delete(self.PAGE_TEMPLATE_KEY % (self.id))
+        self._languages = None
+        self._complete_slug = None
+        self._content_dict = dict()
 
         p_names = [p.name for p in get_placeholders(self.get_template())]
         if 'slug' not in p_names:
             p_names.append('slug')
         if 'title' not in p_names:
             p_names.append('title')
+        # delete content cache, frozen or not
         for name in p_names:
-            cache.delete(self.PAGE_CONTENT_DICT_KEY % (self.id, name))
+            # frozen
+            cache.delete(PAGE_CONTENT_DICT_KEY %
+                (self.id, name, 1))
+            # not frozen
+            cache.delete(PAGE_CONTENT_DICT_KEY %
+                (self.id, name, 0))
 
         for lang in settings.PAGE_LANGUAGES:
             cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))
@@ -165,9 +196,11 @@ class Page(models.Model):
         """
         Return a list of all used languages for this page.
         """
-        languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
-        if languages:
-            return languages
+        if self._languages:
+            return self._languages
+        self._languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
+        if self._languages:
+            return self._languages
 
         languages = [c['language'] for
                             c in Content.objects.filter(page=self,
@@ -175,6 +208,7 @@ class Page(models.Model):
         languages = list(set(languages)) # remove duplicates
         languages.sort()
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
+        self._languages = languages
         return languages
 
     def is_first_root(self):
@@ -183,8 +217,8 @@ class Page(models.Model):
             return False
         return Page.objects.root()[0].id == self.id
 
-    def get_absolute_url(self, language=None):
-        """Return the absolute page url. Add the language prefix if
+    def get_url_path(self, language=None):
+        """Return the URL's path component. Add the language prefix if
         ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
 
         :param language: the wanted url language.
@@ -192,13 +226,29 @@ class Page(models.Model):
         url = reverse('pages-root')
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             url += str(language) + '/'
-        return url + self.get_url(language)
+        return url + self.get_complete_slug(language)
 
-    def get_url(self, language=None):
-        """Return url of this page, adding all parent's slug."""
-        url = cache.get(self.PAGE_URL_KEY % (self.id, language))
-        if url:
-            return url
+    def get_absolute_url(self, language=None):
+        """Alias for `get_url_path`.
+
+        This method is only there for backward compatibility and will be
+        removed in a near futur.
+
+        :param language: the wanted url language.
+        """
+        return self.get_url_path(language=language)
+
+    def get_complete_slug(self, language=None):
+        """Return the complete slug of this page by concatenating
+        all parent's slugs.
+
+        :param language: the wanted slug language."""
+        if self._complete_slug:
+            return self._complete_slug
+        self._complete_slug = cache.get(self.PAGE_URL_KEY %
+            (self.id, language))
+        if self._complete_slug:
+            return self._complete_slug
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
@@ -207,8 +257,18 @@ class Page(models.Model):
             url = ancestor.slug(language) + u'/' + url
 
         cache.set(self.PAGE_URL_KEY % (self.id, language), url)
-        
+        self._complete_slug = url
         return url
+
+    def get_url(self, language=None):
+        """Alias for `get_complete_slug`.
+
+        This method is only there for backward compatibility and will be
+        removed in a near futur.
+
+        :param language: the wanted url language.
+        """
+        return self.get_complete_slug(language=language)
 
     def slug(self, language=None, fallback=True):
         """
@@ -219,8 +279,7 @@ class Page(models.Model):
         languages.
         """
         
-        slug = Content.objects.get_content(self, language, 'slug',
-                                           language_fallback=fallback)
+        slug = self.get_content(language, 'slug', language_fallback=fallback)
 
         return slug
 
@@ -229,20 +288,43 @@ class Page(models.Model):
         Return the title of the page depending on the given language.
 
         :param language: wanted language, if not defined default is used.
-        :param fallback: if ``True``, the slug will also be searched in other \
-        languages.
+        :param fallback: if ``True``, the slug will also be searched in \
+        other languages.
         """
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
             
-        return Content.objects.get_content(self, language, 'title',
-                                           language_fallback=fallback)
+        return self.get_content(language, 'title', language_fallback=fallback)
+
+    def get_content(self, language, ctype, language_fallback=False):
+        """Shortcut method for retrieving a piece of page content
+
+        :param language: wanted language, if not defined default is used.
+        :param ctype: the type of content.
+        :param fallback: if ``True``, the content will also be searched in \
+        other languages.
+        """
+        return Content.objects.get_content(self, language, ctype,
+            language_fallback)
+
+    def expose_content(self):
+        """Return all the current content of this page into a `string`.
+
+        This is used by the haystack framework to build the search index."""
+        placeholders = get_placeholders(self.get_template())
+        exposed_content = []
+        for lang in self.get_languages():
+            for p_name in [p.name for p in placeholders]:
+                content = self.get_content(lang, p_name, False)
+                if content:
+                    exposed_content.append(content)
+        return u"\r\n".join(exposed_content)
 
     def get_template(self):
         """
         Get the :attr:`template <Page.template>` of this page if
         defined or the closer parent's one if defined
-        or :attr:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        or :attr:`pages.settings.PAGE_DEFAULT_TEMPLATE` otherwise.
         """
         if self.template:
             return self.template
@@ -254,7 +336,7 @@ class Page(models.Model):
                 break
 
         if not template:
-            template = settings.DEFAULT_PAGE_TEMPLATE
+            template = settings.PAGE_DEFAULT_TEMPLATE
 
         return template
 
@@ -262,28 +344,14 @@ class Page(models.Model):
         """
         Get the template name of this page if defined or if a closer
         parent has a defined template or
-        :data:`pages.settings.DEFAULT_PAGE_TEMPLATE` otherwise.
+        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE` otherwise.
         """
         template = self.get_template()
-        for  t in settings.PAGE_TEMPLATES:
+        page_templates = settings.get_page_templates()
+        for t in page_templates:
             if t[0] == template:
                 return t[1]
         return template
-
-    def has_page_permission(self, request):
-        """
-        Return ``True`` if the current user has permission on the page.
-        Return the string 'All' if the user has all rights.
-        """
-        if not settings.PAGE_PERMISSION:
-            return True
-        else:
-            permission = PagePermission.objects.get_page_id_list(request.user)
-            if permission == "All":
-                return True
-            if self.id in permission:
-                return True
-            return False
 
     def has_broken_link(self):
         """
@@ -292,7 +360,7 @@ class Page(models.Model):
         """
         return cache.get(self.PAGE_BROKEN_LINK_KEY % self.id)
 
-    def valid_targets(self, perms="All"):
+    def valid_targets(self):
         """Return a :class:`QuerySet` of valid targets for moving a page
         into the tree.
 
@@ -301,11 +369,7 @@ class Page(models.Model):
         exclude_list = [self.id]
         for p in self.get_descendants():
             exclude_list.append(p.id)
-        if perms != "All":
-            return Page.objects.filter(id__in=perms).exclude(
-                                                id__in=exclude_list)
-        else:
-            return Page.objects.exclude(id__in=exclude_list)
+        return Page.objects.exclude(id__in=exclude_list)
 
     def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
@@ -315,47 +379,25 @@ class Page(models.Model):
             for n in range(0, self.level):
                 level += '&nbsp;&nbsp;&nbsp;'
         return mark_safe(level + self.slug(language))
-        
+
     def margin_level(self):
+        """Used in the admin menu to create the left margin."""
         return self.level * 2
 
     def __unicode__(self):
+        """Representation of the page, saved or not."""
         if self.id:
             slug = self.slug()
-        else:
-            return "Page %s" % self.id
-        return slug
+            if slug:
+                return slug
+            return "Page %d" % self.id
+        return "Page without id"
 
 # Don't register the Page model twice.
 try:
     mptt.register(Page)
 except mptt.AlreadyRegistered:
     pass
-
-if settings.PAGE_PERMISSION:
-    class PagePermission(models.Model):
-        """
-        :class:`Page <pages.models.Page>` permission object
-        """
-        TYPES = (
-            (0, _('All')),
-            (1, _('This page only')),
-            (2, _('This page and all children')),
-        )
-        page = models.ForeignKey(Page, null=True, blank=True,
-                verbose_name=_('page'))
-        user = models.ForeignKey(User, verbose_name=_('user'))
-        type = models.IntegerField(_('type'), choices=TYPES, default=0)
-
-        objects = PagePermissionManager()
-
-        class Meta:
-            verbose_name = _('page permission')
-            verbose_name_plural = _('page permissions')
-
-        def __unicode__(self):
-            return "%s :: %s" % (self.user,
-                    unicode(PagePermission.TYPES[self.type][1]))
 
 
 class Content(models.Model):
@@ -365,11 +407,12 @@ class Content(models.Model):
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
     body = models.TextField(_('body'))
-    type = models.CharField(_('type'), max_length=100, blank=False)
+    type = models.CharField(_('type'), max_length=100, blank=False,
+        db_index=True)
     page = models.ForeignKey(Page, verbose_name=_('page'))
 
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-            default=datetime.now)
+        default=datetime.now)
     objects = ContentManager()
 
     class Meta:
@@ -383,7 +426,8 @@ class Content(models.Model):
 
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
-    page = models.ForeignKey(Page, null=True, blank=True, verbose_name=_('page'))
+    page = models.ForeignKey(Page, null=True, blank=True,
+        verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
     class Meta:
@@ -395,5 +439,5 @@ class PageAlias(models.Model):
         super(PageAlias, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "%s => %s" % (self.url, self.page.get_url())
+        return "%s => %s" % (self.url, self.page.get_complete_slug())
 

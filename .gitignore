@@ -1,5 +1,10 @@
 mptt/
 tagging/
+build/
+coverage/
+dist/
+example/media/
+django_page_cms.egg-info/
 cms.db
 local_settings.py
 *.pyc

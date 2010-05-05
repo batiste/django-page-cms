@@ -15,8 +15,6 @@ from pages.placeholders import parse_placeholder
 
 register = template.Library()
 
-PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
-
 def get_page_from_string_or_id(page_string, lang):
     """Return a Page object from a slug or an id."""
     if type(page_string) == int:

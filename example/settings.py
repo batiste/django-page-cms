@@ -183,12 +183,6 @@ COVERAGE_EXCLUDE_MODULES = (
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
-try:
-    import test_extensions
-except ImportError:
-    pass
-else:
-    INSTALLED_APPS += ("test_extensions", )
 
 try:
     from local_settings import *

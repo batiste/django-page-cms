@@ -38,6 +38,25 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(page.slug(), page_data['slug'])
         self.assertNotEqual(page.last_modification_date, None)
 
+    def test_delete_page(self):
+        """Create a page, then delete it."""
+        c = self.get_admin_client()        
+        page_data = self.get_new_page_data()     
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
+        assert(slug_content is not None)
+        pageCount = Page.objects.count()
+        page = slug_content.page
+        page.delete()
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
+        assert(slug_content is None)
+        self.assertEqual(Page.objects.count(), pageCount - 1)
+        
     def test_slug_collision(self):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)

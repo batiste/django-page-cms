@@ -2,6 +2,7 @@
 # Django settings for cms project.
 import os
 PROJECT_DIR = os.path.dirname(__file__)
+TEST_PROJ = 'pages.testproj'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -81,7 +82,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
 )
 
-ROOT_URLCONF = 'pages.testproj.urls'
+ROOT_URLCONF = TEST_PROJ + '.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -98,7 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'pages.testproj.documents',
+    TEST_PROJ + '.documents',
     #'tagging',
     'pages',
     'mptt',
@@ -117,8 +118,8 @@ PAGE_TINYMCE = False
 #PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
-    'model':'pages.testproj.documents.models.Document',
-    'form':'pages.testproj.documents.models.DocumentForm',
+    'model':TEST_PROJ + '.documents.models.Document',
+    'form':TEST_PROJ + '.documents.models.DocumentForm',
     'options':{
             'extra': 3,
             'max_num': 10,
@@ -184,7 +185,7 @@ COVERAGE_EXCLUDE_MODULES = (
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
-TEST_RUNNER = 'example.test_runner.run_tests'
+#TEST_RUNNER = 'example.test_runner.run_tests'
 
 #here = os.path.abspath(os.path.dirname(__file__))
 #NOSE_ARGS = [os.path.join(here, os.pardir, "pages", "tests"),

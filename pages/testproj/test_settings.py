@@ -196,13 +196,6 @@ COVERAGE_BRANCH_COVERAGE = False
 #            "--cover3-exclude=%s" % ",".join(COVERAGE_EXCLUDE_MODULES)]
 
 try:
-    import test_extensions
-except ImportError:
-    pass
-else:
-    INSTALLED_APPS += ("test_extensions", )
-
-try:
     from local_settings import *
 except ImportError:
     pass

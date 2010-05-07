@@ -2,6 +2,7 @@
 # Django settings for cms project.
 import os
 PROJECT_DIR = os.path.dirname(__file__)
+
 TEST_PROJ = 'pages.testproj'
 
 DEBUG = True

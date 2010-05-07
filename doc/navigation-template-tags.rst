@@ -78,6 +78,22 @@ Again, the default template `pages/sub_menu.html` will render the items as a nes
 unordered list (see above).
 
 
+pages_siblings_menu
+===================
+
+The pages_siblings_menu tag shows all the children of the immediate parent of the current page. This can be used for example as a secondary menu.
+
+Use the following snippet to display a list of all the children of the
+immediate parent of the current page::
+
+    <ul>
+    {% pages_siblings_menu current_page %}
+    </ul>
+
+Again, the default template `pages/sub_menu.html` will render the items as a nested,
+unordered list (see above).
+
+
 pages_breadcrumb
 ================
 

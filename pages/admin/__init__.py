@@ -300,8 +300,8 @@ class PageAdmin(admin.ModelAdmin):
 
     def list_pages(self, request, template_name=None, extra_context=None):
         """List root pages"""
-        if not admin.site.has_permission(request):
-            return admin.site.login(request)
+        if not self.admin_site.has_permission(request):
+            return self.admin_site.login(request)
         language = get_language_from_request(request)
 
         query = request.POST.get('q', '').strip()

@@ -78,10 +78,8 @@ Dependencies & Compatibility
 How to contribute
 ==================
 
-I recommend to `create a for on github  <http://github.com/batiste/django-page-cms>`_ and make you modifications in your branch.
-
-A few things to follow
--------------------------
+I recommend to `create a for on github  <http://github.com/batiste/django-page-cms>`_ and
+make you modifications in your branch. A few things to follow:
 
   * Add your name to the AUTHORS file.
   * Follow the pep08, and the 79 characters rules.
@@ -90,8 +88,8 @@ A few things to follow
   * It's better if a new feature is not activated by default but with a new setting.
   * Be careful of performance regresssion.
   * Write tests so the test coverage stay over 90%.
-  * Every new CMS setting should start with PAGE_
-  * Every new template_tag should start with pages_
+  * Every new CMS setting should start with PAGE_<something>
+  * Every new template_tag should start with pages_<something>
 
 
 Ask for help
@@ -102,16 +100,23 @@ Ask for help
 Test it
 -------
 
-To test this CMS checkout the code with subversion::
+To test this CMS checkout the code with git::
 
-    git clone git://github.com/batiste/django-page-cms.git django-page-cms
+    $ git clone git://github.com/batiste/django-page-cms.git django-page-cms
+
+Install the dependencies::
+
+    $ sudo easy_install pip
+    $ wget -c http://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
+    $ sudo pip install -r external_apps.txt
 
 And then, run the development server::
-    
-    cd example/
-    python manage.py syncdb
-    python manage.py build_static
-    python manage.py manage.py runserver
+
+
+    $ cd example/
+    $ python manage.py syncdb
+    $ python manage.py build_static
+    $ python manage.py manage.py runserver
 
 
 Django Page CMS try to keep the code base stable. The test coverage is higher

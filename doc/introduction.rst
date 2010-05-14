@@ -78,12 +78,12 @@ Dependencies & Compatibility
 How to contribute
 ==================
 
-I recommend to `create a for on github  <http://github.com/batiste/django-page-cms>`_ and
-make you modifications in your branch. A few things to follow:
+I recommend to `create a clone on github  <http://github.com/batiste/django-page-cms>`_ and
+make your modifications in your branch. There is a things that is nice to do:
 
   * Add your name to the AUTHORS file.
   * Follow the pep08, and the 79 characters rules.
-  * Add new features in the CHANGELOG file.
+  * Add new features in the `doc/changelog.rst` file.
   * Document how the user might use a new feature.
   * It's better if a new feature is not activated by default but with a new setting.
   * Be careful of performance regresssion.

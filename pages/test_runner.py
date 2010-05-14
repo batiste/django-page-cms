@@ -1,10 +1,11 @@
 
 import os, sys
+coverage = None
 try:
     from coverage import coverage
 except ImportError:
     coverage = None
-coverage = None
+
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pages.testproj.test_settings'
 current_dirname = os.path.dirname(__file__)

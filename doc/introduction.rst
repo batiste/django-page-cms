@@ -75,6 +75,25 @@ Dependencies & Compatibility
 
     For install instruction go to the :doc:`Installation section </installation>`
 
+How to contribute
+==================
+
+I recommend to `create a for on github  <http://github.com/batiste/django-page-cms>`_ and make you modifications in your branch.
+
+A few things to follow
+-------------------------
+
+  * Add your name to the AUTHORS file.
+  * Follow the pep08, and the 79 characters rules.
+  * Add new features in the CHANGELOG file.
+  * Document how the user might use a new feature.
+  * It's better if a new feature is not activated by default but with a new setting.
+  * Be careful of performance regresssion.
+  * Write tests so the test coverage stay over 90%.
+  * Every new CMS setting should start with PAGE_
+  * Every new template_tag should start with pages_
+
+
 Ask for help
 ============
 

@@ -32,7 +32,8 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     if path is None:
         slug, path, lang = get_slug_and_relative_path(request.path, lang)
 
-    if lang is None:
+    # Can be an empty string or None
+    if not lang:
         lang = get_language_from_request(request)
 
     context = {

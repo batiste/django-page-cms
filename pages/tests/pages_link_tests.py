@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module for page links"""
-from django.test.client import Client
 
 from pages import settings
 from pages.tests.testcase import TestCase
-from pages.models import Page, Content, PageAlias
+from pages.models import Content
 
 class LinkTestCase(TestCase):
     """Django page CMS link test suite class"""

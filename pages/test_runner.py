@@ -1,21 +1,28 @@
 
 import os, sys
-os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
+coverage = None
+try:
+    from coverage import coverage
+except ImportError:
+    coverage = None
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'pages.testproj.test_settings'
+current_dirname = os.path.dirname(__file__)
+sys.path.insert(0, current_dirname)
+sys.path.insert(0, os.path.join(current_dirname, '../..'))
 
 from django.test.simple import run_tests as django_test_runner
 from django.db.models import get_app, get_apps
 
-from coverage import coverage
 import fnmatch
 
 # necessary for "python setup.py test"
-example_dir = os.path.dirname(__file__)
-sys.path.insert(0, example_dir)
-sys.path.insert(0, os.path.join(example_dir, '..'))
 
 patterns = (
     "pages.migrations.*",
     "pages.tests.*",
+    "pages.testproj.*",
     "pages.urls",
     "pages.__init__",
     "pages.search_indexes",
@@ -57,19 +64,21 @@ def get_all_coverage_modules(app_module, exclude_patterns=[]):
 
 def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         extra_tests=[]):
-            
-    cov = coverage()
-    cov.erase()
-    cov.use_cache(0)
-    cov.start()
+
+    if coverage:
+        cov = coverage()
+        cov.erase()
+        cov.use_cache(0)
+        cov.start()
+        
     results = django_test_runner(test_labels, verbosity, interactive,
         extra_tests)
-    cov.stop()
 
-    app = get_app('pages')
-    modules = get_all_coverage_modules(app)
-    
-    cov.html_report(modules, directory='coverage')
+    if coverage:
+        cov.stop()
+        app = get_app('pages')
+        modules = get_all_coverage_modules(app)
+        cov.html_report(modules, directory='coverage')
 
     sys.exit(results)
     

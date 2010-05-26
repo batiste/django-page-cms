@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-import django
 from django.conf import settings
-from django.test.client import Client
-from django.template import Template, RequestContext, TemplateDoesNotExist
+from django.template import Template, RequestContext, Context 
+from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+import django
 
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from pages.tests.testcase import TestCase
 
 class RegressionTestCase(TestCase):
@@ -48,9 +46,9 @@ class RegressionTestCase(TestCase):
 
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
-
+        
         try:
-            response = c.get('/pages/toto/page1/')
+            response = c.get(self.get_page_url('toto/page1/'))
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -162,25 +160,28 @@ class RegressionTestCase(TestCase):
         
         # create a draft page and ensure we can view it
         response = c.post('/admin/pages/page/add/', page_data)
-        response = c.get('/pages/page1/')
+        response = c.get(self.get_page_url('page1/'))
         self.assertEqual(response.status_code, 200)
 
         # logout and we should get a 404
         c.logout()
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
         # login as a non staff user and we should get a 404
         c.login(username= 'nonstaff', password='b')
-        response = c.get('/pages/page1/')
-        self.assertEqual(response.status_code, 404)
+        def func():
+            return c.get(self.get_page_url('page1/'))
+        self.assert404(func)
 
 
     def test_urls_in_templates(self):
         """Test different ways of displaying urls in templates."""
         page = self.create_new_page()
-        from pages.utils import get_request_mock
+        from pages.http import get_request_mock
         request = get_request_mock()
+        temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
         render = temp.render(RequestContext(request, {'current_page':page}))
 

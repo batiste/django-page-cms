@@ -42,7 +42,7 @@ Where the model might look like this::
 
 
 PAGE_DEFAULT_TEMPLATE
-==================
+=========================
 
 You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default template::
 
@@ -75,15 +75,15 @@ Defines which language should be used by default.  If
 PAGE_LANGUAGE_MAPPING
 ==================================
 
-PAGE_LANGUAGE_MAPPING should be assigned a function that takes
-the language code of the incoming browser request as an argument.
+PAGE_LANGUAGE_MAPPING must be a function that takes
+the language code of the incoming browser as an argument.
 
-This function maps the incoming client language code to another language code,
+This function can change the incoming client language code to another language code,
 presumably one for which you are managing trough the CMS.
 
-This is most useful if your project only has one set of translation strings
-for a language like Chinese, which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk``, etc.
-You don't have the ressources to a real translation for every variant.
+This is useful if your project only has one set of translation strings
+for a language like Chinese, which has several variants like ``zh-cn``, ``zh-tw``, ``zh-hk``,
+but you don't have a translation for every variant.
 
 `PAGE_LANGUAGE_MAPPING` help you to server the same Chinese translation to all those Chinese variants,
 not just those with the exact ``zh-cn`` locale.

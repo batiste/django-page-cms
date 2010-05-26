@@ -91,16 +91,7 @@ class Page(models.Model):
         sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
                 help_text=_('The site(s) the page is accessible at.'),
                 verbose_name=_('sites'))
-    else:
-        # Total disabling could make site tests fail
-        _sites = [settings.SITE_ID]
-        def _get_sites(self):
-            return self.sites 
-        def _set_sites(self, new_sites):
-            self.sites = new_sites
-        sites = property(_get_sites, _set_sites)
-        
-            
+
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
@@ -116,6 +107,7 @@ class Page(models.Model):
     # per instance cache
     _languages = None
     _complete_slug = None
+    _content_dict = None
 
     class Meta:
         """Make sure the default page ordering is correct."""
@@ -179,6 +171,7 @@ class Page(models.Model):
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         self._languages = None
         self._complete_slug = None
+        self._content_dict = dict()
 
         p_names = [p.name for p in get_placeholders(self.get_template())]
         if 'slug' not in p_names:
@@ -351,7 +344,7 @@ class Page(models.Model):
         """
         Get the template name of this page if defined or if a closer
         parent has a defined template or
-        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE otherwise.
+        :data:`pages.settings.PAGE_DEFAULT_TEMPLATE` otherwise.
         """
         template = self.get_template()
         page_templates = settings.get_page_templates()

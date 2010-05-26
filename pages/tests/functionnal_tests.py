@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """Django page CMS functionnal tests suite module."""
 from pages.models import Page, Content, PageAlias
-from pages.placeholders import PlaceholderNode
-from pages.tests.testcase import TestCase, MockRequest
+from pages.tests.testcase import TestCase
 
 import django
 from django.conf import settings
-from django.template import Template, RequestContext, Context
+from django.template import Template, RequestContext
 from django.template import TemplateDoesNotExist
 
 import datetime
@@ -25,7 +24,6 @@ class FunctionnalTestCase(TestCase):
 
     def test_create_page(self):
         """Test that a page can be created via the admin."""
-        #setattr(settings, "SITE_ID", 2)
         c = self.get_admin_client()
 
         page_data = self.get_new_page_data()
@@ -40,6 +38,25 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(page.slug(), page_data['slug'])
         self.assertNotEqual(page.last_modification_date, None)
 
+    def test_delete_page(self):
+        """Create a page, then delete it."""
+        c = self.get_admin_client()        
+        page_data = self.get_new_page_data()     
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
+        assert(slug_content is not None)
+        pageCount = Page.objects.count()
+        page = slug_content.page
+        page.delete()
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
+        assert(slug_content is None)
+        self.assertEqual(Page.objects.count(), pageCount - 1)
+        
     def test_slug_collision(self):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
@@ -62,12 +79,12 @@ class FunctionnalTestCase(TestCase):
         self.assertNotEqual(page1.id, page2.id)
 
     def test_details_view(self):
-        """Test the details view"""
+        """Test the details view."""
 
         c = self.get_admin_client()
 
         try:
-            response = c.get('/pages/')
+            response = c.get(self.get_page_url())
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -76,7 +93,7 @@ class FunctionnalTestCase(TestCase):
         page_data['status'] = Page.DRAFT
         response = c.post('/admin/pages/page/add/', page_data)
         try:
-            response = c.get('/pages/')
+            response = c.get(self.get_page_url())
         except TemplateDoesNotExist, e:
             if e.args != ('404.html',):
                 raise
@@ -114,10 +131,15 @@ class FunctionnalTestCase(TestCase):
         """Test the site framework, and test if it's possible to
         disable it"""
 
-        # this is necessary to make the test pass
         from pages import settings as pages_settings
+        
+        # it's not possible to enforce PAGE_USE_SITE_ID in the tests
+        if not pages_settings.PAGE_USE_SITE_ID:
+            #TODO: use unittest.skip skip when 2.7
+            return
+
+        # this is necessary to make the test pass
         setattr(pages_settings, "SITE_ID", 2)
-        setattr(pages_settings, "PAGE_USE_SITE_ID", True)
 
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
@@ -171,6 +193,8 @@ class FunctionnalTestCase(TestCase):
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)
 
+        setattr(pages_settings, "SITE_ID", 1)
+
     def test_languages(self):
         """Test post a page with different languages
         and test that the admin views works correctly."""
@@ -220,14 +244,14 @@ class FunctionnalTestCase(TestCase):
         # header so I used django_language cookie instead
         c = self.get_admin_client()
         c.cookies["django_language"] = 'en-us'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'english title')
         self.assertContains(response, 'lang="en-us"')
         self.assertNotContains(response, 'french title')
 
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-ch'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -236,7 +260,7 @@ class FunctionnalTestCase(TestCase):
         # this should be mapped to the fr-ch content
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-fr'
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -255,10 +279,11 @@ class FunctionnalTestCase(TestCase):
 
         page_data['body'] = 'changed body 2'
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        page.invalidate()
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertContains(response, 'changed body 2', 1)
 
         setattr(settings, "PAGE_CONTENT_REVISION", False)
@@ -271,7 +296,6 @@ class FunctionnalTestCase(TestCase):
         Test that the placeholder is correctly displayed in
         the admin
         """
-        setattr(settings, "SITE_ID", 2)
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
@@ -317,10 +341,10 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
 
         # finaly test that we can get every page according the path
-        response = c.get('/pages/same-slug')
+        response = c.get(self.get_page_url('same-slug'))
         self.assertContains(response, "parent title", 2)
 
-        response = c.get('/pages/same-slug/same-slug')
+        response = c.get(self.get_page_url('same-slug/same-slug'))
         self.assertContains(response, "children title", 2)
 
 
@@ -390,16 +414,17 @@ class FunctionnalTestCase(TestCase):
 
         # now check whether we can retrieve the pages.
         # is the homepage available from is alias
-        response = c.get('/pages/index.php')
-        self.assertRedirects(response, '/pages/home-page', 301)
+        response = c.get(self.get_page_url('index.php'))
+        self.assertRedirects(response, self.get_page_url('home-page'), 301)
 
         # for the download page, the slug is canonical
-        response = c.get('/pages/downloads-page/')
+        response = c.get(self.get_page_url('downloads-page/'))
         self.assertContains(response, "downloads-page-title", 2)
 
         # calling via its alias must cause redirect
-        response = c.get('/pages/index.php?page=downloads')
-        self.assertRedirects(response, '/pages/downloads-page', 301)
+        response = c.get(self.get_page_url('index.php')+'?page=downloads')
+        self.assertRedirects(response,
+            self.get_page_url('downloads-page'), 301)
 
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""
@@ -499,7 +524,6 @@ class FunctionnalTestCase(TestCase):
         """
         Test that the default view can only return the context
         """
-
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
@@ -708,7 +732,7 @@ class FunctionnalTestCase(TestCase):
         page = Page.objects.from_path('delegate', None)
 
         from pages import urlconf_registry as reg
-        reg.register_urlconf('test', 'pages.tests.documents.urls',
+        reg.register_urlconf('test', 'pages.testproj.documents.urls',
             label='test')
         page.delegate_to = 'test'
         page.save()

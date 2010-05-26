@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
 from pages import settings
-from pages.http import get_request_mock, get_language_from_request
+from pages.http import get_request_mock
 
-from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context, RequestContext
 from django.core.cache import cache

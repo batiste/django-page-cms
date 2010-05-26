@@ -63,7 +63,7 @@ Dependencies & Compatibility
   * Python 2.3.
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
-  * `django-mptt <http://code.google.com/p/django-mptt/>`_
+  * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
   * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
@@ -75,6 +75,23 @@ Dependencies & Compatibility
 
     For install instruction go to the :doc:`Installation section </installation>`
 
+How to contribute
+==================
+
+I recommend to `create a clone on github  <http://github.com/batiste/django-page-cms>`_ and
+make your modifications in your branch. There is a things that is nice to do:
+
+  * Add your name to the AUTHORS file.
+  * Follow the pep08, and the 79 characters rules.
+  * Add new features in the `doc/changelog.rst` file.
+  * Document how the user might use a new feature.
+  * It's better if a new feature is not activated by default but with a new setting.
+  * Be careful of performance regresssion.
+  * Write tests so the test coverage stay over 90%.
+  * Every new CMS setting should start with PAGE_<something>
+  * Every new template_tag should start with pages_<something>
+
+
 Ask for help
 ============
 
@@ -83,16 +100,23 @@ Ask for help
 Test it
 -------
 
-To test this CMS checkout the code with subversion::
+To test this CMS checkout the code with git::
 
-    git clone git://github.com/batiste/django-page-cms.git django-page-cms
+    $ git clone git://github.com/batiste/django-page-cms.git django-page-cms
+
+Install the dependencies::
+
+    $ sudo easy_install pip
+    $ wget -c http://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
+    $ sudo pip install -r external_apps.txt
 
 And then, run the development server::
-    
-    cd example/
-    python manage.py syncdb
-    python manage.py build_static
-    python manage.py manage.py runserver
+
+
+    $ cd example/
+    $ python manage.py syncdb
+    $ python manage.py build_static
+    $ python manage.py manage.py runserver
 
 
 Django Page CMS try to keep the code base stable. The test coverage is higher
@@ -108,11 +132,13 @@ than 80% and we try to keep it this way. To run the test suite::
 Handling images and files
 ---------------------------
 
-Django page CMS include a image placeholder for basic needs. For files browser you could use django-filebrowser:
+Django page CMS include a image placeholder for basic needs. For a more advanced
+files browser you could use django-filebrowser:
 
   * http://code.google.com/p/django-filebrowser/
 
-Once the application installed a `FileBrowseInput` will be available to use with your placeholders.
+Once the application installed try to register the `FileBrowseInput` widget to make it
+available to your placeholders.
 
 Translations
 ------------

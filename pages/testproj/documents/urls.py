@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import *
-from django.conf import settings
-from pages.tests.documents.views import document_view
+from pages.testproj.documents.views import document_view
 from pages.http import pages_view
 
 urlpatterns = patterns('',

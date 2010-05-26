@@ -6,7 +6,7 @@
 <title>
     {% show_content current_page "title" %}
 </title>
-<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}pages/javascript/jquery.js" /></script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.js" /></script>
 <style>
     .placeholder-editable {
         border:1px #bbb solid;
@@ -130,10 +130,9 @@
             {% endif %}
         </div>
 
-        {% videoplaceholder video %}
-        
+        <div id="content2" class="placeholder">
         {% placeholder content2 %}
-
+        </div>
 
     </div>
     {% endif %}
@@ -142,16 +141,20 @@
 </div>
 
 <script type="text/javascript">
+$(function(){
     // quick and dirty edit in place example
-    {% if user.is_authenticated %}
+    {% if request.user.is_authenticated %}
         $('.placeholder').addClass('placeholder-editable');
     {% endif %}
+    
     $('.placeholder-editable').mouseover(function() {
         $(this).addClass('placeholder-over');
     });
+    
     $('.placeholder-editable').mouseout(function() {
         $(this).removeClass('placeholder-over');
     });
+    
     $('.placeholder-editable').click(function() {
         var p = $(this);
         if(p.hasClass('edit')) {
@@ -175,7 +178,9 @@
             return false;
         });
     });
+});
 </script>
+
 
 {% include "pages/examples/debug.html" %}
 

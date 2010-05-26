@@ -1,22 +1,42 @@
 from django.test import TestCase
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from django.contrib.auth.models import User
-from django.test.client import Client
+from django.core.urlresolvers import reverse
+from django.template import TemplateDoesNotExist
 
 class MockRequest:
     REQUEST = {'language': 'en'}
     GET = {}
     META = {}
 
+class Error404Expected(Exception):
+    """
+    A 404 error was expected."
+    """
+    pass
+
 class TestCase(TestCase):
     """Django page CMS test suite class"""
     fixtures = ['pages_tests.json']
     counter = 1
 
+    def assert404(self, func):
+        try:
+            response = func()
+            if response.status_code != 404:
+                print response.status_code
+                raise Error404Expected
+        except TemplateDoesNotExist:
+            pass
+
     def get_admin_client(self):
+        from django.test.client import Client
         client = Client()
         client.login(username='admin', password='b')
         return client
+
+    def get_page_url(self, path=''):
+        return reverse('pages-details-by-path', args=[path])
 
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 
 import django
-from django.conf import settings as global_settings
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.template import Template, RequestContext, Context
@@ -131,7 +130,7 @@ class UnitTestCase(TestCase):
 
 
         # error in parse template content
-        setattr(global_settings, "DEBUG", True)
+        setattr(settings, "DEBUG", True)
         
         page = self.new_page({'wrong': '{% wrong %}'})
         context = Context({'current_page': page, 'lang':'en-us'})

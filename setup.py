@@ -16,7 +16,7 @@ download_url = url_schema % (package_name, package_name, pages.__version__)
 
 setup(
     name=package_name,
-    test_suite='example.test_runner.run_tests',
+    test_suite='pages.test_runner.run_tests',
     version=pages.__version__,
     description=pages.__doc__,
     author=pages.__author__,
@@ -29,9 +29,9 @@ setup(
         'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'django-tagging>0.2.1', # please use the trunk version of tagging
-        'django-mptt>0.2.1', # please use the trunk version of django mptt
-        'django-authority', # known as django-authority
+        'django-tagging>0.2.1',
+        'django-mptt-2>0.2.1',
+        'django-authority',
         'django-staticfiles',
         'django-haystack',
         # necessary for tests

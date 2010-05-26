@@ -33,3 +33,25 @@ img, input, textarea
 {
 	cursor: default;
 }
+
+/* http://perishablepress.com/press/2009/12/06/new-clearfix-hack */
+
+p:after {
+	clear: both;
+	content: ' ';
+	display: block;
+	font-size: 0;
+	line-height: 0;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
+/*
+	The following zoom:1 rule is specifically for IE6 + IE7.
+	Move to separate stylesheet if invalid CSS is a problem.
+*/
+* html p,
+*:first-child+html p {
+	zoom: 1;
+}

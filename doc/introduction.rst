@@ -14,6 +14,11 @@ The project repository code repository is found at this address: http://github.c
     :local:
     :depth: 1
 
+Screenshot
+============
+
+.. image:: admin-screenshot1.png
+
 Demo
 ====
 

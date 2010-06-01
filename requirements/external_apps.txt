@@ -1,3 +1,4 @@
+setuptools
 django-mptt-2>0.2.1
 # the dev version doesn't pass the tests
 #-e hg+http://bitbucket.org/jezdez/django-authority/@7bc186caa7dc#egg=django-authority

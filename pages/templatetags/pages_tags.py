@@ -112,7 +112,7 @@ def pages_siblings_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     if page:

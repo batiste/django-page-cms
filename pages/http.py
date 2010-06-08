@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from pages import settings
 
 def get_request_mock():
-    """Build a ``request`` mock that can be used for testing."""
+    """Build a ``request`` mock up that can be used for testing."""
     basehandler = BaseHandler()
     basehandler.load_middleware()
     request = WSGIRequest({
@@ -36,7 +36,7 @@ def auto_render(func):
     shortcut. A view that use this decorator should return a tuple of this
     form : (template name, context) instead of a ``HttpRequest`` object.
     """
-    def _dec(request, *args, **kwargs):
+    def auto_render_decorator(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
         only_context = kwargs.pop('only_context', False)
         only_response = kwargs.pop('only_response', False)
@@ -56,13 +56,14 @@ def auto_render(func):
         template_name = context['template_name'] = template_override or template_name
         return render_to_response(template_name, context,
                             context_instance=RequestContext(request))
-    return _dec
+    return auto_render_decorator
 
 def pages_view(view):
     """
-    Provide the pages variables to the decorated view.
+    Provide the essential pages variables to the decorated view
+    by using the default pages.views.details view.
     """
-    def _dec(request, *args, **kwargs):
+    def pages_view_decorator(request, *args, **kwargs):
         path = kwargs.pop('path', None)
         lang = kwargs.pop('lang', None)
         if path or lang:
@@ -72,11 +73,16 @@ def pages_view(view):
             context = response
             kwargs.update(context)
         return view(request, *args, **kwargs)
-    return _dec
+    return pages_view_decorator
 
 
 def get_slug_and_relative_path(path, lang=None):
-    """Return the page's slug and relative path."""
+    """
+    Return the page's slug, relative path and language.
+    
+        >>> get_slug_and_relative_path('/test/function/')
+        ('function', 'test/function', None)
+    """
     root = reverse('pages-root')
     if path.startswith(root):
         path = path[len(root):]

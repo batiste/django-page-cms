@@ -233,6 +233,9 @@ class ImagePlaceholderNode(PlaceholderNode):
     def save(self, page, language, data, change):
         filename = ""
         if change and data:
+            # the image URL is posted if not changed
+            if type(data) is unicode:
+                return
             storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,

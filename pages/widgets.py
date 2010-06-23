@@ -281,8 +281,13 @@ class ImageInput(FileInput):
         else:
             field_content = ''
             if value:
-                field_content = _('Current file: %s<br/>') % value
+                field_content += _('Current file: %s<br/>') % value
             field_content += super(ImageInput, self).render(name, attrs)
+            if value:
+                field_content += '''<br><label for="%s-delete">%s</label>
+                    <input name="%s-delete" id="%s-delete"
+                    type="checkbox" value="true">
+                    ''' % (name, _('Delete image'), name, name)
         return mark_safe(field_content)
 register_widget(ImageInput)
 

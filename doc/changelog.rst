@@ -4,6 +4,12 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.2.0
+=============
+
+    * Change the placeholder save prototype by adding an extra keyword parameter: extra_data.
+    * Fix a bug with the image placeholder when the "save and continue" button is used.
+
 Release 1.1.3
 =============
 

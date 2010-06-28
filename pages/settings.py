@@ -43,7 +43,7 @@ PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
 # PAGE_TEMPLATES = _get_templates
 
 PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
-    default_value=(PAGE_DEFAULT_TEMPLATE,))
+    default_value=())
 
 # The callable that is used by the CMS
 def get_page_templates():

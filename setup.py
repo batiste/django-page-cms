@@ -7,9 +7,14 @@ def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
 import os
-templates_dirs = []
+data_dirs = []
 for directory in os.walk('pages/templates'):
-    templates_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:]+'/*.*')
+
+for directory in os.walk('pages/media'):
+    data_dirs.append(directory[0][6:]+'/*.*')
+
+print data_dirs
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
@@ -39,7 +44,7 @@ setup(
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
-    package_data={'pages': templates_dirs},
+    package_data={'pages': data_dirs},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

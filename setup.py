@@ -14,8 +14,6 @@ for directory in os.walk('pages/templates'):
 for directory in os.walk('pages/media'):
     data_dirs.append(directory[0][6:]+'/*.*')
 
-print data_dirs
-
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 

@@ -7,6 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.2.0
 =============
 
+    * Fix the package so the media are included.
     * Change the placeholder save prototype by adding an extra keyword parameter: extra_data.
     * Fix a bug with the image placeholder when the "save and continue" button is used.
 

@@ -239,7 +239,6 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context['request']
     site_id = None
     children = None
     if 'current_page' in context:
@@ -266,7 +265,6 @@ def pages_breadcrumb(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context['request']
     site_id = None
     if page:
         pages_navigation = page.get_ancestors()

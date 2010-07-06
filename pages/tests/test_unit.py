@@ -193,7 +193,8 @@ class UnitTestCase(TestCase):
 
         # test the syntax
         page = self.new_page()
-        template = django.template.loader.get_template('pages/tests/test8.html')
+        template = django.template.loader.get_template(
+                'pages/tests/untranslated.html')
         context = Context({'current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
 

@@ -739,3 +739,26 @@ class FunctionnalTestCase(TestCase):
         
         response = c.get('/pages/delegate')
         self.assertEqual(response.status_code, 200)
+
+
+    def test_untranslated(self):
+        """Test the untranslated feature in the admin."""
+        c = self.get_admin_client()
+        page_data = self.get_new_page_data()
+        page_data['title'] = 'untranslated'
+        page_data['slug'] = 'untranslated'
+        unstranslated_string = 'the untranslated string'
+        page_data['untrans'] = unstranslated_string
+        page_data['template'] = 'pages/tests/untranslated.html'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+
+        page = Page.objects.from_path('untranslated', None)
+        self.assertEqual(
+            Content.objects.get_content(page, 'en-us', 'untrans'),
+            unstranslated_string
+        )
+        
+        page_data['untrans'] = ''
+        response = c.get('/admin/pages/page/%d/?language=fr-ch' % page.id)
+        self.assertContains(response, unstranslated_string)

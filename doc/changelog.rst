@@ -7,7 +7,12 @@ This file describe new features and incompatibilites between released version of
 Release 1.2.0
 =============
 
+    * Fix an admin bug with the untranslated option for placeholder.
     * Fix the package so the media are included.
+    * Fix bug with the default value of PAGE_TEMPLATES doesn't trigger an error in the admin
+      when unspecified.
+    * Add a delete image feature to the image placeholder.
+    * Make root page url '/' work with the PAGE_USE_LANGUAGE_PREFIX option.
     * Change the placeholder save prototype by adding an extra keyword parameter: extra_data.
     * Fix a bug with the image placeholder when the "save and continue" button is used.
 

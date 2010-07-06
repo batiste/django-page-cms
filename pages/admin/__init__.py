@@ -236,7 +236,7 @@ class PageAdmin(admin.ModelAdmin):
         for placeholder in get_placeholders(template):
             name = placeholder.name
             if obj:
-                initial = Content.objects.get_content(obj, language, name)
+                initial = placeholder.get_content(obj, language, name)
             else:
                 initial = None
             form.base_fields[name] = placeholder.get_field(obj,

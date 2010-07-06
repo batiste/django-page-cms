@@ -172,6 +172,9 @@ class PlaceholderNode(template.Node):
             )
 
     def get_content(self, page_obj, lang, lang_fallback=True):
+        if self.untranslated:
+            lang = settings.PAGE_DEFAULT_LANGUAGE
+            lang_fallback = False
         content = Content.objects.get_content(page_obj, lang, self.name,
             lang_fallback)
         if self.inherited and not content:

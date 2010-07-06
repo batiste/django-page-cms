@@ -1,4 +1,4 @@
-"""Placeholder module, that's where the smart things appened."""
+"""Placeholder module, that's where the smart things happen."""
 
 from pages.widgets_registry import get_widget
 from pages import settings
@@ -65,7 +65,7 @@ def parse_placeholder(parser, token):
 
 
 class PlaceholderNode(template.Node):
-    """This template node is used to output page content and
+    """This template node is used to output and save page content and
     dynamically generate input fields in the admin.
 
     :param name: the name of the placeholder you want to show/create

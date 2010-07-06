@@ -127,7 +127,7 @@ pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
 def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages."""
     request = context['request']
-    can_publish = context['can_publish']
+    can_publish = context.get('can_publish', False)
     
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])

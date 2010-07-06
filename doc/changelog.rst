@@ -7,6 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.2.0
 =============
 
+    * Add publish right managements in the admin.
     * Fix an admin bug with the untranslated option for placeholder.
     * Fix the package so the media are included.
     * Fix bug with the default value of PAGE_TEMPLATES doesn't trigger an error in the admin

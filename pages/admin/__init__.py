@@ -179,10 +179,12 @@ class PageAdmin(admin.ModelAdmin):
             'fields': list(self.general_fields),
             'classes': ('module-general',),
         }
-        
+
         default_fieldsets = list(self.fieldsets)
         if not perms.check('freeze'):
             general_module['fields'].remove('freeze_date')
+        if not perms.check('publish'):
+            general_module['fields'].remove('status')
 
         default_fieldsets[0][1] = general_module
 
@@ -306,7 +308,7 @@ class PageAdmin(admin.ModelAdmin):
         if not admin.site.has_permission(request):
             return admin.site.login(request)
         language = get_language_from_request(request)
-
+        
         query = request.POST.get('q', '').strip()
 
         if query:
@@ -318,7 +320,9 @@ class PageAdmin(admin.ModelAdmin):
         if settings.PAGE_HIDE_SITES:
             pages = pages.filter(sites=settings.SITE_ID)
 
+        perms = PagePermission(request.user)
         context = {
+            'can_publish': perms.check('publish'),
             'language': language,
             'name': _("page"),
             'pages': pages,

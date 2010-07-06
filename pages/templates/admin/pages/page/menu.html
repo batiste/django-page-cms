@@ -61,21 +61,29 @@
     <td class="last-modification-cell">
         {{ page.last_modification_date|date:_("DATETIME_FORMAT") }}
     </td>
-    <td class="publish-cell">
-        {% ifequal page.status page.DRAFT %}
-            <img src="{{ PAGES_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
-        {% else %}{% ifequal page.status page.PUBLISHED %}
-            <img src="{{ PAGES_MEDIA_URL }}images/icons/published.gif" alt="published" />
-        {% else %}
-            <img src="{{ PAGES_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
-        {% endifequal %}{% endifequal %}
-        &nbsp;
-        <select class="publish-select" name="select-status-{{ page.id }}">
-            <option value="0" {% ifequal page.status page.DRAFT %}selected="selected"{% endifequal %}>{% trans "Draft" %}</option>
-            <option value="1" {% ifequal page.status page.PUBLISHED %}selected="selected"{% endifequal %}>{% trans "In navigation" %}</option>
-            <option value="3" {% ifequal page.status page.HIDDEN %}selected="selected"{% endifequal %}>{% trans "Hidden" %}</option>
-        </select>
-    </td>
+    {% if can_publish %}
+        <td class="publish-cell">
+            {% ifequal page.status page.DRAFT %}
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
+            {% else %}{% ifequal page.status page.PUBLISHED %}
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/published.gif" alt="published" />
+            {% else %}
+                <img src="{{ PAGES_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
+            {% endifequal %}{% endifequal %}
+            &nbsp;
+            <select class="publish-select" name="select-status-{{ page.id }}">
+                <option value="0" {% ifequal page.status page.DRAFT %}selected="selected"{% endifequal %}>{% trans "Draft" %}</option>
+                <option value="1" {% ifequal page.status page.PUBLISHED %}selected="selected"{% endifequal %}>{% trans "In navigation" %}</option>
+                <option value="3" {% ifequal page.status page.HIDDEN %}selected="selected"{% endifequal %}>{% trans "Hidden" %}</option>
+            </select>
+        </td>
+    {% else %}
+        <td>
+            {% ifequal page.status page.DRAFT %}{% trans "Draft" %}{% endifequal %}
+            {% ifequal page.status page.PUBLISHED %}{% trans "In navigation" %}{% endifequal %}
+            {% ifequal page.status page.HIDDEN %}{% trans "Hidden" %}{% endifequal %}
+        </td>
+    {% endif %}
     <td class="template-cell">
         {{ page.get_template_name }}
     </td>

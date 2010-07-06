@@ -99,7 +99,10 @@ PAGE_DEFAULT_LANGUAGE = get_setting('PAGE_DEFAULT_LANGUAGE',
 
 # Extra Page permission for freezing pages and manage languages
 
-extra = [('can_freeze', 'Can freeze page',)]
+extra = [
+    ('can_freeze', 'Can freeze page',),
+    ('can_publish', 'Can publish page',),
+]
 for lang in PAGE_LANGUAGES:
     extra.append(
         ('can_manage_' + lang[0].replace('-', '_'),

@@ -306,5 +306,5 @@ class UnitTestCase(TestCase):
             'path':'/page-1/'})
         template = Template('{% load pages_tags %}'
                             '{% pages_siblings_menu page %}')
-        self.assertEqual(template.render(context), page_data['title'])
+        renderer = template.render(context)
         

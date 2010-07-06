@@ -116,7 +116,10 @@ def pages_siblings_menu(context, page, url='/'):
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     if page:
-        root = page.parent
+        if page.parent:
+            root = page.parent
+        else:
+            root = page
         children = root.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']

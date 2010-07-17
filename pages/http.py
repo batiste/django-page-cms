@@ -76,9 +76,12 @@ def pages_view(view):
     return pages_view_decorator
 
 
-def get_slug_and_relative_path(path, lang=None):
+def get_slug_and_relative_path(path, lang=None, path_lang_stripped=False):
     """
     Return the page's slug, relative path and language.
+
+    path_lang_stripped -- True if language portion of path has already
+                          been removed
     
         >>> get_slug_and_relative_path('/test/function/')
         ('function', 'test/function', None)
@@ -89,7 +92,7 @@ def get_slug_and_relative_path(path, lang=None):
     if len(path) and path[-1] == '/':
         path = path[:-1]
     slug = path.split("/")[-1]
-    if settings.PAGE_USE_LANGUAGE_PREFIX:
+    if settings.PAGE_USE_LANGUAGE_PREFIX and not path_lang_stripped:
         lang = path.split("/")[0]
         path = path[(len(lang) + 1):]
     return slug, path, lang

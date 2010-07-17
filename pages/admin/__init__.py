@@ -151,13 +151,17 @@ class PageAdmin(admin.ModelAdmin):
         for name in self.mandatory_placeholders:
             data = form.cleaned_data[name]
             placeholder = PlaceholderNode(name)
-            placeholder.save(page, language, data, change)
+            extra_data = placeholder.get_extra_data(form.data)
+            placeholder.save(page, language, data, change,
+                extra_data=extra_data)
 
         for placeholder in get_placeholders(page.get_template()):
             if(placeholder.name in form.cleaned_data and placeholder.name
                     not in self.mandatory_placeholders):
                 data = form.cleaned_data[placeholder.name]
-                placeholder.save(page, language, data, change)
+                extra_data = placeholder.get_extra_data(form.data)
+                placeholder.save(page, language, data, change,
+                    extra_data=extra_data)
         
         page.invalidate()
 
@@ -175,10 +179,12 @@ class PageAdmin(admin.ModelAdmin):
             'fields': list(self.general_fields),
             'classes': ('module-general',),
         }
-        
+
         default_fieldsets = list(self.fieldsets)
         if not perms.check('freeze'):
             general_module['fields'].remove('freeze_date')
+        if not perms.check('publish'):
+            general_module['fields'].remove('status')
 
         default_fieldsets[0][1] = general_module
 
@@ -232,7 +238,7 @@ class PageAdmin(admin.ModelAdmin):
         for placeholder in get_placeholders(template):
             name = placeholder.name
             if obj:
-                initial = Content.objects.get_content(obj, language, name)
+                initial = placeholder.get_content(obj, language, name)
             else:
                 initial = None
             form.base_fields[name] = placeholder.get_field(obj,
@@ -302,7 +308,7 @@ class PageAdmin(admin.ModelAdmin):
         if not self.admin_site.has_permission(request):
             return self.admin_site.login(request)
         language = get_language_from_request(request)
-
+        
         query = request.POST.get('q', '').strip()
 
         if query:
@@ -314,7 +320,9 @@ class PageAdmin(admin.ModelAdmin):
         if settings.PAGE_HIDE_SITES:
             pages = pages.filter(sites=settings.SITE_ID)
 
+        perms = PagePermission(request.user)
         context = {
+            'can_publish': perms.check('publish'),
             'language': language,
             'name': _("page"),
             'pages': pages,

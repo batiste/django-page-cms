@@ -193,7 +193,8 @@ class UnitTestCase(TestCase):
 
         # test the syntax
         page = self.new_page()
-        template = django.template.loader.get_template('pages/tests/test8.html')
+        template = django.template.loader.get_template(
+                'pages/tests/untranslated.html')
         context = Context({'current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
 
@@ -291,3 +292,19 @@ class UnitTestCase(TestCase):
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" %}')
         self.assertEqual(template.render(context), page_data['title'])
+
+    def test_pages_siblings_menu_tag(self):
+        """
+        Test the {% pages_siblings_menu %} template tag.
+        """
+        page_data = {'title':'test', 'slug':'test'}
+        page = self.new_page(page_data)
+        # cleanup the cache from previous tests
+        page.invalidate()
+
+        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
+            'path':'/page-1/'})
+        template = Template('{% load pages_tags %}'
+                            '{% pages_siblings_menu page %}')
+        renderer = template.render(context)
+        

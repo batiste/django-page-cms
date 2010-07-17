@@ -112,11 +112,14 @@ def pages_siblings_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     path = context.get('path', None)
     if page:
-        root = page.parent
+        if page.parent:
+            root = page.parent
+        else:
+            root = page
         children = root.get_children_for_frontend()
     if 'current_page' in context:
         current_page = context['current_page']
@@ -127,6 +130,7 @@ pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
 def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages."""
     request = context['request']
+    can_publish = context.get('can_publish', False)
     
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])

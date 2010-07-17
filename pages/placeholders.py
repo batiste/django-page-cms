@@ -1,4 +1,4 @@
-"""Placeholder module, that's where the smart things appened."""
+"""Placeholder module, that's where the smart things happen."""
 
 from pages.widgets_registry import get_widget
 from pages import settings
@@ -65,7 +65,7 @@ def parse_placeholder(parser, token):
 
 
 class PlaceholderNode(template.Node):
-    """This template node is used to output page content and
+    """This template node is used to output and save page content and
     dynamically generate input fields in the admin.
 
     :param name: the name of the placeholder you want to show/create
@@ -117,6 +117,16 @@ class PlaceholderNode(template.Node):
             pass
         return widget()
 
+    def get_extra_data(self, data):
+        """Get eventual extra data for this placeholder from the
+        POST dictionary."""
+        result = {}
+        for key in data.keys():
+            if key.startswith(self.name+'-'):
+                new_key = key.replace(self.name+'-', '')
+                result[new_key] = data[key]
+        return result
+
     def get_field(self, page, language, initial=None):
         """The field that will be shown within the admin."""
         if self.parsed:
@@ -127,7 +137,7 @@ class PlaceholderNode(template.Node):
         return self.field(widget=widget, initial=initial,
                     help_text=help_text, required=False)
 
-    def save(self, page, language, data, change):
+    def save(self, page, language, data, change, extra_data=None):
         """Actually save the placeholder data into the Content object."""
         # if this placeholder is untranslated, we save everything
         # in the default language
@@ -162,6 +172,9 @@ class PlaceholderNode(template.Node):
             )
 
     def get_content(self, page_obj, lang, lang_fallback=True):
+        if self.untranslated:
+            lang = settings.PAGE_DEFAULT_LANGUAGE
+            lang_fallback = False
         content = Content.objects.get_content(page_obj, lang, self.name,
             lang_fallback)
         if self.inherited and not content:
@@ -230,9 +243,19 @@ class ImagePlaceholderNode(PlaceholderNode):
             required=False
         )
 
-    def save(self, page, language, data, change):
-        filename = ""
+    def save(self, page, language, data, change, extra_data=None):
+        if 'delete' in extra_data:
+            return super(ImagePlaceholderNode, self).save(
+                page,
+                language,
+                "",
+                change
+            )
+        filename = ''
         if change and data:
+            # the image URL is posted if not changed
+            if type(data) is unicode:
+                return
             storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,
@@ -245,7 +268,7 @@ class ImagePlaceholderNode(PlaceholderNode):
                 filename += m.group(0).lower()
 
             filename = storage.save(filename, data)
-            super(ImagePlaceholderNode, self).save(
+            return super(ImagePlaceholderNode, self).save(
                 page,
                 language,
                 filename,

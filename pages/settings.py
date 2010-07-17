@@ -43,7 +43,7 @@ PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
 # PAGE_TEMPLATES = _get_templates
 
 PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
-    default_value=(PAGE_DEFAULT_TEMPLATE,))
+    default_value=())
 
 # The callable that is used by the CMS
 def get_page_templates():
@@ -99,7 +99,10 @@ PAGE_DEFAULT_LANGUAGE = get_setting('PAGE_DEFAULT_LANGUAGE',
 
 # Extra Page permission for freezing pages and manage languages
 
-extra = [('can_freeze', 'Can freeze page',)]
+extra = [
+    ('can_freeze', 'Can freeze page',),
+    ('can_publish', 'Can publish page',),
+]
 for lang in PAGE_LANGUAGES:
     extra.append(
         ('can_manage_' + lang[0].replace('-', '_'),

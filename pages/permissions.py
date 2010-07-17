@@ -23,6 +23,7 @@ class PagePermission(authority.permissions.BasePermission):
         
         if action == 'change':
             return self.has_change_permission(page, lang, method)
+            
         if action == 'delete':
             if not self.delete_page():
                 return False
@@ -36,6 +37,12 @@ class PagePermission(authority.permissions.BasePermission):
             if perm:
                 return True
             return False
+        if action == 'publish':
+            perm = self.user.has_perm('pages.can_publish')
+            if perm:
+                return True
+            return False
+        
         return False
 
     def has_change_permission(self, page, lang, method=None):

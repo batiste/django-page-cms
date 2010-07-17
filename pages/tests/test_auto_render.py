@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Auto render test suite"""
 from django.test import TestCase
-from pages.http import auto_render, AutoRenderHttpError
+from pages.http import auto_render, AutoRenderHttpError, get_request_mock
 from django.http import HttpResponse, HttpResponseRedirect
 
 class AutoRenderTestCase(TestCase):
@@ -17,19 +17,20 @@ class AutoRenderTestCase(TestCase):
             assert 'only_context' not in kwargs
             assert 'template_name' not in kwargs
             return 'pages/tests/auto_render.txt', locals()
-        response = testview(None)
+        request_mock = get_request_mock()
+        response = testview(request_mock)
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
                          "template_name: 'pages/tests/auto_render.txt', "
                          "only_context: ''\n")
-        self.assertEqual(testview(None, only_context=True),
-                         {'args': (), 'request': None, 'kwargs': {}})
-        response = testview(None, only_context=False)
+        self.assertEqual(testview(request_mock, only_context=True),
+                         {'args': (), 'request': request_mock, 'kwargs': {}})
+        response = testview(request_mock, only_context=False)
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
                          "template_name: 'pages/tests/auto_render.txt', "
                          "only_context: ''\n")
-        response = testview(None, template_name='pages/tests/auto_render2.txt')
+        response = testview(request_mock, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, HttpResponse)
         self.assertEqual(response.content,
                          "alternate template_name: 'pages/tests/auto_render2.txt', "
@@ -83,22 +84,17 @@ class AutoRenderTestCase(TestCase):
         def testview(request, *args, **kwargs):
             assert 'only_context' not in kwargs
             assert 'template_name' not in kwargs
-            return MyResponse(repr(sorted(locals().items())))
-        response = testview(None)
+            return MyResponse("toto")
+        request_mock = get_request_mock()
+        response = testview(request_mock)
         self.assertEqual(response.__class__, MyResponse)
         self.assertOnlyContextException(testview)
-        self.assertEqual(response.content,
-                         "[('MyResponse', "
-                         "<class 'pages.tests.auto_render.MyResponse'>), "
-                         "('args', ()), ('kwargs', {}), ('request', None)]")
-        self.assertEqual(testview(None, only_context=False).__class__,
+        self.assertEqual(response.content, "toto")
+        self.assertEqual(testview(request_mock, only_context=False).__class__,
                          MyResponse)
         response = testview(None, template_name='pages/tests/auto_render2.txt')
         self.assertEqual(response.__class__, MyResponse)
-        self.assertEqual(response.content,
-                         "[('MyResponse', "
-                         "<class 'pages.tests.auto_render.MyResponse'>), "
-                         "('args', ()), ('kwargs', {}), ('request', None)]")
+        self.assertEqual(response.content, "toto")
 
     def assertOnlyContextException(self, view):
         """If an @auto_render-decorated view returns an HttpResponse

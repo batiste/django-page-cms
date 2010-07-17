@@ -11,6 +11,9 @@ recursive-include doc *
 recursive-include pages *
 recursive-include requirements *
 recursive-include pages/templates *
+recursive-include pages/media *
+global-include *.css
+global-include *.js
 global-include *.html
 global-exclude *.pyc
 prune example

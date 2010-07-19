@@ -243,12 +243,9 @@ class Page(models.Model):
         all parent's slugs.
 
         :param language: the wanted slug language."""
-        if self._complete_slug:
-            return self._complete_slug
-        self._complete_slug = cache.get(self.PAGE_URL_KEY %
-            (self.id, language))
-        if self._complete_slug:
-            return self._complete_slug
+        url = cache.get(self.PAGE_URL_KEY % (self.id, language))
+        if url:
+            return url
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
@@ -257,7 +254,6 @@ class Page(models.Model):
             url = ancestor.slug(language) + u'/' + url
 
         cache.set(self.PAGE_URL_KEY % (self.id, language), url)
-        self._complete_slug = url
         return url
 
     def get_url(self, language=None):

@@ -104,11 +104,6 @@ class Page(models.Model):
         from tagging import fields
         tags = fields.TagField(null=True)
 
-    # per instance cache
-    _languages = None
-    _complete_slug = None
-    _content_dict = None
-
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
@@ -116,6 +111,14 @@ class Page(models.Model):
         verbose_name = _('page')
         verbose_name_plural = _('pages')
         permissions = settings.PAGE_EXTRA_PERMISSIONS
+
+    def __init__(self, *args, **kwargs):
+        """Instanciate the page object."""
+        # per instance cache
+        self._languages = None
+        self._complete_slug = None
+        self._content_dict = None
+        super(Page, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         """Override the default ``save`` method."""

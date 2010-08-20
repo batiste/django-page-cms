@@ -135,7 +135,7 @@ You can also look at how the example project is working to make a local setup. I
 `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
 files for you. After installation in your project just run::
 
-    $ python manage.py build_media pages
+    $ python manage.py build_static pages
 
 And the cms media files will be copied in your project's media directory.
 

@@ -108,8 +108,8 @@ You *must* set ``PAGE_DEFAULT_TEMPLATE`` to the path of your default CMS templat
 
     PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
 
-This template must exist somewhere in your project. If you want you can copy the directory
-``example/templates/pages`` into your root template directory to retrieve some example of templates.
+This template must exist somewhere in your project. If you want you can copy the example templates
+from the directory ``pages/templates/pages/examples/`` into the directory ``page`` of your root template directory.
 
 Additional templates
 --------------------

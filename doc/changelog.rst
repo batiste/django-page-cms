@@ -4,6 +4,12 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.2.1
+=============
+
+    * Change the cache class attributes into data attributes as it was intented in
+      the design for the "per instance" cache.
+
 Release 1.2.0
 =============
 

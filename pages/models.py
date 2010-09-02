@@ -58,7 +58,7 @@ class Page(models.Model):
     )
 
     PAGE_LANGUAGES_KEY = "page_%d_languages"
-    PAGE_URL_KEY = "page_%d_language_%s_url"
+    PAGE_URL_KEY = "page_%d_url"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
@@ -190,9 +190,7 @@ class Page(models.Model):
             cache.delete(PAGE_CONTENT_DICT_KEY %
                 (self.id, name, 0))
 
-        for lang in settings.PAGE_LANGUAGES:
-            cache.delete(self.PAGE_URL_KEY % (self.id, lang[0]))
-        cache.delete(self.PAGE_URL_KEY % (self.id, "None"))
+        cache.delete(self.PAGE_URL_KEY % (self.id))
 
 
     def get_languages(self):
@@ -246,12 +244,15 @@ class Page(models.Model):
         all parent's slugs.
 
         :param language: the wanted slug language."""
-        if self._complete_slug:
-            return self._complete_slug
-        self._complete_slug = cache.get(self.PAGE_URL_KEY %
-            (self.id, language))
-        if self._complete_slug:
-            return self._complete_slug
+        if self._complete_slug and language in self._complete_slug:
+            return self._complete_slug[language]
+
+        self._complete_slug = cache.get(self.PAGE_URL_KEY % (self.id))
+        if self._complete_slug is None:
+            self._complete_slug = {}
+        elif language in self._complete_slug:
+            return self._complete_slug[language]
+        
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
@@ -259,8 +260,8 @@ class Page(models.Model):
         for ancestor in self.get_ancestors(ascending=True):
             url = ancestor.slug(language) + u'/' + url
 
-        cache.set(self.PAGE_URL_KEY % (self.id, language), url)
-        self._complete_slug = url
+        self._complete_slug[language] = url
+        cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
         return url
 
     def get_url(self, language=None):

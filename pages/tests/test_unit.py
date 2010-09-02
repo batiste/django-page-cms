@@ -307,4 +307,25 @@ class UnitTestCase(TestCase):
         template = Template('{% load pages_tags %}'
                             '{% pages_siblings_menu page %}')
         renderer = template.render(context)
+
+    def test_show_absolute_url_with_language(self):
+        """
+        Test a {% show_absolute_url %} template tag  bug.
+        """
+        page_data = {'title':'english', 'slug':'english'}
+        page = self.new_page(page_data)
+        Content(page=page, language='fr-ch', type='title', body='french').save()
+        Content(page=page, language='fr-ch', type='slug', body='french').save()
+
+        self.assertEqual(page.get_url_path(language='fr-ch'), u'/pages/french')
+        self.assertEqual(page.get_url_path(language='en-us'), u'/pages/english')
+
+        context = RequestContext(MockRequest, {'page': page})
+        template = Template('{% load pages_tags %}'
+                            '{% show_absolute_url page "en-us" %}')
+        self.assertEqual(template.render(context), u'/pages/english')
+        template = Template('{% load pages_tags %}'
+                            '{% show_absolute_url page "fr-ch" %}')
+        self.assertEqual(template.render(context), u'/pages/french')
+        
         

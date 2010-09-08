@@ -70,8 +70,7 @@ a note in the admin interface noting its ability to be evaluated as template.
 
 Template syntax example::
 
-    {% placeholder image as image_src %}
-    <img src="{{ img_src }}" alt=""/>
+    {% placeholder special-content parsed %}
 
 The **inherited** keyword
 -------------------------

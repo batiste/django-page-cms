@@ -38,20 +38,20 @@ def get_placeholders(template_name):
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
-    # I needed to import make this lazy import to make the doc compile
+    # I needed to make this lazy import to compile the documentation
     from django.template.loader_tags import BlockNode
     
     for node in nodelist:
 
-        # extends node
+        # extends node?
         if hasattr(node, 'parent_name'):
             _placeholders_recursif(node.get_parent(Context()).nodelist,
                                                         plist, blist)
-        # include node
+        # include node?
         elif hasattr(node, 'template'):
             _placeholders_recursif(node.template.nodelist, plist, blist)
 
-        # It's a placeholder
+        # Is it a placeholder?
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
                 hasattr(node, 'as_varname') and hasattr(node, 'name'):
             already_in_plist = False

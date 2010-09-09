@@ -327,5 +327,38 @@ class UnitTestCase(TestCase):
         template = Template('{% load pages_tags %}'
                             '{% show_absolute_url page "fr-ch" %}')
         self.assertEqual(template.render(context), u'/pages/french')
+
+    def test_get_page_ids_by_slug(self):
+        """
+        Test that get_page_ids_by_slug work as intented.
+        """
+        page_data = {'title':'test1', 'slug':'test1'}
+        page1 = self.new_page(page_data)
         
+        self.assertEqual(
+            Content.objects.get_page_ids_by_slug('test1'),
+            [page1.id]
+        )
+
+        page_data = {'title':'test1', 'slug':'test1'}
+        page2 = self.new_page(page_data)
+        
+        self.assertEqual(
+            Content.objects.get_page_ids_by_slug('test1'),
+            [page1.id, page2.id]
+        )
+
+        Content(page=page1, language='en-us', type='slug', body='test2').save()
+
+        self.assertEqual(
+            Content.objects.get_page_ids_by_slug('test1'),
+            [page1.id, page2.id]
+        )
+
+        Content(page=page1, language='en-us', type='slug', body='test1').save()
+
+        self.assertEqual(
+            Content.objects.get_page_ids_by_slug('test1'),
+            [page1.id, page2.id]
+        )
         

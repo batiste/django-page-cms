@@ -8,6 +8,7 @@ from django.db import models, connection
 from django.db.models import Q
 from django.core.cache import cache
 from django.contrib.auth.models import User
+from django.db.models import Avg, Max, Min, Count
 
 from datetime import datetime
 
@@ -102,7 +103,8 @@ class PageManager(models.Manager):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
         slug, path, lang = get_slug_and_relative_path(complete_path, lang)
-        page_ids = ContentManager().get_page_ids_by_slug(slug)
+        from pages.models import Content
+        page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)
         if exclude_drafts:
             pages_list = pages_list.exclude(status=self.model.DRAFT)
@@ -248,18 +250,15 @@ class ContentManager(models.Manager):
 
     def get_page_ids_by_slug(self, slug):
         """Return all page's id matching the given slug.
+        This function also returns pages that have an old slug
+        that match.
 
         :param slug: the wanted slug.
         """
-        sql = '''SELECT pages_content.page_id,
-            MAX(pages_content.creation_date)
-            FROM pages_content WHERE (pages_content.type = %s
-            AND pages_content.body =%s)
-            GROUP BY pages_content.page_id'''
-            
-        cursor = connection.cursor()
-        cursor.execute(sql, ('slug', slug, ))
-        return [c[0] for c in cursor.fetchall()]
+        ids = self.filter(type='slug', body=slug).values('page_id').annotate(
+            max_creation_date=Max('creation_date')
+        )
+        return [content['page_id'] for content in ids]
 
 
 class PageAliasManager(models.Manager):

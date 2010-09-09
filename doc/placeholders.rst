@@ -9,8 +9,8 @@ is that you design your template first according to the page design.
 Then you put placeholder tag where you want dynamic content.
 
 For each placeholder you will have a corresponding field appearing automaticaly
-in the administration interface. You can make as many templates as you want,
-use the Django template inheritance, and then CMS will still behave as intended.
+in the administration interface. You can make as many templates as you want, even
+use the template inheritance: this CMS administration will still behave as intended.
 
 The syntax for a placeholder tag is the following::
 
@@ -33,9 +33,10 @@ Template syntax example::
 the **widget** option
 ----------------------
 
-If the **widget** option is omitted the CMS will render a simple `TextInput`.
-Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
-before you can use them in the CMS::
+If the **widget** option is used to change the way the CMS administration interface.
+
+By default the CMS will use a simple `TextInput` widget. Otherwise the CMS will use the
+widget fo your choice. Widgets need to be registered before you can use them in the CMS::
 
     from pages.widgets_registry import register_widget
     from django.forms import TextInput
@@ -49,11 +50,16 @@ Template syntax example::
 
     {% placeholder body with NewWidget %}
 
+
+.. note::
+
+    This CMS is shipped with :ref:`a list of useful widgets <placeholder-widgets-list>` .
+
 The **as** option
 ------------------
 
-If you use the option **as** the content of the placeholder will not be displayed but
-a variable will be defined within the template's context instead.
+If you use the option **as** the content of the placeholder content will not be displayed:
+a variable of your choice will be defined within the template's context.
 
 Template syntax example::
 
@@ -75,8 +81,8 @@ Template syntax example::
 The **inherited** keyword
 -------------------------
 
-If you add the keyword **inherited** the placeholder's content
-will be retrieved from the closest parent. But only if there is no
+If you add the keyword **inherited** the placeholder's content displayed
+on the frontend will be retrieved from the closest parent. But only if there is no
 content for the current page.
 
 Template syntax example::
@@ -156,7 +162,7 @@ you can simply subclass the :class:`PlaceholderNode <pages.placeholders.Placehol
         return ContactFormPlaceholderNode(name, **params)
     register.tag('contactplaceholder', do_contactplaceholder)
 
-And use it your templates as a normal placeholder::
+And use it your templates as a normal placeholder in your templates::
 
     {% contactplaceholder contact %}
 

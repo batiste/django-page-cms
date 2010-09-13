@@ -224,6 +224,8 @@ class Page(models.Model):
 
         :param language: the wanted url language.
         """
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
         url = reverse('pages-root')
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             url += str(language) + '/'
@@ -244,6 +246,9 @@ class Page(models.Model):
         all parent's slugs.
 
         :param language: the wanted slug language."""
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+        
         if self._complete_slug and language in self._complete_slug:
             return self._complete_slug[language]
 

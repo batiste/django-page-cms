@@ -42,9 +42,6 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
         'lang': lang,
     }
 
-    if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
-        raise Http404
-
     is_user_staff = request.user.is_authenticated() and request.user.is_staff
     if path:
         current_page = Page.objects.from_path(path, lang,

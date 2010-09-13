@@ -118,7 +118,11 @@ def get_language_from_request(request):
         return language
 
     if hasattr(request, 'LANGUAGE_CODE'):
-        return settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        lang = settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
+            return settings.PAGE_DEFAULT_LANGUAGE
+        else:
+            return lang
     else:
         return settings.PAGE_DEFAULT_LANGUAGE
 

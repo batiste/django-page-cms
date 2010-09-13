@@ -4,6 +4,7 @@ from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
+from pages.http import get_language_from_request
 
 import django
 from django.contrib.auth.models import User
@@ -361,4 +362,24 @@ class UnitTestCase(TestCase):
             Content.objects.get_page_ids_by_slug('test1'),
             [page1.id, page2.id]
         )
+
+    def test_get_language_from_request(self):
+        """
+        Test that get_language_from_request return the default language even if a
+        unaccepted language is used.
+        """
+        class Req():
+            LANGUAGE_CODE = 'en-us'
+            GET = {}
+        request = Req()
+        self.assertEqual(
+            get_language_from_request(request), 'en-us')
+
+        request.LANGUAGE_CODE = 'dont'
+        self.assertEqual(
+            get_language_from_request(request), 'en-us')
+
+        request.LANGUAGE_CODE = 'fr-ch'
+        self.assertEqual(
+            get_language_from_request(request), 'fr-ch')
         

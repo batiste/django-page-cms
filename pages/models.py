@@ -200,7 +200,7 @@ class Page(models.Model):
         if self._languages:
             return self._languages
         self._languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
-        if self._languages:
+        if self._languages is not None:
             return self._languages
 
         languages = [c['language'] for

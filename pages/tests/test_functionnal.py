@@ -342,10 +342,10 @@ class FunctionnalTestCase(TestCase):
 
         # finaly test that we can get every page according the path
         response = c.get(self.get_page_url('same-slug'))
-        self.assertContains(response, "parent title", 2)
+        self.assertContains(response, "parent title", 3)
 
         response = c.get(self.get_page_url('same-slug/same-slug'))
-        self.assertContains(response, "children title", 2)
+        self.assertContains(response, "children title", 3)
 
 
     def test_page_admin_view(self):
@@ -419,7 +419,7 @@ class FunctionnalTestCase(TestCase):
 
         # for the download page, the slug is canonical
         response = c.get(self.get_page_url('downloads-page/'))
-        self.assertContains(response, "downloads-page-title", 2)
+        self.assertContains(response, "downloads-page-title", 3)
 
         # calling via its alias must cause redirect
         response = c.get(self.get_page_url('index.php')+'?page=downloads')

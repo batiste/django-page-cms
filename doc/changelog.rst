@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.2.2
+==============
+
+    * The default template for menu now display the title instead of the slug in the link
+    * Improve the default application look.
+
+
 Release 1.2.1
 =============
 

@@ -201,7 +201,10 @@ class ContentManager(models.Manager):
         else:
             content_dict = cache.get(key)
 
-        # fill a dict object for each language
+        # fill a dict object for each language, that will create
+        # P * L queries.
+        # L == number of language, P == number of placeholder in the page.
+        # Once generated the result is cached.
         if not content_dict:
             content_dict = {}
             for lang in settings.PAGE_LANGUAGES:

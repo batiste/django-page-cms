@@ -4,7 +4,7 @@ from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
-from pages.http import get_language_from_request
+from pages.http import get_language_from_request, get_slug_and_relative_path
 
 import django
 from django.contrib.auth.models import User
@@ -382,4 +382,26 @@ class UnitTestCase(TestCase):
         request.LANGUAGE_CODE = 'fr-ch'
         self.assertEqual(
             get_language_from_request(request), 'fr-ch')
+
+    def test_get_slug_and_relative_path(self):
+        """
+        Test that get_slug_and_relative_path doesn't strip the language
+        2 times from the path.
+        """
+        from pages import settings as pages_settings
+        old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
+        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
+        
+        path = 'en-us/path/path/slug'
+        slug, path, lang = get_slug_and_relative_path(path)
+        self.assertEqual(slug, 'slug')
+        self.assertEqual(path, 'path/path/slug')
+        self.assertEqual(lang, 'en-us')
+        # second pass
+        slug, path, lang = get_slug_and_relative_path(path)
+        self.assertEqual(slug, 'slug')
+        self.assertEqual(path, 'path/path/slug')
+        self.assertEqual(lang, None)
+
+        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
         

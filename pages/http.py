@@ -7,6 +7,8 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from pages import settings
 
+LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
+
 def get_request_mock():
     """Build a ``request`` mock up that can be used for testing."""
     basehandler = BaseHandler()
@@ -79,6 +81,8 @@ def pages_view(view):
 def get_slug_and_relative_path(path, lang=None):
     """
     Return the page's slug, relative path and language.
+    If the language prefix is used in the pathm, this function
+    will try to remove the language from the path.
     
         >>> get_slug_and_relative_path('/test/function/')
         ('function', 'test/function', None)
@@ -90,8 +94,10 @@ def get_slug_and_relative_path(path, lang=None):
         path = path[:-1]
     slug = path.split("/")[-1]
     if settings.PAGE_USE_LANGUAGE_PREFIX:
-        lang = path.split("/")[0]
-        path = path[(len(lang) + 1):]
+        maybe_lang = path.split("/")[0]
+        if maybe_lang in LANGUAGE_KEYS:
+            lang = maybe_lang
+            path = path[(len(lang) + 1):]
     return slug, path, lang
 
 def get_template_from_request(request, page=None):
@@ -119,7 +125,7 @@ def get_language_from_request(request):
 
     if hasattr(request, 'LANGUAGE_CODE'):
         lang = settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
-        if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
+        if lang not in LANGUAGE_KEYS:
             return settings.PAGE_DEFAULT_LANGUAGE
         else:
             return lang

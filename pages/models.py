@@ -45,7 +45,7 @@ class Page(models.Model):
     .. attribute:: template
        A string containing the name of the template file for this page.
     """
-    
+
     # some class constants to refer to, e.g. Page.DRAFT
     DRAFT = 0
     PUBLISHED = 1
@@ -62,15 +62,15 @@ class Page(models.Model):
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
-    
-    parent = models.ForeignKey('self', null=True, blank=True, 
+
+    parent = models.ForeignKey('self', null=True, blank=True,
             related_name='children', verbose_name=_('parent'))
     creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=datetime.now)
-    publication_date = models.DateTimeField(_('publication date'), 
+    publication_date = models.DateTimeField(_('publication date'),
             null=True, blank=True, help_text=_('''When the page should go
             live. Status must be "Published" for page to go live.'''))
-    publication_end_date = models.DateTimeField(_('publication end date'), 
+    publication_end_date = models.DateTimeField(_('publication end date'),
             null=True, blank=True, help_text=_('''When to expire the page.
             Leave empty to never expire.'''))
 
@@ -197,7 +197,6 @@ class Page(models.Model):
 
         cache.delete(self.PAGE_URL_KEY % (self.id))
 
-
     def get_languages(self):
         """
         Return a list of all used languages for this page.
@@ -211,7 +210,8 @@ class Page(models.Model):
         languages = [c['language'] for
                             c in Content.objects.filter(page=self,
                             type="slug").values('language')]
-        languages = list(set(languages)) # remove duplicates
+        # remove duplicates
+        languages = list(set(languages))
         languages.sort()
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
         self._languages = languages
@@ -444,6 +444,7 @@ class PageAlias(models.Model):
         verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
+    
     class Meta:
         verbose_name_plural = _('Aliases')
     
@@ -454,4 +455,3 @@ class PageAlias(models.Model):
     
     def __unicode__(self):
         return "%s => %s" % (self.url, self.page.get_complete_slug())
-

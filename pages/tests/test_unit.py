@@ -5,8 +5,10 @@ from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 from pages.http import get_language_from_request, get_slug_and_relative_path
+from pages.http import get_request_mock
 
 import django
+from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.template import Template, RequestContext, Context
@@ -397,11 +399,45 @@ class UnitTestCase(TestCase):
         self.assertEqual(slug, 'slug')
         self.assertEqual(path, 'path/path/slug')
         self.assertEqual(lang, 'en-us')
-        # second pass
+        # second pass withe the modified path
         slug, path, lang = get_slug_and_relative_path(path)
         self.assertEqual(slug, 'slug')
         self.assertEqual(path, 'path/path/slug')
         self.assertEqual(lang, None)
 
         setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
+
+    def test_default_view_with_language_prefix(self):
+        """
+        Test that everything is working with the language prefix option
+        activated.
+        """
+        from pages import settings as pages_settings
+        old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
+        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
+
+        from pages.views import details
+        req = get_request_mock()
+        self.assertRaises(Http404, details, req)
+
+        page1 = self.new_page(content={'slug':'page1'})
+        page2 = self.new_page(content={'slug':'page2'})
+        
+        req.path = page1.get_url_path()
+        self.assertEqual(details(req, only_context=True)['current_page'],
+            page1)
+
+        self.assertEqual(details(req, path=page2.get_complete_slug(),
+            only_context=True)['current_page'], page2)
+        
+        req.path = page2.get_url_path()
+        self.assertEqual(details(req, only_context=True)['current_page'],
+            page2)
+
+
+        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
+
+        req.path = page2.get_url_path()
+        self.assertEqual(details(req, only_context=True)['current_page'],
+            page2)
         

@@ -19,6 +19,7 @@ def get_request_mock():
         'SERVER_PORT': '8000',
         'HTTP_HOST': 'testhost',
     })
+    request.path = reverse('pages-root')
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because

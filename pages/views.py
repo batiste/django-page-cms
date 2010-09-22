@@ -27,10 +27,12 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
     
     pages_navigation = Page.objects.navigation().order_by("tree_id")
     current_page = False
-    template_name = settings.PAGE_DEFAULT_TEMPLATE
 
+    # if the path is not defined, we assume that the user
+    # is using the view in a non usual way and fallback onto the
+    # the full request path.
     if path is None:
-        slug, path, lang = get_slug_and_relative_path(request.path, lang)
+        path = request.path
 
     # Can be an empty string or None
     if not lang:
@@ -57,8 +59,7 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
             return HttpResponsePermanentRedirect(url)
         raise Http404
 
-    if ((not is_user_staff) and
-            current_page.calculated_status in (Page.DRAFT, Page.EXPIRED)):
+    if not is_user_staff and not current_page.visible:
         raise Http404
 
     if current_page.redirect_to_url:

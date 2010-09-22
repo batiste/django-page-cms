@@ -244,14 +244,14 @@ class FunctionnalTestCase(TestCase):
         # header so I used django_language cookie instead
         c = self.get_admin_client()
         c.cookies["django_language"] = 'en-us'
-        response = c.get(self.get_page_url())
+        response = c.get(page.get_url_path())
         self.assertContains(response, 'english title')
         self.assertContains(response, 'lang="en-us"')
         self.assertNotContains(response, 'french title')
 
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-ch'
-        response = c.get(self.get_page_url())
+        response = c.get(page.get_url_path())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -260,7 +260,7 @@ class FunctionnalTestCase(TestCase):
         # this should be mapped to the fr-ch content
         c = self.get_admin_client()
         c.cookies["django_language"] = 'fr-fr'
-        response = c.get(self.get_page_url())
+        response = c.get(page.get_url_path())
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
@@ -283,7 +283,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 
-        response = c.get(self.get_page_url())
+        response = c.get(page.get_url_path())
         self.assertContains(response, 'changed body 2', 1)
 
         setattr(settings, "PAGE_CONTENT_REVISION", False)
@@ -535,6 +535,7 @@ class FunctionnalTestCase(TestCase):
         from pages.views import details
         from pages.utils import get_request_mock
         request = get_request_mock()
+        request.path = page1.get_url_path()
         context = details(request, only_context=True)
         self.assertEqual(context['current_page'], page1)
 

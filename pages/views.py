@@ -6,6 +6,7 @@ from pages.http import auto_render, get_language_from_request
 from pages.http import get_slug_and_relative_path
 from pages.urlconf_registry import get_urlconf
 from django.core.urlresolvers import resolve
+from django.utils import translation
 
 def details(request, path=None, lang=None, delegation=True, **kwargs):
     """This view get the root pages for navigation
@@ -43,6 +44,14 @@ def details(request, path=None, lang=None, delegation=True, **kwargs):
         'pages_navigation': pages_navigation,
         'lang': lang,
     }
+
+    if lang not in [key for (key, value) in settings.PAGE_LANGUAGES]:
+        raise Http404
+
+    # We're going to serve CMS pages in language lang;
+    # make django gettext use that language too
+    if lang and translation.check_for_language(lang):
+        translation.activate (lang)
 
     is_user_staff = request.user.is_authenticated() and request.user.is_staff
     if path:

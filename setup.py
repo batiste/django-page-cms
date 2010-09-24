@@ -32,13 +32,10 @@ setup(
         'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'django-tagging>0.2.1',
-        'django-mptt-2>0.2.1',
+        'django-mptt>0.2.1',
         'django-authority',
         'django-staticfiles',
         'django-haystack',
-        # necessary for tests
-        'coverage',
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

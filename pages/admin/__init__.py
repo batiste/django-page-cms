@@ -42,7 +42,7 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
         general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
-    
+
     # Strange django behavior. If not provided, django will try to find
     # 'page' foreign key in all registered models
     inlines = []
@@ -115,7 +115,7 @@ class PageAdmin(admin.ModelAdmin):
                 change_status, name='page-change-status'),
         )
         urlpatterns += super(PageAdmin, self).urls
-        
+
         return urlpatterns
 
     urls = property(urls)
@@ -162,7 +162,7 @@ class PageAdmin(admin.ModelAdmin):
                 extra_data = placeholder.get_extra_data(form.data)
                 placeholder.save(page, language, data, change,
                     extra_data=extra_data)
-        
+
         page.invalidate()
 
     def get_fieldsets(self, request, obj=None):
@@ -257,6 +257,11 @@ class PageAdmin(admin.ModelAdmin):
             'page_languages': settings.PAGE_LANGUAGES,
         }
         try:
+            int(object_id)
+        except ValueError:
+            raise Http404('The "%s" part of the location is invalid.'
+                % str(object_id))
+        try:
             obj = self.model.objects.get(pk=object_id)
         except self.model.DoesNotExist:
             # Don't raise Http404 just yet, because we haven't checked
@@ -308,7 +313,7 @@ class PageAdmin(admin.ModelAdmin):
         if not admin.site.has_permission(request):
             return admin.site.login(request)
         language = get_language_from_request(request)
-        
+
         query = request.POST.get('q', '').strip()
 
         if query:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
 from django.conf import settings
-from django.template import Template, RequestContext, Context 
+from django.template import Template, RequestContext, Context
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
 import django
@@ -46,7 +46,7 @@ class RegressionTestCase(TestCase):
 
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
-        
+
         try:
             response = c.get(self.get_page_url('toto/page1/'))
         except TemplateDoesNotExist, e:
@@ -102,7 +102,7 @@ class RegressionTestCase(TestCase):
             {'page':page, 'lang':'fr-ch'}
         ))
         self.assertTrue('title-fr-ch' in render)
-        
+
 
     def test_page_id_in_template(self):
         """Get a page in the templates via the page id."""
@@ -123,7 +123,7 @@ class RegressionTestCase(TestCase):
     def test_language_fallback_bug(self):
         """Language fallback doesn't work properly."""
         page = self.create_new_page()
-        
+
         c = Content(page=page, type='new_type', body='toto', language='en-us')
         c.save()
 
@@ -157,7 +157,7 @@ class RegressionTestCase(TestCase):
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data(draft=True)
         page_data['slug'] = 'page1'
-        
+
         # create a draft page and ensure we can view it
         response = c.post('/admin/pages/page/add/', page_data)
         response = c.get(self.get_page_url('page1/'))
@@ -204,3 +204,15 @@ class RegressionTestCase(TestCase):
             Content.objects.get_content(page, 'fr-ch', 'test'),
             'fr'
         )
+
+    def test_pages_dynamic_tree_menu_bug(self):
+        """
+        Test a bug with the dynamic tree template tag doesn't occur anymore.
+        http://code.google.com/p/django-page-cms/issues/detail?id=209
+        """
+        page = self.new_page()
+        context = Context({'current_page': page, 'lang':'en-us'})
+
+        pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
+        template = loader.get_template_from_string(pl1)
+        self.assertEqual(template.render(context), u'\n')

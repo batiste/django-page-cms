@@ -104,7 +104,7 @@ class UnitTestCase(TestCase):
         template = django.template.loader.get_template('pages/tests/test7.html')
         context = Context({'current_page': p2, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
-        
+
         p2.move_to(p1, position='first-child')
         self.assertEqual(template.render(context), 'parent-content')
 
@@ -122,11 +122,11 @@ class UnitTestCase(TestCase):
         """Test placeholder syntaxes."""
         page = self.new_page()
         context = Context({'current_page': page, 'lang':'en-us'})
-        
+
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), '')
-        
+
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}{{ hello }}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), page.title())
@@ -134,10 +134,10 @@ class UnitTestCase(TestCase):
 
         # error in parse template content
         setattr(settings, "DEBUG", True)
-        
+
         page = self.new_page({'wrong': '{% wrong %}'})
         context = Context({'current_page': page, 'lang':'en-us'})
-        
+
         pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
         template = get_template_from_string(pl2)
         from pages.placeholders import PLACEHOLDER_ERROR
@@ -205,7 +205,7 @@ class UnitTestCase(TestCase):
         """Test urlconf_registry basic functions."""
         reg.register_urlconf('Documents', 'example.documents.urls',
             label='Display documents')
-        
+
         reg.get_urlconf('Documents')
         try:
             reg.register_urlconf('Documents', 'example.documents.urls',
@@ -217,7 +217,7 @@ class UnitTestCase(TestCase):
             reg.get_urlconf('Documents')
         except reg.UrlconfNotFound:
             pass
-        
+
         reg.register_urlconf('Documents', 'example.documents.urls',
             label='Display documents')
 
@@ -226,14 +226,14 @@ class UnitTestCase(TestCase):
 
     def test_permissions(self):
         """Test the permissions lightly."""
-        
+
         from pages.permissions import PagePermission
         admin = User.objects.get(username='admin')
         page = self.new_page()
         pp = PagePermission(user=page.author)
         self.assertTrue(pp.check('change', page=page, method='GET'))
         self.assertTrue(pp.check('change', page=page, method='POST'))
-        
+
         staff = User.objects.get(username='staff')
         pp = PagePermission(user=staff)
         # weird because nonstaff?
@@ -337,7 +337,7 @@ class UnitTestCase(TestCase):
         """
         page_data = {'title':'test1', 'slug':'test1'}
         page1 = self.new_page(page_data)
-        
+
         self.assertEqual(
             Content.objects.get_page_ids_by_slug('test1'),
             [page1.id]
@@ -345,7 +345,7 @@ class UnitTestCase(TestCase):
 
         page_data = {'title':'test1', 'slug':'test1'}
         page2 = self.new_page(page_data)
-        
+
         self.assertEqual(
             Content.objects.get_page_ids_by_slug('test1'),
             [page1.id, page2.id]
@@ -393,7 +393,7 @@ class UnitTestCase(TestCase):
         from pages import settings as pages_settings
         old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
         setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
-        
+
         path = 'en-us/path/path/slug'
         slug, path, lang = get_slug_and_relative_path(path)
         self.assertEqual(slug, 'slug')
@@ -422,14 +422,14 @@ class UnitTestCase(TestCase):
 
         page1 = self.new_page(content={'slug':'page1'})
         page2 = self.new_page(content={'slug':'page2'})
-        
+
         req.path = page1.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],
             page1)
 
         self.assertEqual(details(req, path=page2.get_complete_slug(),
             only_context=True)['current_page'], page2)
-        
+
         req.path = page2.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],
             page2)
@@ -440,4 +440,4 @@ class UnitTestCase(TestCase):
         req.path = page2.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],
             page2)
-        
+

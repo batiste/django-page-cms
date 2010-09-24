@@ -129,17 +129,17 @@ pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
 
 def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages."""
-    request = context['request']
+    request = context.get('request', None)
     can_publish = context.get('can_publish', False)
-    
+
     if "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
-            ids = [int(id) for id in 
+            ids = [int(id) for id in
                 urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
             if page.id in ids:
                 expanded = True
-    
+
     page_languages = pages_settings.PAGE_LANGUAGES
     #has_permission = page.has_page_permission(request)
     PAGES_MEDIA_URL = pages_settings.PAGES_MEDIA_URL
@@ -153,13 +153,13 @@ pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
 
 def show_content(context, page, content_type, lang=None, fallback=True):
     """Display a content type from a page.
-    
+
     Example::
 
         {% show_content page_object "title" %}
-    
+
     You can also use the slug of a page::
-    
+
         {% show_content "my-page-slug" "title" %}
 
     Or even the id of a page::
@@ -194,11 +194,11 @@ def show_absolute_url(context, page, lang=None):
     """Show the url of a page in the right language
 
     Example ::
-    
+
         {% show_absolute_url page_object %}
 
     You can also use the slug of a page::
-    
+
         {% show_absolute_url "my-page-slug" %}
 
     Keyword arguments:
@@ -243,10 +243,10 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context['request']
+    request = context.get('request', None)
     site_id = None
     children = None
-    if 'current_page' in context:
+    if page and 'current_page' in context:
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
         # a node is expanded if it is the current node or one of its ancestors
@@ -264,13 +264,13 @@ def pages_breadcrumb(context, page, url='/'):
 
     Override ``pages/breadcrumb.html`` if you want to change the
     design.
-    
+
     :param page: the current page
     :param url: not used anymore
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context['request']
+    request = context.get('request', None)
     site_id = None
     if page:
         pages_navigation = page.get_ancestors()
@@ -299,7 +299,7 @@ class GetPageNode(template.Node):
     def __init__(self, page, varname):
         self.page = page
         self.varname = varname
-    
+
     def render(self, context):
         page = get_page_from_string_or_id(self.page)
         context[self.varname] = page
@@ -349,15 +349,15 @@ def do_get_content(parser, token):
     """Retrieve a Content object and insert it into the template's context.
 
     Example::
-    
+
         {% get_content page_object "title" as content %}
 
     You can also use the slug of a page::
-    
+
         {% get_content "my-page-slug" "title" as content %}
 
     Syntax::
-    
+
         {% get_content page type [lang] as name %}
 
     :param page: the page object, slug or id
@@ -396,7 +396,7 @@ def do_load_pages(parser, token):
     current context.
 
     Example::
-    
+
         <ul>
             {% load_pages %}
             {% for page in pages_navigation %}
@@ -411,7 +411,7 @@ do_load_pages = register.tag('load_pages', do_load_pages)
 def do_placeholder(parser, token):
     """
     Method that parse the placeholder template tag.
-    
+
     Syntax::
 
         {% placeholder <name> [on <page>] [with <widget>] \
@@ -448,11 +448,11 @@ register.tag('videoplaceholder', do_videoplaceholder)
 def language_content_up_to_date(page, language):
     """Tell if all the page content has been updated since the last
     change of the official version (settings.LANGUAGE_CODE)
-    
+
     This is approximated by comparing the last modified date of any
     content in the page, not comparing each content block to its
     corresponding official language version.  That allows users to
-    easily make "do nothing" changes to any content block when no 
+    easily make "do nothing" changes to any content block when no
     change is required for a language.
     """
     lang_code = getattr(settings, 'LANGUAGE_CODE', None)

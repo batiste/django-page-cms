@@ -7,7 +7,7 @@ from pages import settings
 
 urlpatterns = patterns('',
     # Public pages
-    url(r'^$', details, name='pages-root'),
+    url(r'^/$', details, name='pages-root'),
 )
 
 if settings.PAGE_USE_LANGUAGE_PREFIX:

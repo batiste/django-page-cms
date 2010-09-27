@@ -423,6 +423,8 @@ class UnitTestCase(TestCase):
         page1 = self.new_page(content={'slug':'page1'})
         page2 = self.new_page(content={'slug':'page2'})
 
+        self.assertEqual(page1.get_url_path(), '/pages/en-us/page1')
+
         req.path = page1.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],
             page1)

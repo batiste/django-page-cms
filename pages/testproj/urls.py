@@ -12,7 +12,7 @@ authority.autodiscover()
 urlpatterns = patterns('',
     (r'^authority/', include('authority.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    
+
     (r'^pages/', include('pages.urls')),
     (r'^admin/', include(admin.site.urls)),
     # make tests fail if a backend is not present on the system

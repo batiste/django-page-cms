@@ -5,8 +5,8 @@ from django.conf.urls.defaults import handler404, handler500
 from pages.views import details
 from pages import settings
 
+# Public pages
 urlpatterns = patterns('',
-    # Public pages
     url(r'^/$', details, name='pages-root'),
 )
 

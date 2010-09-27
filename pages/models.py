@@ -86,9 +86,9 @@ class Page(models.Model):
     freeze_date = models.DateTimeField(_('freeze date'),
             null=True, blank=True, help_text=_('''Don't publish any content
             after this date.'''))
-    
+
     if settings.PAGE_USE_SITE_ID:
-        sites = models.ManyToManyField(Site, default=[settings.SITE_ID], 
+        sites = models.ManyToManyField(Site, default=[settings.SITE_ID],
                 help_text=_('The site(s) the page is accessible at.'),
                 verbose_name=_('sites'))
 
@@ -96,7 +96,7 @@ class Page(models.Model):
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
-    
+
     # Managers
     objects = PageManager()
 
@@ -218,10 +218,13 @@ class Page(models.Model):
         return languages
 
     def is_first_root(self):
-        """Return ``True`` if the page is the first root page."""
+        """Return ``True`` if the page is the first root pages."""
         if self.parent:
             return False
-        return Page.objects.root()[0].id == self.id
+        root_pages = Page.objects.root()
+        if len(root_pages):
+            return Page.objects.root()[0].id == self.id
+        return False
 
     def get_url_path(self, language=None):
         """Return the URL's path component. Add the language prefix if
@@ -232,6 +235,8 @@ class Page(models.Model):
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
         url = reverse('pages-root')
+        if url.endswith('//'):
+            url = url[:-1]
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             url += str(language) + '/'
         return url + self.get_complete_slug(language)
@@ -253,7 +258,7 @@ class Page(models.Model):
         :param language: the wanted slug language."""
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        
+
         if self._complete_slug and language in self._complete_slug:
             return self._complete_slug[language]
 
@@ -262,7 +267,7 @@ class Page(models.Model):
             self._complete_slug = {}
         elif language in self._complete_slug:
             return self._complete_slug[language]
-        
+
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = ''
         else:
@@ -292,7 +297,7 @@ class Page(models.Model):
         :param fallback: if ``True``, the slug will also be searched in other \
         languages.
         """
-        
+
         slug = self.get_content(language, 'slug', language_fallback=fallback)
 
         return slug
@@ -307,7 +312,7 @@ class Page(models.Model):
         """
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
-            
+
         return self.get_content(language, 'title', language_fallback=fallback)
 
     def get_content(self, language, ctype, language_fallback=False):
@@ -417,7 +422,7 @@ except mptt.AlreadyRegistered:
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,
     for a particular language"""
-    
+
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
     body = models.TextField(_('body'))
@@ -444,14 +449,14 @@ class PageAlias(models.Model):
         verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
-    
+
     class Meta:
         verbose_name_plural = _('Aliases')
-    
+
     def save(self, *args, **kwargs):
         # normalize url
         self.url = normalize_url(self.url)
         super(PageAlias, self).save(*args, **kwargs)
-    
+
     def __unicode__(self):
         return "%s => %s" % (self.url, self.page.get_complete_slug())

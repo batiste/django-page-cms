@@ -40,8 +40,8 @@ class FunctionnalTestCase(TestCase):
 
     def test_delete_page(self):
         """Create a page, then delete it."""
-        c = self.get_admin_client()        
-        page_data = self.get_new_page_data()     
+        c = self.get_admin_client()
+        page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         slug_content = Content.objects.get_content_slug_by_slug(
@@ -56,7 +56,7 @@ class FunctionnalTestCase(TestCase):
         )
         assert(slug_content is None)
         self.assertEqual(Page.objects.count(), pageCount - 1)
-        
+
     def test_slug_collision(self):
         """Test a slug collision."""
         setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
@@ -132,7 +132,7 @@ class FunctionnalTestCase(TestCase):
         disable it"""
 
         from pages import settings as pages_settings
-        
+
         # it's not possible to enforce PAGE_USE_SITE_ID in the tests
         if not pages_settings.PAGE_USE_SITE_ID:
             #TODO: use unittest.skip skip when 2.7
@@ -737,7 +737,7 @@ class FunctionnalTestCase(TestCase):
             label='test')
         page.delegate_to = 'test'
         page.save()
-        
+
         response = c.get('/pages/delegate')
         self.assertEqual(response.status_code, 200)
 
@@ -759,7 +759,18 @@ class FunctionnalTestCase(TestCase):
             Content.objects.get_content(page, 'en-us', 'untrans'),
             unstranslated_string
         )
-        
+
         page_data['untrans'] = ''
         response = c.get('/admin/pages/page/%d/?language=fr-ch' % page.id)
         self.assertContains(response, unstranslated_string)
+
+    def test_root_page(self):
+        """Test that the root page doesn't trigger a 404."""
+        c = self.get_admin_client()
+        page1 = self.new_page(content={'slug':'this-is-not-a-404'})
+        self.assertEqual(Page.objects.count(), 1)
+        page = Page.objects.on_site()[0]
+        self.assertTrue(page.is_first_root())
+
+        response = c.get('/pages/')
+        self.assertEqual(response.status_code, 200)

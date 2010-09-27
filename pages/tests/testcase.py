@@ -3,6 +3,7 @@ from pages.models import Page, Content
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
+from django.contrib.sites.models import Site
 
 class MockRequest:
     REQUEST = {'language': 'en'}
@@ -54,6 +55,7 @@ class TestCase(TestCase):
         page = Page(author=author, status=Page.PUBLISHED,
             template='pages/examples/index.html')
         page.save()
+        page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache
         page.invalidate()
         for key, value in content.items():

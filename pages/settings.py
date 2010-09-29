@@ -21,12 +21,12 @@ def get_setting(*args, **kwargs):
     return kwargs.get('default_value', None)
 
 
-# The path to default template 
+# The path to default template
 PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
     'DEFAULT_PAGE_TEMPLATE', raise_error=True)
 
-# PAGE_TEMPLATES is a list of tuples that specifies the which templates 
-# are available in the ``pages`` admin.  Templates should be assigned in 
+# PAGE_TEMPLATES is a list of tuples that specifies the which templates
+# are available in the ``pages`` admin.  Templates should be assigned in
 # the following format:
 #
 # PAGE_TEMPLATES = (
@@ -52,8 +52,8 @@ def get_page_templates():
     else:
         return PAGE_TEMPLATES
 
-# Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the 
-# ``django-tagging`` application. 
+# Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
+# ``django-tagging`` application.
 PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
 if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
     raise ImproperlyConfigured('django-tagging could not be found.\n'
@@ -69,12 +69,12 @@ if PAGE_TINYMCE and "tinymce" not in getattr(settings, 'INSTALLED_APPS', []):
                                'correctly or disable the tinymce feature by '
                                'setting PAGE_TINYMCE to False.')
 
-# Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names 
+# Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names
 # for all pages.
-PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED', 
+PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
                                     False)
 
-# Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of 
+# Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of
 # pages revision information in the database
 PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 
@@ -90,7 +90,7 @@ PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 
 PAGE_LANGUAGES = get_setting('PAGE_LANGUAGES', raise_error=True)
 
-# Defines which language should be used by default.  If 
+# Defines which language should be used by default.  If
 # ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
 # ``settings.LANGUAGE_CODE`` is used
 
@@ -128,11 +128,11 @@ PAGE_EXTRA_PERMISSIONS = getattr(settings, 'PAGE_EXTRA_PERMISSIONS', extra)
 #         if lang.startswith('zh'):
 #             return 'zh-cn'
 #         return lang
-#     PAGE_LANGUAGE_MAPPING = language_mapping 
+#     PAGE_LANGUAGE_MAPPING = language_mapping
 PAGE_LANGUAGE_MAPPING = getattr(settings, 'PAGE_LANGUAGE_MAPPING', lambda l: l)
 
 # Set SITE_ID to the id of the default ``Site`` instance to be used on
-# installations where content from a single installation is served on 
+# installations where content from a single installation is served on
 # multiple domains via the ``django.contrib.sites`` framework.
 SITE_ID = getattr(settings, 'SITE_ID', 1)
 
@@ -170,17 +170,17 @@ PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)
 
 # Show the publication start date field in the admin.  Allows for future dating
 # Changing the ``PAGE_SHOW_START_DATE``  from ``True`` to ``False``
-# after adding data could cause some weirdness.  If you must do this, you 
+# after adding data could cause some weirdness.  If you must do this, you
 # should update your database to correct any future dated pages.
 PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
 
 # Show the publication end date field in the admin, allows for page expiration
-# Changing ``PAGE_SHOW_END_DATE`` from ``True`` to ``False`` after adding 
-# data could cause some weirdness.  If you must do this, you should update 
+# Changing ``PAGE_SHOW_END_DATE`` from ``True`` to ``False`` after adding
+# data could cause some weirdness.  If you must do this, you should update
 # your database and null any pages with ``publication_end_date`` set.
 PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 
-# ``PAGE_CONNECTED_MODELS`` allows you to specify a model and form for this 
+# ``PAGE_CONNECTED_MODELS`` allows you to specify a model and form for this
 # model into your settings to get an automatic form to create
 # and directly link a new instance of this model with your page in the admin.
 #
@@ -199,7 +199,8 @@ PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
 PAGE_LINK_FILTER = getattr(settings, 'PAGE_LINK_FILTER', False)
 
 # This setting is a function that can be defined if you need to pass extra
-# context data to the pages templates.
+# context dict to the pages templates. You can customize the way the function
+# is called by subclassing ``pages.views.Details``.
 PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 
 # This setting is the name of a sub-folder where uploaded content, like

@@ -14,12 +14,12 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
-import mptt
+from mptt.models import MPTTModel
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
 
-class Page(models.Model):
+class Page(MPTTModel):
     """
     This model contain the status, dates, author, template.
     The real content of the page can be found in the
@@ -411,12 +411,6 @@ class Page(models.Model):
                 return slug
             return "Page %d" % self.id
         return "Page without id"
-
-# Don't register the Page model twice.
-try:
-    mptt.register(Page)
-except mptt.AlreadyRegistered:
-    pass
 
 
 class Content(models.Model):

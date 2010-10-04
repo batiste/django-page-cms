@@ -1,5 +1,5 @@
 setuptools
-django-mptt>0.2.1
+django-mptt=0.3.0
 django-authority
 html5lib>=0.10
 django>=1.1.1

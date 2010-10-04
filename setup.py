@@ -32,7 +32,7 @@ setup(
         'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'django-mptt>0.2.1',
+        'django-mptt=0.3.0',
         'django-authority',
         'django-staticfiles',
         'django-haystack',

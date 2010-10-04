@@ -142,7 +142,7 @@ class Details(object):
         if delegation and current_page.delegate_to:
             urlconf = get_urlconf(current_page.delegate_to)
             result = resolve('/', urlconf)
-            if len(result):
+            if result:
                 view, args, kwargs = result
                 kwargs.update(context)
                 return view(request, *args, **kwargs)

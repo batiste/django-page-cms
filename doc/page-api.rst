@@ -83,6 +83,12 @@ Page Manager
     :members:
     :undoc-members:
 
+Page view
+==========
+
+.. autoclass:: pages.views.Details
+    :members:
+
 Content Model
 =============
 

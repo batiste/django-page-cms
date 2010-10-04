@@ -2,14 +2,14 @@
 Display page's content in templates
 ===================================
 
-Django page CMS provide several ready to use template tags. To use these tags in your templates
-you must load them first::
+Django page CMS provide several template tags to extract data from the CMS.
+To use these tags in your templates you must load them first::
 
     {% load pages_tags %}
 
 .. contents::
     :local:
-    :depth: 1
+    :depth: 2
 
 get_content
 -----------
@@ -75,3 +75,65 @@ that the template knows which language is used within the context and display th
 .. note::
 
     You can use either the page object, the slug, or the id of the page.
+
+
+Display content from other applications
+----------------------------------------
+
+There is several ways to change the way the default view provided
+by the CMS render the pages. This list try explain the most common.
+
+Using the PAGE_EXTRA_CONTEXT setting
+======================================
+
+Considering you have a simple news model::
+
+    class News(models.Model):
+        title = models.CharField(max_length=200)
+        postdate = models.DateTimeField(default=datetime.now)
+        body = models.CharField(max_length=200)
+
+And that you would like to display a list of news into some of your page's templates::
+
+    <ul>
+    {% for new in news %}
+        <li>
+            <h2>{{ news.title }}</p>
+            <p>{{ news.body }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+
+Then you might want to use the `PAGE_EXTRA_CONTEXT` setting. You should set this setting to be a function.
+This function should return a Python dictionary. This dictionary will be merged with the context of
+every page of your website.
+
+Example in the case of the news::
+
+    def extra_context():
+        from news.models import News
+        lastest_news = News.object.all()
+        return {'news': lastest_news}
+
+    PAGE_EXTRA_CONTEXT = extra_context
+
+Delegate the page rendering to another application
+===================================================
+
+:doc:`You can set another application to render certain pages of your website </3rd-party-apps>`.
+
+Subclass the default view
+===================================================
+
+New in 1.2.3: The default view is now a real class. That will
+help if you want to override some default behavior::
+
+
+    from pages.views import Details
+    from news.models import News
+
+    class NewsView(Details):
+
+        def extra_context(self, request, context):
+            lastest_news = News.object.all()
+            return {'news': lastest_news}

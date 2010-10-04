@@ -140,3 +140,24 @@ help if you want to override some default behavior::
             return {'news': lastest_news}
 
     details = auto_render(NewsView())
+
+And don't forget to redefine the urls to point to your new view with something similar to this code::
+
+    from django.conf.urls.defaults import url, include, patterns
+    from YOUR_APP.views import details
+    from pages import page_settings
+
+    urlpatterns = patterns('',
+        url(r'^/$', details, name='pages-root'),
+        ...
+    )
+
+    if page_settings.PAGE_USE_LANGUAGE_PREFIX:
+        urlpatterns += patterns('',
+            url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
+                name='pages-details-by-path')
+        )
+    else:
+        urlpatterns += patterns('',
+            url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
+        )

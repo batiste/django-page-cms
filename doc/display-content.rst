@@ -125,7 +125,7 @@ Delegate the page rendering to another application
 Subclass the default view
 ===================================================
 
-New in 1.2.3: The default view is now a real class. That will
+New in 1.3.0: The default view is now a real class. That will
 help if you want to override some default behavior::
 
 

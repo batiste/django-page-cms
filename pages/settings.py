@@ -55,8 +55,8 @@ def get_page_templates():
 # Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
 # ``django-tagging`` application.
 PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
-if PAGE_TAGGING and "tagging" not in getattr(settings, 'INSTALLED_APPS', []):
-    raise ImproperlyConfigured('django-tagging could not be found.\n'
+if PAGE_TAGGING and "taggit" not in getattr(settings, 'INSTALLED_APPS', []):
+    raise ImproperlyConfigured('django-taggit could not be found.\n'
                                'Please make sure you\'ve installed it '
                                'correctly or disable the tagging feature by '
                                'setting PAGE_TAGGING to False.')

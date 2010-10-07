@@ -24,7 +24,7 @@ the **on** option
 
 If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
-to get the content of the placeholder. 
+to get the content of the placeholder.
 
 Template syntax example::
 
@@ -43,7 +43,7 @@ widget fo your choice. Widgets need to be registered before you can use them in 
 
     class NewWidget(TextInput):
         pass
-    
+
     register_widget(NewWidget)
 
 Template syntax example::
@@ -294,14 +294,6 @@ A HTML editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
     {% placeholder [name] with markItUpHTML %}
 
 .. image:: http://t37.net/files/markitup-081127.jpg
-
-AutoCompleteTagInput
----------------------
-
-Provide a dynamic auto complete widget for tags used on pages::
-
-    {% placeholder [name] with AutoCompleteTagInput %}
-
 
 TinyMCE
 -------

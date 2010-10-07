@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
+from taggit.managers import TaggableManager
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
@@ -101,8 +102,7 @@ class Page(MPTTModel):
     objects = PageManager()
 
     if settings.PAGE_TAGGING:
-        from tagging import fields
-        tags = fields.TagField(null=True)
+        tags = TaggableManager()
 
     class Meta:
         """Make sure the default page ordering is correct."""

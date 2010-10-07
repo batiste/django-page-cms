@@ -34,38 +34,6 @@ if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
     register_widget(FileBrowseInput)
 
 
-if PAGE_TAGGING:
-    from tagging.models import Tag
-    from django.utils import simplejson
-
-    class AutoCompleteTagInput(TextInput):
-        """An autocompete widget"""
-        class Media:
-            js = [join(PAGES_MEDIA_URL, path) for path in (
-                'javascript/jquery.js',
-                'javascript/jquery.bgiframe.min.js',
-                'javascript/jquery.ajaxQueue.js',
-                'javascript/jquery.autocomplete.min.js'
-            )]
-
-        def __init__(self, language=None, attrs=None, **kwargs):
-            self.language = language
-            super(AutoCompleteTagInput, self).__init__(attrs)
-
-        def render(self, name, value, language=None, attrs=None, **kwargs):
-            rendered = super(AutoCompleteTagInput, self).render(
-                name, value, attrs)
-            page_tags = Tag.objects.usage_for_model(Page)
-            context = {
-                'name': name,
-                'tags': simplejson.dumps([tag.name for tag in page_tags],
-                    ensure_ascii=False),
-            }
-            return rendered + mark_safe(render_to_string(
-            'pages/widgets/autocompletetaginput.html', context))
-
-    register_widget(AutoCompleteTagInput)
-
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
     class Media:

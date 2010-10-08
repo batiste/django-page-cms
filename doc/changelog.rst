@@ -7,6 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.3.0
 ==============
 
+    * The default view is now a class therefor you can subclass it and change it's behavior more easily.
     * Fix a bug with get_slug_relative_path that may strip the language 2 times from the URL.
     * Remove the dependency to django-unittest-depth.
     * Don't raise a 404 when the LANGUAGE_CODE language is not present in the PAGE_LANGUAGES list.

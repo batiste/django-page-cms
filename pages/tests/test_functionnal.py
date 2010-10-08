@@ -774,3 +774,15 @@ class FunctionnalTestCase(TestCase):
 
         response = c.get('/pages/')
         self.assertEqual(response.status_code, 200)
+
+    def test_page_with_trailing_slash(self):
+        """
+        Test that a page is also available with and without a trailing slash.
+        """
+        c = self.get_admin_client()
+        page1 = self.new_page(content={'slug':'root'})
+        page2 = self.new_page(content={'slug':'other'})
+        response = c.get('/pages/other')
+        self.assertEqual(response.status_code, 200)
+        response = c.get('/pages/other/')
+        self.assertEqual(response.status_code, 200)

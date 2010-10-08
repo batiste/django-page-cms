@@ -4,12 +4,30 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release 1.2.2
+Release 1.3.0
 ==============
 
+    * Use the new version of django-mptt 0.4.1.
+    * Remove the support for django-tagging and use django-taggit instead.
+    * Fix a bug with get_slug_relative_path that may strip the language 2 times from the URL.
+    * Remove the dependency to django-unittest-depth.
+    * Don't raise a 404 when the LANGUAGE_CODE language is not present in the PAGE_LANGUAGES list.
+    * Get ride of the only raw SQL command by using the ORM's annotate.
+    * Fix a cache issue with show_absolute_url and get_complete_slug.
+    * Placeholer content is now marked as safe by default.
     * The default template for menu now display the title instead of the slug in the link
     * Improve the default application look.
 
+Maintenance
+-----------
+
+Install the new django-mptt package::
+
+    sudo pip install -U django-mptt>=0.4.1
+
+If you want to use tags you should install the new django-taggit::
+
+    sudo pip install django-taggit
 
 Release 1.2.1
 =============

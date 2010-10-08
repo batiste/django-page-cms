@@ -29,13 +29,10 @@ setup(
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     install_requires=[
-        'BeautifulSoup',
         'Django',
         'html5lib>=0.10',
-        'django-mptt>=0.4.0',
-        'django-authority',
-        'django-staticfiles',
-        'django-haystack',
+        'BeautifulSoup',
+        'django-mptt>=0.4.1',
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.

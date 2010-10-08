@@ -143,7 +143,7 @@ class PlaceholderNode(template.Node):
         # in the default language
         if self.untranslated:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        
+
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
@@ -203,7 +203,7 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         """Output the content of the `PlaceholdeNode` in the template."""
 
-        content = self.get_content_from_context(context)
+        content = mark_safe(self.get_content_from_context(context))
         if not content:
             return ''
         if self.parsed:

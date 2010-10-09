@@ -4,17 +4,22 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 from django.contrib.sites.models import Site
+from django.utils.importlib import import_module
+from django.core.urlresolvers import clear_url_caches
+
 
 class MockRequest:
     REQUEST = {'language': 'en'}
     GET = {}
     META = {}
 
+
 class Error404Expected(Exception):
     """
     A 404 error was expected."
     """
     pass
+
 
 class TestCase(TestCase):
     """Django page CMS test suite class"""
@@ -38,6 +43,11 @@ class TestCase(TestCase):
 
     def get_page_url(self, path=''):
         return reverse('pages-details-by-path', args=[path])
+
+    def reset_urlconf(self):
+        reload(import_module('pages.urls'))
+        reload(import_module('pages.testproj.urls'))
+        clear_url_caches()
 
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""

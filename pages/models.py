@@ -232,14 +232,19 @@ class Page(MPTTModel):
 
         :param language: the wanted url language.
         """
+        url = self.get_complete_slug(language)
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        url = reverse('pages-root')
-        if url.endswith('//'):
-            url = url[:-1]
+        if url == '':
+            url = reverse('pages-root')
+            if url.endswith('//'):
+                url = url[:-1]
+            return url
         if settings.PAGE_USE_LANGUAGE_PREFIX:
-            url += str(language) + '/'
-        return url + self.get_complete_slug(language)
+            return reverse('pages-details-by-path',
+                args=[language, url])
+        else:
+            return reverse('pages-details-by-path', args=[url])
 
     def get_absolute_url(self, language=None):
         """Alias for `get_url_path`.
@@ -269,7 +274,7 @@ class Page(MPTTModel):
             return self._complete_slug[language]
 
         if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
-            url = ''
+            url = u''
         else:
             url = u'%s' % self.slug(language)
         for ancestor in self.get_ancestors(ascending=True):

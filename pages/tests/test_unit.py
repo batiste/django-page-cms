@@ -415,6 +415,7 @@ class UnitTestCase(TestCase):
         from pages import settings as pages_settings
         old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
         setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
+        self.reset_urlconf()
 
         from pages.views import details
         req = get_request_mock()
@@ -438,6 +439,7 @@ class UnitTestCase(TestCase):
 
 
         setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
+        self.reset_urlconf()
 
         req.path = page2.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],

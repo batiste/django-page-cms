@@ -1,5 +1,6 @@
 from django.test import TestCase
 from pages.models import Page, Content
+from pages import settings as pages_settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
@@ -25,6 +26,22 @@ class TestCase(TestCase):
     """Django page CMS test suite class"""
     fixtures = ['pages_tests.json']
     counter = 1
+    settings_to_reset = {}
+
+    def tearDown(self):
+        for name, value in self.settings_to_reset.items():
+            setattr(pages_settings, name, value)
+        if 'PAGE_USE_LANGUAGE_PREFIX' in self.settings_to_reset:
+            self.reset_urlconf()
+        self.settings_to_reset = {}
+
+    def set_setting(self, name, value):
+        old_value = getattr(pages_settings, name)
+        setattr(pages_settings, name, value)
+        if name == 'PAGE_USE_LANGUAGE_PREFIX':
+            self.reset_urlconf()
+        if name not in self.settings_to_reset:
+            self.settings_to_reset[name] = old_value
 
     def assert404(self, func):
         try:

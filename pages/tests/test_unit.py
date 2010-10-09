@@ -390,9 +390,7 @@ class UnitTestCase(TestCase):
         Test that get_slug_and_relative_path doesn't strip the language
         2 times from the path.
         """
-        from pages import settings as pages_settings
-        old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
-        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
+        self.set_setting("PAGE_USE_LANGUAGE_PREFIX", True)
 
         path = 'en-us/path/path/slug'
         slug, path, lang = get_slug_and_relative_path(path)
@@ -405,17 +403,12 @@ class UnitTestCase(TestCase):
         self.assertEqual(path, 'path/path/slug')
         self.assertEqual(lang, None)
 
-        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
-
     def test_default_view_with_language_prefix(self):
         """
         Test that everything is working with the language prefix option
         activated.
         """
-        from pages import settings as pages_settings
-        old_value = getattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX")
-        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", True)
-        self.reset_urlconf()
+        self.set_setting("PAGE_USE_LANGUAGE_PREFIX", True)
 
         from pages.views import details
         req = get_request_mock()
@@ -437,9 +430,12 @@ class UnitTestCase(TestCase):
         self.assertEqual(details(req, only_context=True)['current_page'],
             page2)
 
+        self.set_setting("PAGE_HIDE_ROOT_SLUG", False)
 
-        setattr(pages_settings, "PAGE_USE_LANGUAGE_PREFIX", old_value)
-        self.reset_urlconf()
+        self.assertEqual(page1.get_url_path(), '/pages/en-us/page1')
+
+        self.assertEqual(page1.is_first_root(), True)
+
 
         req.path = page2.get_url_path()
         self.assertEqual(details(req, only_context=True)['current_page'],

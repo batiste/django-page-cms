@@ -59,14 +59,14 @@ class FunctionnalTestCase(TestCase):
 
     def test_slug_collision(self):
         """Test a slug collision."""
-        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", True)
 
         c = self.get_admin_client()
 
         page_data = self.get_new_page_data()
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", False)
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertEqual(response.status_code, 200)
 
@@ -237,8 +237,6 @@ class FunctionnalTestCase(TestCase):
         response = c.post('/admin/pages/page/%d/' % page.id, page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
-        #setattr(settings, "PAGE_DEFAULT_LANGUAGE", 'en-us')
-
         # test that the frontend view use the good parameters
         # I cannot find a way of setting the accept-language HTTP
         # header so I used django_language cookie instead
@@ -286,7 +284,7 @@ class FunctionnalTestCase(TestCase):
         response = c.get(page.get_url_path())
         self.assertContains(response, 'changed body 2', 1)
 
-        setattr(settings, "PAGE_CONTENT_REVISION", False)
+        self.set_setting("PAGE_CONTENT_REVISION", False)
 
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
@@ -311,7 +309,7 @@ class FunctionnalTestCase(TestCase):
         """
         Test diretory slugs
         """
-        setattr(settings, "PAGE_UNIQUE_SLUG_REQUIRED", False)
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", False)
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
 

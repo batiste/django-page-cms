@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-from django.conf import settings
 from django.template import Template, RequestContext, Context
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
@@ -17,7 +16,7 @@ class RegressionTestCase(TestCase):
         Test the issue 100
         http://code.google.com/p/django-page-cms/issues/detail?id=100
         """
-        setattr(settings, "PAGE_SHOW_START_DATE", True)
+        self.set_setting("PAGE_SHOW_START_DATE", True)
         c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -29,8 +28,7 @@ class RegressionTestCase(TestCase):
         page1.status = Page.DRAFT
         page1.save()
 
-        page1.calculated_status
-        setattr(settings, "PAGE_SHOW_START_DATE", False)
+        self.assertEqual(page1.calculated_status, Page.DRAFT)
 
     def test_slug_bug(self):
         """

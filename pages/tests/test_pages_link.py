@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module for page links"""
 
-from pages import settings
 from pages.tests.testcase import TestCase
 from pages.models import Content
 
@@ -10,7 +9,7 @@ class LinkTestCase(TestCase):
 
     def test_01_set_body_pagelink(self):
         """Test the get_body_pagelink_ids and set_body_pagelink functions."""
-        setattr(settings, "PAGE_LINK_FILTER", True)
+        self.set_setting("PAGE_LINK_FILTER", True)
         page1 = self.create_new_page()
         page2 = self.create_new_page()
         # page2 has a link on page1

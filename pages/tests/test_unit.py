@@ -22,8 +22,7 @@ class UnitTestCase(TestCase):
 
     def test_date_ordering(self):
         """Test page date ordering feature."""
-        from pages import settings as pages_settings
-        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        self.set_setting("PAGE_USE_SITE_ID", False)
         author = User.objects.all()[0]
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
         now = datetime.datetime.now()
@@ -79,8 +78,7 @@ class UnitTestCase(TestCase):
 
     def test_page_caculated_status(self):
         """Test calculated status property."""
-        from pages import settings as pages_settings
-        setattr(pages_settings, "PAGE_SHOW_START_DATE", True)
+        self.set_setting("PAGE_SHOW_START_DATE", True)
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
         tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
 
@@ -90,14 +88,13 @@ class UnitTestCase(TestCase):
         self.assertEqual(page.calculated_status, Page.DRAFT)
         page.publication_date = yesterday
         self.assertEqual(page.calculated_status, Page.PUBLISHED)
-        setattr(pages_settings, "PAGE_SHOW_END_DATE", True)
+        self.set_setting("PAGE_SHOW_END_DATE", True)
         page.publication_end_date = yesterday
         self.assertEqual(page.calculated_status, Page.EXPIRED)
 
     def test_placeholder_inherit_content(self):
         """Test placeholder content inheritance between pages."""
-        from pages import settings as pages_settings
-        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        self.set_setting("PAGE_USE_SITE_ID", False)
         author = User.objects.all()[0]
         p1 = self.new_page(content={'inher':'parent-content'})
         p2 = self.new_page()
@@ -132,7 +129,7 @@ class UnitTestCase(TestCase):
         self.assertEqual(template.render(context), page.title())
 
 
-        # error in parse template content
+        # to be sure to raise an errors in parse template content
         setattr(settings, "DEBUG", True)
 
         page = self.new_page({'wrong': '{% wrong %}'})
@@ -181,8 +178,7 @@ class UnitTestCase(TestCase):
 
     def test_placeholder_untranslated_content(self):
         """Test placeholder untranslated content."""
-        from pages import settings as pages_settings
-        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
+        self.set_setting("PAGE_USE_SITE_ID", False)
         page = self.new_page(content={})
         placeholder = PlaceholderNode('untrans', page='p', untranslated=True)
         placeholder.save(page, 'fr-ch', 'test-content', True)

@@ -239,6 +239,8 @@ class Page(MPTTModel):
             url = reverse('pages-root')
             if url.endswith('//'):
                 url = url[:-1]
+            if settings.PAGE_USE_LANGUAGE_PREFIX:
+                url = url + language + '/'
             return url
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             return reverse('pages-details-by-path',

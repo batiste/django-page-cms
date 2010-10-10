@@ -5,17 +5,12 @@ from django.conf.urls.defaults import handler404, handler500
 from pages.views import details
 from pages import settings
 
-# Public pages
-urlpatterns = patterns('',
-    url(r'^/$', details, name='pages-root'),
-)
-
 if settings.PAGE_USE_LANGUAGE_PREFIX:
-    urlpatterns += patterns('',
+    urlpatterns = patterns('',
         url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
             name='pages-details-by-path')
     )
 else:
-    urlpatterns += patterns('',
+    urlpatterns = patterns('',
         url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
     )

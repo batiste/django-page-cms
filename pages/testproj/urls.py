@@ -31,7 +31,6 @@ if pages_settings.PAGE_USE_LANGUAGE_PREFIX:
     )
 else:
     urlpatterns += patterns('',
-        url(r'^pages/$', details, name='pages-root'),
         url(r'^pages/(?P<path>.*)/documents/', include("example.documents.urls")),
         url(r'^pages/(?P<path>.*)$', details, name='pages-details-by-path')
     )

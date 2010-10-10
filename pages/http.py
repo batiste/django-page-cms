@@ -84,7 +84,7 @@ def get_slug_and_relative_path(path, lang=None):
     Return the page's slug, relative path and language.
     If the language prefix is used in the pathm, this function
     will try to remove the language from the path.
-    
+
         >>> get_slug_and_relative_path('/test/function/')
         ('function', 'test/function', None)
     """

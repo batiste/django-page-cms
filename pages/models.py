@@ -235,13 +235,6 @@ class Page(MPTTModel):
         url = self.get_complete_slug(language)
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        if url == '':
-            url = reverse('pages-root')
-            if url.endswith('//'):
-                url = url[:-1]
-            if settings.PAGE_USE_LANGUAGE_PREFIX:
-                url = url + language + '/'
-            return url
         if settings.PAGE_USE_LANGUAGE_PREFIX:
             return reverse('pages-details-by-path',
                 args=[language, url])
@@ -416,8 +409,8 @@ class Page(MPTTModel):
             slug = self.slug()
             if slug:
                 return slug
-            return "Page %d" % self.id
-        return "Page without id"
+            return u"Page %d" % self.id
+        return u"Page without id"
 
 
 class Content(models.Model):
@@ -441,7 +434,7 @@ class Content(models.Model):
         verbose_name_plural = _('contents')
 
     def __unicode__(self):
-        return "%s :: %s" % (self.page.slug(), self.body[0:15])
+        return u"%s :: %s" % (self.page.slug(), self.body[0:15])
 
 
 class PageAlias(models.Model):
@@ -460,4 +453,4 @@ class PageAlias(models.Model):
         super(PageAlias, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "%s => %s" % (self.url, self.page.get_complete_slug())
+        return u"%s :: %s" % (self.url, self.page.get_complete_slug())

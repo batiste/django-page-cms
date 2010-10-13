@@ -78,6 +78,11 @@ PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
 # pages revision information in the database
 PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)
 
+# Define the number of revisions too keep in the database. Set to None
+# if you want to keep everything
+PAGE_CONTENT_REVISION_DEPTH = getattr(settings,
+    'PAGE_CONTENT_REVISION_DEPTH', 10)
+
 # A list tuples that defines the languages that pages can be translated into.
 #
 # gettext_noop = lambda s: s
@@ -206,3 +211,6 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # This setting is the name of a sub-folder where uploaded content, like
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
+
+
+

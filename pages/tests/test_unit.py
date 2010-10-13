@@ -451,3 +451,18 @@ class UnitTestCase(TestCase):
 
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
         self.assertEqual(page1.get_url_path(), '/pages/page1')
+
+    def test_revision_depth(self):
+        """
+        Check that PAGE_CONTENT_REVISION_DEPTH works.
+        """
+        page1 = self.new_page(content={'slug':'page1'})
+        self.set_setting("PAGE_CONTENT_REVISION_DEPTH", 3)
+        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev1')
+        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev2')
+        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev3')
+        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev4')
+        self.assertEqual(Content.objects.filter(type='rev-test').count(), 3)
+        self.assertEqual(
+            Content.objects.filter(type='rev-test').latest('creation_date').body,
+            'rev4')

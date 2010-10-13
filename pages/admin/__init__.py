@@ -7,7 +7,8 @@ from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
-from pages.admin.views import traduction, get_content, sub_menu, list_pages_ajax
+from pages.admin.views import traduction, get_content, sub_menu
+from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
 from pages.permissions import PagePermission

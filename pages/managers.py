@@ -35,7 +35,7 @@ class PageManager(models.Manager):
             language='en-us', page=p).save()
         for child in range(1, child+1):
             self.populate_pages(parent=p, child=child, depth=(depth-1))
-    
+
     def on_site(self, site_id=None):
         """Return a :class:`QuerySet` of pages that are published on the site
         defined by the ``SITE_ID`` setting.
@@ -178,6 +178,13 @@ class ContentManager(models.Manager):
         content = self.create(page=page, language=language, body=body,
                 type=ctype)
 
+        # Delete old revisions
+        if settings.PAGE_CONTENT_REVISION_DEPTH:
+            oldest_content = self.filter(page=page, language=language,
+                type=ctype).order_by('-creation_date')[settings.PAGE_CONTENT_REVISION_DEPTH:]
+            for c in oldest_content:
+                c.delete()
+
     def get_content(self, page, language, ctype, language_fallback=False):
         """Gets the latest :class:`Content <pages.models.Content>`
         for a particular page and language. Falls back to another
@@ -193,7 +200,7 @@ class ContentManager(models.Manager):
 
         frozen = int(bool(page.freeze_date))
         key = self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen)
-        
+
         if page._content_dict is None:
             page._content_dict = dict()
         if page._content_dict.get(key, None):
@@ -266,7 +273,7 @@ class ContentManager(models.Manager):
 
 class PageAliasManager(models.Manager):
     """:class:`PageAlias <pages.models.PageAlias>` manager."""
-    
+
     def from_path(self, request, path, lang):
         """
         Resolve a request to an alias. returns a

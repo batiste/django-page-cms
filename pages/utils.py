@@ -9,12 +9,14 @@ from django.core.cache import cache
 
 import re
 
+
 def get_context_mock():
     """return a mockup dictionnary to use in get_placeholders."""
-    context = {'current_page':None}
+    context = {'current_page': None}
     if settings.PAGE_EXTRA_CONTEXT:
         context.update(settings.PAGE_EXTRA_CONTEXT())
     return context
+
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.
@@ -34,6 +36,7 @@ def get_placeholders(template_name):
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
     return plist
+
 
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
@@ -60,7 +63,7 @@ def _placeholders_recursif(nodelist, plist, blist):
                     already_in_plist = True
             if not already_in_plist:
                 if len(blist):
-                    node.found_in_block = blist[len(blist)-1]
+                    node.found_in_block = blist[len(blist) - 1]
                 plist.append(node)
             node.render(Context())
 
@@ -68,7 +71,7 @@ def _placeholders_recursif(nodelist, plist, blist):
             if isinstance(node, BlockNode):
                 # delete placeholders found in a block of the same name
                 offset = 0
-                _plist = [(i,v) for i,v in enumerate(plist)]
+                _plist = [(i, v) for i, v in enumerate(plist)]
                 for index, pl in _plist:
                     if pl.found_in_block and \
                             pl.found_in_block.name == node.name \
@@ -85,6 +88,7 @@ def _placeholders_recursif(nodelist, plist, blist):
             if isinstance(node, BlockNode):
                 blist.pop()
 
+
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.
 
@@ -99,15 +103,16 @@ def normalize_url(url):
      >>> normalize_url('/foo/bar/')
      '/foo/bar'
     """
-    if not url or len(url)==0:
+    if not url or len(url) == 0:
         return '/'
     if not url.startswith('/'):
         url = '/' + url
-    if len(url)>1 and url.endswith('/'):
-        url = url[0:len(url)-1]
+    if len(url) > 1 and url.endswith('/'):
+        url = url[0:len(url) - 1]
     return url
 
 PAGE_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
+
 
 def filter_link(content, page, language, content_type):
     """Transform the HTML link href to point to the targeted page

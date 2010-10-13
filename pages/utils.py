@@ -25,7 +25,7 @@ def get_placeholders(template_name):
         temp = loader.get_template(template_name)
     except TemplateDoesNotExist:
         return []
-        
+
     request = get_request_mock()
     context = get_context_mock()
     # I need to render the template in order to extract
@@ -40,7 +40,7 @@ def _placeholders_recursif(nodelist, plist, blist):
     node."""
     # I needed to make this lazy import to compile the documentation
     from django.template.loader_tags import BlockNode
-    
+
     for node in nodelist:
 
         # extends node?
@@ -67,13 +67,16 @@ def _placeholders_recursif(nodelist, plist, blist):
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
             if isinstance(node, BlockNode):
                 # delete placeholders found in a block of the same name
-                for index, pl in enumerate(plist):
+                offset = 0
+                _plist = [(i,v) for i,v in enumerate(plist)]
+                for index, pl in _plist:
                     if pl.found_in_block and \
                             pl.found_in_block.name == node.name \
                             and pl.found_in_block != node:
-                        del plist[index]
+                        del plist[index - offset]
+                        offset += 1
                 blist.append(node)
-            
+
             if hasattr(node, key):
                 try:
                     _placeholders_recursif(getattr(node, key), plist, blist)
@@ -84,7 +87,7 @@ def _placeholders_recursif(nodelist, plist, blist):
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.
-     
+
      >>> normalize_url(None)
      '/'
      >>> normalize_url('/')

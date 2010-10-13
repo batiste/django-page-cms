@@ -214,3 +214,19 @@ class RegressionTestCase(TestCase):
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
         template = loader.get_template_from_string(pl1)
         self.assertEqual(template.render(context), u'\n')
+
+    def test_placeholder_bug(self):
+        """Test placeholder with django template inheritance works prepoerly.
+        http://code.google.com/p/django-page-cms/issues/detail?id=210
+        """
+        p1 = self.new_page(content={'slug':'test', 'one':'one', 'two': 'two'})
+        template = django.template.loader.get_template('pages/tests/extends.html')
+        context = Context({'current_page': p1, 'lang':'en-us'})
+        renderer = template.render(context)
+        self.assertTrue('one' in renderer)
+        self.assertTrue('two' in renderer)
+
+        from pages.utils import get_placeholders
+        self.assertEqual(
+            str(get_placeholders('pages/tests/extends.html')),
+            '[<Placeholder Node: one>, <Placeholder Node: two>]')

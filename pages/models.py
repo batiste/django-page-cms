@@ -15,7 +15,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
-from taggit.managers import TaggableManager
+if settings.PAGE_TAGGING:
+    from taggit.managers import TaggableManager
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 

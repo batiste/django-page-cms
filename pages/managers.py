@@ -131,9 +131,8 @@ class ContentManager(models.Manager):
         import html5lib
         from html5lib import sanitizer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
-        # TODO: that's a bit of a hack there
-        # we need to remove <html><head/><body>...</body></html>
-        return p.parse(content).toxml()[19:-14]
+        dom_tree = p.parseFragment(content)
+        return dom_tree.toxml()
 
     def set_or_create_content(self, page, language, ctype, body):
         """Set or create a :class:`Content <pages.models.Content>` for a

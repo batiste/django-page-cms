@@ -97,6 +97,9 @@ def get_slug_and_relative_path(path, lang=None):
         >>> get_slug_and_relative_path('/test/function/')
         ('function', 'test/function', None)
     """
+    # TODO: next 3 lines might be removed because
+    # the user is not supposed to user request.path but
+    # configure his urls.py properly
     root = page_root_url()
     if path.startswith(root):
         path = path[len(root):]

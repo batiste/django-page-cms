@@ -533,8 +533,7 @@ class FunctionnalTestCase(TestCase):
         from pages.views import details
         from pages.utils import get_request_mock
         request = get_request_mock()
-        request.path = page1.get_url_path()
-        context = details(request, only_context=True)
+        context = details(request, path='/pages/page1/', only_context=True)
         self.assertEqual(context['current_page'], page1)
 
 

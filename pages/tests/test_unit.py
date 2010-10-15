@@ -408,28 +408,28 @@ class UnitTestCase(TestCase):
 
         from pages.views import details
         req = get_request_mock()
-        self.assertRaises(Http404, details, req)
+        self.assertRaises(Http404, details, req, '/pages/')
 
         page1 = self.new_page(content={'slug':'page1'})
         page2 = self.new_page(content={'slug':'page2'})
 
         self.assertEqual(page1.get_url_path(), '/pages/en-us/page1')
 
-        req.path = page1.get_url_path()
-        self.assertEqual(details(req, only_context=True)['current_page'],
+        self.assertEqual(details(req, page1.get_url_path(),
+            only_context=True)['current_page'],
             page1)
 
         self.assertEqual(details(req, path=page2.get_complete_slug(),
             only_context=True)['current_page'], page2)
 
-        req.path = page2.get_url_path()
-        self.assertEqual(details(req, only_context=True)['current_page'],
+        self.assertEqual(details(req, page2.get_url_path(),
+            only_context=True)['current_page'],
             page2)
 
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
 
-        req.path = page2.get_url_path()
-        self.assertEqual(details(req, only_context=True)['current_page'],
+        self.assertEqual(details(req, page2.get_url_path(),
+            only_context=True)['current_page'],
             page2)
 
     def test_root_page_hidden_slug(self):

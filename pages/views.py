@@ -23,11 +23,10 @@ class Details(object):
         current_page = False
         lang = self.choose_language(lang, request)
 
-        # if the path is not defined, we assume that the user
-        # is using the view in a non usual way and fallback onto the
-        # the full request path.
         if path is None:
-            path = request.path
+            raise ValueError(
+                "pages.views.Details class view requires the path argument. "
+                "Check your urls.py file.")
 
         pages_navigation = self.get_navigation(request, path, lang)
 

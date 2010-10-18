@@ -79,9 +79,8 @@ class TestCase(TestCase):
 
     def new_page(self, content={'title':'test-page'}, language='en-us'):
         author = User.objects.all()[0]
-        page = Page(author=author, status=Page.PUBLISHED,
+        page = Page.objects.create(author=author, status=Page.PUBLISHED,
             template='pages/examples/index.html')
-        page.save()
         page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache
         page.invalidate()

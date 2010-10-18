@@ -109,6 +109,9 @@ class PageManager(models.Manager):
         if exclude_drafts:
             pages_list = pages_list.exclude(status=self.model.DRAFT)
         if len(pages_list) == 1:
+            if(settings.PAGES_STRICT_URLS and
+                page.get_complete_slug(lang) != complete_path):
+                    return None
             return pages_list[0]
         # if more than one page is matching the slug,
         # we need to use the full URL

@@ -3,7 +3,6 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from pages import settings
 from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request
-from pages.http import get_slug
 from pages.urlconf_registry import get_urlconf
 from django.core.urlresolvers import resolve
 from django.utils import translation
@@ -36,7 +35,6 @@ class Details(object):
                 path = path[(len(lang) + 1):]
 
         lang = self.choose_language(lang, request)
-
         pages_navigation = self.get_navigation(request, path, lang)
 
         context = {

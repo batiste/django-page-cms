@@ -77,20 +77,16 @@ def pages_view(view):
         return view(request, *args, **kwargs)
     return pages_view_decorator
 
-
 def get_slug(path):
     """
-    Return the page's slug, relative path and language.
-    If the language prefix is used in the pathm, this function
-    will try to remove the language from the path.
+    Return the page's slug
 
-        >>> get_slug_and_relative_path('/test/function/')
-        ('function', 'test/function', None)
+        >>> get_slug('/test/function/')
+        function
     """
     if len(path) and path[-1] == '/':
         path = path[:-1]
-    slug = path.split("/")[-1]
-    return slug
+    return path.split("/")[-1]
 
 def get_template_from_request(request, page=None):
     """

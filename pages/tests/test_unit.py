@@ -249,6 +249,7 @@ class UnitTestCase(TestCase):
             lang='en-us'))
 
     def test_managers(self):
+        # TODO: this test seems dependant from other tests
         Page.objects.populate_pages(child=2, depth=2)
         for p in Page.objects.all():
             p.invalidate()
@@ -380,7 +381,6 @@ class UnitTestCase(TestCase):
         request.LANGUAGE_CODE = 'fr-ch'
         self.assertEqual(
             get_language_from_request(request), 'fr-ch')
-
 
     def test_default_view_with_language_prefix(self):
         """

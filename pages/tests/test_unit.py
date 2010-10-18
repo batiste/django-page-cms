@@ -466,3 +466,15 @@ class UnitTestCase(TestCase):
         self.assertEqual(
             Content.objects.filter(type='rev-test').latest('creation_date').body,
             'rev4')
+
+    def test_content_dict(self):
+        """
+        Check that content_dict method works.
+        """
+        page1 = self.new_page(content={'slug':'page1'})
+        page1.save()
+        c = Content.objects.create_content_if_changed(page1, 'en-us', 'body', 'test')
+        self.assertEqual(
+            page1.content_by_language(language='en-us'),
+            [c]
+        )

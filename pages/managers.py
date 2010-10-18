@@ -180,14 +180,28 @@ class ContentManager(models.Manager):
         # Delete old revisions
         if settings.PAGE_CONTENT_REVISION_DEPTH:
             oldest_content = self.filter(page=page, language=language,
-                type=ctype).order_by('-creation_date')[settings.PAGE_CONTENT_REVISION_DEPTH:]
+                type=ctype).order_by('-creation_date'
+                )[settings.PAGE_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
 
+        return content
+
+    def get_content_object(self, page, language, ctype):
+        """Gets the latest published :class:`Content <pages.models.Content>`
+        for a particular page, language and placeholder type."""
+        params = {
+            'language':language,
+            'type':ctype,
+            'page':page
+        }
+        if page.freeze_date:
+            params['creation_date__lte'] = page.freeze_date
+        return  self.filter(**params).latest()
+
     def get_content(self, page, language, ctype, language_fallback=False):
-        """Gets the latest :class:`Content <pages.models.Content>`
-        for a particular page and language. Falls back to another
-        language if wanted.
+        """Gets the latest content string for a particular page, language and
+        placeholder.
 
         :param page: the concerned page object.
         :param language: the wanted language.
@@ -214,20 +228,11 @@ class ContentManager(models.Manager):
         if not content_dict:
             content_dict = {}
             for lang in settings.PAGE_LANGUAGES:
-                params = {
-                    'language':lang[0],
-                    'type':ctype,
-                    'page':page
-                }
-                if page.freeze_date:
-                    params['creation_date__lte'] = page.freeze_date
-                # using the same variable name "language" introduce nasty bugs.
-                lang = lang[0]
                 try:
-                    content = self.filter(**params).latest()
-                    content_dict[lang] = content.body
+                    content = self.get_content_object(page, lang[0], ctype)
+                    content_dict[lang[0]] = content.body
                 except self.model.DoesNotExist:
-                    content_dict[lang] = ''
+                    content_dict[lang[0]] = ''
             page._content_dict[key] = content_dict
             cache.set(key, content_dict)
 

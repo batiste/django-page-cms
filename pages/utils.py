@@ -89,6 +89,39 @@ def _placeholders_recursif(nodelist, plist, blist):
                 blist.pop()
 
 
+def generate_po_files():
+    import polib
+    from pages.models import Page
+    source_language = settings.PAGE_DEFAULT_LANGUAGE
+    source_list = []
+    for page in Page.objects.published():
+        source_list.extend(page.content_by_language(source_language))
+
+    for lang in settings.PAGE_LANGUAGES:
+        if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
+            po = polib.pofile('tests/'+lang[0]+'.po')
+            for source_content in source_list:
+                page = source_content.page
+                try:
+                    target_content = Content.objects.get_content_object(
+                        page, lang[0], source_content.type)
+                    msgstr = target_content.body
+                except:
+                    target_content = None
+                    msgstr = ""
+                if source_content.body:
+                    meta_data = [('page_id', str(page.id)), ('placeholder_name', source_content.type)]
+                    if target_content:
+                        meta_data.append(('content_id', str(target_content.id)))
+                    entry = polib.POEntry(msgid=source_content.body, msgstr=msgstr)
+                    entry.occurrences = meta_data
+                    entry.tcomment = "Placeholder %s in page %s" % (source_content.type, page.title())
+                    if entry not in po:
+                        po.append(entry)
+            po.save()
+            print po
+
+
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.
 

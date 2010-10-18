@@ -334,11 +334,29 @@ class Page(MPTTModel):
         placeholders = get_placeholders(self.get_template())
         exposed_content = []
         for lang in self.get_languages():
-            for p_name in [p.name for p in placeholders]:
-                content = self.get_content(lang, p_name, False)
+            for ctype in [p.name for p in placeholders]:
+                content = self.get_content(lang, ctype, False)
                 if content:
                     exposed_content.append(content)
         return u"\r\n".join(exposed_content)
+
+    def content_by_language(self, language):
+        """
+        Return a list of latest published :class:`Content <pages.models.Content>`
+        for a particluar language.
+
+        :param language: wanted language,
+        """
+        placeholders = get_placeholders(self.get_template())
+        content_list = []
+        for ctype in [p.name for p in placeholders]:
+            try:
+                content = Content.objects.get_content_object(self,
+                    language, ctype)
+                content_list.append(content)
+            except Content.DoesNotExist:
+                pass
+        return content_list
 
     def get_template(self):
         """

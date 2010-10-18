@@ -4,7 +4,7 @@ from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
-from pages.http import get_language_from_request, get_slug_and_relative_path
+from pages.http import get_language_from_request, get_slug
 from pages.http import get_request_mock
 
 import django
@@ -381,23 +381,6 @@ class UnitTestCase(TestCase):
         self.assertEqual(
             get_language_from_request(request), 'fr-ch')
 
-    def test_get_slug_and_relative_path(self):
-        """
-        Test that get_slug_and_relative_path doesn't strip the language
-        2 times from the path.
-        """
-        self.set_setting("PAGE_USE_LANGUAGE_PREFIX", True)
-
-        path = 'en-us/path/path/slug'
-        slug, path, lang = get_slug_and_relative_path(path)
-        self.assertEqual(slug, 'slug')
-        self.assertEqual(path, 'path/path/slug')
-        self.assertEqual(lang, 'en-us')
-        # second pass withe the modified path
-        slug, path, lang = get_slug_and_relative_path(path)
-        self.assertEqual(slug, 'slug')
-        self.assertEqual(path, 'path/path/slug')
-        self.assertEqual(lang, None)
 
     def test_default_view_with_language_prefix(self):
         """

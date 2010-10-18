@@ -2,7 +2,7 @@
 """Django page CMS ``managers``."""
 from pages import settings
 from pages.utils import normalize_url, filter_link
-from pages.http import get_slug_and_relative_path
+from pages.http import get_slug
 
 from django.db import models, connection
 from django.db.models import Q
@@ -102,7 +102,7 @@ class PageManager(models.Manager):
     def from_path(self, complete_path, lang, exclude_drafts=True):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
-        slug, path, lang = get_slug_and_relative_path(complete_path, lang)
+        slug = get_slug(complete_path)
         from pages.models import Content
         page_ids = Content.objects.get_page_ids_by_slug(slug)
         pages_list = self.on_site().filter(id__in=page_ids)

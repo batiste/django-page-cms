@@ -3,11 +3,12 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from pages import settings
 from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request
-from pages.http import get_slug_and_relative_path
+from pages.http import get_slug
 from pages.urlconf_registry import get_urlconf
 from django.core.urlresolvers import resolve
 from django.utils import translation
 
+LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
 class Details(object):
     """
@@ -21,12 +22,20 @@ class Details(object):
             **kwargs):
 
         current_page = False
-        lang = self.choose_language(lang, request)
 
         if path is None:
             raise ValueError(
                 "pages.views.Details class view requires the path argument. "
                 "Check your urls.py file.")
+
+        # for the one that might have forgot to pass the language
+        if settings.PAGE_USE_LANGUAGE_PREFIX and lang is None:
+            maybe_lang = path.split("/")[0]
+            if maybe_lang in LANGUAGE_KEYS:
+                lang = maybe_lang
+                path = path[(len(lang) + 1):]
+
+        lang = self.choose_language(lang, request)
 
         pages_navigation = self.get_navigation(request, path, lang)
 

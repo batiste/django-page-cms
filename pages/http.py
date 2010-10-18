@@ -88,7 +88,7 @@ def pages_view(view):
     return pages_view_decorator
 
 
-def get_slug_and_relative_path(path, lang=None):
+def get_slug(path):
     """
     Return the page's slug, relative path and language.
     If the language prefix is used in the pathm, this function
@@ -100,12 +100,7 @@ def get_slug_and_relative_path(path, lang=None):
     if len(path) and path[-1] == '/':
         path = path[:-1]
     slug = path.split("/")[-1]
-    if settings.PAGE_USE_LANGUAGE_PREFIX:
-        maybe_lang = path.split("/")[0]
-        if maybe_lang in LANGUAGE_KEYS:
-            lang = maybe_lang
-            path = path[(len(lang) + 1):]
-    return slug, path, lang
+    return slug
 
 def get_template_from_request(request, page=None):
     """

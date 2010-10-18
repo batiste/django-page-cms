@@ -88,9 +88,16 @@ def _placeholders_recursif(nodelist, plist, blist):
             if isinstance(node, BlockNode):
                 blist.pop()
 
+do_not_msg = "DO NOT MODIFIY BELOW THIS LINE"
 
 def generate_po_files():
+    """
+    Export all the content from the published pages into
+    po files. The files will be automatically updated
+    with the new content if you run the command again.
+    """
     import polib
+    import os
     from pages.models import Page
     source_language = settings.PAGE_DEFAULT_LANGUAGE
     source_list = []
@@ -99,7 +106,15 @@ def generate_po_files():
 
     for lang in settings.PAGE_LANGUAGES:
         if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
-            po = polib.pofile('tests/'+lang[0]+'.po')
+            try:
+                os.mkdir('poexport/')
+            except OSError:
+                pass
+            path = 'poexport/'+lang[0]+'.po'
+            print("Export language %s" % lang[0])
+            po = polib.pofile(path)
+            po.metadata['Content-Type'] = 'text/plain; charset=utf-8'
+
             for source_content in source_list:
                 page = source_content.page
                 try:
@@ -110,17 +125,66 @@ def generate_po_files():
                     target_content = None
                     msgstr = ""
                 if source_content.body:
-                    meta_data = [('page_id', str(page.id)), ('placeholder_name', source_content.type)]
                     if target_content:
-                        meta_data.append(('content_id', str(target_content.id)))
-                    entry = polib.POEntry(msgid=source_content.body, msgstr=msgstr)
-                    entry.occurrences = meta_data
-                    entry.tcomment = "Placeholder %s in page %s" % (source_content.type, page.title())
+                        tc_id = str(target_content.id)
+                    else:
+                        tc_id = ""
+                    entry = polib.POEntry(msgid=source_content.body,
+                        msgstr=msgstr)
+                    entry.tcomment = """Page %s
+%s
+placeholder=%s
+page_id=%d
+content_id=%s""" % (page.title(), do_not_msg,
+                    source_content.type, page.id, tc_id)
                     if entry not in po:
                         po.append(entry)
-            po.save()
-            print po
+            po.save(path)
+    print("Export finished. The files are available in the poexport directory")
 
+
+def import_po_files():
+    """
+    Import all the content updates from the po files into
+    the pages.
+    """
+    import polib
+    import os
+    from pages.models import Page, Content
+    source_language = settings.PAGE_DEFAULT_LANGUAGE
+    source_list = []
+    pages_to_invalidate = []
+    for page in Page.objects.published():
+        source_list.extend(page.content_by_language(source_language))
+
+    for lang in settings.PAGE_LANGUAGES:
+        if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
+            print("Update language %s" % lang[0])
+            path = 'poexport/'+lang[0]+'.po'
+            po = polib.pofile(path)
+            for entry in po:
+                meta_data = entry.tcomment.split(do_not_msg)[1].split("\n")
+                placeholder_name = meta_data[1].split('=')[1]
+                page_id = int(meta_data[2].split('=')[1])
+                try:
+                    content_id = int(meta_data[3].split('=')[1])
+                except ValueError:
+                    content_id = None
+
+                page = Page.objects.get(id=page_id)
+                current_content = Content.objects.get_content(page, lang[0],
+                    placeholder_name)
+                if current_content != entry.msgstr:
+                    print("Update page %d placeholder %s" % (page_id,
+                        placeholder_name))
+                    Content.objects.create_content_if_changed(
+                        page, lang[0], placeholder_name, entry.msgstr)
+                    if page not in pages_to_invalidate:
+                        pages_to_invalidate.append(page)
+
+    for page in pages_to_invalidate:
+        page.invalidate()
+    print("Import finished")
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

@@ -9,15 +9,6 @@ from pages import settings
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
-def page_root_url(lang=None, url=u''):
-    if not lang:
-        lang = settings.PAGE_DEFAULT_LANGUAGE
-    if settings.PAGE_USE_LANGUAGE_PREFIX:
-        return reverse('pages-details-by-path',
-            args=[lang, url])
-    else:
-        return reverse('pages-details-by-path', args=[url])
-
 def get_request_mock():
     """Build a ``request`` mock up that can be used for testing."""
     basehandler = BaseHandler()
@@ -28,7 +19,6 @@ def get_request_mock():
         'SERVER_PORT': '8000',
         'HTTP_HOST': 'testhost',
     })
-    request.path = page_root_url()
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because

@@ -108,7 +108,6 @@ class PageManager(models.Manager):
         pages_list = self.on_site().filter(id__in=page_ids)
         if exclude_drafts:
             pages_list = pages_list.exclude(status=self.model.DRAFT)
-        current_page = None
         if len(pages_list) == 1:
             return pages_list[0]
         # if more than one page is matching the slug,

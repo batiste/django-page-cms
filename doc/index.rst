@@ -25,6 +25,7 @@ Table of content
     navigation-template-tags.rst
 
     3rd-party-apps.rst
+    commands.rst
 
     settings-list.rst
     changelog.rst

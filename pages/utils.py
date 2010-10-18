@@ -89,13 +89,20 @@ def _placeholders_recursif(nodelist, plist, blist):
                 blist.pop()
 
 do_not_msg = "DO NOT MODIFIY BELOW THIS LINE"
+po_comment = """Page %s
+%s
+placeholder=%s
+page_id=%d
+content_id=%s"""
 
-def generate_po_files():
+def export_po_files(path='poexport'):
     """
     Export all the content from the published pages into
     po files. The files will be automatically updated
     with the new content if you run the command again.
     """
+    if not path.endswith('/'):
+        path += '/'
     import polib
     import os
     from pages.models import Page
@@ -107,12 +114,12 @@ def generate_po_files():
     for lang in settings.PAGE_LANGUAGES:
         if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
             try:
-                os.mkdir('poexport/')
+                os.mkdir(path)
             except OSError:
                 pass
-            path = 'poexport/'+lang[0]+'.po'
+            po_path = path+lang[0]+'.po'
             print("Export language %s" % lang[0])
-            po = polib.pofile(path)
+            po = polib.pofile(po_path)
             po.metadata['Content-Type'] = 'text/plain; charset=utf-8'
 
             for source_content in source_list:
@@ -131,19 +138,15 @@ def generate_po_files():
                         tc_id = ""
                     entry = polib.POEntry(msgid=source_content.body,
                         msgstr=msgstr)
-                    entry.tcomment = """Page %s
-%s
-placeholder=%s
-page_id=%d
-content_id=%s""" % (page.title(), do_not_msg,
-                    source_content.type, page.id, tc_id)
+                    entry.tcomment = po_comment % (page.title(), do_not_msg,
+                        source_content.type, page.id, tc_id)
                     if entry not in po:
                         po.append(entry)
-            po.save(path)
-    print("Export finished. The files are available in the poexport directory")
+            po.save(po_path)
+    print("Export finished. The files are available in the %s directory" % path)
 
 
-def import_po_files():
+def import_po_files(path='poexport'):
     """
     Import all the content updates from the po files into
     the pages.
@@ -156,12 +159,14 @@ def import_po_files():
     pages_to_invalidate = []
     for page in Page.objects.published():
         source_list.extend(page.content_by_language(source_language))
+    if not path.endswith('/'):
+        path += '/'
 
     for lang in settings.PAGE_LANGUAGES:
         if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
             print("Update language %s" % lang[0])
-            path = 'poexport/'+lang[0]+'.po'
-            po = polib.pofile(path)
+            po_path = path+lang[0]+'.po'
+            po = polib.pofile(po_path)
             for entry in po:
                 meta_data = entry.tcomment.split(do_not_msg)[1].split("\n")
                 placeholder_name = meta_data[1].split('=')[1]
@@ -184,7 +189,7 @@ def import_po_files():
 
     for page in pages_to_invalidate:
         page.invalidate()
-    print("Import finished")
+    print("Import finished from %s" % path)
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

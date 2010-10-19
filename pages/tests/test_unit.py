@@ -5,7 +5,8 @@ from pages.placeholders import PlaceholderNode
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 from pages.http import get_language_from_request, get_slug
-from pages.http import get_request_mock
+from pages.http import get_request_mock, remove_slug
+from pages.views import details
 
 import django
 from django.http import Http404
@@ -493,3 +494,30 @@ class UnitTestCase(TestCase):
             Page.objects.from_path('page1/page2', 'en-us'),
             page2
         )
+
+    def test_remove_slug(self):
+        """Test the remove slug function."""
+        self.assertEqual(remove_slug('hello/world/toto'), 'hello/world')
+        self.assertEqual(remove_slug('hello/world'), 'hello')
+        self.assertEqual(remove_slug('/hello/world/'), 'hello')
+        self.assertEqual(remove_slug('hello'), None)
+
+    def test_path_too_long(self):
+        """Test that the CMS try to resolve the whole page path to find
+        a suitable sub path."""
+        page1 = self.new_page(content={'slug':'page1'})
+        page2 = self.new_page(content={'slug':'page2'})
+        page1.save()
+        page2.save()
+        page2.parent = page1
+        page2.save()
+
+        req = get_request_mock()
+        self.set_setting("PAGE_HIDE_ROOT_SLUG", True)
+        def _get_context_page(path):
+            return details(req, path, 'en-us', only_context=True)['current_page']
+        self.assertEqual(_get_context_page('/'), page1)
+        self.assertEqual(_get_context_page('/page1'), page1)
+        self.assertEqual(_get_context_page('/page1/page2/'), page2)
+        self.assertEqual(_get_context_page('/page1/page2/whatever/'), page2)
+        self.assertEqual(_get_context_page('/page1/page-wrong/whatever/'), page1)

@@ -102,6 +102,16 @@ class PageManager(models.Manager):
     def from_path(self, complete_path, lang, exclude_drafts=True):
         """Return a :class:`Page <pages.models.Page>` according to
         the page's path."""
+        if complete_path.endswith("/"):
+            complete_path = complete_path[:-1]
+        # just return the root page
+        if complete_path == '':
+            root_pages = self.root()
+            if root_pages:
+                return root_pages[0]
+            else:
+                return None
+
         slug = get_slug(complete_path)
         from pages.models import Content
         page_ids = Content.objects.get_page_ids_by_slug(slug)

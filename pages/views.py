@@ -2,7 +2,7 @@
 from django.http import Http404, HttpResponsePermanentRedirect
 from pages import settings
 from pages.models import Page, PageAlias
-from pages.http import auto_render, get_language_from_request
+from pages.http import auto_render, get_language_from_request, remove_slug
 from pages.urlconf_registry import get_urlconf
 from django.core.urlresolvers import resolve
 from django.utils import translation
@@ -27,7 +27,7 @@ class Details(object):
                 "pages.views.Details class view requires the path argument. "
                 "Check your urls.py file.")
 
-        # for the one that might have forgot to pass the language
+        # for the ones that might have forgotten to pass the language
         if settings.PAGE_USE_LANGUAGE_PREFIX and lang is None:
             maybe_lang = path.split("/")[0]
             if maybe_lang in LANGUAGE_KEYS:
@@ -82,11 +82,12 @@ class Details(object):
         path = context['path']
         lang = context['lang']
         pages_navigation = context['pages_navigation']
-        if path:
-            return Page.objects.from_path(path, lang,
+        page = None
+        while path is not None and not page:
+            page = Page.objects.from_path(path, lang,
                 exclude_drafts=(not is_staff))
-        elif pages_navigation:
-            return Page.objects.root()[0]
+            path = remove_slug(path)
+        return page
 
     def resolve_alias(self, request, path, lang):
         alias = PageAlias.objects.from_path(request, path, lang)

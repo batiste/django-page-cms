@@ -84,9 +84,25 @@ def get_slug(path):
         >>> get_slug('/test/function/')
         function
     """
-    if len(path) and path[-1] == '/':
+    if path.endswith('/'):
         path = path[:-1]
     return path.split("/")[-1]
+
+def remove_slug(path):
+    """
+    Return the remainin part of the path
+
+        >>> remove_slug('/test/some/function/')
+        test/some
+    """
+    if path.endswith('/'):
+        path = path[:-1]
+    if path.startswith('/'):
+        path = path[1:]
+    if "/" not in path or not path:
+        return None
+    parts = path.split("/")[:-1]
+    return "/".join(parts)
 
 def get_template_from_request(request, page=None):
     """

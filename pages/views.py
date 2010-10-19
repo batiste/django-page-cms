@@ -28,6 +28,7 @@ class Details(object):
                 "Check your urls.py file.")
 
         # for the ones that might have forgotten to pass the language
+        # the language is now removed from the page path
         if settings.PAGE_USE_LANGUAGE_PREFIX and lang is None:
             maybe_lang = path.split("/")[0]
             if maybe_lang in LANGUAGE_KEYS:
@@ -71,9 +72,10 @@ class Details(object):
 
         self.extra_context(request, context)
 
-        answer = self.delegate(request, context, delegation)
-        if answer:
-            return answer
+        if delegation and current_page.delegate_to:
+            answer = self.delegate(request, context, delegation)
+            if answer:
+                return answer
 
         return template_name, context
 
@@ -81,7 +83,6 @@ class Details(object):
         """Return the appropriate page according to the path."""
         path = context['path']
         lang = context['lang']
-        pages_navigation = context['pages_navigation']
         page = None
         while path is not None and not page:
             page = Page.objects.from_path(path, lang,
@@ -146,13 +147,14 @@ class Details(object):
         # if there is a delegation to another view,
         # call this view instead.
         current_page = context['current_page']
-        if delegation and current_page.delegate_to:
-            urlconf = get_urlconf(current_page.delegate_to)
-            result = resolve('/', urlconf)
-            if result:
-                view, args, kwargs = result
-                kwargs.update(context)
-                return view(request, *args, **kwargs)
+        path = context['path']
+        delegate_path = path.replace(current_page.get_complete_slug(), "/")
+        urlconf = get_urlconf(current_page.delegate_to)
+        result = resolve(delegate_path, urlconf)
+        if result:
+            view, args, kwargs = result
+            kwargs.update(context)
+            return view(request, *args, **kwargs)
 
 
 # This view instance use the auto_render decorator. It means

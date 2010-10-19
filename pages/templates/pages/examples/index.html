@@ -115,7 +115,7 @@
     <h3>Right column placeholder</h3>
     <div class="right_column">{{ right_column }}</div>
     </div>
-    
+
     {% if current_page %}
     <div style="width:70%">
 
@@ -140,15 +140,15 @@ $(function(){
     {% if request.user.is_authenticated %}
         $('.placeholder').addClass('placeholder-editable');
     {% endif %}
-    
+
     $('.placeholder-editable').mouseover(function() {
         $(this).addClass('placeholder-over');
     });
-    
+
     $('.placeholder-editable').mouseout(function() {
         $(this).removeClass('placeholder-over');
     });
-    
+
     $('.placeholder-editable').click(function() {
         var p = $(this);
         if(p.hasClass('edit')) {

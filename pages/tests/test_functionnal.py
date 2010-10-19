@@ -738,6 +738,14 @@ class FunctionnalTestCase(TestCase):
         response = c.get('/pages/delegate')
         self.assertEqual(response.status_code, 200)
 
+        from pages.testproj.documents.models import Document
+        doc = Document(title='doc title 1', text='text', page=page)
+        doc.save()
+
+        response = c.get('/pages/delegate/doc-%d' % doc.id)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, "doc title 1")
 
     def test_untranslated(self):
         """Test the untranslated feature in the admin."""

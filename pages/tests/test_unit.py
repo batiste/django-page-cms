@@ -461,3 +461,35 @@ class UnitTestCase(TestCase):
             page1.content_by_language(language='en-us'),
             [c]
         )
+
+    def test_strict_urls(self):
+        """
+        Check that the strict handling of URLs work as
+        intended.
+        """
+        page1 = self.new_page(content={'slug':'page1'})
+        page2 = self.new_page(content={'slug':'page2'})
+        page1.save()
+        page2.save()
+        page2.parent = page1
+        page2.save()
+
+        page1 = Page.objects.get(id=page1.id)
+        self.assertTrue(page1.get_children(), [page2])
+
+        self.assertEqual(
+            Page.objects.from_path('wrong/path/page2', 'en-us'),
+            page2
+        )
+
+        self.set_setting("PAGE_USE_STRICT_URL", True)
+
+        self.assertEqual(
+            Page.objects.from_path('wrong/path/page2', 'en-us'),
+            None
+        )
+
+        self.assertEqual(
+            Page.objects.from_path('page1/page2', 'en-us'),
+            page2
+        )

@@ -156,7 +156,7 @@ PAGE_USE_LANGUAGE_PREFIX = getattr(settings, 'PAGE_USE_LANGUAGE_PREFIX',
 
 # Set this to True to raise an error 404 if the used URL path is
 # not strictly the same than the page.
-PAGES_STRICT_URLS = getattr(settings, 'PAGES_STRICT_URLS', False)
+PAGE_USE_STRICT_URL = getattr(settings, 'PAGE_USE_STRICT_URL', False)
 
 # Assign a list of placeholders to PAGE_CONTENT_REVISION_EXCLUDE_LIST
 # to exclude them from the revision process.

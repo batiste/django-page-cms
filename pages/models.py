@@ -233,6 +233,13 @@ class Page(MPTTModel):
 
         :param language: the wanted url language.
         """
+        if self.is_first_root():
+            # this is used to allow users to change URL of the root
+            # page. The language prefix is not usable here.
+            try:
+                return reverse('pages-root')
+            except Exception:
+                pass
         url = self.get_complete_slug(language)
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE

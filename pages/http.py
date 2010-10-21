@@ -104,6 +104,21 @@ def remove_slug(path):
     parts = path.split("/")[:-1]
     return "/".join(parts)
 
+def path_iter(path):
+    """
+
+    """
+    if path is None:
+        raise StopIteration
+    if path.endswith('/'):
+        path = path[:-1]
+    if path.startswith('/'):
+        path = path[1:]
+    parts = []
+    for part in path.split("/"):
+        parts.append(part)
+        yield "/".join(parts)
+
 def get_template_from_request(request, page=None):
     """
     Gets a valid template from different sources or falls back to the

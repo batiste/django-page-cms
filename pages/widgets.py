@@ -149,7 +149,7 @@ class WYMEditor(Textarea):
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         context['page_link_wymeditor'] = 1
-        context['page_list'] = Page.objects.all().order_by('tree_id','lft')
+        context['page_list'] = Page.objects.all().order_by('tree_id', 'lft')
 
         context['filebrowser'] = 0
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
@@ -184,6 +184,33 @@ class markItUpMarkdown(Textarea):
         return rendered + mark_safe(render_to_string(
             'pages/widgets/markitupmarkdown.html', context))
 register_widget(markItUpMarkdown)
+
+
+class markItUpRest(Textarea):
+    """markItUpRest widget."""
+
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'markitup/jquery.markitup.js',
+            'markitup/sets/rst/set.js',
+        )]
+        css = {
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'markitup/skins/simple/style.css',
+                'markitup/sets/rst/style.css',
+            )]
+        }
+
+    def render(self, name, value, attrs=None, **kwargs):
+        rendered = super(markItUpRest, self).render(name, value, attrs)
+        context = {
+            'name': name,
+        }
+        return rendered + mark_safe(render_to_string(
+            'pages/widgets/markituprest.html', context))
+register_widget(markItUpRest)
+
 
 class markItUpHTML(Textarea):
     """markItUpHTML widget."""
@@ -280,7 +307,7 @@ class VideoWidget(MultiWidget):
     def value_from_datadict(self, data, files, name):
         value = [u'', u'', u'']
         for da in filter(lambda x: x.startswith(name), data):
-            index = int(da[len(name)+1:])
+            index = int(da[len(name) + 1:])
             value[index] = data[da]
         if value[0] == value[1] == value[2] == u'':
             return None

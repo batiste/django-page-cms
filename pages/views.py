@@ -4,7 +4,7 @@ from pages import settings
 from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request, remove_slug
 from pages.urlconf_registry import get_urlconf
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
@@ -73,7 +73,7 @@ class Details(object):
         self.extra_context(request, context)
 
         if delegation and current_page.delegate_to:
-            answer = self.delegate(request, context, delegation)
+            answer = self.delegate(request, context, delegation, **kwargs)
             if answer:
                 return answer
 
@@ -83,10 +83,22 @@ class Details(object):
         """Return the appropriate page according to the path."""
         path = context['path']
         lang = context['lang']
-        page = None
-        while path is not None and not page:
+        page = Page.objects.from_path(path, lang,
+            exclude_drafts=(not is_staff))
+        if page:
+            return page
+        # if the complete path didn't worked out properly we gonna
+        # try to see if it might be a delegation page.
+        # To do that we remove the right part of the url and try again
+        # to find a page that match
+        path = remove_slug(path)
+        while path is not None:
             page = Page.objects.from_path(path, lang,
                 exclude_drafts=(not is_staff))
+            # find a match. Is the page delegating?
+            if page:
+                if page.delegate_to:
+                    return page
             path = remove_slug(path)
         return page
 
@@ -148,12 +160,22 @@ class Details(object):
         # call this view instead.
         current_page = context['current_page']
         path = context['path']
-        delegate_path = path.replace(current_page.get_complete_slug(), "/")
+        delegate_path = path.replace(current_page.get_complete_slug(), "")
+        # it seems that the urlconf path have to start with a slash
+        if len(delegate_path) == 0:
+            delegate_path = "/"
+        if delegate_path.startswith("//"):
+            delegate_path = delegate_path[1:]
         urlconf = get_urlconf(current_page.delegate_to)
-        result = resolve(delegate_path, urlconf)
+        try:
+            result = resolve(delegate_path, urlconf)
+        except Resolver404:
+            raise Http404
         if result:
             view, args, kwargs = result
             kwargs.update(context)
+            # for now the view is called as is. Usage of
+            # the auto_render decorator could simplify a few things.
             return view(request, *args, **kwargs)
 
 

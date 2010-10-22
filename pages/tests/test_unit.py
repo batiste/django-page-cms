@@ -504,20 +504,33 @@ class UnitTestCase(TestCase):
 
     def test_path_too_long(self):
         """Test that the CMS try to resolve the whole page path to find
-        a suitable sub path."""
+        a suitable sub path with delegation."""
         page1 = self.new_page(content={'slug':'page1'})
         page2 = self.new_page(content={'slug':'page2'})
+        from pages import urlconf_registry as reg
+        reg.register_urlconf('test', 'pages.testproj.documents.urls',
+            label='test')
+        page2.delegate_to = 'test'
+        page1.delegate_to = 'test'
         page1.save()
         page2.save()
         page2.parent = page1
         page2.save()
 
+        from pages.testproj.documents.models import Document
+        doc = Document(title='doc title 1', text='text', page=page1)
+        doc.save()
+
         req = get_request_mock()
         self.set_setting("PAGE_HIDE_ROOT_SLUG", True)
         def _get_context_page(path):
-            return details(req, path, 'en-us', only_context=True)['current_page']
-        self.assertEqual(_get_context_page('/'), page1)
-        self.assertEqual(_get_context_page('/page1'), page1)
-        self.assertEqual(_get_context_page('/page1/page2/'), page2)
-        self.assertEqual(_get_context_page('/page1/page2/whatever/'), page2)
-        self.assertEqual(_get_context_page('/page1/page-wrong/whatever/'), page1)
+            return details(req, path, 'en-us')
+        self.assertEqual(_get_context_page('/').status_code, 200)
+        self.assertEqual(_get_context_page('/page1').status_code, 200)
+        self.assertEqual(_get_context_page('/page1/').status_code, 200)
+        self.assertEqual(_get_context_page('/page1/page2').status_code, 200)
+        self.assertEqual(_get_context_page('/page1/page2/').status_code, 200)
+        self.assertEqual(_get_context_page('/page1/page2/doc-%d' % doc.id).status_code, 200)
+        self.assertRaises(Http404, _get_context_page, '/page1/page-wrong/doc-%d' % doc.id)
+
+        reg.registry = []

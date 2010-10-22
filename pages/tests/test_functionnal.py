@@ -746,6 +746,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, "doc title 1")
+        reg.registry = []
 
     def test_untranslated(self):
         """Test the untranslated feature in the admin."""

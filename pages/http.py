@@ -48,14 +48,15 @@ def auto_render(func):
             if only_response:
                 return response
             if isinstance(response, HttpResponse):
-                raise AutoRenderHttpError
+                raise AutoRenderHttpError(AutoRenderHttpError.__doc__)
             (template_name, context) = response
             return context
         response = func(request, *args, **kwargs)
         if isinstance(response, HttpResponse):
             return response
         (template_name, context) = response
-        template_name = context['template_name'] = template_override or template_name
+        template_name = context['template_name'] = (template_override or
+            template_name)
         return render_to_response(template_name, context,
                             context_instance=RequestContext(request))
     return auto_render_decorator
@@ -103,21 +104,6 @@ def remove_slug(path):
         return None
     parts = path.split("/")[:-1]
     return "/".join(parts)
-
-def path_iter(path):
-    """
-
-    """
-    if path is None:
-        raise StopIteration
-    if path.endswith('/'):
-        path = path[:-1]
-    if path.startswith('/'):
-        path = path[1:]
-    parts = []
-    for part in path.split("/"):
-        parts.append(part)
-        yield "/".join(parts)
 
 def get_template_from_request(request, page=None):
     """

@@ -17,8 +17,8 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
     from pages.http import pages_view
 
     urlpatterns = patterns('',
-        url(r'doc-(?P<document_id>[0-9]+)$', pages_view(document_view), name='document_details'),
-        url(r'$', pages_view(document_view), name='document_root'),
+        url(r'^doc-(?P<document_id>[0-9]+)$', pages_view(document_view), name='document_details'),
+        url(r'^$', pages_view(document_view), name='document_root'),
     )
 
 .. note::

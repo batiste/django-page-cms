@@ -250,7 +250,9 @@ def pages_dynamic_tree_menu(context, page, url='/'):
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
         # a node is expanded if it is the current node or one of its ancestors
-        if page.lft <= current_page.lft and page.rght >= current_page.rght:
+        if(page.tree_id == current_page.tree_id and
+            page.lft <= current_page.lft and
+            page.rght >= current_page.rght):
             children = page.get_children_for_frontend()
     return locals()
 pages_dynamic_tree_menu = register.inclusion_tag(

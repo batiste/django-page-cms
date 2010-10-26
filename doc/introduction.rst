@@ -45,7 +45,7 @@ Key features
   * Directory-like page hierarchy (page can have the same name if they are not in the same directory).
   * Every page can have multiple alias URLs. It's especially useful to migrate websites.
   * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`.
-  
+
 
 Other features
 ==============
@@ -69,7 +69,7 @@ Dependencies & Compatibility
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
-  * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
+  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Django page CMS is shipped with jQuery.

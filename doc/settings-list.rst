@@ -216,7 +216,7 @@ PAGE_TAGGING
 ==================================
 
 Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
-``django-tagging`` application.
+``django-taggit`` application.
 
 PAGE_TINYMCE
 ==================================

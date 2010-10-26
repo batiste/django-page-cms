@@ -27,6 +27,7 @@ patterns = (
     "pages.__init__",
     "pages.search_indexes",
     "pages.test_runner",
+    "pages.management.commands.*",
 )
 
 def match_pattern(filename):
@@ -70,7 +71,7 @@ def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         cov.erase()
         cov.use_cache(0)
         cov.start()
-        
+
     results = django_test_runner(test_labels, verbosity, interactive,
         extra_tests)
 
@@ -81,7 +82,7 @@ def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         cov.html_report(modules, directory='coverage')
 
     sys.exit(results)
-    
+
 
 if __name__ == '__main__':
     run_tests()

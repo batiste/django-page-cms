@@ -183,6 +183,7 @@ COVERAGE_EXCLUDE_MODULES = (
     "pages.urls",
     "pages.__init__",
     "pages.search_indexes",
+    "pages.management.commands.*",
 )
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False

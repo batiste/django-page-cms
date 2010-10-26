@@ -95,17 +95,20 @@ placeholder=%s
 page_id=%d
 content_id=%s"""
 
-def export_po_files(path='poexport'):
+def export_po_files(path='poexport', stdout=None):
     """
     Export all the content from the published pages into
     po files. The files will be automatically updated
     with the new content if you run the command again.
     """
+    if stdout is None:
+        import sys
+        stdout = sys.stdout
     if not path.endswith('/'):
         path += '/'
     import polib
     import os
-    from pages.models import Page
+    from pages.models import Page, Content
     source_language = settings.PAGE_DEFAULT_LANGUAGE
     source_list = []
     for page in Page.objects.published():
@@ -118,7 +121,7 @@ def export_po_files(path='poexport'):
             except OSError:
                 pass
             po_path = path+lang[0]+'.po'
-            print("Export language %s" % lang[0])
+            stdout.write("Export language %s.\n" % lang[0])
             po = polib.pofile(po_path)
             po.metadata['Content-Type'] = 'text/plain; charset=utf-8'
 
@@ -128,7 +131,7 @@ def export_po_files(path='poexport'):
                     target_content = Content.objects.get_content_object(
                         page, lang[0], source_content.type)
                     msgstr = target_content.body
-                except:
+                except Content.DoesNotExist:
                     target_content = None
                     msgstr = ""
                 if source_content.body:
@@ -143,10 +146,10 @@ def export_po_files(path='poexport'):
                     if entry not in po:
                         po.append(entry)
             po.save(po_path)
-    print("Export finished. The files are available in the %s directory" % path)
+    stdout.write("Export finished. The files are available in the %s directory.\n" % path)
 
 
-def import_po_files(path='poexport'):
+def import_po_files(path='poexport', stdout=None):
     """
     Import all the content updates from the po files into
     the pages.
@@ -159,12 +162,15 @@ def import_po_files(path='poexport'):
     pages_to_invalidate = []
     for page in Page.objects.published():
         source_list.extend(page.content_by_language(source_language))
+    if stdout is None:
+        import sys
+        stdout = sys.stdout
     if not path.endswith('/'):
         path += '/'
 
     for lang in settings.PAGE_LANGUAGES:
         if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
-            print("Update language %s" % lang[0])
+            stdout.write("Update language %s.\n" % lang[0])
             po_path = path+lang[0]+'.po'
             po = polib.pofile(po_path)
             for entry in po:
@@ -180,7 +186,7 @@ def import_po_files(path='poexport'):
                 current_content = Content.objects.get_content(page, lang[0],
                     placeholder_name)
                 if current_content != entry.msgstr:
-                    print("Update page %d placeholder %s" % (page_id,
+                    stdout.write("Update page %d placeholder %s.\n" % (page_id,
                         placeholder_name))
                     Content.objects.create_content_if_changed(
                         page, lang[0], placeholder_name, entry.msgstr)
@@ -189,7 +195,7 @@ def import_po_files(path='poexport'):
 
     for page in pages_to_invalidate:
         page.invalidate()
-    print("Import finished from %s" % path)
+    stdout.write("Import finished from %s.\n" % path)
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

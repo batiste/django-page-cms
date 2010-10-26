@@ -6,6 +6,7 @@ from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 from pages.http import get_language_from_request, get_slug
 from pages.http import get_request_mock, remove_slug
+from pages.utils import export_po_files, import_po_files
 from pages.views import details
 
 import django
@@ -164,6 +165,21 @@ class UnitTestCase(TestCase):
         except TemplateSyntaxError:
             pass
 
+    def test_parsed_template(self):
+        """Test the parsed template syntax."""
+        setattr(settings, "DEBUG", True)
+        page = self.new_page({'title':'<b>{{ "hello"|capfirst }}</b>'})
+        page.save()
+        context = Context({'current_page': page, 'lang':'en-us'})
+        pl_parsed = """{% load pages_tags %}{% placeholder title parsed %}"""
+        template = get_template_from_string(pl_parsed)
+        self.assertEqual(template.render(context), '<b>Hello</b>')
+        setattr(settings, "DEBUG", False)
+        page = self.new_page({'title':'<b>{{ "hello"|wrong_filter }}</b>'})
+        context = Context({'current_page': page, 'lang':'en-us'})
+        self.assertEqual(template.render(context), u'')
+
+
     def test_video(self):
         """Test video placeholder."""
         page = self.new_page(content={
@@ -247,6 +263,9 @@ class UnitTestCase(TestCase):
             lang='en-us'))
 
         self.assertFalse(pp.check('doesnotexist', page=page, method='POST',
+            lang='en-us'))
+
+        self.assertFalse(pp.check('publish', page=page, method='POST',
             lang='en-us'))
 
     def test_managers(self):
@@ -530,7 +549,60 @@ class UnitTestCase(TestCase):
         self.assertEqual(_get_context_page('/page1/').status_code, 200)
         self.assertEqual(_get_context_page('/page1/page2').status_code, 200)
         self.assertEqual(_get_context_page('/page1/page2/').status_code, 200)
-        self.assertEqual(_get_context_page('/page1/page2/doc-%d' % doc.id).status_code, 200)
-        self.assertRaises(Http404, _get_context_page, '/page1/page-wrong/doc-%d' % doc.id)
+        self.assertEqual(_get_context_page('/page1/page2/doc-%d' % doc.id
+            ).status_code, 200)
+        self.assertRaises(Http404, _get_context_page,
+            '/page1/page-wrong/doc-%d' % doc.id)
 
         reg.registry = []
+
+    def test_po_file_imoprt_export(self):
+        """Test the po files export and import."""
+        page1 = self.new_page(content={'slug':'page1', 'title':'english title'})
+        page1.save()
+        #Content(page=page1, language='en-us', type='title', body='toto').save()
+        Content(page=page1, language='fr-ch', type='title', body='french title').save()
+        page1.invalidate()
+
+        import StringIO
+        stdout = StringIO.StringIO()
+
+        # TODO: might be nice to use a temp dir for this test
+        export_po_files(path='potests', stdout=stdout)
+        self.assertTrue("Export language fr-ch" in stdout.getvalue())
+
+        f = open("potests/fr-ch.po", "r+")
+        old = f.read().replace('french title', 'translated')
+        f.seek(0)
+        f.write(old)
+        f.close()
+
+        stdout = StringIO.StringIO()
+        import_po_files(path='potests', stdout=stdout)
+
+        self.assertTrue("Update language fr-ch" in stdout.getvalue())
+        self.assertTrue(("Update page %d" % page1.id) in stdout.getvalue())
+        self.assertTrue(page1.title(language='fr-ch'), 'translated')
+
+    def test_page_methods(self):
+        """Test that some methods run properly."""
+        page1 = self.new_page(content={'slug':'page1', 'title':'hello'})
+        page2 = self.new_page(content={'slug':'page2'})
+        page1.save()
+        page2.save()
+        page2.parent = page1
+        page2.save()
+        self.assertEqual(
+            page1.expose_content(),
+            u"hello"
+        )
+        self.assertEqual(
+             page2.slug_with_level(),
+            u"&nbsp;&nbsp;&nbsp;page2"
+        )
+        p = Page(author=page1.author)
+        self.assertEqual(unicode(p), u"Page without id")
+        p.save()
+        self.assertEqual(unicode(p), u"page-%d" % p.id)
+
+

@@ -95,6 +95,7 @@ placeholder=%s
 page_id=%d
 content_id=%s"""
 
+
 def export_po_files(path='poexport', stdout=None):
     """
     Export all the content from the published pages into
@@ -120,7 +121,7 @@ def export_po_files(path='poexport', stdout=None):
                 os.mkdir(path)
             except OSError:
                 pass
-            po_path = path+lang[0]+'.po'
+            po_path = path + lang[0] + '.po'
             stdout.write("Export language %s.\n" % lang[0])
             po = polib.pofile(po_path)
             po.metadata['Content-Type'] = 'text/plain; charset=utf-8'
@@ -146,7 +147,8 @@ def export_po_files(path='poexport', stdout=None):
                     if entry not in po:
                         po.append(entry)
             po.save(po_path)
-    stdout.write("Export finished. The files are available in the %s directory.\n" % path)
+    stdout.write("""Export finished. The files are available """
+        """in the %s directory.\n""" % path)
 
 
 def import_po_files(path='poexport', stdout=None):
@@ -171,7 +173,7 @@ def import_po_files(path='poexport', stdout=None):
     for lang in settings.PAGE_LANGUAGES:
         if lang[0] != settings.PAGE_DEFAULT_LANGUAGE:
             stdout.write("Update language %s.\n" % lang[0])
-            po_path = path+lang[0]+'.po'
+            po_path = path + lang[0] + '.po'
             po = polib.pofile(po_path)
             for entry in po:
                 meta_data = entry.tcomment.split(do_not_msg)[1].split("\n")
@@ -196,6 +198,7 @@ def import_po_files(path='poexport', stdout=None):
     for page in pages_to_invalidate:
         page.invalidate()
     stdout.write("Import finished from %s.\n" % path)
+
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

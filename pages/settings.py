@@ -7,6 +7,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 url = 'http://packages.python.org/django-page-cms/settings-list.html#%s'
 
+
 def get_setting(*args, **kwargs):
     """Get a setting and raise an appropriate user friendly error if
     the setting is not found."""
@@ -45,8 +46,9 @@ PAGE_DEFAULT_TEMPLATE = get_setting('PAGE_DEFAULT_TEMPLATE',
 PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
     default_value=())
 
-# The callable that is used by the CMS
+
 def get_page_templates():
+    """The callable that is used by the CMS."""
     if callable(PAGE_TEMPLATES):
         return PAGE_TEMPLATES()
     else:
@@ -215,6 +217,3 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # This setting is the name of a sub-folder where uploaded content, like
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
-
-
-

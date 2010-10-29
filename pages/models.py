@@ -349,7 +349,8 @@ class Page(MPTTModel):
 
     def content_by_language(self, language):
         """
-        Return a list of latest published :class:`Content <pages.models.Content>`
+        Return a list of latest published
+        :class:`Content <pages.models.Content>`
         for a particluar language.
 
         :param language: wanted language,

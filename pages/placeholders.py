@@ -21,6 +21,7 @@ import re
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
 
+
 def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.
 
@@ -122,8 +123,8 @@ class PlaceholderNode(template.Node):
         POST dictionary."""
         result = {}
         for key in data.keys():
-            if key.startswith(self.name+'-'):
-                new_key = key.replace(self.name+'-', '')
+            if key.startswith(self.name + '-'):
+                new_key = key.replace(self.name + '-', '')
                 result[new_key] = data[key]
         return result
 
@@ -259,7 +260,7 @@ class ImagePlaceholderNode(PlaceholderNode):
             storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,
-                'page_'+str(page.id),
+                'page_' + str(page.id),
                 self.name + '-' + str(time.time())
             )
 
@@ -275,6 +276,7 @@ class ImagePlaceholderNode(PlaceholderNode):
                 change
             )
 
+
 class VideoPlaceholderNode(PlaceholderNode):
     """A youtube `PlaceholderNode`, just here as an example."""
 
@@ -288,12 +290,12 @@ class VideoPlaceholderNode(PlaceholderNode):
             video_url, w, h = content.split('\\')
             m = re.search('youtube\.com\/watch\?v=([^&]+)', content)
             if m:
-                video_url = 'http://www.youtube.com/v/'+m.group(1)
+                video_url = 'http://www.youtube.com/v/' + m.group(1)
             if not w:
                 w = 425
             if not h:
                 h = 344
-            context = {'video_url': video_url, 'w':w, 'h':h}
+            context = {'video_url': video_url, 'w': w, 'h': h}
             renderer = render_to_string('pages/embed.html', context)
             return mark_safe(renderer)
         return ''

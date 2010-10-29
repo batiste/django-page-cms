@@ -10,6 +10,7 @@ from pages.urlconf_registry import get_urlconf
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
+
 class Details(object):
     """
     This class based view get the root pages for navigation

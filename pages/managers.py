@@ -30,12 +30,12 @@ class PageManager(models.Manager):
             status=self.model.PUBLISHED)
         p.save()
         p = self.get(id=p.id)
-        Content(body='page-'+str(p.id), type='title',
+        Content(body='page-' + str(p.id), type='title',
             language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
-        Content(body='page-'+str(p.id), type='slug',
+        Content(body='page-' + str(p.id), type='slug',
             language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
-        for child in range(1, child+1):
-            self.populate_pages(parent=p, child=child, depth=(depth-1))
+        for child in range(1, child + 1):
+            self.populate_pages(parent=p, child=child, depth=(depth - 1))
 
     def on_site(self, site_id=None):
         """Return a :class:`QuerySet` of pages that are published on the site
@@ -204,9 +204,9 @@ class ContentManager(models.Manager):
         """Gets the latest published :class:`Content <pages.models.Content>`
         for a particular page, language and placeholder type."""
         params = {
-            'language':language,
-            'type':ctype,
-            'page':page
+            'language': language,
+            'type': ctype,
+            'page': page
         }
         if page.freeze_date:
             params['creation_date__lte'] = page.freeze_date
@@ -269,7 +269,7 @@ class ContentManager(models.Manager):
         if settings.PAGE_USE_SITE_ID:
             content = content.filter(page__sites__id=settings.SITE_ID)
         try:
-           content = content.latest('creation_date')
+            content = content.latest('creation_date')
         except self.model.DoesNotExist:
             return None
         else:

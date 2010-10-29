@@ -116,7 +116,6 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug':'get-page-slug'})
         self.assertEqual(template.render(context), u'get-page-slug')
 
-
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
@@ -270,6 +269,7 @@ class UnitTestCase(TestCase):
 
     def test_managers(self):
         # TODO: this test seems dependant from other tests
+        self.set_setting("PAGE_USE_SITE_ID", False)
         Page.objects.populate_pages(child=2, depth=2)
         for p in Page.objects.all():
             p.invalidate()

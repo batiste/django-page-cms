@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     TEST_PROJ + '.documents',
     #'tagging',
     'pages',

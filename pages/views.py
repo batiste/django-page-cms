@@ -1,11 +1,12 @@
 """Default example views"""
 from django.http import Http404, HttpResponsePermanentRedirect
+from django.contrib.sitemaps import Sitemap
+from django.core.urlresolvers import resolve, Resolver404
+from django.utils import translation
 from pages import settings
 from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request, remove_slug
 from pages.urlconf_registry import get_urlconf
-from django.core.urlresolvers import resolve, Resolver404
-from django.utils import translation
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
@@ -187,3 +188,43 @@ class Details(object):
 #   >>> from pages.views import details
 #   >>> context = details(request, only_context=True)
 details = auto_render(Details())
+
+
+class PageSitemap(Sitemap):
+    """This site map implementation expose the pages
+    in the default language only."""
+    changefreq = "weekly"
+    priority = 0.5
+
+    def items(self):
+        return Page.objects.published()
+
+    def lastmod(self, obj):
+        return obj.last_modification_date
+
+
+class PageItemProxy(object):
+
+    def __init__(self, page, lang):
+        self.page = page
+        self.lang = lang
+
+    def get_absolute_url(self):
+        return self.page.get_absolute_url(language=self.lang)
+
+
+class MultiLanguagePageSitemap(Sitemap):
+    """This site map implementation expose the pages
+    in all the languages."""
+    changefreq = "weekly"
+    priority = 0.5
+
+    def items(self):
+        item_list = []
+        for page in Page.objects.published():
+            for lang in page.get_languages():
+                item_list.append(PageItemProxy(page, lang))
+        return item_list
+
+    def lastmod(self, obj):
+        return obj.page.last_modification_date

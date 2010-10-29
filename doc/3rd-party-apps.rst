@@ -1,6 +1,6 @@
-==========================
- Third party applications
-==========================
+===================================
+ Integrate with other applications
+===================================
 
 
 Delegate the rendering of a page to an application
@@ -43,6 +43,12 @@ is now choosen by `pages.testproj.documents.urls`.
 
     The path passed to your urlconf module is the remaining path
     available after the page slug. Eg: `/pages/page1/doc-1` will become `doc-1`.
+
+.. note::
+
+    If you want to have the reverse URLs to still work, you will need to include them in your urls.py, eg::
+
+        (r'^pages/(?P<path>.*)', include('pages.testproj.documents.urls')),
 
 Here is an example of a valid view from the documents application::
 
@@ -114,3 +120,21 @@ After that you need to set up the PAGE_CONNECTED_MODELS into your settings simil
 
 When you edit a page, you should see a form to create/update/delete a Document object linked to this page.
 
+
+Sitemaps
+=================
+
+Django page CMS provide 2 sitemaps classes to use with `Django sitemap framework <http://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_::
+
+    from pages.views import PageSitemap, MultiLanguagePageSitemap
+
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': {'pages':PageSitemap}}),
+
+    # or for multi language:
+
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': {'pages':MultiLanguagePageSitemap}})
+
+The `PageSitemap` class provide a sitemap for every published page in the default language.
+The `MultiLanguagePageSitemap` is gonna create an extra entry for every other language.

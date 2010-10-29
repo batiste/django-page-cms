@@ -29,10 +29,11 @@ class PageManager(models.Manager):
         p = self.model(parent=parent, author=author,
             status=self.model.PUBLISHED)
         p.save()
+        p = self.get(id=p.id)
         Content(body='page-'+str(p.id), type='title',
-            language='en-us', page=p).save()
+            language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
         Content(body='page-'+str(p.id), type='slug',
-            language='en-us', page=p).save()
+            language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
         for child in range(1, child+1):
             self.populate_pages(parent=p, child=child, depth=(depth-1))
 

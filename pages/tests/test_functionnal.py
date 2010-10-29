@@ -792,3 +792,23 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = c.get('/pages/other/')
         self.assertEqual(response.status_code, 200)
+
+    def test_page_sitemap(self):
+        """
+        Test the sitemap class
+        """
+        c = self.get_admin_client()
+        page1 = self.new_page(content={'slug':'english-slug'})
+        page1.save()
+        Content(page=page1, language='fr-ch', type='slug',
+            body='french-slug').save()
+
+        response = c.get('/sitemap.xml')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'english-slug')
+        self.assertNotContains(response, 'french-slug')
+
+        response = c.get('/sitemap2.xml')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'english-slug')
+        self.assertContains(response, 'french-slug')

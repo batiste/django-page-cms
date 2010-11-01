@@ -132,7 +132,7 @@ def pages_admin_menu(context, page, url='', level=None):
     request = context.get('request', None)
     can_publish = context.get('can_publish', False)
 
-    if "tree_expanded" in request.COOKIES:
+    if request and "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
             ids = [int(id) for id in

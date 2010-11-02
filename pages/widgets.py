@@ -26,6 +26,7 @@ register_widget(AdminTextareaWidget)
 
 if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
     from filebrowser.fields import FileBrowseWidget
+
     class FileBrowseInput(FileBrowseWidget):
         """FileBrowseInput widget."""
 
@@ -89,6 +90,7 @@ if PAGE_TINYMCE:
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
     register_widget(TinyMCE)
 
+
 class CKEditor(Textarea):
     """CKEditor widget."""
 
@@ -116,6 +118,7 @@ class CKEditor(Textarea):
             'pages/widgets/ckeditor.html', context))
 
 register_widget(CKEditor)
+
 
 class WYMEditor(Textarea):
     """WYMEditor widget."""
@@ -159,6 +162,7 @@ class WYMEditor(Textarea):
             'pages/widgets/wymeditor.html', context))
 
 register_widget(WYMEditor)
+
 
 class markItUpMarkdown(Textarea):
     """markItUpMarkdown widget."""
@@ -263,6 +267,7 @@ class EditArea(Textarea):
             'pages/widgets/editarea.html', context))
 register_widget(EditArea)
 
+
 class ImageInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
@@ -347,10 +352,10 @@ class LanguageChoiceWidget(TextInput):
     def render(self, name, value, attrs=None, **kwargs):
         context = {
             'name': name,
-            'value':value,
-            'page':self.page,
+            'value': value,
+            'page': self.page,
             'language': value,
-            'page_languages':PAGE_LANGUAGES
+            'page_languages': PAGE_LANGUAGES
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))

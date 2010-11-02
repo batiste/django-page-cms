@@ -3,16 +3,17 @@ from setuptools import setup, find_packages
 import pages
 package_name = 'django-page-cms'
 
+
 def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
 import os
 data_dirs = []
 for directory in os.walk('pages/templates'):
-    data_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:] + '/*.*')
 
 for directory in os.walk('pages/media'):
-    data_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:] + '/*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)

@@ -15,6 +15,7 @@ from pages.placeholders import parse_placeholder
 
 register = template.Library()
 
+
 def get_page_from_string_or_id(page_string, lang=None):
     """Return a Page object from a slug or an id."""
     if type(page_string) == int:
@@ -26,6 +27,7 @@ def get_page_from_string_or_id(page_string, lang=None):
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)
     return page_string
+
 
 def _get_content(context, page, content_type, lang, fallback=True):
     """Helper function used by ``PlaceholderNode``."""
@@ -45,6 +47,7 @@ def _get_content(context, page, content_type, lang, fallback=True):
 
 """Filters"""
 
+
 def has_content_in(page, language):
     """Fitler that return ``True`` if the page has any content in a
     particular language.
@@ -55,16 +58,9 @@ def has_content_in(page, language):
     return Content.objects.filter(page=page, language=language).count() > 0
 register.filter(has_content_in)
 
-'''def has_permission(page, request):
-    """Tell if a user has permissions on the page.
-
-    :param page: the current page
-    :param request: the request object where the user is extracted
-    """
-    return page.has_page_permission(request)
-register.filter(has_permission)'''
 
 """Inclusion tags"""
+
 
 def pages_menu(context, page, url='/'):
     """Render a nested list of all the descendents of the given page,
@@ -84,6 +80,7 @@ def pages_menu(context, page, url='/'):
     return locals()
 pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
+
 
 def pages_sub_menu(context, page, url='/'):
     """Get the root page of the given page and
@@ -105,6 +102,7 @@ def pages_sub_menu(context, page, url='/'):
 pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
+
 def pages_siblings_menu(context, page, url='/'):
     """Get the parent page of the given page and render a nested list of its
     child pages. Good for rendering a secondary menu.
@@ -125,7 +123,8 @@ def pages_siblings_menu(context, page, url='/'):
         current_page = context['current_page']
     return locals()
 pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
-                                        takes_context=True)(pages_siblings_menu)
+                                    takes_context=True)(pages_siblings_menu)
+
 
 def pages_admin_menu(context, page, url='', level=None):
     """Render the admin table of pages."""
@@ -168,13 +167,15 @@ def show_content(context, page, content_type, lang=None, fallback=True):
 
     :param page: the page object, slug or id
     :param content_type: content_type used by a placeholder
-    :param lang: the wanted language (default None, use the request object to know)
+    :param lang: the wanted language
+        (default None, use the request object to know)
     :param fallback: use fallback content from other language
     """
-    return {'content':_get_content(context, page, content_type, lang,
+    return {'content': _get_content(context, page, content_type, lang,
                                                                 fallback)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
+
 
 def show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
@@ -203,32 +204,35 @@ def show_absolute_url(context, page, lang=None):
 
     Keyword arguments:
     :param page: the page object, slug or id
-    :param lang: the wanted language (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
+    :param lang: the wanted language
+        (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
     """
     if not lang:
         lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if not page:
-        return {'content':''}
+        return {'content': ''}
     url = page.get_url_path(language=lang)
     if url:
-        return {'content':url}
-    return {'content':''}
+        return {'content': url}
+    return {'content': ''}
 show_absolute_url = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_absolute_url)
+
 
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``pages/revisions.html`` template"""
     if not pages_settings.PAGE_CONTENT_REVISION:
-        return {'revisions':None}
+        return {'revisions': None}
     revisions = Content.objects.filter(page=page, language=lang,
                                 type=content_type).order_by('-creation_date')
     if len(revisions) < 2:
-        return {'revisions':None}
-    return {'revisions':revisions[0:10]}
+        return {'revisions': None}
+    return {'revisions': revisions[0:10]}
 show_revisions = register.inclusion_tag('pages/revisions.html',
                                         takes_context=True)(show_revisions)
+
 
 def pages_dynamic_tree_menu(context, page, url='/'):
     """
@@ -260,6 +264,7 @@ pages_dynamic_tree_menu = register.inclusion_tag(
     takes_context=True
 )(pages_dynamic_tree_menu)
 
+
 def pages_breadcrumb(context, page, url='/'):
     """
     Render a breadcrumb like menu.
@@ -285,16 +290,20 @@ pages_breadcrumb = register.inclusion_tag(
 
 """Tags"""
 
+
 class FakeCSRFNode(template.Node):
     """Fake CSRF node for django 1.1.1"""
     def render(self, context):
         return ''
+
+
 def do_csrf_token(parser, token):
     return FakeCSRFNode()
 try:
     from django.views.decorators.csrf import csrf_protect
 except ImportError:
     do_csrf_token = register.tag('csrf_token', do_csrf_token)
+
 
 class GetPageNode(template.Node):
     """get_page Node"""
@@ -337,6 +346,7 @@ class GetContentNode(template.Node):
         self.content_type = content_type
         self.varname = varname
         self.lang = lang
+
     def render(self, context):
         context[self.varname] = _get_content(
             context,
@@ -390,8 +400,9 @@ class LoadPagesNode(template.Node):
             pages = Page.objects.navigation().order_by("tree_id")
             context.update({'pages_navigation': pages})
         if 'current_page' not in context:
-            context.update({'current_page':None})
+            context.update({'current_page': None})
         return ''
+
 
 def do_load_pages(parser, token):
     """Load the navigation pages, lang, and current_page variables into the
@@ -439,6 +450,7 @@ def do_imageplaceholder(parser, token):
     return ImagePlaceholderNode(name, **params)
 register.tag('imageplaceholder', do_imageplaceholder)
 
+
 def do_videoplaceholder(parser, token):
     """
     Method that parse the imageplaceholder template tag.
@@ -446,6 +458,7 @@ def do_videoplaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return VideoPlaceholderNode(name, **params)
 register.tag('videoplaceholder', do_videoplaceholder)
+
 
 def language_content_up_to_date(page, language):
     """Tell if all the page content has been updated since the last
@@ -471,4 +484,3 @@ def language_content_up_to_date(page, language):
         page=page).order_by('-creation_date')[0].creation_date
     return lang_modified > last_modified[0].creation_date
 register.filter(language_content_up_to_date)
-

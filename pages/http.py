@@ -9,6 +9,7 @@ from pages import settings
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
+
 def get_request_mock():
     """Build a ``request`` mock up that can be used for testing."""
     basehandler = BaseHandler()
@@ -27,10 +28,12 @@ def get_request_mock():
             response = middleware_method(request)
     return request
 
+
 class AutoRenderHttpError(Exception):
     """Cannot return context dictionary because a view returned an
     ``HttpResponse`` when a (template_name, context) tuple was expected."""
     pass
+
 
 def auto_render(func):
     """
@@ -61,6 +64,7 @@ def auto_render(func):
                             context_instance=RequestContext(request))
     return auto_render_decorator
 
+
 def pages_view(view):
     """
     Provide the essential pages variables to the decorated view
@@ -78,6 +82,7 @@ def pages_view(view):
         return view(request, *args, **kwargs)
     return pages_view_decorator
 
+
 def get_slug(path):
     """
     Return the page's slug
@@ -88,6 +93,7 @@ def get_slug(path):
     if path.endswith('/'):
         path = path[:-1]
     return path.split("/")[-1]
+
 
 def remove_slug(path):
     """
@@ -104,6 +110,7 @@ def remove_slug(path):
         return None
     parts = path.split("/")[:-1]
     return "/".join(parts)
+
 
 def get_template_from_request(request, page=None):
     """
@@ -122,6 +129,7 @@ def get_template_from_request(request, page=None):
         return page.get_template()
     return settings.PAGE_DEFAULT_TEMPLATE
 
+
 def get_language_from_request(request):
     """Return the most obvious language according the request."""
     language = request.GET.get('language', None)
@@ -136,4 +144,3 @@ def get_language_from_request(request):
             return lang
     else:
         return settings.PAGE_DEFAULT_LANGUAGE
-

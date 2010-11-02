@@ -2,12 +2,14 @@
 __all__ = ('register_widget',)
 from django.utils.translation import ugettext as _
 
+
 class WidgetAlreadyRegistered(Exception):
     """
     An attempt was made to register a widget for Django page CMS more
     than once.
     """
     pass
+
 
 class WidgetNotFound(Exception):
     """
@@ -17,6 +19,7 @@ class WidgetNotFound(Exception):
 
 registry = []
 
+
 def register_widget(widget):
     """
     Register the given widget as a candidate to use in placeholder.
@@ -25,6 +28,7 @@ def register_widget(widget):
         raise WidgetAlreadyRegistered(
             _('The widget %s has already been registered.') % widget.__name__)
     registry.append(widget)
+
 
 def get_widget(name):
     """

@@ -16,5 +16,4 @@ class PageIndex(SearchIndex):
         """Used when the entire index for model is updated."""
         return Page.objects.published()
 
-
 site.register(Page, PageIndex)

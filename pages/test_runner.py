@@ -1,5 +1,5 @@
-
-import os, sys
+import os
+import sys
 coverage = None
 try:
     from coverage import coverage
@@ -30,11 +30,13 @@ patterns = (
     "pages.management.commands.*",
 )
 
+
 def match_pattern(filename):
     for pattern in patterns:
         if fnmatch.fnmatch(filename, pattern):
             return True
     return False
+
 
 def get_all_coverage_modules(app_module, exclude_patterns=[]):
     """Returns all possible modules to report coverage on, even if they
@@ -62,6 +64,7 @@ def get_all_coverage_modules(app_module, exclude_patterns=[]):
                         mod_list.append(mod)
 
     return mod_list
+
 
 def run_tests(test_labels=('pages',), verbosity=1, interactive=True,
         extra_tests=[]):

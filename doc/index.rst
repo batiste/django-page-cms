@@ -12,6 +12,9 @@ To get the source code with git use::
 
 To get installations instructions go to the :doc:`Installation section </installation>`.
 
+The latest changelog can be found here :doc:`Changelog section </changelog>`.
+
+
 Table of content
 ======================================
 

@@ -23,9 +23,10 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
 
 .. note::
 
-    The decorator `pages_view` is important. This decorator will ensure
-    that the CMS default view will be called before yours to get the context
-    variables.
+    The decorator `pages_view` call the CMS if the context variables `current_page` and `pages_navigation` are not present
+    in the arguments.
+
+    It's not necessary to decorate your view with it if you only call your views only via the CMS or if your views don't require those variables.
 
 Then you need to register the urlconf module of your application to use it
 within the admin interface. Here is an example for a document application::
@@ -120,6 +121,7 @@ After that you need to set up the PAGE_CONNECTED_MODELS into your settings simil
 
 When you edit a page, you should see a form to create/update/delete a Document object linked to this page.
 
+.. _sitemaps:
 
 Sitemaps
 =================

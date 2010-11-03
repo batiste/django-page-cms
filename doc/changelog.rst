@@ -4,6 +4,32 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.4.0
+==============
+
+    * Implement 2 classes for the Django sitemap framework. :ref:`Documentation on sitemap classes <sitemaps>`
+    * Add a markitup REST editor.
+    * Fix a bug with `pages_dynamic_tree_menu` template tag and multiple roots in a pages tree.
+    * Added a PAGES_STRICT_URLS setting. If set to `True` the CMS will check for the complete URL instead
+      of just the slug. If the complete path doesn't match, a 404 error is raised in the view.
+    * Added 2 managing commands for exporting and importing PO translation files into the CMS.
+      :doc:`Documentation on the commands</commands>`
+    * Add a PAGE_CONTENT_REVISION_DEPTH setting to limit the amount of revision we want to keep.
+    * Fix a bug so the CMS can run without django-taggit installed.
+    * Fix a bug with placeholder and template inheritance.
+    * The `pages-root` URL doesn't need to be specified anymore. But you can still
+      use it if you want to define a special URL for the root page.
+
+
+Incompatible changes
+---------------------
+
+    * New delegation rules: the CMS delegate not only the exact path leading to page but also
+      the whole sub path. :doc:`Documentation on the delegation as been updated</3rd-party-apps>`.
+    * The default view now raise an `ValueError` if the `path` argument is not passed instead
+      of guessing the path by using `request.path`.
+
+
 Release 1.3.0
 ==============
 

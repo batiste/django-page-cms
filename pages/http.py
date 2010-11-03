@@ -67,13 +67,18 @@ def auto_render(func):
 
 def pages_view(view):
     """
-    Provide the essential pages variables to the decorated view
-    by using the default pages.views.details view.
+    Make sure the decorated view gets the essential pages
+    variables.
     """
     def pages_view_decorator(request, *args, **kwargs):
+        # if the current page is already there
+        if(kwargs.get('current_page', False) or
+            kwargs.get('pages_navigation', False)):
+            return view(request, *args, **kwargs)
+
         path = kwargs.pop('path', None)
         lang = kwargs.pop('lang', None)
-        if path or lang:
+        if path:
             from pages.views import details
             response = details(request, path=path, lang=lang,
                 only_context=True, delegation=False)

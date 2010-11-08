@@ -26,7 +26,7 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
     The decorator `pages_view` call the CMS if the context variables `current_page` and `pages_navigation` are not present
     in the arguments.
 
-    It's not necessary to decorate your view with it if you only call your views only via the CMS or if your views don't require those variables.
+    It's not necessary to decorate your views if you only call them via the CMS or you don't need those variables.
 
 Then you need to register the urlconf module of your application to use it
 within the admin interface. Here is an example for a document application::

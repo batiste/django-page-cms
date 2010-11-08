@@ -12,9 +12,10 @@ recursive-include pages *
 recursive-include requirements *
 recursive-include pages/templates *
 recursive-include pages/media *
-global-include *.css
-global-include *.js
-global-include *.html
+global-include pages/*.css
+global-include pages/*.js
+global-include pages/*.html
 global-exclude *.pyc
+global-exclude coverage/*
 prune example
 

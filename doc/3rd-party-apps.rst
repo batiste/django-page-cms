@@ -47,8 +47,10 @@ is now choosen by `pages.testproj.documents.urls`.
 
 .. note::
 
-    If you want to have the reverse URLs to still work, you will need to include them in your urls.py, eg::
+    If you want to have the reverse URLs with your delegated application, you will need to include your URLs into your main urls.py, eg::
 
+        (r'^pages/', include('pages.urls')),
+        ...
         (r'^pages/(?P<path>.*)', include('pages.testproj.documents.urls')),
 
 Here is an example of a valid view from the documents application::

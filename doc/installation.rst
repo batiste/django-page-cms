@@ -2,7 +2,7 @@
 Installation
 ============
 
-This document explain how to install django page CMS into an existing Django project.
+This document explain how to install Gerbi CMS into an existing Django project.
 This document assume that you already know how to setup a Django project.
 
 If you have any problem installing this CMS, take a look at the example application that stands in the example directory.
@@ -52,7 +52,7 @@ On debian linux you can do::
     $ sudo easy_install html5lib BeautifulSoup django django-staticfiles django-authority
 
 Optionnaly::
-    
+
     $ sudo easy_install django-haystack
 
 If you are not using the source code version of the application then install it using::
@@ -92,9 +92,9 @@ You will certainly want to activate the static file serve view in your ``urls.py
 Settings
 ========
 
-All the Django page CMS specific settings and options are listed and explained in the ``pages/settings.py`` file.
+All the Gerbi CMS specific settings and options are listed and explained in the ``pages/settings.py`` file.
 
-Django page CMS require several of these settings to be set. They are marked in this document with a bold "*must*".
+Gerbi CMS require several of these settings to be set. They are marked in this document with a bold "*must*".
 
 .. note::
 
@@ -172,7 +172,7 @@ A possible solution is to redefine ``settings.LANGUAGES``. For example you can d
 
     # copy PAGE_LANGUAGES
     languages = list(PAGE_LANGUAGES)
-    
+
     # redefine the LANGUAGES setting in order to be sure to have the correct request.LANGUAGE_CODE
     LANGUAGES = languages
 
@@ -205,7 +205,7 @@ You *must* have these middleware into your ``MIDDLEWARE_CLASSES`` setting::
 Caching
 -------
 
-Django page CMS use the caching framework quite intensively. You should definitely
+Gerbi CMS use the caching framework quite intensively. You should definitely
 setting-up a cache-backend_ to have decent performance.
 
 .. _cache-backend: http://docs.djangoproject.com/en/dev/topics/cache/#setting-up-the-cache
@@ -218,7 +218,7 @@ The sites framework
 -------------------
 
 If you want to use the `Django sites framework <http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites>`_
-with django-page-cms, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
+with Gerbi CMS, you *must* define the ``SITE_ID`` and ``PAGE_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
 
     PAGE_USE_SITE_ID = True
     SITE_ID = 1

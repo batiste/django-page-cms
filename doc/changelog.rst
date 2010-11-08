@@ -7,6 +7,8 @@ This file describe new features and incompatibilites between released version of
 Release 1.4.0
 ==============
 
+    * A cute new name for the django page CMS : *Gerbi CMS*. The package name will remain `django-page-cms` for
+      this release but might be changed to `gerbi` in a near future.
     * Implement 2 classes for the Django sitemap framework. :ref:`Documentation on sitemap classes <sitemaps>`
     * Add a markitup REST editor.
     * Fix a bug with `pages_dynamic_tree_menu` template tag and multiple roots in a pages tree.

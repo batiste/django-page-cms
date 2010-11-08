@@ -2,7 +2,7 @@
 Display page's content in templates
 ===================================
 
-Django page CMS provide several template tags to extract data from the CMS.
+Gerbi CMS provide several template tags to extract data from the CMS.
 To use these tags in your templates you must load them first::
 
     {% load pages_tags %}

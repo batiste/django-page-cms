@@ -4,7 +4,7 @@ Placeholders template tag
 
 .. contents::
 
-The placeholder template tag is what make Django Page CMS special. The workflow
+The placeholder template tag is what make Gerbi CMS special. The workflow
 is that you design your template first according to the page design.
 Then you put placeholder tag where you want dynamic content.
 

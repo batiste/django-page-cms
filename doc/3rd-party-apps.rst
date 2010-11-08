@@ -90,13 +90,13 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
 Integrate application models and forms into the page admin
 ==========================================================
 
-Django page CMS provide a solid way to integrate external application
+Gerbi provide a solid way to integrate external application
 forms for managing page related objects (create/delete/update) into the page's administration interface.
 
 For this you need an object with foreign key pointing to a page::
 
     class Document(models.Model):
-        "A dummy model used to illustrate the use of linked models in django-page-cms"
+        "A dummy model used to illustrate the use of linked models in Gerbi CMS"
 
         title = models.CharField(_('title'), max_length=100, blank=False)
         text = models.TextField(_('text'), blank=True)
@@ -126,7 +126,7 @@ When you edit a page, you should see a form to create/update/delete a Document o
 Sitemaps
 =================
 
-Django page CMS provide 2 sitemaps classes to use with `Django sitemap framework <http://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_::
+Gerbi CMS provide 2 sitemaps classes to use with `Django sitemap framework <http://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_::
 
     from pages.views import PageSitemap, MultiLanguagePageSitemap
 

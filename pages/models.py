@@ -481,14 +481,3 @@ class PageAlias(models.Model):
 
     def __unicode__(self):
         return u"%s :: %s" % (self.url, self.page.get_complete_slug())
-s
-sdf
-
-
-af
-
-
-
-
-
-

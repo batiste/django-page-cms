@@ -26,7 +26,7 @@ Release 1.4.0
 Incompatible changes
 ---------------------
 
-    * New delegation rules: the CMS delegate not only the exact path leading to page but also
+    * New delegation rules: the CMS delegate not only the exact path leading to the page but also
       the whole sub path. :doc:`Documentation on the delegation as been updated</3rd-party-apps>`.
     * The default view now raise an `ValueError` if the `path` argument is not passed instead
       of guessing the path by using `request.path`.

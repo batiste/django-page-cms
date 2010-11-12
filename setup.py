@@ -30,10 +30,6 @@ setup(
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     install_requires=[
-        'Django',
-        'html5lib>=0.10',
-        'BeautifulSoup',
-        'django-mptt>=0.4.1',
     ],
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
@@ -53,3 +49,4 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Site Management',
     ],
 )
+

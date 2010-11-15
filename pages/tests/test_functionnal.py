@@ -78,25 +78,21 @@ class FunctionnalTestCase(TestCase):
         page2 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertNotEqual(page1.id, page2.id)
 
+
     def test_details_view(self):
-        """Test the details view."""
+        """Test the details view basics."""
 
         c = self.get_admin_client()
 
-        try:
-            response = c.get(self.get_page_url())
-        except TemplateDoesNotExist, e:
-            if e.args != ('404.html',):
-                raise
+        response = c.get(self.get_page_url())
+        self.assertEqual(response.status_code, 404)
 
         page_data = self.get_new_page_data()
         page_data['status'] = Page.DRAFT
         response = c.post('/admin/pages/page/add/', page_data)
-        try:
-            response = c.get(self.get_page_url())
-        except TemplateDoesNotExist, e:
-            if e.args != ('404.html',):
-                raise
+
+        response = c.get(self.get_page_url())
+        self.assertEqual(response.status_code, 200)
 
         page_data = self.get_new_page_data()
         page_data['status'] = Page.PUBLISHED
@@ -105,11 +101,12 @@ class FunctionnalTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
-        response = c.get('/pages/test-page-2/')
+        response = c.get(self.get_page_url('test-page-2'))
         self.assertEqual(response.status_code, 200)
 
+
     def test_edit_page(self):
-        """Test that a page can edited via the admin"""
+        """Test that a page can edited via the admin."""
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
@@ -127,9 +124,10 @@ class FunctionnalTestCase(TestCase):
         body = Content.objects.get_content(page, 'en-us', 'body')
         self.assertEqual(body, 'changed body')
 
+
     def test_site_framework(self):
         """Test the site framework, and test if it's possible to
-        disable it"""
+        disable it."""
 
         from pages import settings as pages_settings
 
@@ -194,6 +192,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Page.objects.on_site().count(), 3)
 
         setattr(pages_settings, "SITE_ID", 1)
+
 
     def test_languages(self):
         """Test post a page with different languages
@@ -262,6 +261,7 @@ class FunctionnalTestCase(TestCase):
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
+
     def test_revision(self):
         """Test that a page can edited several times."""
         c = self.get_admin_client()
@@ -289,6 +289,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 
+
     def test_placeholder(self):
         """
         Test that the placeholder is correctly displayed in
@@ -304,6 +305,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, 'name="right-column"', 1)
+
 
     def test_directory_slug(self):
         """
@@ -381,6 +383,7 @@ class FunctionnalTestCase(TestCase):
         response = c.get(url)
         self.assertEqual(response.status_code, 302)
 
+
     def test_page_alias(self):
         """Test page aliasing system"""
 
@@ -424,6 +427,7 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response,
             self.get_page_url('downloads-page'), 301)
 
+
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""
 
@@ -439,6 +443,7 @@ class FunctionnalTestCase(TestCase):
         # now check whether you go to the target page.
         response = client.get(page1.get_url_path())
         self.assertRedirects(response, page2.get_url_path(), 301)
+
 
     def test_page_valid_targets(self):
         """Test page valid_targets method"""
@@ -518,6 +523,7 @@ class FunctionnalTestCase(TestCase):
         # Make sure the content response we got was in french
         self.assertTrue('Auteur' in response.content)
 
+
     def test_view_context(self):
         """
         Test that the default view can only return the context
@@ -541,6 +547,7 @@ class FunctionnalTestCase(TestCase):
         from pages.utils import get_request_mock
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
+
 
     def test_tree_admin_interface(self):
         """
@@ -623,6 +630,7 @@ class FunctionnalTestCase(TestCase):
         response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
         self.assertEqual(response.status_code, 200)
 
+
     def test_tree(self):
         """
         Test that the navigation tree works properly with mptt.
@@ -687,6 +695,7 @@ class FunctionnalTestCase(TestCase):
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
 
+
     def test_page_freeze_date(self):
         """Test page freezing feature."""
         c = self.get_admin_client()
@@ -748,6 +757,7 @@ class FunctionnalTestCase(TestCase):
         self.assertContains(response, "doc title 1")
         reg.registry = []
 
+
     def test_untranslated(self):
         """Test the untranslated feature in the admin."""
         c = self.get_admin_client()
@@ -770,6 +780,7 @@ class FunctionnalTestCase(TestCase):
         response = c.get('/admin/pages/page/%d/?language=fr-ch' % page.id)
         self.assertContains(response, unstranslated_string)
 
+
     def test_root_page(self):
         """Test that the root page doesn't trigger a 404."""
         c = self.get_admin_client()
@@ -780,6 +791,7 @@ class FunctionnalTestCase(TestCase):
 
         response = c.get('/pages/')
         self.assertEqual(response.status_code, 200)
+
 
     def test_page_with_trailing_slash(self):
         """
@@ -792,6 +804,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = c.get('/pages/other/')
         self.assertEqual(response.status_code, 200)
+
 
     def test_page_sitemap(self):
         """

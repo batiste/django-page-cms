@@ -68,11 +68,11 @@ class TestCase(TestCase):
 
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
-        page_data = {'title':'test page %d' % self.counter,
-            'slug':'test-page-%d' % self.counter, 'language':'en-us',
-            'sites':[1], 'status': Page.DRAFT if draft else Page.PUBLISHED,
+        page_data = {'title': 'test page %d' % self.counter,
+            'slug': 'test-page-%d' % self.counter, 'language':'en-us',
+            'sites': [1], 'status': Page.DRAFT if draft else Page.PUBLISHED,
             # used to disable an error with connected models
-            'document_set-TOTAL_FORMS':0, 'document_set-INITIAL_FORMS':0,
+            'document_set-TOTAL_FORMS': 0, 'document_set-INITIAL_FORMS': 0,
             }
         self.counter = self.counter + 1
         return page_data
@@ -81,7 +81,8 @@ class TestCase(TestCase):
         author = User.objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
             template='pages/examples/index.html')
-        page.sites.add(Site.objects.get(id=1))
+        if pages_settings.PAGE_USE_SITE_ID:
+            page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache
         page.invalidate()
         for key, value in content.items():

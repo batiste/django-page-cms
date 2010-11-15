@@ -413,8 +413,8 @@ class UnitTestCase(TestCase):
         req = get_request_mock()
         self.assertRaises(Http404, details, req, '/pages/')
 
-        page1 = self.new_page(content={'slug':'page1'})
-        page2 = self.new_page(content={'slug':'page2'})
+        page1 = self.new_page(content={'slug': 'page1'})
+        page2 = self.new_page(content={'slug': 'page2'})
 
         self.assertEqual(page1.get_url_path(), '/pages/en-us/page1')
 
@@ -439,7 +439,7 @@ class UnitTestCase(TestCase):
         """
         Check that the root works properly in every case.
         """
-        page1 = self.new_page(content={'slug':'page1'})
+        page1 = self.new_page(content={'slug': 'page1'})
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
         self.set_setting("PAGE_HIDE_ROOT_SLUG", True)
         self.assertEqual(page1.is_first_root(), True)

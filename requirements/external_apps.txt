@@ -1,10 +1,4 @@
-setuptools
-django-mptt>=0.4.1
-django-authority
-html5lib>=0.10
 django>=1.1.1
+django-mptt>=0.4.1
+html5lib>=0.10
 BeautifulSoup
-django-staticfiles
-django-haystack
-django-page-cms
-django-taggit

@@ -13,6 +13,7 @@ import django
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.template import Template, RequestContext, Context
 from django.template.loader import get_template_from_string
 from django.template import Template, TemplateSyntaxError
@@ -440,20 +441,32 @@ class UnitTestCase(TestCase):
         Check that the root works properly in every case.
         """
         page1 = self.new_page(content={'slug': 'page1'})
+
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
         self.set_setting("PAGE_HIDE_ROOT_SLUG", True)
         self.assertEqual(page1.is_first_root(), True)
-        self.assertEqual(page1.get_url_path(), '/pages/')
+        self.assertEqual(page1.get_url_path(),
+            reverse('pages-details-by-path', args=[], kwargs={'path': ''})
+        )
 
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", True)
-        self.assertEqual(page1.get_url_path(), '/pages/en-us/')
+        self.assertEqual(page1.get_url_path(),
+            reverse('pages-details-by-path', args=[],
+            kwargs={'lang': 'en-us', 'path': ''})
+        )
 
         self.set_setting("PAGE_HIDE_ROOT_SLUG", False)
         page1.invalidate()
-        self.assertEqual(page1.get_url_path(), '/pages/en-us/page1')
+        self.assertEqual(page1.get_url_path(),
+            reverse('pages-details-by-path', args=[],
+            kwargs={'lang': 'en-us', 'path': 'page1'})
+        )
 
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
-        self.assertEqual(page1.get_url_path(), '/pages/page1')
+        self.assertEqual(page1.get_url_path(),
+            reverse('pages-details-by-path', args=[],
+            kwargs={'path': 'page1'})
+        )
 
     def test_revision_depth(self):
         """

@@ -321,7 +321,7 @@ class FunctionnalTestCase(TestCase):
         response = c.post('/admin/pages/page/add/', page_data)
         # the redirect tell that the page has been create correctly
         self.assertRedirects(response, '/admin/pages/page/')
-        response = c.get('/pages/same-slug/')
+        response = c.get(self.get_page_url('same-slug/'))
         self.assertEqual(response.status_code, 200)
 
         page = Page.objects.all()[0]
@@ -744,14 +744,14 @@ class FunctionnalTestCase(TestCase):
         page.delegate_to = 'test'
         page.save()
 
-        response = c.get('/pages/delegate')
+        response = c.get(self.get_page_url('delegate'))
         self.assertEqual(response.status_code, 200)
 
         from pages.testproj.documents.models import Document
         doc = Document(title='doc title 1', text='text', page=page)
         doc.save()
 
-        response = c.get('/pages/delegate/doc-%d' % doc.id)
+        response = c.get(self.get_page_url('delegate/doc-%d' % doc.id))
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, "doc title 1")
@@ -784,12 +784,12 @@ class FunctionnalTestCase(TestCase):
     def test_root_page(self):
         """Test that the root page doesn't trigger a 404."""
         c = self.get_admin_client()
-        page1 = self.new_page(content={'slug':'this-is-not-a-404'})
+        page1 = self.new_page(content={'slug': 'this-is-not-a-404'})
         self.assertEqual(Page.objects.count(), 1)
         page = Page.objects.on_site()[0]
         self.assertTrue(page.is_first_root())
 
-        response = c.get('/pages/')
+        response = c.get(self.get_page_url())
         self.assertEqual(response.status_code, 200)
 
 
@@ -798,11 +798,11 @@ class FunctionnalTestCase(TestCase):
         Test that a page is also available with and without a trailing slash.
         """
         c = self.get_admin_client()
-        page1 = self.new_page(content={'slug':'root'})
-        page2 = self.new_page(content={'slug':'other'})
-        response = c.get('/pages/other')
+        page1 = self.new_page(content={'slug': 'root'})
+        page2 = self.new_page(content={'slug': 'other'})
+        response = c.get(self.get_page_url('other'))
         self.assertEqual(response.status_code, 200)
-        response = c.get('/pages/other/')
+        response = c.get(self.get_page_url('other/'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -811,7 +811,7 @@ class FunctionnalTestCase(TestCase):
         Test the sitemap class
         """
         c = self.get_admin_client()
-        page1 = self.new_page(content={'slug':'english-slug'})
+        page1 = self.new_page(content={'slug': 'english-slug'})
         page1.save()
         Content(page=page1, language='fr-ch', type='slug',
             body='french-slug').save()

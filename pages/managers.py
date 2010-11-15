@@ -47,7 +47,7 @@ class PageManager(models.Manager):
             if not site_id:
                 site_id = settings.SITE_ID
             return self.filter(sites=site_id)
-        return self
+        return self.all()
 
     def root(self):
         """Return a :class:`QuerySet` of pages without parent."""

@@ -1,6 +1,8 @@
 from django.test import TestCase
 from pages.models import Page, Content
 from pages import settings as pages_settings
+from pages.testproj import test_settings
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
@@ -27,13 +29,27 @@ class TestCase(TestCase):
     fixtures = ['pages_tests.json']
     counter = 1
     settings_to_reset = {}
+    old_url_conf = None
+
+    def setUp(self):
+        # useful to make sure the tests will be properly
+        # executed in an exotic project.
+        self.set_setting('PAGE_TEMPLATES',
+            test_settings.PAGE_TEMPLATES)
+        self.set_setting('PAGE_DEFAULT_TEMPLATE',
+            test_settings.PAGE_DEFAULT_TEMPLATE)
+
+        self.old_url_conf = getattr(settings, 'ROOT_URLCONF')
+        setattr(settings, 'ROOT_URLCONF', 'pages.testproj.urls')
+        clear_url_caches()
 
     def tearDown(self):
+        setattr(settings, 'ROOT_URLCONF', self.old_url_conf)
         for name, value in self.settings_to_reset.items():
             setattr(pages_settings, name, value)
-        if 'PAGE_USE_LANGUAGE_PREFIX' in self.settings_to_reset:
-            self.reset_urlconf()
+        self.reset_urlconf()
         self.settings_to_reset = {}
+
 
     def set_setting(self, name, value):
         old_value = getattr(pages_settings, name)
@@ -42,6 +58,7 @@ class TestCase(TestCase):
             self.reset_urlconf()
         if name not in self.settings_to_reset:
             self.settings_to_reset[name] = old_value
+
 
     def assert404(self, func):
         try:
@@ -58,13 +75,19 @@ class TestCase(TestCase):
         client.login(username='admin', password='b')
         return client
 
+
     def get_page_url(self, path=''):
         return reverse('pages-details-by-path', args=[path])
 
+
     def reset_urlconf(self):
+        url_conf = getattr(settings, 'ROOT_URLCONF', False)
+        if url_conf:
+            reload(import_module(url_conf))
         reload(import_module('pages.urls'))
         reload(import_module('pages.testproj.urls'))
         clear_url_caches()
+
 
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
@@ -77,6 +100,7 @@ class TestCase(TestCase):
         self.counter = self.counter + 1
         return page_data
 
+
     def new_page(self, content={'title':'test-page'}, language='en-us'):
         author = User.objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
@@ -88,6 +112,7 @@ class TestCase(TestCase):
         for key, value in content.items():
             Content(page=page, language='en-us', type=key, body=value).save()
         return page
+
 
     def create_new_page(self, client=None, draft=False):
         if not client:

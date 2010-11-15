@@ -817,11 +817,11 @@ class FunctionnalTestCase(TestCase):
             body='french-slug').save()
 
         response = c.get('/sitemap.xml')
-        self.assertEqual(response.status_code, 200)
+
         self.assertContains(response, 'english-slug')
         self.assertNotContains(response, 'french-slug')
 
         response = c.get('/sitemap2.xml')
-        self.assertEqual(response.status_code, 200)
+
         self.assertContains(response, 'english-slug')
         self.assertContains(response, 'french-slug')

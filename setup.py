@@ -16,11 +16,9 @@ required_to_install = []
 for dist in requirements.readlines():
     dist = dist.strip()
     try:
-        print require(dist)
+        require(dist)
     except DistributionNotFound:
         required_to_install.append(dist)
-
-print required_to_install
 
 data_dirs = []
 for directory in os.walk('pages/templates'):
@@ -62,4 +60,3 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Site Management',
     ],
 )
-

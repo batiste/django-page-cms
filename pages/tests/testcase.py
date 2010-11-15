@@ -64,7 +64,6 @@ class TestCase(TestCase):
         try:
             response = func()
             if response.status_code != 404:
-                print response.status_code
                 raise Error404Expected
         except TemplateDoesNotExist:
             pass

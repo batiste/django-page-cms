@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Page CMS page_tags template tags"""
 from django import template
 from django.utils.safestring import SafeUnicode
@@ -71,13 +70,10 @@ def pages_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    path = context.get('path', None)
-    site_id = None
     if page:
         children = page.get_children_for_frontend()
-    if 'current_page' in context:
-        current_page = context['current_page']
-    return locals()
+        context.update({'children': children, 'page': page})
+    return context
 pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
 
@@ -92,13 +88,11 @@ def pages_sub_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    path = context.get('path', None)
     if page:
         root = page.get_root()
         children = root.get_children_for_frontend()
-    if 'current_page' in context:
-        current_page = context['current_page']
-    return locals()
+        context.update({'children': children, 'page': page})
+    return context
 pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
@@ -112,25 +106,23 @@ def pages_siblings_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    path = context.get('path', None)
     if page:
         if page.parent:
             root = page.parent
         else:
             root = page
         children = root.get_children_for_frontend()
-    if 'current_page' in context:
-        current_page = context['current_page']
-    return locals()
+        context.update({'children': children, 'page': page})
+    return context
 pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
                                     takes_context=True)(pages_siblings_menu)
 
 
-def pages_admin_menu(context, page, url='', level=None):
+def pages_admin_menu(context, page):
     """Render the admin table of pages."""
     request = context.get('request', None)
-    can_publish = context.get('can_publish', False)
 
+    expanded = False
     if request and "tree_expanded" in request.COOKIES:
         cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
@@ -138,14 +130,8 @@ def pages_admin_menu(context, page, url='', level=None):
                 urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
             if page.id in ids:
                 expanded = True
-
-    page_languages = pages_settings.PAGE_LANGUAGES
-    #has_permission = page.has_page_permission(request)
-    PAGES_MEDIA_URL = pages_settings.PAGES_MEDIA_URL
-    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
-    LANGUAGE_BIDI = context.get('LANGUAGE_BIDI', False)
-
-    return locals()
+    context.update({'expanded': expanded, 'page': page})
+    return context
 pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
                                         takes_context=True)(pages_admin_menu)
 
@@ -247,8 +233,6 @@ def pages_dynamic_tree_menu(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context.get('request', None)
-    site_id = None
     children = None
     if page and 'current_page' in context:
         current_page = context['current_page']
@@ -258,7 +242,8 @@ def pages_dynamic_tree_menu(context, page, url='/'):
             page.lft <= current_page.lft and
             page.rght >= current_page.rght):
             children = page.get_children_for_frontend()
-    return locals()
+    context.update({'children': children, 'page': page})
+    return context
 pages_dynamic_tree_menu = register.inclusion_tag(
     'pages/dynamic_tree_menu.html',
     takes_context=True
@@ -277,11 +262,11 @@ def pages_breadcrumb(context, page, url='/'):
     """
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
-    request = context.get('request', None)
-    site_id = None
+    pages_navigation = None
     if page:
         pages_navigation = page.get_ancestors()
-    return locals()
+    context.update({'pages_navigation': pages_navigation, 'page': page})
+    return context
 pages_breadcrumb = register.inclusion_tag(
     'pages/breadcrumb.html',
     takes_context=True

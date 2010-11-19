@@ -120,7 +120,9 @@ class PlaceholderNode(template.Node):
 
     def get_extra_data(self, data):
         """Get eventual extra data for this placeholder from the
-        POST dictionary."""
+        admin form. This method is called when the Page is
+        saved in the admin and passed to the placeholder save
+        method."""
         result = {}
         for key in data.keys():
             if key.startswith(self.name + '-'):

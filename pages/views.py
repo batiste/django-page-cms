@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from django.contrib.sitemaps import Sitemap
 from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
+from django.shortcuts import render_to_response
 from pages import settings
 from pages.models import Page, PageAlias
 from pages.http import auto_render, get_language_from_request, remove_slug
@@ -79,7 +80,12 @@ class Details(object):
             if answer:
                 return answer
 
-        return template_name, context
+        # do what the auto_render was used to do.
+        if kwargs.get('only_context', False):
+            return context
+        template_name = kwargs.get('template_name', template_name)
+
+        return render_to_response(template_name, context)
 
     def resolve_page(self, request, context, is_staff):
         """Return the appropriate page according to the path."""
@@ -181,14 +187,10 @@ class Details(object):
             return view(request, *args, **kwargs)
 
 
-# This view instance use the auto_render decorator. It means
-# that you can use the only_context extra parameter to get
-# only the local variables of this view without rendering
-# the template.
-
-#   >>> from pages.views import details
-#   >>> context = details(request, only_context=True)
-details = auto_render(Details())
+# The view view instance. It's the same object for
+# everybody so be careful to maintain it thread safe.
+# ie: NO self.attrbitute = something
+details = Details()
 
 
 class PageSitemap(Sitemap):

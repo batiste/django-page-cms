@@ -130,7 +130,6 @@ help if you want to override some default behavior::
 
 
     from pages.views import Details
-    from pages.http import auto_render
     from news.models import News
 
     class NewsView(Details):
@@ -139,7 +138,7 @@ help if you want to override some default behavior::
             lastest_news = News.object.all()
             return {'news': lastest_news}
 
-    details = auto_render(NewsView())
+    details = NewsView()
 
 And don't forget to redefine the urls to point to your new view with something similar to this code::
 

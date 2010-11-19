@@ -78,7 +78,7 @@ class AutoRenderTestCase(TestCase):
         """Call an @auto_render decorated view which returns an
         arbitrary HttpResponse subclass with allowed keyword argument
         combinations."""
-        
+
         class MyResponse(HttpResponse): pass
         @auto_render
         def testview(request, *args, **kwargs):
@@ -100,7 +100,7 @@ class AutoRenderTestCase(TestCase):
         """If an @auto_render-decorated view returns an HttpResponse
         and is called with ``only_context=True``, it should raise an
         appropriate exception."""
-        
+
         try:
             view(None, only_context=True)
         except Exception, e:

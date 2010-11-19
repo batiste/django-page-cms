@@ -41,6 +41,9 @@ def auto_render(func):
     shortcut. A view that use this decorator should return a tuple of this
     form : (template name, context) instead of a ``HttpRequest`` object.
     """
+    import warnings
+    warnings.warn(DeprecationWarning("auto_render decorator is a deprecated "
+        "and will be removed in the future."))
     def auto_render_decorator(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
         only_context = kwargs.pop('only_context', False)

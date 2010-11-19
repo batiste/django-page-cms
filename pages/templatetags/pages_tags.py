@@ -25,6 +25,8 @@ def get_page_from_string_or_id(page_string, lang=None):
         if page_string.isdigit():
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)
+    # in any other case we return the input becasue it's probably
+    # a Page object.
     return page_string
 
 

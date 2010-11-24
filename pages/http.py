@@ -1,24 +1,50 @@
 """Page CMS functions related to the ``request`` object."""
+from pages import settings
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from pages import settings
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
 
+# TODO In Django 1.3 there is a new RequestFactory class
+# that can replace the following function.
 def get_request_mock():
-    """Build a ``request`` mock up that can be used for testing."""
+    """Build a ``request`` mock up that is used in to render
+    the templates in the most fidel environement as possible.
+
+    This fonction is used in the get_placeholders method to
+    render the input template and search for the placeholder
+    within.
+    """
     basehandler = BaseHandler()
     basehandler.load_middleware()
+    # http://www.python.org/dev/peps/pep-0333/
     request = WSGIRequest({
+        'HTTP_COOKIE': '',
+        'PATH_INFO': '/',
+        'QUERY_STRING': '',
+        'REMOTE_ADDR': '127.0.0.1',
         'REQUEST_METHOD': 'GET',
-        'SERVER_NAME': 'test',
-        'SERVER_PORT': '8000',
-        'HTTP_HOST': 'testhost',
+        'SERVER_NAME': 'page-request-mock',
+        'SCRIPT_NAME': '',
+        'SERVER_PORT': '80',
+        'SERVER_PROTOCOL': 'HTTP/1.1',
+        'HTTP_HOST': 'page-request-host',
+        'CONTENT_TYPE': 'text/html; charset=utf-8',
+        'wsgi.version': (1, 0),
+        'wsgi.url_scheme': 'http',
+        'wsgi.multiprocess': True,
+        'wsgi.multithread':  False,
+        'wsgi.run_once':     False,
+        'wsgi.input': StringIO("")
     })
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
@@ -26,6 +52,7 @@ def get_request_mock():
         # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.im_class):
             response = middleware_method(request)
+
     return request
 
 

@@ -419,7 +419,7 @@ class Page(MPTTModel):
 
     def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
-        spaces equal to the level of page in the hierarchy."""
+        spaces equal to simluate the level of page in the hierarchy."""
         level = ''
         if self.level:
             for n in range(0, self.level):

@@ -1,13 +1,15 @@
 """Default example views"""
+from pages import settings
+from pages.models import Page, PageAlias
+from pages.http import auto_render, get_language_from_request, remove_slug
+from pages.urlconf_registry import get_urlconf
+
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.contrib.sitemaps import Sitemap
 from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
 from django.shortcuts import render_to_response
-from pages import settings
-from pages.models import Page, PageAlias
-from pages.http import auto_render, get_language_from_request, remove_slug
-from pages.urlconf_registry import get_urlconf
+from django.template import RequestContext
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
@@ -85,7 +87,8 @@ class Details(object):
             return context
         template_name = kwargs.get('template_name', template_name)
 
-        return render_to_response(template_name, context)
+        return render_to_response(template_name,
+            RequestContext(request, context))
 
     def resolve_page(self, request, context, is_staff):
         """Return the appropriate page according to the path."""

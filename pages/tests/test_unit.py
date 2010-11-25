@@ -625,4 +625,11 @@ class UnitTestCase(TestCase):
         p.save()
         self.assertEqual(unicode(p), u"page-%d" % p.id)
 
-
+    def test_context_processor(self):
+        """Test that the page's context processor is properly activated."""
+        from pages.views import details
+        req = get_request_mock()
+        page1 = self.new_page(content={'slug':'page1', 'title':'hello'})
+        page1.save()
+        self.set_setting("PAGES_MEDIA_URL", "test_request_context")
+        self.assertContains(details(req, path='/'), "test_request_context")

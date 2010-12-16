@@ -7,7 +7,7 @@ from pages.widgets import ImageInput, VideoWidget
 
 from django import template
 from django.template import TemplateSyntaxError
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import default_storage
 from django.forms import Textarea, ImageField, CharField
 from django.forms import TextInput
 from django.conf import settings as global_settings
@@ -259,7 +259,6 @@ class ImagePlaceholderNode(PlaceholderNode):
             # the image URL is posted if not changed
             if type(data) is unicode:
                 return
-            storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,
                 'page_' + str(page.id),
@@ -270,7 +269,7 @@ class ImagePlaceholderNode(PlaceholderNode):
             if m is not None:
                 filename += m.group(0).lower()
 
-            filename = storage.save(filename, data)
+            filename = default_storage.save(filename, data)
             return super(ImagePlaceholderNode, self).save(
                 page,
                 language,

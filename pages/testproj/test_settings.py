@@ -183,8 +183,11 @@ COVERAGE_EXCLUDE_MODULES = (
     "pages.search_indexes",
     "pages.management.commands.*",
 )
+
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
+
+PAGE_ENABLE_TESTS = True
 
 #TEST_RUNNER = 'example.test_runner.run_tests'
 

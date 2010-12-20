@@ -3,6 +3,9 @@ import unittest
 
 def suite():
     suite = unittest.TestSuite()
+    from pages import settings
+    if not settings.PAGE_ENABLE_TESTS:
+        return suite
     from pages.tests.test_functionnal import FunctionnalTestCase
     from pages.tests.test_unit import UnitTestCase
     from pages.tests.test_regression import RegressionTestCase

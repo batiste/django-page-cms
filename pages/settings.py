@@ -217,3 +217,5 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # This setting is the name of a sub-folder where uploaded content, like
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
+
+PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)

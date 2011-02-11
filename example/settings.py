@@ -35,8 +35,8 @@ USE_I18N = True
 MEDIA_ROOT = STATIC_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
-STATIC_URL = MEDIA_URL + 'static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = '/static/'
 
 # Absolute path to the directory that holds pages media.
 # PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
@@ -158,7 +158,6 @@ PAGE_LANGUAGE_MAPPING = language_mapping
 
 PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
-PAGES_MEDIA_URL = '/static/'
 
 PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),

@@ -106,7 +106,7 @@ get_content = auto_render(get_content)
 
 def move_page(request, page_id, extra_context=None):
     """Move the page to the requested target, at the given
-    position"""
+    position."""
     page = Page.objects.get(pk=page_id)
 
     target = request.POST.get('target', None)

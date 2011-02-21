@@ -174,7 +174,7 @@ PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 PAGES_MEDIA_URL = get_setting('PAGES_MEDIA_URL')
 if not PAGES_MEDIA_URL:
     media_url = get_setting('STATIC_URL', 'MEDIA_URL', raise_error=True)
-    PAGES_MEDIA_URL = media_url + 'pages/'
+    PAGES_MEDIA_URL = str(media_url) + 'pages/'
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``
 PAGE_HIDE_ROOT_SLUG = getattr(settings, 'PAGE_HIDE_ROOT_SLUG', False)

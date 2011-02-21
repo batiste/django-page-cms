@@ -92,8 +92,8 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
 Integrate application models and forms into the page admin
 ==========================================================
 
-Gerbi provide a solid way to integrate external application
-forms for managing page related objects (create/delete/update) into the page's administration interface.
+If you don't want to sublass the PageAdmin class Gerbi provides an alternative way
+to integrate external application into the page's administration interface.
 
 For this you need an object with foreign key pointing to a page::
 
@@ -103,7 +103,7 @@ For this you need an object with foreign key pointing to a page::
         title = models.CharField(_('title'), max_length=100, blank=False)
         text = models.TextField(_('text'), blank=True)
 
-        # the foreign key *must* be called page
+        # You need a foreign key to the page object, and it must be named page
         page = models.ForeignKey(Page)
 
     class DocumentForm(ModelForm):

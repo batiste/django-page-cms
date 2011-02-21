@@ -170,7 +170,7 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
 # ``html5lib``
 PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
 
-# URL that handles pages media and uses <MEDIA_ROOT>/pages by default.
+# URL that handles pages media and uses <STATIC_URL>/pages by default.
 PAGES_MEDIA_URL = get_setting('PAGES_MEDIA_URL')
 if not PAGES_MEDIA_URL:
     media_url = get_setting('STATIC_URL', 'MEDIA_URL', raise_error=True)
@@ -218,4 +218,6 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
 
+# Disable the tests by default so they don't execute when the user
+# execute manage.py test
 PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)

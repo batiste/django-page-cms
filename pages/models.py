@@ -451,6 +451,59 @@ class Page(MPTTModel):
             return u"Page %d" % self.id
         return u"Page without id"
 
+    def get_next_in_book( self ):
+        """Returns the next page in the tree as if it was traversed
+        like a book (see the tree as the book's ToC).
+
+        This is exactly what a step-wise prefix DFS tree traversal would look like.
+
+        Note that this implementation is biased as follows: we assume
+        that each tree is independant, i.e. we make sure never to jump
+        beyond a root node to another tree.
+        """
+        chd = self.get_children()
+        if 0 < chd.count():
+            return chd[0]
+        elif self.get_next_sibling():
+            return self.get_next_sibling()
+        else:
+            cnt = self.get_ancestors( ascending=True ).count()
+            # Not interested by the root don't want to 'switch' tree.
+            anc = self.get_ancestors( ascending=True )[0:cnt-1]
+            
+            for par in anc: 
+                nxt = par.get_next_sibling()
+                if None != nxt:
+                    return nxt
+        return None
+
+    def get_prev_in_book( self ):
+        """Returns the previous page in the tree as if it was
+        traversed like a book.
+
+        This is a step-wise postfix reverse-DFS traversal.
+
+        Note that this implementation is biased as follows: we assume
+        that each tree is independant, i.e. we make sure never to jump
+        beyond a root node to another tree.
+        """
+
+        ## get_descendants() looks expansive: load the whole pages ?
+        ## Better way to do that ? trying get_descendant_count() + []
+
+        if not self.is_root_node():
+            sib = self.get_previous_sibling()
+            if None != sib:
+                cnt = sib.get_descendant_count()
+                if 0 == cnt:
+                    return sib
+                else: # cnt > 0
+                    return sib.get_descendants()[cnt-1]
+            else:
+                # No get_parent() ?
+                return self.get_ancestors( ascending = True )[0]
+        return None
+
 
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,

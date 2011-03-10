@@ -4,6 +4,18 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.4.1
+==============
+
+    * Tests are not executed when you execute ./manage.py test, unless explicity enabled with PAGE_ENABLE_TESTS.
+    * Deprecation of the auto_render decorator.
+    * Fix the request mock to work with the latest trunk of Django.
+    * ImagePlaceholder: use django.core.files.storage.default_storage instead of from django.core.files.storage import FileSystemStorage
+    * Added setting for allowing realtime search index rather than index on management command.
+    * Optimize and cache is_first_root method.
+    * Fix a bug in the {% get_content %} tag
+
+
 Release 1.4.0
 ==============
 

@@ -18,4 +18,5 @@ global-include pages/*.html
 global-exclude *.pyc
 global-exclude coverage/*
 prune example
+prune dist
 

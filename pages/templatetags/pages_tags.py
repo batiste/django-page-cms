@@ -328,13 +328,16 @@ do_get_page = register.tag('get_page', do_get_page)
 
 class GetContentNode(template.Node):
     """Get content node"""
-    def __init__(self, page, content_type, varname, lang):
+    def __init__(self, page, content_type, varname, lang, lang_filter):
         self.page = page
         self.content_type = content_type
         self.varname = varname
         self.lang = lang
+        self.lang_filter = lang_filter
 
     def render(self, context):
+        if self.lang_filter:
+            self.lang = self.lang_filter.resolve(context)
         context[self.varname] = _get_content(
             context,
             self.page.resolve(context),
@@ -374,9 +377,12 @@ def do_get_content(parser, token):
     content_type = parser.compile_filter(bits[2])
     varname = bits[-1]
     lang = None
+    lang_filter = None
     if len(bits) == 6:
-        lang = parser.compile_filter(bits[3])
-    return GetContentNode(page, content_type, varname, lang)
+        lang = bits[3]
+    else:
+        lang_filter = parser.compile_filter("lang")
+    return GetContentNode(page, content_type, varname, lang, lang_filter)
 do_get_content = register.tag('get_content', do_get_content)
 
 

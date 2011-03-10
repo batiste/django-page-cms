@@ -283,7 +283,7 @@ class UnitTestCase(TestCase):
         """
         Test the {% get_content %} template tag
         """
-        page_data = {'title':'test', 'slug':'test'}
+        page_data = {'title': 'test', 'slug': 'test'}
         page = self.new_page(page_data)
 
         context = RequestContext(MockRequest, {'page': page})
@@ -295,6 +295,39 @@ class UnitTestCase(TestCase):
                             '{% get_content page "title" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), page_data['title'])
+
+    def test_get_content_tag_bug(self):
+        """
+        Make sure that {% get_content %} use the "lang" context variable if
+        no language string is provided.
+        """
+        page_data = {'title': 'test', 'slug': 'english'}
+        page = self.new_page(page_data)
+        Content(page=page, language='fr-ch', type='title', body='french').save()
+        Content(page=page, language='fr-ch', type='slug', body='french').save()
+        self.assertEqual(page.slug(language='fr-ch'), 'french')
+        self.assertEqual(page.slug(language='en-us'), 'english')
+
+        # default
+        context = RequestContext(MockRequest, {'page': page})
+        template = Template('{% load pages_tags %}'
+                            '{% get_content page "slug" as content %}'
+                            '{{ content }}')
+        self.assertEqual(template.render(context), 'english')
+
+        # french specified
+        context = RequestContext(MockRequest, {'page': page, 'lang': 'fr'})
+        template = Template('{% load pages_tags %}'
+                            '{% get_content page "slug" as content %}'
+                            '{{ content }}')
+        self.assertEqual(template.render(context), 'french')
+
+        # english specified
+        context = RequestContext(MockRequest, {'page': page, 'lang': 'en-us'})
+        template = Template('{% load pages_tags %}'
+                            '{% get_content page "slug" as content %}'
+                            '{{ content }}')
+        self.assertEqual(template.render(context), 'english')
 
     def test_show_content_tag(self):
         """
@@ -333,7 +366,7 @@ class UnitTestCase(TestCase):
         """
         Test a {% show_absolute_url %} template tag  bug.
         """
-        page_data = {'title':'english', 'slug':'english'}
+        page_data = {'title': 'english', 'slug': 'english'}
         page = self.new_page(page_data)
         Content(page=page, language='fr-ch', type='title', body='french').save()
         Content(page=page, language='fr-ch', type='slug', body='french').save()

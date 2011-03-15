@@ -294,12 +294,13 @@ except ImportError:
 
 class GetPageNode(template.Node):
     """get_page Node"""
-    def __init__(self, page, varname):
-        self.page = page
+    def __init__(self, page_filter, varname):
+        self.page_filter = page_filter
         self.varname = varname
 
     def render(self, context):
-        page = get_page_from_string_or_id(self.page)
+        page_or_id = self.page_filter.resolve(context)
+        page = get_page_from_string_or_id(page_or_id)
         context[self.varname] = page
         return ''
 
@@ -320,9 +321,9 @@ def do_get_page(parser, token):
     if bits[-2] != 'as':
         raise TemplateSyntaxError(
             '%r expects "as" as the second argument' % bits[0])
-    page = bits[1]
+    page_filter = parser.compile_filter(bits[1])
     varname = bits[-1]
-    return GetPageNode(page, varname)
+    return GetPageNode(page_filter, varname)
 do_get_page = register.tag('get_page', do_get_page)
 
 

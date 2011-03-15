@@ -8,6 +8,7 @@ from pages.http import get_language_from_request, get_slug
 from pages.http import get_request_mock, remove_slug
 from pages.utils import export_po_files, import_po_files
 from pages.views import details
+from pages.templatetags.pages_tags import get_page_from_string_or_id
 
 import django
 from django.http import Http404
@@ -639,8 +640,8 @@ class UnitTestCase(TestCase):
 
     def test_page_methods(self):
         """Test that some methods run properly."""
-        page1 = self.new_page(content={'slug':'page1', 'title':'hello'})
-        page2 = self.new_page(content={'slug':'page2'})
+        page1 = self.new_page(content={'slug': 'page1', 'title':'hello'})
+        page2 = self.new_page(content={'slug': 'page2'})
         page1.save()
         page2.save()
         page2.parent = page1
@@ -662,7 +663,22 @@ class UnitTestCase(TestCase):
         """Test that the page's context processor is properly activated."""
         from pages.views import details
         req = get_request_mock()
-        page1 = self.new_page(content={'slug':'page1', 'title':'hello'})
+        page1 = self.new_page(content={'slug': 'page1', 'title': 'hello'})
         page1.save()
         self.set_setting("PAGES_MEDIA_URL", "test_request_context")
         self.assertContains(details(req, path='/'), "test_request_context")
+
+    def test_get_page_from_string_or_id(self):
+        """Test get_page_from_string_or_id with literal string."""
+        page = self.new_page({'slug': 'test'})
+        self.assertEqual(get_page_from_string_or_id(unicode(page.id)), page)
+
+        content = Content(page=page, language='en-us', type='test_id', body=page.id)
+        content.save()
+        context = Context({'current_page': page})
+        context = RequestContext(MockRequest, context)
+        template = Template('{% load pages_tags %}'
+                            '{% placeholder test_id as str %}'
+                            '{% get_page str as p %}'
+                            '{{ p.slug }}')
+        self.assertEqual(template.render(context), 'test')

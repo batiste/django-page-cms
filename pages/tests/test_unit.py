@@ -668,8 +668,8 @@ class UnitTestCase(TestCase):
         self.set_setting("PAGES_MEDIA_URL", "test_request_context")
         self.assertContains(details(req, path='/'), "test_request_context")
 
-    def test_get_page_from_string_or_id(self):
-        """Test get_page_from_string_or_id with literal string."""
+    def test_get_page_from_id_context_variable(self):
+        """Test get_page_from_string_or_id with an id context variable."""
         page = self.new_page({'slug': 'test'})
         self.assertEqual(get_page_from_string_or_id(unicode(page.id)), page)
 
@@ -680,5 +680,22 @@ class UnitTestCase(TestCase):
         template = Template('{% load pages_tags %}'
                             '{% placeholder test_id as str %}'
                             '{% get_page str as p %}'
+                            '{{ p.slug }}')
+        self.assertEqual(template.render(context), 'test')
+
+    def test_get_page_from_slug_context_variable(self):
+        """Test get_page_from_string_or_id with an slug context variable."""
+        page = self.new_page({'slug': 'test'})
+
+        context = Context({'current_page': page})
+        context = RequestContext(MockRequest, context)
+        template = Template('{% load pages_tags %}'
+                            '{% placeholder slug as str %}'
+                            '{% get_page str as p %}'
+                            '{{ p.slug }}')
+        self.assertEqual(template.render(context), 'test')
+
+        template = Template('{% load pages_tags %}'
+                            '{% get_page "test" as p %}'
                             '{{ p.slug }}')
         self.assertEqual(template.render(context), 'test')

@@ -112,16 +112,16 @@ class UnitTestCase(TestCase):
     def test_get_page_template_tag(self):
         """Test get_page template tag."""
         context = Context({})
-        pl1 = """{% load pages_tags %}{% get_page get-page-slug as toto %}{{ toto }}"""
+        pl1 = """{% load pages_tags %}{% get_page "get-page-slug" as toto %}{{ toto }}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), u'None')
-        page = self.new_page({'slug':'get-page-slug'})
+        page = self.new_page({'slug': 'get-page-slug'})
         self.assertEqual(template.render(context), u'get-page-slug')
 
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'current_page': page, 'lang': 'en-us'})
 
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
         template = get_template_from_string(pl1)

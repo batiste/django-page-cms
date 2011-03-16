@@ -673,7 +673,8 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'test'})
         self.assertEqual(get_page_from_string_or_id(unicode(page.id)), page)
 
-        content = Content(page=page, language='en-us', type='test_id', body=page.id)
+        content = Content(page=page, language='en-us', type='test_id',
+            body=page.id)
         content.save()
         context = Context({'current_page': page})
         context = RequestContext(MockRequest, context)
@@ -699,3 +700,33 @@ class UnitTestCase(TestCase):
                             '{% get_page "test" as p %}'
                             '{{ p.slug }}')
         self.assertEqual(template.render(context), 'test')
+
+    def test_get_page_template_tag_with_page_arg_as_id(self):
+        """Test get_page template tag with page argument given as a page id"""
+        context = Context({})
+        pl1 = """{% load pages_tags %}{% get_page 1 as toto %}{{ toto }}"""
+        template = get_template_from_string(pl1)
+        page = self.new_page({'id': 1, 'slug': 'get-page-slug'})
+        self.assertEqual(template.render(context), u'get-page-slug')
+
+    def test_get_page_template_tag_with_variable_containing_page_id(self):
+        """Test get_page template tag with page argument given as a page id"""
+        context = Context({})
+        pl1 = ('{% load pages_tags %}{% placeholder somepage as page_id %}'
+            '{% get_page page_id as toto %}{{ toto }}')
+        template = get_template_from_string(pl1)
+        page = self.new_page({'id': 1, 'slug': 'get-page-slug',
+            'somepage': '1'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'get-page-slug')
+
+    def test_get_page_template_tag_with_variable_containing_page_slug(self):
+        """Test get_page template tag with page argument given as a page id"""
+        context = Context({})
+        pl1 = ('{% load pages_tags %}{% placeholder somepage as slug %}'
+            '{% get_page slug as toto %}{{ toto }}')
+        template = get_template_from_string(pl1)
+        page = self.new_page({'slug': 'get-page-slug', 'somepage':
+            'get-page-slug' })
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'get-page-slug')

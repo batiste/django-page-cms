@@ -189,10 +189,8 @@ class PlaceholderNode(template.Node):
         return content
 
     def get_content_from_context(self, context):
-        if not self.page in context:
-            return ''
         # current_page can be set to None
-        if not context[self.page]:
+        if not self.page in context:
             return ''
 
         if self.untranslated:

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Django settings for cms project.
+from django                     import VERSION as DJANGO_VERSION
 import os
-PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR =  os.path.dirname(__file__)
 
 TEST_PROJ = 'pages.testproj'
 
@@ -15,13 +16,6 @@ ADMINS = (
 CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.db'
-    }
-}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -55,20 +49,46 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader'
-)
+if DJANGO_VERSION[0] == 1 and DJANGO_VERSION[1] < 2:
+    DATABASE_ENGINE = 'django.db.backends.sqlite3'
+    DATABASE_NAME   = 'test.db'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.request",
-    "django.core.context_processors.media",
-    "pages.context_processors.media",
-    #"staticfiles.context_processors.static_url",
-)
+    TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.load_template_source',
+        'django.template.loaders.app_directories.load_template_source',
+    )
+
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        "django.core.context_processors.auth",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.request",
+        "django.core.context_processors.media",
+        "pages.context_processors.media",
+        #"staticfiles.context_processors.static_url",
+    )
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'test.db'
+        }
+    }
+
+    TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader'
+    )
+
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        "django.contrib.auth.context_processors.auth",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.request",
+        "django.core.context_processors.media",
+        "pages.context_processors.media",
+        #"staticfiles.context_processors.static_url",
+    )
 
 INTERNAL_IPS = ('127.0.0.1',)
 

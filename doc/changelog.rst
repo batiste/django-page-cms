@@ -4,6 +4,11 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.4.2
+==============
+
+    * Fix a packaging issue with the static files. The package_data setup variable was incorrect.
+
 Release 1.4.1
 ==============
 

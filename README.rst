@@ -10,7 +10,7 @@ dynamically appears in the page admin.
 
 This CMS is know to work on Django 1.1.3, 1.2.5 and 1.3-beta-1
 
-.. image:: http://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
+.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
 
 Documentation
 =============

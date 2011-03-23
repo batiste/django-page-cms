@@ -67,9 +67,6 @@ def pages_menu(context, page, url='/'):
     """Render a nested list of all the descendents of the given page,
     including this page.
 
-    This tag adds to variable to the current context:
-    page
-
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """

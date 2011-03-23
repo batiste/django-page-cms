@@ -139,3 +139,48 @@ The load_pages does not take any parameters and must
 be placed before one of the menu-rendering tags::
 
     {% load_pages %}
+
+
+===========================================================
+Creating/Editing templates for the navigation template tags
+===========================================================
+
+The templates tags are rendered in the same context as the template they are in, but with a few additionnal variables.
+
+Templates for pages_*_menu tags
+===============================
+
+The pages_*_menu templates tags context has the two additional variables:
+
+ * page: the page argument given to the tag;
+ * children: the children pages of the given page;
+
+You can use them as follows::
+
+   <h1>Topic {% show_content page 'title' %}</h1>
+   <p>as the following sub topics: </p>
+   <ul>
+     {% for child in children %}
+       <li> <a href="{% get_a%}">{% show_content child 'title' %}</a></li>
+     {% endfor %}
+   </ul>
+
+See also the provided `pages/menu.html` and `pages/sub_menu.html` templates.
+
+Templates for the pages_breadcrumb tag
+======================================
+
+The page_breadcrumb template tag context has the following additional variables:
+
+ * page: the page argument given to the tag;
+ * page_navigation: the breadcrumb pages on the path to page (excluding page itself);
+
+You can use them as follows::
+
+  {% for parent in page_navigation %}
+    &gt;&nbsp;<a href="{% show_absolute_url parent %}">{% show_content parent 'title' %}</a>&nbsp;
+  {% endfor %}
+  &gt;&nbsp; {% show_content page 'title' %}
+
+See also the provided `pages/breadcrumb.html` templates.
+

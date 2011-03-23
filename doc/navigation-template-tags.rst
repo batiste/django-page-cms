@@ -78,6 +78,23 @@ Again, the default template `pages/sub_menu.html` will render the items as a nes
 unordered list (see above).
 
 
+pages_children_menu
+===================
+
+The pages_children_menu tag shows all the dirent children of the given page. Unlike the pages_menu tag
+it is not recursive: the children's children, and so on are not displayed.
+This is typically used for a secondary navigation menu.
+
+Use the following snippet to display a list of all the
+children of the current root::
+
+    <ul>
+    {% pages_children_menu page %}
+    </ul>
+
+Again, the default template `pages/sub_menu.html` will render the items as an
+unordered list (see above).
+
 pages_siblings_menu
 ===================
 

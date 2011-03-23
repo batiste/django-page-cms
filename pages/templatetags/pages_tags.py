@@ -67,6 +67,9 @@ def pages_menu(context, page, url='/'):
     """Render a nested list of all the descendents of the given page,
     including this page.
 
+    This tag adds to variable to the current context:
+    page
+
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
@@ -78,6 +81,26 @@ def pages_menu(context, page, url='/'):
     return context
 pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
+
+
+def pages_children_menu(context, page, url='/'):
+    """Get the direct children of the given page and render them as a
+    list pages.
+
+    Unlike the pages_menu tag, this tag does not display the children's
+    children and so on, but only the direct children of the given page.
+
+    :param page: the page where to start the menu from.
+    :param url: not used anymore.
+    """
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
+    if page:
+        children = page.get_children_for_frontend()
+        context.update({'children': children, 'page': page})
+    return context
+pages_children_menu = register.inclusion_tag('pages/sub_menu.html',
+                                             takes_context=True)(pages_children_menu)
 
 
 def pages_sub_menu(context, page, url='/'):

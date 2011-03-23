@@ -12,6 +12,7 @@ recursive-include pages *
 recursive-include requirements *
 recursive-include pages/templates *
 recursive-include pages/media *
+recursive-include pages/static *
 recursive-include pages/*.css
 recursive-include pages/*.js
 recursive-include pages/*.html

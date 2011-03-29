@@ -86,8 +86,8 @@ class Page(MPTTModel):
             blank=True)
 
     freeze_date = models.DateTimeField(_('freeze date'),
-            null=True, blank=True, help_text=_('''Don't publish any content
-            after this date.'''))
+            null=True, blank=True, help_text=_("""Don't publish any content
+            after this date."""))
 
     if settings.PAGE_USE_SITE_ID:
         sites = models.ManyToManyField(Site, default=[settings.SITE_ID],

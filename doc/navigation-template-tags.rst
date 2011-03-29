@@ -81,8 +81,8 @@ unordered list (see above).
 pages_children_menu
 ===================
 
-The pages_children_menu tag shows all the dirent children of the given page. Unlike the pages_menu tag
-it is not recursive: the children's children, and so on are not displayed.
+The pages_children_menu tag shows all the direct children of the given page. Unlike the pages_menu tag
+it is not recursive: the children's children and so on, are not displayed.
 This is typically used for a secondary navigation menu.
 
 Use the following snippet to display a list of all the

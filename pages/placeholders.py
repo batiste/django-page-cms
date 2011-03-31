@@ -5,6 +5,8 @@ from pages import settings
 from pages.models import Content
 from pages.widgets import ImageInput, VideoWidget
 
+from django import forms
+from django.core.mail import send_mail
 from django import template
 from django.template import TemplateSyntaxError
 from django.core.files.storage import default_storage
@@ -277,8 +279,6 @@ class ImagePlaceholderNode(PlaceholderNode):
                 change
             )
 
-from django import forms
-from django.core.mail import send_mail
 
 class ContactForm(forms.Form):
   

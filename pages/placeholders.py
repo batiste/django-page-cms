@@ -277,6 +277,42 @@ class ImagePlaceholderNode(PlaceholderNode):
                 change
             )
 
+from django import forms
+from django.core.mail import send_mail
+
+class ContactForm(forms.Form):
+  
+    email = forms.EmailField(label=_('Your email'))
+    subject = forms.CharField(label=_('Subject'), 
+      max_length=150)
+    message = forms.CharField(widget=forms.Textarea(),
+      label=_('Your message'))
+    
+
+class ContactPlaceholderNode(PlaceholderNode):
+    """A contact `PlaceholderNode` example."""
+
+    def render(self, context):
+        content = self.get_content_from_context(context)
+        request = context.get('request', None)
+        if not request:
+            raise ValueError('request no available in the context.')
+        if request.method == 'POST':
+            form = ContactForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                recipients = [adm[1] for adm in global_settings.ADMINS]
+                try:
+                    send_mail(data['subject'], data['message'], 
+                        data['email'], recipients, fail_silently=False)
+                    return _("Your email has been sent. Thank you.")
+                except:
+                    return _("An error as occured: your email has not been sent.")
+        else:
+            form = ContactForm()
+        renderer = render_to_string('pages/contact.html', {'form':form})
+        return mark_safe(renderer)
+
 
 class VideoPlaceholderNode(PlaceholderNode):
     """A youtube `PlaceholderNode`, just here as an example."""

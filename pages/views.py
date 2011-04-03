@@ -168,7 +168,8 @@ class Details(object):
         # call this view instead.
         current_page = context['current_page']
         path = context['path']
-        delegate_path = path.replace(current_page.get_complete_slug(), "")
+        delegate_path = path.replace(
+            current_page.get_complete_slug(hideroot=False), "")
         # it seems that the urlconf path have to start with a slash
         if len(delegate_path) == 0:
             delegate_path = "/"

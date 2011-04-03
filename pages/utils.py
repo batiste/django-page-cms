@@ -4,19 +4,10 @@ from pages import settings
 from pages.http import get_request_mock
 
 from django.template import TemplateDoesNotExist
-from django.template import loader, Context, RequestContext
+from django.template import loader, Context
 from django.core.cache import cache
 
 import re
-
-
-def get_context_mock():
-    """return a mockup dictionnary to use in get_placeholders."""
-    context = {'current_page': None}
-    if settings.PAGE_EXTRA_CONTEXT:
-        context.update(settings.PAGE_EXTRA_CONTEXT())
-    return context
-
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.
@@ -28,11 +19,6 @@ def get_placeholders(template_name):
     except TemplateDoesNotExist:
         return []
 
-    request = get_request_mock()
-    context = get_context_mock()
-    # I need to render the template in order to extract
-    # placeholder tags
-    temp.render(RequestContext(request, context))
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
     return plist
@@ -41,7 +27,7 @@ def get_placeholders(template_name):
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
-    # I needed to make this lazy import to compile the documentation
+    # I needed to do this lazy import to compile the documentation
     from django.template.loader_tags import BlockNode
 
     for node in nodelist:

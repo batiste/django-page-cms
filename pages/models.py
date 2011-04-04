@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
 
 from pages.utils import get_placeholders, normalize_url

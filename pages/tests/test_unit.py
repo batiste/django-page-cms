@@ -747,3 +747,18 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
+
+    def test_variable_disapear_in_overloaded_block(self):
+        """Try to test the disapearance of a context variable in an overloaded block."""
+        tpl = ("{% extends 'pages/examples/base.html' %}"
+	  "{% load pages_tags %}"
+	  "{% placeholder page_id  as test_value  with TextInput untranslated %}"
+	  "{% block someblock %}"
+	  "{% get_page test_value as toto %}{{toto.slug}}"
+	  "{% endblock %}")
+
+        template = get_template_from_string ( tpl )
+        page = self.new_page ( { 'slug': 'get-page-slug' } )
+        context = Context( { 'current_page': page } )
+        self.assertEqual(template.render(context), u'get-page-slug')
+

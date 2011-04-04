@@ -733,3 +733,17 @@ class UnitTestCase(TestCase):
             'get-page-slug' })
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
+        
+    def test_variable_disapear_in_block(self):
+        """Try to test the disapearance of a context variable in a block."""
+        tpl = ("{% load pages_tags %}"
+          "{% placeholder slug as test_value untranslated %}"
+          "{% block someblock %}"
+          "{% get_page test_value as toto %}"
+          "{{ toto.slug }}"
+          "{% endblock %}")
+          
+        template = get_template_from_string(tpl)
+        page = self.new_page({'slug': 'get-page-slug'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'get-page-slug')

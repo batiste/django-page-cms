@@ -271,7 +271,7 @@ class Page(MPTTModel):
         """
         return self.get_url_path(language=language)
 
-    def get_complete_slug(self, language=None):
+    def get_complete_slug(self, language=None, hideroot=True):
         """Return the complete slug of this page by concatenating
         all parent's slugs.
 
@@ -288,7 +288,7 @@ class Page(MPTTModel):
         elif language in self._complete_slug:
             return self._complete_slug[language]
 
-        if settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
+        if hideroot and settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
             url = u''
         else:
             url = u'%s' % self.slug(language)
@@ -445,6 +445,7 @@ class Page(MPTTModel):
     def __unicode__(self):
         """Representation of the page, saved or not."""
         if self.id:
+            # without ID a slug cannot be retrieved
             slug = self.slug()
             if slug:
                 return slug

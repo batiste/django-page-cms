@@ -481,7 +481,7 @@ class Page(MPTTModel):
         """Returns the previous page in the tree as if it was
         traversed like a book.
 
-        This is a step-wise postfix reverse-DFS traversal.
+        This is a step-wise postfix “reverse-DFS” traversal.
 
         Note that this implementation is biased as follows: we assume
         that each tree is independant, i.e. we make sure never to jump
@@ -494,14 +494,25 @@ class Page(MPTTModel):
         if not self.is_root_node():
             sib = self.get_previous_sibling()
             if None != sib:
-                cnt = sib.get_descendant_count()
-                if 0 == cnt:
+                ## Somehow MPTT get_descendant_count() returns non
+                ## zero value when descendant nodes have been added
+                ## and then deleted. I guess this is an MPTT bug (not
+                ## a PageCMS bug) that needs to be investigated.
+                
+                # cnt = sib.get_descendant_count()
+                # if 0 == cnt:
+                #     return sib
+                # else: # cnt > 0
+                #     return sib.get_descendants()[cnt-1]
+
+                ## Inefficient fix.
+                dsc = sib.get_descendants() ## Possibly very expansive
+                cnt = len(dsc)
+                if 0 == len(dsc):
                     return sib
-                else: # cnt > 0
-                    return sib.get_descendants()[cnt-1]
+                return dsc[cnt-1]
             else:
-                # No get_parent() ?
-                return self.get_ancestors( ascending = True )[0]
+                return self.parent
         return None
 
 

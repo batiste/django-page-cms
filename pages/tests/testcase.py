@@ -19,7 +19,7 @@ class MockRequest:
 
 class Error404Expected(Exception):
     """
-    A 404 error was expected."
+    A 404 error was expected.
     """
     pass
 

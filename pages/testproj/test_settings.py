@@ -181,6 +181,7 @@ PAGE_LANGUAGE_MAPPING = language_mapping
 PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
 PAGE_TEMPLATES = (
+    ('pages/examples/index.html', 'index'),
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),
     ('pages/examples/editor.html', 'raw editor'),

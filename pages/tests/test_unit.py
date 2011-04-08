@@ -749,7 +749,11 @@ class UnitTestCase(TestCase):
         self.assertEqual(template.render(context), u'get-page-slug')
 
     def test_variable_disapear_in_overloaded_block(self):
-        """Try to test the disapearance of a context variable in an overloaded block."""
+        """
+        Try to test the disapearance of a context variable in an
+        overloaded block, when the variable is defined by a
+        place-holder that is outside of a block.
+        """
         tpl = ("{% extends 'pages/examples/base.html' %}"
 	  "{% load pages_tags %}"
 	  "{% placeholder page_id  as test_value  with TextInput untranslated %}"
@@ -760,5 +764,154 @@ class UnitTestCase(TestCase):
         template = get_template_from_string ( tpl )
         page = self.new_page ( { 'slug': 'get-page-slug' } )
         context = Context( { 'current_page': page } )
-        self.assertEqual(template.render(context), u'get-page-slug')
+        self.assertNotEqual(template.render(context), u'get-page-slug')
 
+
+    def test_traversal_with_get_next_in_book(self):
+        """
+        Checks that the method get_next_in_book() does traverse a tree
+        of :model:`Page`s in the right order and does not jump from
+        one tree to another.
+        """
+        self.set_setting("PAGE_USE_SITE_ID", False)
+
+        author = User.objects.all()[0]
+        now = datetime.datetime.now()
+
+        def page_factory( ):
+            return Page( author=author, status=Page.PUBLISHED,
+                         publication_date=now)
+        
+        roots, pages = mptt_mk_forest( self, page_factory, Page )
+        tree = roots[1]
+
+        self.assertEqual(
+            [ page.id for page in pages[1:-1] ],
+            [ page.id for page in
+              object_sequence_generator( tree,
+                                         Page.get_next_in_book ) ] )
+
+
+
+    def test_traversal_with_get_prev_in_book(self):
+        """
+        Checks that the method get_next_in_book() does traverse a tree
+        of :model:`Page`s in the right order and does not jump from
+        one tree to another.
+        """
+        self.set_setting("PAGE_USE_SITE_ID", False)
+
+        author = User.objects.all()[0]
+        now = datetime.datetime.now()
+
+        def page_factory( ):
+            return Page(author=author, status=Page.PUBLISHED, publication_date=now)
+            
+        roots, pages = mptt_mk_forest( self, page_factory,
+                                       Page )
+        tree = roots[1]
+        cnt  = tree.get_descendant_count()
+        tree = tree.get_descendants()[cnt-1]
+
+        self.assertEqual(
+            [ page.id for page in pages[::-1] ][1:-1],
+            [ page.id for page in
+              object_sequence_generator( tree,
+                                         Page.get_prev_in_book ) ] )
+        
+
+# -----------------------------------------------------------------------------
+
+
+def object_sequence_generator( elmt, nexter ):
+    """
+    Generator that given an element object in a data structure and a
+    method that retrieves the next element in that data structure (or
+    None if there is no such next object) generates a sequence.
+    """
+    while elmt:
+        yield elmt
+        elmt = nexter ( elmt )
+
+# -----------------------------------------------------------------------------
+
+
+def mptt_mk_forest( tc, mptt_model_factory, model=None ):
+    """
+    Creates the test fixture used to check :model:`Page` tree
+    traversal functions/methods. It is the forest depicted below:
+    
+      p1,
+      p2 { p3 { p4, p5 { p6 { p7 } }, p8 { p9, p10 },  \
+        p11 }, p12 { p13 { p14 { p15 } } }, p16 { p17 \
+        { p18 { p19, p20}, p21 { p22, p23 } }, p24    \
+        { p25 { p26, p27 }, p28 { p29, p30 } } } },
+      p31
+
+    The tree traversed is the one rooted in p2.
+    Format:
+      - Sibling nodes are seperated by commas ','; eg p1, p2, p3.
+      - A node that as children, has its children
+        enclosed by braces; e.g. p1 { p2, p3 } here p1 has two children
+        p2 and p3 (note that p2 and p3 are siblings thus separated by a
+        comma).
+
+    Returns a list of the tree roots and a list of all :model:`Pages`
+    in the :model:`Page` forest built.
+    
+    """
+    if not model:
+        model = mptt_model_factory
+    parenting = [
+        None,
+        None,
+        (  1, 'first-child'),
+        (  2, 'first-child'),
+        (  3, 'right'),
+        (  4, 'first-child'),
+        (  5, 'first-child'),
+        (  5, 'right'),
+        (  7, 'first-child'),
+        (  8, 'right'),
+        (  4, 'right'),
+        (  2, 'right'),
+        ( 11, 'first-child'),
+        ( 12, 'first-child'),
+        ( 13, 'first-child'),
+        ( 11, 'right'),
+        ( 15, 'first-child'),
+        ( 16, 'first-child'),
+        ( 17, 'first-child'),
+        ( 18, 'right'),
+        ( 17, 'right'),
+        ( 20, 'first-child'),
+        ( 21, 'right'),
+        ( 16, 'right'),
+        ( 23, 'first-child'),
+        ( 24, 'first-child'),
+        ( 25, 'right'),
+        ( 24, 'right'),
+        ( 27, 'first-child'),
+        ( 28, 'right'),
+        None,
+    ]
+    vertices = []
+    roots    = []
+    for i in range(0, 31):
+        vertex = mptt_model_factory()
+        vertex.save()
+        vertices += [ vertex ]
+        if 2 > i or 30 == i :
+            roots += [ vertex ]
+    
+    for key in range(0,len(parenting)):
+
+        if parenting[key]:
+            vertices[key].move_to( vertices[parenting[key][0]], position=parenting[key][1] )
+
+    # Refreshing nodes to have attribute in sync with DB after move_to's
+    nodes = []
+    for vertex in vertices:
+        nodes += [ model.objects.get( pk=vertex.id ) ]
+        
+    return ( nodes[0], nodes[1], nodes[-1] ), nodes

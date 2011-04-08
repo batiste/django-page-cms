@@ -496,10 +496,11 @@ class Page(MPTTModel):
         if not self.is_root_node():
             sib = self.get_previous_sibling()
             if None != sib:
-                ## Somehow MPTT get_descendant_count() returns non
-                ## zero value when descendant nodes have been added
-                ## and then deleted. I guess this is an MPTT bug (not
-                ## a PageCMS bug) that needs to be investigated.
+                ## Somehow MPTT get_descendant_count() sometimes
+                ## returns non zero value when descendant nodes have
+                ## been added and then deleted. I guess this is an
+                ## MPTT bug (not a PageCMS bug) that needs to be
+                ## investigated.
                 
                 # cnt = sib.get_descendant_count()
                 # if 0 == cnt:

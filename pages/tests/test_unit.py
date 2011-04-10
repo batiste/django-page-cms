@@ -805,7 +805,12 @@ class UnitTestCase(TestCase):
         now = datetime.datetime.now()
 
         def page_factory( ):
-            return Page(author=author, status=Page.PUBLISHED, publication_date=now)
+	    """
+            Argument free closure wrapping the Page constructor to make
+            it usable with the mptt_mk_forest() function.
+            """
+            return Page( author=author, status=Page.PUBLISHED,
+			 publication_date=now)
             
         roots, pages = mptt_mk_forest( self, page_factory,
                                        Page )

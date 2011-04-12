@@ -11,13 +11,13 @@ $(function () {
             return str;
         }
     }
-    
+
     function reset_states() {
         action = selected_page = '';
         changelist.removeClass('insert-add insert-move');
         $('tr', changelist).removeClass('insertable highlighted selected');
     }
-    
+
     // Get an array of the TR elements that are children of the given page id
     // The list argument should not be used (it is only used by the recursion)
     function get_children(id, list) {
@@ -28,12 +28,12 @@ $(function () {
         });
         return list;
     }
-    
+
     // Request and insert to the table the children of the given page id
     function add_children(id, callback) {
         var page_row = $('#page-row-'+id);
         var link = $('.expand-collapse', page_row).addClass('loading');
-        
+
         $.get(id+'/sub-menu/', function (html) {
             page_row.after(html);
             link.removeClass('loading');
@@ -48,7 +48,7 @@ $(function () {
             callback && callback(children);
         });
     }
-    
+
     // Remove the children of the given page id from the table
     function rem_children(id) {
         $('.child-of-'+id, changelist).each(function () {
@@ -56,7 +56,7 @@ $(function () {
             $(this).remove();
         });
     }
-    
+
     // Add a page id to the list of expanded pages
     function add_expanded(id) {
         var expanded = get_expanded();
@@ -65,7 +65,7 @@ $(function () {
             set_expanded(expanded);
         }
     }
-    
+
     // Remove a page id from the list of expanded pages
     function rem_expanded(id) {
         var expanded = get_expanded();
@@ -78,18 +78,18 @@ $(function () {
             set_expanded(expanded);
         }
     }
-    
+
     // Get the list of expanded page ids from the cookie
     function get_expanded() {
         var cookie = pages.cookie('tree_expanded');
         return cookie ? cookie.split(',') : [];
     }
-    
+
     // Save the list of expanded page ids to the cookie
     function set_expanded(array) {
         pages.cookie('tree_expanded', array.join(','), { 'expires': 14 }); // expires after 12 days
     }
-    
+
     // Add the event hanlder to handle the changes of the publication status through ajax
     // In IE, event delegation doesn't work for the onchange event, so we do it the old way
     function init_publish_hanlder(elements) {
@@ -99,7 +99,7 @@ $(function () {
             pages.update_published_icon(url, this, img, 1);
         });
     }
-    
+
     init_publish_hanlder(changelist);
 
     function move_page(selected_page, position, id) {
@@ -114,12 +114,12 @@ $(function () {
             }
         );
     };
-    
+
     // let's start event delegation
     changelist.click(function (e) {
         var target = $(e.target);
         var link = target.closest('a').andSelf().filter('a');
-        
+
         if (!target.hasClass('help') && link.length) {
             // Toggles a previous action to come back to the initial state
             if (link.hasClass('cancellink')) {
@@ -152,7 +152,7 @@ $(function () {
                 var position = link.attr('class').match(/left|right|first-child/)[0];
                 var id = link.parent().attr('id').split('move-target-')[1];
                 var row = $('#page-row-'+selected_page);
-                
+
                 changelist.removeClass('insert-add insert-move');
                 $('tr', changelist).removeClass('selected insertable');
                 $('.expand-collapse', row).remove();

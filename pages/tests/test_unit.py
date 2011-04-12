@@ -595,11 +595,14 @@ class UnitTestCase(TestCase):
         doc.save()
 
         req = get_request_mock()
-        self.set_setting("PAGE_HIDE_ROOT_SLUG", True)
+        self.set_setting("PAGE_HIDE_ROOT_SLUG", False)
+        page1.invalidate()
+        page2.invalidate()
+        
         def _get_context_page(path):
             return details(req, path, 'en-us')
         self.assertEqual(_get_context_page('/').status_code, 200)
-        self.assertEqual(_get_context_page('/page1').status_code, 200)
+        self.assertEqual(_get_context_page('/page1/').status_code, 200)
         self.assertEqual(_get_context_page('/page1/').status_code, 200)
         self.assertEqual(_get_context_page('/page1/page2').status_code, 200)
         self.assertEqual(_get_context_page('/page1/page2/').status_code, 200)
@@ -657,7 +660,7 @@ class UnitTestCase(TestCase):
         p = Page(author=page1.author)
         self.assertEqual(unicode(p), u"Page without id")
         p.save()
-        self.assertEqual(unicode(p), u"page-%d" % p.id)
+        self.assertEqual(unicode(p), u"Page %d" % p.id)
 
     def test_context_processor(self):
         """Test that the page's context processor is properly activated."""
@@ -728,5 +731,19 @@ class UnitTestCase(TestCase):
         template = get_template_from_string(pl1)
         page = self.new_page({'slug': 'get-page-slug', 'somepage':
             'get-page-slug' })
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'get-page-slug')
+        
+    def test_variable_disapear_in_block(self):
+        """Try to test the disapearance of a context variable in a block."""
+        tpl = ("{% load pages_tags %}"
+          "{% placeholder slug as test_value untranslated %}"
+          "{% block someblock %}"
+          "{% get_page test_value as toto %}"
+          "{{ toto.slug }}"
+          "{% endblock %}")
+          
+        template = get_template_from_string(tpl)
+        page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')

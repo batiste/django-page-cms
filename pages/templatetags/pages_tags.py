@@ -9,7 +9,7 @@ from django.conf import settings
 from pages import settings as pages_settings
 from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode
-from pages.placeholders import VideoPlaceholderNode
+from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
 from pages.placeholders import parse_placeholder
 
 register = template.Library()
@@ -452,6 +452,14 @@ def do_videoplaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return VideoPlaceholderNode(name, **params)
 register.tag('videoplaceholder', do_videoplaceholder)
+
+def do_contactplaceholder(parser, token):
+    """
+    Method that parse the contactplaceholder template tag.
+    """
+    name, params = parse_placeholder(parser, token)
+    return ContactPlaceholderNode(name, **params)
+register.tag('contactplaceholder', do_contactplaceholder)
 
 
 def language_content_up_to_date(page, language):

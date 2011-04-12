@@ -59,7 +59,8 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
+    # fails on Django 1.1.4
+    #"django.contrib.auth.context_processors.auth",
     'django.core.context_processors.auth',
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",

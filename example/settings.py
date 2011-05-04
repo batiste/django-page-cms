@@ -116,9 +116,9 @@ PAGE_TINYMCE = False
 PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
-    'model':'pages.testproj.documents.models.Document',
-    'form':'pages.testproj.documents.models.DocumentForm',
-    'options':{
+    'model': 'pages.testproj.documents.models.Document',
+    'form': 'pages.testproj.documents.models.DocumentForm',
+    'options': {
             'extra': 3,
             'max_num': 10,
         },

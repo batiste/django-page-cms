@@ -86,8 +86,9 @@ class Migration:
         # Deleting model 'PagePermission'
         db.delete_table('pages_pagepermission')
         
-        # Dropping ManyToManyField 'Page.sites'
-        db.delete_table('pages_page_sites')
+        if settings.PAGE_USE_SITE_ID:
+            # Dropping ManyToManyField 'Page.sites'
+            db.delete_table('pages_page_sites')
         
     
     page = {

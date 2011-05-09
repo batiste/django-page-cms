@@ -4,6 +4,8 @@ from south.db import db
 from django.db import models
 from pages.models import *
 
+from pages import settings
+
 class Migration:
     
     def forwards(self, orm):
@@ -80,7 +82,6 @@ class Migration:
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'sites': ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'tags': ('tagging.fields.TagField', [], {'null': 'True'}),
             'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
         },
@@ -102,5 +103,7 @@ class Migration:
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
+    if settings.PAGE_TAGGING:
+        page['pages.page']['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
     
     complete_apps = ['pages']

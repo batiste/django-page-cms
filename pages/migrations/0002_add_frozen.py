@@ -80,7 +80,6 @@ class Migration:
             'redirect_to': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirected_pages'", 'null': 'True', 'to': "orm['pages.Page']"}),
             'redirect_to_url': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
@@ -104,6 +103,8 @@ class Migration:
         }
     }
     if settings.PAGE_TAGGING:
-        page['pages.page']['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
+        models['pages.page']['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
+    if settings.PAGE_USE_SITE_ID:
+        models['pages.page']['sites'] = ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"})
     
     complete_apps = ['pages']

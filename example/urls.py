@@ -6,6 +6,9 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from pages.views import details
 
+from pages.urlconf_registry import register_urlconf
+register_urlconf('test', 'pages.testsproject.documents.urls')
+
 admin.autodiscover()
 authority.autodiscover()
 

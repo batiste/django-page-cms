@@ -29,12 +29,15 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
     It's not necessary to decorate your views if you only call them via the CMS or you don't need those variables.
 
 Then you need to register the urlconf module of your application to use it
-within the admin interface. Here is an example for a document application::
+within the admin interface. Put this code in you urls.py `before` admin.autodiscover(). Here is an example for a document application.::
 
     from pages.urlconf_registry import register_urlconf
 
     register_urlconf('Documents', 'pages.testproj.documents.urls',
         label='Display documents')
+
+    # this need to be executed after the registry happened.
+    admin.autodiscover()
 
 As soon as you have registered your `urls.py`, a new field will appear in the page administration.
 Choose the `Display documents`. The view used to render this page on the frontend

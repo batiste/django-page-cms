@@ -8,7 +8,7 @@ from django.conf import settings
 
 from pages import settings as pages_settings
 from pages.models import Content, Page
-from pages.placeholders import PlaceholderNode, ImagePlaceholderNode
+from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
 from pages.placeholders import parse_placeholder
 
@@ -444,6 +444,13 @@ def do_imageplaceholder(parser, token):
     return ImagePlaceholderNode(name, **params)
 register.tag('imageplaceholder', do_imageplaceholder)
 
+def do_fileplaceholder(parser, token):
+    """
+    Method that parse the fileplaceholder template tag.
+    """
+    name, params = parse_placeholder(parser, token)
+    return FilePlaceholderNode(name, **params)
+register.tag('fileplaceholder', do_fileplaceholder)
 
 def do_videoplaceholder(parser, token):
     """

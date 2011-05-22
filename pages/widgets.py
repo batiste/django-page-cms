@@ -291,6 +291,29 @@ class ImageInput(FileInput):
         return mark_safe(field_content)
 register_widget(ImageInput)
 
+class FileInput(FileInput):
+
+    def __init__(self, page=None, language=None, attrs=None, **kwargs):
+        self.language = language
+        self.page = page
+        super(FileInput, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None, **kwargs):
+        if not self.page:
+            field_content = _('Please save the page to show the file field')
+        else:
+            field_content = ''
+            if value:
+                field_content += _('Current file: %s<br/>') % value
+            field_content += super(FileInput, self).render(name, attrs)
+            if value:
+                field_content += '''<br><label for="%s-delete">%s</label>
+                    <input name="%s-delete" id="%s-delete"
+                    type="checkbox" value="true">
+                    ''' % (name, _('Delete file'), name, name)
+        return mark_safe(field_content)
+register_widget(FileInput)
+
 
 class VideoWidget(MultiWidget):
     '''A youtube `Widget` for the admin.'''

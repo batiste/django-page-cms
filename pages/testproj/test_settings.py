@@ -146,6 +146,7 @@ PAGE_LANGUAGES = (
 languages = list(PAGE_LANGUAGES)
 languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
+languages.append(('it-it', gettext_noop('Italian')))
 LANGUAGES = languages
 
 # This enable you to map a language(s) to another one, these languages should

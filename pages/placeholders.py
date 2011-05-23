@@ -3,14 +3,14 @@
 from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content
-from pages.widgets import ImageInput, VideoWidget
+from pages.widgets import ImageInput, VideoWidget, FileInput
 
 from django import forms
 from django.core.mail import send_mail
 from django import template
 from django.template import TemplateSyntaxError
 from django.core.files.storage import default_storage
-from django.forms import Textarea, ImageField, CharField
+from django.forms import Textarea, ImageField, CharField, FileField
 from django.forms import TextInput
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
@@ -273,6 +273,53 @@ class ImagePlaceholderNode(PlaceholderNode):
 
             filename = default_storage.save(filename, data)
             return super(ImagePlaceholderNode, self).save(
+                page,
+                language,
+                filename,
+                change
+            )
+
+class FilePlaceholderNode(PlaceholderNode):
+    """A `PlaceholderNode` that saves one file on disk.
+
+    `PAGE_UPLOAD_ROOT` setting define where to save the file.
+    """
+
+    def get_field(self, page, language, initial=None):
+        help_text = ""
+        widget = FileInput(page, language)
+        return FileField(
+            widget=widget,
+            initial=initial,
+            help_text=help_text,
+            required=False
+        )
+
+    def save(self, page, language, data, change, extra_data=None):
+        if 'delete' in extra_data:
+            return super(FilePlaceholderNode, self).save(
+                page,
+                language,
+                "",
+                change
+            )
+        filename = ''
+        if change and data:
+            # the image URL is posted if not changed
+            if type(data) is unicode:
+                return
+            filename = os.path.join(
+                settings.PAGE_UPLOAD_ROOT,
+                'page_' + str(page.id),
+                self.name + '-' + str(time.time())
+            )
+
+            m = re.search('\.[a-zA-Z]{1,4}$', str(data))
+            if m is not None:
+                filename += m.group(0).lower()
+
+            filename = default_storage.save(filename, data)
+            return super(FilePlaceholderNode, self).save(
                 page,
                 language,
                 filename,

@@ -118,9 +118,21 @@ Image placeholder
 
 You can also use a special placeholder for images::
 
-    {% imageplaceholder body-image as imgsrc %}
+    {% \imageplaceholder body-image as imgsrc %}
     {% if imgsrc %}
         <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
+    {% endif %}
+
+A file upload field will appears into the page admin interface.
+
+File placeholder
+================
+
+You can also use a special placeholder for files::
+
+    {% fileplaceholder uploaded_file as filesrc %}
+    {% if filesrc %}
+        <a href="{{ MEDIA_URL }}{{ filesrc }}">Download file</a>
     {% endif %}
 
 A file upload field will appears into the page admin interface.

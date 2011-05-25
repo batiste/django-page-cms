@@ -4,6 +4,17 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.4.3
+==============
+
+    * New placeholder tag: contactplaceholder that produce a contact form.
+    * Performance improvement: don't render the template with a Context in the get_placeholder method.
+    * Fix some issue with Ajax calls and csrf protection.
+    * Fix some outdated migrations.
+    * New placeholder tag: fileplaceholder allows users to upload files.
+    * Italian traduction.
+    * ...
+
 Release 1.4.2
 ==============
 
@@ -18,7 +29,7 @@ Release 1.4.1
     * ImagePlaceholder: use django.core.files.storage.default_storage instead of from django.core.files.storage import FileSystemStorage
     * Added setting for allowing realtime search index rather than index on management command.
     * Optimize and cache is_first_root method.
-    * Fix a bug in the {% get_content %} tag
+    * Fix a bug in the {% get_content %} tag.
 
 
 Release 1.4.0

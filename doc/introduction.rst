@@ -8,7 +8,7 @@ Gerbi CMS is based around a placeholders concept. A placeholder is special templ
 you use in your page templates. Every time you add a placeholder in your template  a field
 dynamically appears in the page admin.
 
-The project repository code repository is found at this address: http://github.com/batiste/django-page-cms
+The project code repository is found at this address: http://github.com/batiste/django-page-cms
 
 .. contents::
     :local:

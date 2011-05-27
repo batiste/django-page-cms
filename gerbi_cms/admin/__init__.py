@@ -320,18 +320,18 @@ class PageAdmin(admin.ModelAdmin):
         if query:
             page_ids = list(set([c.page.pk for c in
                 Content.objects.filter(body__icontains=query)]))
-            pages = Page.objects.filter(pk__in=page_ids)
+            page_set = Page.objects.filter(pk__in=page_ids)
         else:
-            pages = Page.objects.root()
+            page_set = Page.objects.root()
         if settings.PAGE_HIDE_SITES:
-            pages = pages.filter(sites=settings.SITE_ID)
+            page_set = pages.filter(sites=settings.SITE_ID)
 
         perms = PagePermission(request.user)
         context = {
             'can_publish': perms.check('publish'),
             'language': language,
             'name': _("page"),
-            'pages': pages,
+            'pages': page_set,
             'opts': self.model._meta,
             'q': query
         }

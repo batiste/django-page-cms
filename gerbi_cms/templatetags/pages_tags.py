@@ -411,8 +411,8 @@ class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
         if 'pages_navigation' not in context:
-            pages = Page.objects.navigation().order_by("tree_id")
-            context.update({'pages_navigation': pages})
+            page_set = Page.objects.navigation().order_by("tree_id")
+            context.update({'pages_navigation': page_set})
         if 'current_page' not in context:
             context.update({'current_page': None})
         return ''

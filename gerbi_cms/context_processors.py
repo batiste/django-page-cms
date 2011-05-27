@@ -15,8 +15,8 @@ def media(request):
 
 def pages_navigation(request):
     """Adds essential pages variables to the `context`."""
-    pages = Page.objects.navigation().order_by("tree_id")
+    page_set = Page.objects.navigation().order_by("tree_id")
     return {
-        'pages_navigation': pages,
+        'pages_navigation': page_set,
         'current_page': None
     }

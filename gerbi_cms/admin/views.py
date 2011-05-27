@@ -26,11 +26,11 @@ change_status = staff_member_required(change_status)
 def list_pages_ajax(request, invalid_move=False):
     """Render pages table for ajax function."""
     language = get_language_from_request(request)
-    pages = Page.objects.root()
+    page_set = Page.objects.root()
     context = {
-        'invalid_move':invalid_move,
+        'invalid_move': invalid_move,
         'language': language,
-        'pages': pages,
+        'pages': page_set,
     }
     return "admin/pages/page/change_list_table.html", context
 list_pages_ajax = staff_member_required(list_pages_ajax)
@@ -135,11 +135,11 @@ def sub_menu(request, page_id):
     """Render the children of the requested page with the sub_menu
     template."""
     page = Page.objects.get(id=page_id)
-    pages = page.children.all()
+    page_set = page.children.all()
     page_languages = settings.PAGE_LANGUAGES
     return "admin/pages/page/sub_menu.html", {
         'page':page,
-        'pages':pages,
+        'pages':page_set,
         'page_languages':page_languages,
     }
 sub_menu = staff_member_required(sub_menu)

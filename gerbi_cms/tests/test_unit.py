@@ -782,11 +782,11 @@ class UnitTestCase(TestCase):
             return Page( author=author, status=Page.PUBLISHED,
                          publication_date=now)
         
-        roots, pages = mptt_mk_forest( self, page_factory, Page )
+        roots, page_set = mptt_mk_forest( self, page_factory, Page )
         tree = roots[1]
 
         self.assertEqual(
-            [ page.id for page in pages[1:-1] ],
+            [ page.id for page in page_set[1:-1] ],
             [ page.id for page in
               object_sequence_generator( tree,
                                          Page.get_next_in_book ) ] )
@@ -812,14 +812,13 @@ class UnitTestCase(TestCase):
             return Page( author=author, status=Page.PUBLISHED,
 			 publication_date=now)
             
-        roots, pages = mptt_mk_forest( self, page_factory,
-                                       Page )
+        roots, page_set = mptt_mk_forest( self, page_factory, Page )
         tree = roots[1]
         cnt  = tree.get_descendant_count()
         tree = tree.get_descendants()[cnt-1]
 
         self.assertEqual(
-            [ page.id for page in pages[::-1] ][1:-1],
+            [ page.id for page in page_set[::-1] ][1:-1],
             [ page.id for page in
               object_sequence_generator( tree,
                                          Page.get_prev_in_book ) ] )
@@ -837,6 +836,7 @@ def object_sequence_generator( elmt, nexter ):
     while elmt:
         yield elmt
         elmt = nexter ( elmt )
+
 
 # -----------------------------------------------------------------------------
 

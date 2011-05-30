@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 from pkg_resources import require, DistributionNotFound
-import pages
+import django_gerbi
 import os
 package_name = 'django-page-cms'
-
+module_name = 'django_gerbi'
 
 def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
@@ -21,33 +21,36 @@ for dist in requirements.readlines():
         required_to_install.append(dist)
 
 data_dirs = []
-for directory in os.walk('pages/templates'):
-    data_dirs.append(directory[0][6:] + '/*.*')
+for directory in os.walk( module_name + os.sep + 'templates' ):
+    # data_dirs.append(directory[0][6:] + '/*.*')
+    data_dirs.append( os.path.sep.join( directory[0].split(os.sep)[1:] ) + os.sep + '*.*')
 
-for directory in os.walk('pages/media'):
-    data_dirs.append(directory[0][6:] + '/*.*')
+for directory in os.walk( module_name + os.sep + 'media'):
+    # data_dirs.append(directory[0][6:] + '/*.*')
+    data_dirs.append( os.path.sep.join( directory[0].split(os.sep)[1:] ) + os.sep + '*.*')
 
-for directory in os.walk('pages/static'):
-    data_dirs.append(directory[0][6:] + '/*.*')
+for directory in os.walk( module_name + os.sep + 'static'):
+    # data_dirs.append(directory[0][6:] + '/*.*')
+    data_dirs.append( os.path.sep.join( directory[0].split(os.sep)[1:] ) + os.sep + '*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
-download_url = url_schema % (package_name, package_name, pages.__version__)
+download_url = url_schema % (package_name, package_name, django_gerbi.__version__)
 
 setup(
     name=package_name,
-    test_suite='pages.test_runner.run_tests',
-    version=pages.__version__,
-    description=pages.__doc__,
-    author=pages.__author__,
-    author_email=pages.__contact__,
-    url=pages.__homepage__,
-    license=pages.__license__,
+    test_suite= module_name + '.test_runner.run_tests',
+    version=django_gerbi.__version__,
+    description=django_gerbi.__doc__,
+    author=django_gerbi.__author__,
+    author_email=django_gerbi.__contact__,
+    url=django_gerbi.__homepage__,
+    license=django_gerbi.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     install_requires=required_to_install,
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
-    package_data={'pages': data_dirs},
+    package_data={module_name: data_dirs},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[

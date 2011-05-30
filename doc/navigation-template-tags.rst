@@ -3,26 +3,26 @@ How to use the various navigation template tags
 ===============================================
 
 Presenting a navigational structure to the user is an common task on every website.
-Django-pages-cms offers various template tags which can be used to create a site navigation menu.
+Django-django_gerbi.cms offers various template tags which can be used to create a site navigation menu.
 
 .. contents::
     :local:
 
-pages_menu
-==========
+django_gerbi.menu
+=================
 
-The pages_menu tag displays the whole navigation tree, including all subpages.
-This is useful for smaller sites which do not have a large number of pages.
+The django_gerbi.menu tag displays the whole navigation tree, including all subdjango_gerbi.
+This is useful for smaller sites which do not have a large number of django_gerbi.
 
 Use the following snippet in your template::
 
     <ul>
-    {% for page in pages_navigation %}
-        {% pages_menu page %}
+    {% for page in django_gerbi.navigation %}
+        {% django_gerbi.menu page %}
     {% endfor %}
     </ul>
 
-The pages_menu tag uses the `pages/menu.html` template to render the navigation menu.
+The django_gerbi.menu tag uses the `django_gerbi.menu.html` template to render the navigation menu.
 By default, the menu is rendered as a nested list::
 
     <ul>
@@ -30,58 +30,58 @@ By default, the menu is rendered as a nested list::
         ...
     </ul>
 
-You can of course change `pages/menu.html` with the Django override mechanism
+You can of course change `django_gerbi.menu.html` with the Django override mechanism
 to render things differently.
 
-pages_dynamic_tree_menu
-=======================
+django_gerbi.dynamic_tree_menu
+==============================
 
-The pages_dynamic_tree_menu tag works similar to the pages_menu tag.
+The django_gerbi.dynamic_tree_menu tag works similar to the django_gerbi.menu tag.
 but instead of displaying the whole navigation structure,
-only the following pages are displayed:
+only the following django_gerbi.are displayed:
 
- * all "root" pages (pages which have no parent)
+ * all "root" django_gerbi.(django_gerbi.which have no parent)
  * all parents of the current page
  * all direct children of the current page
 
 This type of navigation is recommended if your site has a large number
-of pages and/or a deep hierarchy, which is too complex or large
+of django_gerbi.and/or a deep hierarchy, which is too complex or large
 to be presented to the user at once.
 
 
 Use the following snippet in your template::
 
     <ul>
-    {% for page in pages_navigation %}
-        {% pages_dynamic_tree_menu page %}
+    {% for page in django_gerbi.navigation %}
+        {% django_gerbi.dynamic_tree_menu page %}
     {% endfor %}
     </ul>
 
-The pages_dynamic_tree_menu tag uses the `pages/dynamic_tree_menu.html`
+The django_gerbi.dynamic_tree_menu tag uses the `django_gerbi.dynamic_tree_menu.html`
 template to render the navigation menu. By default, the menu is rendered
-as a nested list similar to the pages_menu tag.
+as a nested list similar to the django_gerbi.menu tag.
 
-pages_sub_menu
-==============
+django_gerbi.sub_menu
+=====================
 
-The pages_sub_menu tag shows all the children of the root of the current page (the highest in the hierarchy).
+The django_gerbi.sub_menu tag shows all the children of the root of the current page (the highest in the hierarchy).
 This is typically used for a secondary navigation menu.
 
 Use the following snippet to display a list of all the
 children of the current root::
 
     <ul>
-    {% pages_sub_menu current_page %}
+    {% django_gerbi.sub_menu current_page %}
     </ul>
 
-Again, the default template `pages/sub_menu.html` will render the items as a nested,
+Again, the default template `django_gerbi.sub_menu.html` will render the items as a nested,
 unordered list (see above).
 
 
-pages_children_menu
-===================
+django_gerbi.children_menu
+==========================
 
-The pages_children_menu tag shows all the direct children of the given page. Unlike the pages_menu tag
+The django_gerbi.children_menu tag shows all the direct children of the given page. Unlike the django_gerbi.menu tag
 it is not recursive: the children's children and so on, are not displayed.
 This is typically used for a secondary navigation menu.
 
@@ -89,56 +89,56 @@ Use the following snippet to display a list of all the
 children of the current root::
 
     <ul>
-    {% pages_children_menu page %}
+    {% django_gerbi.children_menu page %}
     </ul>
 
-Again, the default template `pages/sub_menu.html` will render the items as an
+Again, the default template `django_gerbi.sub_menu.html` will render the items as an
 unordered list (see above).
 
-pages_siblings_menu
-===================
+django_gerbi.siblings_menu
+==========================
 
-The pages_siblings_menu tag shows all the children of the immediate parent of the current page. This can be used for example as a secondary menu.
+The django_gerbi.siblings_menu tag shows all the children of the immediate parent of the current page. This can be used for example as a secondary menu.
 
 Use the following snippet to display a list of all the children of the
 immediate parent of the current page::
 
     <ul>
-    {% pages_siblings_menu current_page %}
+    {% django_gerbi.siblings_menu current_page %}
     </ul>
 
-Again, the default template `pages/sub_menu.html` will render the items as a nested,
+Again, the default template `django_gerbi.sub_menu.html` will render the items as a nested,
 unordered list (see above).
 
 
-pages_breadcrumb
-================
+django_gerbi.breadcrumb
+=======================
 
-With the pages_breadcrumb tag, it is possible to use the "breadcrumb"/"you are here"
+With the django_gerbi.breadcrumb tag, it is possible to use the "breadcrumb"/"you are here"
 navigational pattern, consisting of a list of all parents of the current page::
 
     <ul>
-    {% pages_breadcrumb current_page %}
+    {% django_gerbi.breadcrumb current_page %}
     </ul>
 
-The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`.
+The output of the django_gerbi.breadcrumb tag is defined by the template `django_gerbi.breadcrumb.html`.
 
 load_pages
 ==========
 
-The load_pages Tag can be used to load the navigational structure
+The load_django_gerbi.Tag can be used to load the navigational structure
 in views which are *not* rendered through page's own details() view.
-It will check the current template context and adds the pages and
+It will check the current template context and adds the django_gerbi.and
 current_page variable to the context, if they are not present.
 
 This is useful if you are using a common base template for your whole site,
-and want the pages menu to be always present, even if the actual content
+and want the django_gerbi.menu to be always present, even if the actual content
 is not a page.
 
-The load_pages does not take any parameters and must
+The load_django_gerbi.does not take any parameters and must
 be placed before one of the menu-rendering tags::
 
-    {% load_pages %}
+    {% load_django_gerbi.%}
 
 
 ===========================================================
@@ -147,13 +147,13 @@ Creating/Editing templates for the navigation template tags
 
 The templates tags are rendered in the same context as the template they are in, but with a few additionnal variables.
 
-Templates for pages_*_menu tags
-===============================
+Templates for django_gerbi.*_menu tags
+======================================
 
-The pages_*_menu templates tags context has the two additional variables:
+The django_gerbi.*_menu templates tags context has the two additional variables:
 
  * page: the page argument given to the tag;
- * children: the children pages of the given page;
+ * children: the children django_gerbi.of the given page;
 
 You can use them as follows::
 
@@ -165,15 +165,15 @@ You can use them as follows::
      {% endfor %}
    </ul>
 
-See also the provided `pages/menu.html` and `pages/sub_menu.html` templates.
+See also the provided `django_gerbi.menu.html` and `django_gerbi.sub_menu.html` templates.
 
-Templates for the pages_breadcrumb tag
-======================================
+Templates for the django_gerbi.breadcrumb tag
+=============================================
 
 The page_breadcrumb template tag context has the following additional variables:
 
  * page: the page argument given to the tag;
- * page_navigation: the breadcrumb pages on the path to page (excluding page itself);
+ * page_navigation: the breadcrumb django_gerbi.on the path to page (excluding page itself);
 
 You can use them as follows::
 
@@ -182,5 +182,5 @@ You can use them as follows::
   {% endfor %}
   &gt;&nbsp; {% show_content page 'title' %}
 
-See also the provided `pages/breadcrumb.html` templates.
+See also the provided `django_gerbi.breadcrumb.html` templates.
 

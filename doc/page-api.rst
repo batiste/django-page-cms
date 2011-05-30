@@ -9,8 +9,8 @@ Page CMS reference API
 The application model
 ======================
 
-Gerbi CMS declare rather simple models: :class:`Page <pages.models.Page>`
-:class:`Content <pages.models.Content>` and :class:`PageAlias <pages.models.PageAlias>`.
+Gerbi CMS declare rather simple models: :class:`Page <django_gerbi.models.Page>`
+:class:`Content <django_gerbi.models.Content>` and :class:`PageAlias <django_gerbi.models.PageAlias>`.
 
 Those Django models have the following relations:
 
@@ -53,87 +53,87 @@ Those Django models have the following relations:
 Placeholders
 ============
 
-.. automodule:: pages.placeholders
+.. automodule:: django_gerbi.placeholders
     :members:
     :undoc-members:
 
 Template tags
 =============
 
-.. automodule:: pages.templatetags.pages_tags
+.. automodule:: django_gerbi.templatetags.django_gerbi_tags
     :members:
 
 Widgets
 =======
 
-.. automodule:: pages.widgets
+.. automodule:: django_gerbi.widgets
     :members:
     :undoc-members:
 
 Page Model
 ==========
 
-.. autoclass:: pages.models.Page
+.. autoclass:: django_gerbi.models.Page
     :members:
 
 Page Manager
 ============
 
-.. autoclass:: pages.managers.PageManager
+.. autoclass:: django_gerbi.managers.PageManager
     :members:
     :undoc-members:
 
 Page view
 ==========
 
-.. autoclass:: pages.views.Details
+.. autoclass:: django_gerbi.views.Details
     :members:
 
 Content Model
 =============
 
-.. autoclass:: pages.models.Content
+.. autoclass:: django_gerbi.models.Content
     :members:
     :undoc-members:
 
 Content Manager
 ===============
 
-.. autoclass:: pages.managers.ContentManager
+.. autoclass:: django_gerbi.managers.ContentManager
     :members:
     :undoc-members:
 
 PageAlias Model
 ===============
 
-.. autoclass:: pages.models.PageAlias
+.. autoclass:: django_gerbi.models.PageAlias
     :members:
     :undoc-members:
 
 PageAlias Manager
 =================
 
-.. autoclass:: pages.managers.PageAliasManager
+.. autoclass:: django_gerbi.managers.PageAliasManager
     :members:
     :undoc-members:
 
 Utils
 =====
 
-.. automodule:: pages.utils
+.. automodule:: django_gerbi.utils
     :members:
     :undoc-members:
 
 Http
 ====
 
-.. automodule:: pages.http
+.. automodule:: django_gerbi.http
     :members:
     :undoc-members:
 
 Admin views
 ===========
 
-.. automodule:: pages.admin.views
+.. automodule:: django_gerbi.admin.views
     :members:
     :undoc-members:

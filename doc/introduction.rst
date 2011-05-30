@@ -2,7 +2,7 @@
 Introduction
 ============
 
-Gerbi CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
+Gerbi CMS enable you to create and administrate hierarchical django_gerbi.in a simple and powerful way.
 
 Gerbi CMS is based around a placeholders concept. A placeholder is special template tag that
 you use in your page templates. Every time you add a placeholder in your template  a field
@@ -24,8 +24,8 @@ Demo
 
 This admin interface is no up to date, but could give you an idea of what the software is doing:
 
- * admin : http://pagesdemo.piquadrat.ch/admin/
- * frontend : http://pagesdemo.piquadrat.ch/pages/
+ * admin : http://django_gerbi.emo.piquadrat.ch/admin/
+ * frontend : http://django_gerbi.emo.piquadrat.ch/django_gerbi.
 
 
 Key features
@@ -69,9 +69,9 @@ Dependencies & Compatibility
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
-  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
-  * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
-  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
+  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if DJANGO_GERBI_TAGGING = True)
+  * `html5lib <http://code.google.com/p/html5lib/>`_ (if DJANGO_GERBI_SANITIZE_USER_INPUT = True)
+  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if DJANGO_GERBI_TINYMCE = True)
   * Gerbi CMS is shipped with jQuery.
   * Gerbi CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
@@ -93,8 +93,8 @@ make your modifications in your branch. There is a things that is nice to do:
   * It's better if a new feature is not activated by default but with a new setting.
   * Be careful of performance regresssion.
   * Write tests so the test coverage stay over 90%.
-  * Every new CMS setting should start with PAGE_<something>
-  * Every new template_tag should start with pages_<something>
+  * Every new CMS setting should start with DJANGO_GERBI_<something>
+  * Every new template_tag should start with django_gerbi.<something>
 
 
 Ask for help
@@ -131,8 +131,8 @@ than 80% and we try to keep it this way. To run the test suite::
 
 .. note::
 
-    If you are not admin you have to create the appropriate permissions to modify pages.
-    After that you will be able to create pages.
+    If you are not admin you have to create the appropriate permissions to modify django_gerbi.
+    After that you will be able to create django_gerbi.
 
 Handling images and files
 ---------------------------

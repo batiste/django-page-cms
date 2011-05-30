@@ -1,0 +1,6 @@
+{% load cache django_gerbi_tags %}
+{% load_pages %}
+{% for page in pages_navigation %}
+    {{ page.slug }}
+{% endfor %}
+

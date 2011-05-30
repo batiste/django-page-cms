@@ -1,8 +1,0 @@
-{% load pages_tags %}
-
-t1_{% url pages-details-by-path current_page.get_complete_slug %}
-t2_{% show_absolute_url current_page %}
-t3_{% show_absolute_url current_page.slug %}
-t4_{% show_content current_page.slug "slug" %}
-{% get_content current_page.slug "slug" as content %}
-t5_{{ content }}

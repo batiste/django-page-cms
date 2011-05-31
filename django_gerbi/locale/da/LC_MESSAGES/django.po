@@ -21,15 +21,15 @@ msgstr ""
 msgid "Published"
 msgstr "Offentliggjort"
 
-#: models.py:41 templates/admin/gerbi_cms/page/menu.html:58
+#: models.py:41 templates/admin/django_gerbi/page/menu.html:58
 msgid "Hidden"
 msgstr "Skjult"
 
-#: models.py:42 templates/admin/gerbi_cms/page/menu.html:56
+#: models.py:42 templates/admin/django_gerbi/page/menu.html:56
 msgid "Draft"
 msgstr "Kladde"
 
-#: models.py:51 templates/admin/gerbi_cms/page/change_list_table.html:9
+#: models.py:51 templates/admin/django_gerbi/page/change_list_table.html:9
 msgid "author"
 msgstr "forfatter"
 
@@ -73,7 +73,7 @@ msgstr "sidste ændringsdato"
 msgid "status"
 msgstr "status"
 
-#: models.py:66 templates/admin/gerbi_cms/page/change_list_table.html:8
+#: models.py:66 templates/admin/django_gerbi/page/change_list_table.html:8
 msgid "template"
 msgstr "skabelon"
 
@@ -205,108 +205,108 @@ msgstr "Et barn med denne slug eksisterer allerede på den ønskede position"
 msgid "A sibiling with this slug already exists"
 msgstr "En søskend med denne slug eksisterer allerede"
 
-#: templates/admin/gerbi_cms/page/change_form.html:4
+#: templates/admin/django_gerbi/page/change_form.html:4
 msgid "Edit"
 msgstr "Rediger"
 
-#: templates/admin/gerbi_cms/page/change_form.html:17
+#: templates/admin/django_gerbi/page/change_form.html:17
 msgid "View on site"
 msgstr "Vis på siden"
 
-#: templates/admin/gerbi_cms/page/change_form.html:30
+#: templates/admin/django_gerbi/page/change_form.html:30
 msgid "Translation helper"
 msgstr "Oversættelseshjælper"
 
-#: templates/admin/gerbi_cms/page/change_form.html:32
-#: templates/admin/gerbi_cms/page/includes/fieldset.html:19
+#: templates/admin/django_gerbi/page/change_form.html:32
+#: templates/admin/django_gerbi/page/includes/fieldset.html:19
 msgid "Language:"
 msgstr "Sprog:"
 
-#: templates/admin/gerbi_cms/page/change_list.html:4
+#: templates/admin/django_gerbi/page/change_list.html:4
 msgid "List of pages"
 msgstr "Liste af sider"
 
-#: templates/admin/gerbi_cms/page/change_list.html:10
+#: templates/admin/django_gerbi/page/change_list.html:10
 msgid "Home"
 msgstr "Hjem"
 
-#: templates/admin/gerbi_cms/page/change_list.html:30
+#: templates/admin/django_gerbi/page/change_list.html:30
 #, python-format
 msgid "Add %(name)s"
 msgstr "Tilføj %(name)s"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:5
+#: templates/admin/django_gerbi/page/change_list_table.html:5
 msgid "title"
 msgstr "titel"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:6
+#: templates/admin/django_gerbi/page/change_list_table.html:6
 msgid "languages"
 msgstr "sprog"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:7
+#: templates/admin/django_gerbi/page/change_list_table.html:7
 msgid "published"
 msgstr "offentliggjort"
 
-#: templates/admin/gerbi_cms/page/menu.html:18
+#: templates/admin/django_gerbi/page/menu.html:18
 msgid "view this page"
 msgstr "vis denne side"
 
-#: templates/admin/gerbi_cms/page/menu.html:19
+#: templates/admin/django_gerbi/page/menu.html:19
 msgid "move this page"
 msgstr "flyt denne side"
 
-#: templates/admin/gerbi_cms/page/menu.html:20
+#: templates/admin/django_gerbi/page/menu.html:20
 msgid "insert a new page here"
 msgstr "indsæt en ny side her"
 
-#: templates/admin/gerbi_cms/page/menu.html:21
+#: templates/admin/django_gerbi/page/menu.html:21
 msgid "delete this page"
 msgstr "slet denne side"
 
-#: templates/admin/gerbi_cms/page/menu.html:22
+#: templates/admin/django_gerbi/page/menu.html:22
 msgid "don&#x27;t move this page"
 msgstr "flyt ikke denne side"
 
-#: templates/admin/gerbi_cms/page/menu.html:22
-#: templates/admin/gerbi_cms/page/menu.html:26
+#: templates/admin/django_gerbi/page/menu.html:22
+#: templates/admin/django_gerbi/page/menu.html:26
 msgid "cancel"
 msgstr "annullér"
 
-#: templates/admin/gerbi_cms/page/menu.html:26
+#: templates/admin/django_gerbi/page/menu.html:26
 msgid "don&#x27;t insert a new page here"
 msgstr "indsæt ikke en ny side her"
 
-#: templates/admin/gerbi_cms/page/menu.html:27
+#: templates/admin/django_gerbi/page/menu.html:27
 msgid "insert above"
 msgstr "indsæt over"
 
-#: templates/admin/gerbi_cms/page/menu.html:28
+#: templates/admin/django_gerbi/page/menu.html:28
 msgid "insert below"
 msgstr "indsæt under"
 
-#: templates/admin/gerbi_cms/page/menu.html:29
+#: templates/admin/django_gerbi/page/menu.html:29
 msgid "insert as child"
 msgstr "indsæt som barn"
 
-#: templates/admin/gerbi_cms/page/menu.html:38
+#: templates/admin/django_gerbi/page/menu.html:38
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "rediger %(lang)s oversættelse"
 
-#: templates/admin/gerbi_cms/page/menu.html:40
+#: templates/admin/django_gerbi/page/menu.html:40
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "skab %(lang)s oversættelse"
 
-#: templates/admin/gerbi_cms/page/menu.html:57
+#: templates/admin/django_gerbi/page/menu.html:57
 msgid "In navigation"
 msgstr "I navigation"
 
-#: templates/gerbi_cms/revisions.html:6
+#: templates/django_gerbi/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr "DATETIME_FORMAT"
 
-#: templates/gerbi_cms/traduction_helper.html:4
+#: templates/django_gerbi/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Ønskede sprog er ikke blevet oversat endnu."
 

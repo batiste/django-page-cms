@@ -310,7 +310,7 @@ class PageAdmin(admin.ModelAdmin):
             lang=lang)
 
     def list_pages(self, request, template_name=None, extra_context=None):
-        """List root django_gerbi"""
+        """List root pages"""
         if not admin.site.has_permission(request):
             return admin.site.login(request)
         language = get_language_from_request(request)

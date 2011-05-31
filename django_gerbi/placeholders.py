@@ -82,7 +82,7 @@ class PlaceholderNode(template.Node):
     :param as_varname: if ``as_varname`` is defined, no value will be
         returned. A variable will be created in the context
         with the defined name.
-    :param inherited: inherit content from parent's django_gerbi.
+    :param inherited: inherit content from parent's pages.
     :param untranslated: the placeholder's content is the same for
         every language.
     """

@@ -23,7 +23,7 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
 
 .. note::
 
-    The decorator `django_gerbi.view` call the CMS if the context variables `current_page` and `django_gerbi.navigation` are not present
+    The decorator `django_gerbi_view` call the CMS if the context variables `current_page` and `pages_navigation` are not present
     in the arguments.
 
     It's not necessary to decorate your views if you only call them via the CMS or you don't need those variables.
@@ -46,15 +46,15 @@ is now choosen by `django_gerbi.testproj.documents.urls`.
 .. note::
 
     The path passed to your urlconf module is the remaining path
-    available after the page slug. Eg: `/django_gerbi.page1/doc-1` will become `doc-1`.
+    available after the page slug. Eg: `/pages/page1/doc-1` will become `doc-1`.
 
 .. note::
 
     If you want to have the reverse URLs with your delegated application, you will need to include your URLs into your main urls.py, eg::
 
-        (r'^django_gerbi.', include('django_gerbi.urls')),
+        (r'^pages/', include('django_gerbi.urls')),
         ...
-        (r'^django_gerbi.(?P<path>.*)', include('django_gerbi.testproj.documents.urls')),
+        (r'^pages/(?P<path>.*)', include('django_gerbi.testproj.documents.urls')),
 
 Here is an example of a valid view from the documents application::
 
@@ -71,14 +71,14 @@ Here is an example of a valid view from the documents application::
             document = Document.objects.get(pk=int(kwargs['document_id']))
             context['document'] = document
         context['in_document_view'] = True
-        return render_to_response('django_gerbi.examples/index.html', context)
+        return render_to_response('django_gerbi/examples/index.html', context)
 
 The `document_view` will receive a bunch of extra parameters related to the CMS:
 
     * `current_page` the page object,
     * `path` the path used to reach the page,
     * `lang` the current language,
-    * `django_gerbi.navigation` the list of django_gerbi.used to render navigation.
+    * `pages_navigation` the list of django_gerbi.used to render navigation.
 
 .. note::
 
@@ -136,12 +136,12 @@ Gerbi CMS provide 2 sitemaps classes to use with `Django sitemap framework <http
     from django_gerbi.views import PageSitemap, MultiLanguagePageSitemap
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': {'django_gerbi.:PageSitemap}}),
+        {'sitemaps': {'django_gerbi':PageSitemap}}),
 
     # or for multi language:
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': {'django_gerbi.:MultiLanguagePageSitemap}})
+        {'sitemaps': {'django_gerbi':MultiLanguagePageSitemap}})
 
 The `PageSitemap` class provide a sitemap for every published page in the default language.
 The `MultiLanguagePageSitemap` is gonna create an extra entry for every other language.

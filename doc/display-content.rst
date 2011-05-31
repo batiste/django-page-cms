@@ -81,7 +81,7 @@ Display content from other applications
 ----------------------------------------
 
 There is several ways to change the way the default view provided
-by the CMS render the django_gerbi. This list try explain the most common.
+by the CMS render the pages. This list try explain the most common.
 
 Using the DJANGO_GERBI_EXTRA_CONTEXT setting
 ============================================
@@ -120,7 +120,7 @@ Example in the case of the news::
 Delegate the page rendering to another application
 ===================================================
 
-:doc:`You can set another application to render certain django_gerbi.of your website </3rd-party-apps>`.
+:doc:`You can set another application to render certain pages of your website </3rd-party-apps>`.
 
 Subclass the default view
 ===================================================
@@ -144,7 +144,7 @@ And don't forget to redefine the urls to point to your new view with something s
 
     from django.conf.urls.defaults import url, include, patterns
     from YOUR_APP.views import details
-    from django_gerbi.import page_settings
+    from django_gerbi import page_settings
 
     if page_settings.DJANGO_GERBI_USE_LANGUAGE_PREFIX:
         urlpatterns = patterns('',

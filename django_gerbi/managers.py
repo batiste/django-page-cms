@@ -15,7 +15,7 @@ from datetime import datetime
 
 class PageManager(models.Manager):
     """
-    Page manager provide several filters to obtain django_gerbi :class:`QuerySet`
+    Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page attributes and project settings.
     """
 
@@ -38,7 +38,7 @@ class PageManager(models.Manager):
             self.populate_pages(parent=p, child=child, depth=(depth - 1))
 
     def on_site(self, site_id=None):
-        """Return a :class:`QuerySet` of django_gerbi that are published on the site
+        """Return a :class:`QuerySet` of pages that are published on the site
         defined by the ``SITE_ID`` setting.
 
         :param site_id: specify the id of the site object to filter with.
@@ -50,20 +50,20 @@ class PageManager(models.Manager):
         return self.all()
 
     def root(self):
-        """Return a :class:`QuerySet` of django_gerbi without parent."""
+        """Return a :class:`QuerySet` of pages without parent."""
         return self.on_site().filter(parent__isnull=True)
 
     def navigation(self):
-        """Creates a :class:`QuerySet` of the published root django_gerbi."""
+        """Creates a :class:`QuerySet` of the published root pages."""
         return self.on_site().filter(
                 status=self.model.PUBLISHED).filter(parent__isnull=True)
 
     def hidden(self):
-        """Creates a :class:`QuerySet` of the hidden django_gerbi."""
+        """Creates a :class:`QuerySet` of the hidden pages."""
         return self.on_site().filter(status=self.model.HIDDEN)
 
     def filter_published(self, queryset):
-        """Filter the given django_gerbi :class:`QuerySet` to obtain only published
+        """Filter the given pages :class:`QuerySet` to obtain only published
         page."""
         if settings.DJANGO_GERBI_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
@@ -277,7 +277,7 @@ class ContentManager(models.Manager):
 
     def get_page_ids_by_slug(self, slug):
         """Return all page's id matching the given slug.
-        This function also returns django_gerbi that have an old slug
+        This function also returns pages that have an old slug
         that match.
 
         :param slug: the wanted slug.

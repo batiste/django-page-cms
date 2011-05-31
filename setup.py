@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from pkg_resources import require, DistributionNotFound
 import django_gerbi
 import os
-package_name = 'django-page-cms'
+package_name = 'django-gerbi'
 module_name = 'django_gerbi'
 
 def local_open(fname):

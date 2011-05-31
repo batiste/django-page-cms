@@ -7,7 +7,7 @@ from haystack import site
 
 
 class PageIndex(SearchIndex):
-    """Search index for django_gerbi content."""
+    """Search index for pages content."""
     text = CharField(document=True, use_template=True)
     title = CharField(model_attr='title')
     url = CharField(model_attr='get_absolute_url')
@@ -19,7 +19,7 @@ class PageIndex(SearchIndex):
 
 
 class RealTimePageIndex(RealTimeSearchIndex):
-    """Search index for django_gerbi content."""
+    """Search index for pages content."""
     text = CharField(document=True, use_template=True)
     title = CharField(model_attr='title')
     url = CharField(model_attr='get_absolute_url')

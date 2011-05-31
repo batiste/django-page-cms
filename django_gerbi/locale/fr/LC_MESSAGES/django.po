@@ -68,7 +68,7 @@ msgstr " Quand la page doit expirer. Laissez\n"
 msgid "status"
 msgstr "Statut"
 
-#: models.py:53 templates/admin/gerbi_cms/page/change_list_table.html:9
+#: models.py:53 templates/admin/django_gerbi/page/change_list_table.html:9
 msgid "template"
 msgstr "Template"
 
@@ -212,92 +212,92 @@ msgstr "Un enfant avec ce slug existe déjà à la position désirée."
 msgid "A sibiling with this slug already exists"
 msgstr "Un frère avec ce slug existe déjà."
 
-#: templates/admin/gerbi_cms/page/change_form.html:3
+#: templates/admin/django_gerbi/page/change_form.html:3
 msgid "Change a page"
 msgstr "Changer une page"
 
-#: templates/admin/gerbi_cms/page/change_form.html:17
+#: templates/admin/django_gerbi/page/change_form.html:17
 msgid "View on site"
 msgstr "Voir sur le site"
 
-#: templates/admin/gerbi_cms/page/change_form.html:29
+#: templates/admin/django_gerbi/page/change_form.html:29
 msgid "Translation helper"
 msgstr "Aide de traduction"
 
-#: templates/admin/gerbi_cms/page/change_form.html:31
+#: templates/admin/django_gerbi/page/change_form.html:31
 msgid "Language:"
 msgstr "Langue:"
 
-#: templates/admin/gerbi_cms/page/change_list.html:3
+#: templates/admin/django_gerbi/page/change_list.html:3
 msgid "List of pages"
 msgstr "Liste des pages"
 
-#: templates/admin/gerbi_cms/page/change_list.html:8
+#: templates/admin/django_gerbi/page/change_list.html:8
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/admin/gerbi_cms/page/change_list.html:27
+#: templates/admin/django_gerbi/page/change_list.html:27
 #, python-format
 msgid "Add %(name)s"
 msgstr "Ajouter %(name)s"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:5
+#: templates/admin/django_gerbi/page/change_list_table.html:5
 msgid "title"
 msgstr "Titre"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:6
+#: templates/admin/django_gerbi/page/change_list_table.html:6
 msgid "quick actions"
 msgstr "Actions rapides"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:7
+#: templates/admin/django_gerbi/page/change_list_table.html:7
 msgid "translations"
 msgstr "Traductions"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:8
+#: templates/admin/django_gerbi/page/change_list_table.html:8
 msgid "published"
 msgstr "Publié"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:10
+#: templates/admin/django_gerbi/page/change_list_table.html:10
 msgid "creator"
 msgstr "Créateur"
 
-#: templates/admin/gerbi_cms/page/menu.html:7
+#: templates/admin/django_gerbi/page/menu.html:7
 msgid "as left sibling"
 msgstr "comme frère à gauche."
 
-#: templates/admin/gerbi_cms/page/menu.html:8
+#: templates/admin/django_gerbi/page/menu.html:8
 msgid "as right sibling"
 msgstr "comme frère à droite."
 
-#: templates/admin/gerbi_cms/page/menu.html:9
+#: templates/admin/django_gerbi/page/menu.html:9
 msgid "as child"
 msgstr "comme enfant."
 
-#: templates/admin/gerbi_cms/page/menu.html:20
+#: templates/admin/django_gerbi/page/menu.html:20
 msgid "move"
 msgstr "Déplacer"
 
-#: templates/admin/gerbi_cms/page/menu.html:21
+#: templates/admin/django_gerbi/page/menu.html:21
 msgid "add"
 msgstr "Ajouter"
 
-#: templates/admin/gerbi_cms/page/menu.html:22
+#: templates/admin/django_gerbi/page/menu.html:22
 msgid "view"
 msgstr "Voir"
 
-#: templates/admin/gerbi_cms/page/menu.html:23
+#: templates/admin/django_gerbi/page/menu.html:23
 msgid "delete"
 msgstr "Supprimer"
 
-#: templates/gerbi_cms/revisions.html:4
+#: templates/django_gerbi/revisions.html:4
 msgid "Revisions"
 msgstr "Révisions"
 
-#: templates/gerbi_cms/revisions.html:8
+#: templates/django_gerbi/revisions.html:8
 msgid "DATETIME_FORMAT"
 msgstr "d.m.Y"
 
-#: templates/gerbi_cms/traduction_helper.html:4
+#: templates/django_gerbi/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Le langage désiré n'a pas encore été traduit."
 

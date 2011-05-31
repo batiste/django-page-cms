@@ -24,7 +24,7 @@ def change_status(request, page_id):
 change_status = staff_member_required(change_status)
 
 def list_pages_ajax(request, invalid_move=False):
-    """Render django_gerbi table for ajax function."""
+    """Render pages table for ajax function."""
     language = get_language_from_request(request)
     page_set = Page.objects.root()
     context = {

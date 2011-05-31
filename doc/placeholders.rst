@@ -147,7 +147,7 @@ If you want to include a simple contact form in your page, there is a contact pl
     {% contactplaceholder contact %}
 
 This placeholder use ´settings.ADMINS´ for recipients email. The template used to render
-the contact form is ´django_gerbi.contact.html´.
+the contact form is ´django_gerbi/contact.html´.
 
 
 Create your own placeholder
@@ -350,7 +350,7 @@ Allows to edit raw html code with syntax highlight based on this project: http:/
 Basic code (Javascript, CSS) for editarea is included into the codebase.
 If you want the full version you can get it there::
 
-    django_gerbi.media/django_gerbi.edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
+    django_gerbi/media/django_gerbi.edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
 
 Usage::
 

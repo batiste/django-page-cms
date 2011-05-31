@@ -2,7 +2,7 @@
 Introduction
 ============
 
-Gerbi CMS enable you to create and administrate hierarchical django_gerbi.in a simple and powerful way.
+Gerbi CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
 
 Gerbi CMS is based around a placeholders concept. A placeholder is special template tag that
 you use in your page templates. Every time you add a placeholder in your template  a field
@@ -94,7 +94,7 @@ make your modifications in your branch. There is a things that is nice to do:
   * Be careful of performance regresssion.
   * Write tests so the test coverage stay over 90%.
   * Every new CMS setting should start with DJANGO_GERBI_<something>
-  * Every new template_tag should start with django_gerbi.<something>
+  * Every new template_tag should start with gerbi_<something>
 
 
 Ask for help
@@ -131,8 +131,8 @@ than 80% and we try to keep it this way. To run the test suite::
 
 .. note::
 
-    If you are not admin you have to create the appropriate permissions to modify django_gerbi.
-    After that you will be able to create django_gerbi.
+    If you are not admin you have to create the appropriate permissions to modify pages.
+    After that you will be able to create pages.
 
 Handling images and files
 ---------------------------

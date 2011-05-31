@@ -5,7 +5,7 @@
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
-<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{PAGES_MEDIA_URL}}"</script>
+<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{DJANGO_GERBI_MEDIA_URL}}";:</script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@
         {% csrf_token %}
         <div class="sidebar">
         {% for fieldset in adminform %}
-            {% include "admin/pages/page/includes/fieldset.html" %}
+            {% include "admin/django_gerbi/page/includes/fieldset.html" %}
 
             {% if forloop.first %}
                 {% if not add and traduction_languages %}

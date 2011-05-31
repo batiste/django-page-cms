@@ -331,7 +331,7 @@ class PageAdmin(admin.ModelAdmin):
             'can_publish': perms.check('publish'),
             'language': language,
             'name': _("page"),
-            'django_gerbi': page_set,
+            'pages': page_set,
             'opts': self.model._meta,
             'q': query
         }

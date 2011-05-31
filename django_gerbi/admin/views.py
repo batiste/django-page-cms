@@ -139,7 +139,7 @@ def sub_menu(request, page_id):
     page_languages = settings.DJANGO_GERBI_LANGUAGES
     return "admin/django_gerbi/page/sub_menu.html", {
         'page':page,
-        'django_gerbi':page_set,
+        'pages':page_set,
         'page_languages':page_languages,
     }
 sub_menu = staff_member_required(sub_menu)

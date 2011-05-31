@@ -111,7 +111,7 @@ class Page(MPTTModel):
         ordering = ['tree_id', 'lft']
         get_latest_by = "publication_date"
         verbose_name = _('page')
-        verbose_name_plural = _('django_gerbi')
+        verbose_name_plural = _('pages')
         permissions = settings.DJANGO_GERBI_EXTRA_PERMISSIONS
 
     def __init__(self, *args, **kwargs):

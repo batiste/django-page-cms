@@ -14,6 +14,7 @@ from django_gerbi.placeholders import parse_placeholder
 
 register = template.Library()
 
+print "Legacy tag names allowed ? %s " % ( gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES )
 
 def get_page_from_string_or_id(page_string, lang=None):
     """Return a Page object from a slug or an id."""
@@ -77,8 +78,10 @@ def gerbi_menu(context, page, url='/'):
         context.update({'children': children, 'page': page})
     return context
 if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+    def pages_menu ( context, page, url='/' ):
+        return gerbi_menu ( context, page, url )
     pages_menu = register.inclusion_tag('django_gerbi/menu.html',
-				        takes_context=True)(gerbi_menu)
+				        takes_context=True)(pages_menu)
 gerbi_menu = register.inclusion_tag('django_gerbi/menu.html',
 				    takes_context=True)(gerbi_menu)
 
@@ -100,8 +103,10 @@ def gerbi_children_menu(context, page, url='/'):
         context.update({'children': children, 'page': page})
     return context
 if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
-    gerbi_children_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
-                                                 takes_context=True)(gerbi_children_menu)
+    def pages_children_menu( context, pages, url='/' ):
+        return gerbi_children_menu ( context, pages, url )
+    pages_children_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
+                                                 takes_context=True)(pages_children_menu)
 
 gerbi_children_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
                                              takes_context=True)(gerbi_children_menu)
@@ -123,8 +128,10 @@ def gerbi_sub_menu(context, page, url='/'):
         context.update({'children': children, 'page': page})
     return context
 if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+    def pages_sub_menu( context, page, url='/' ):
+        return pages_sub_menu ( context, page, url )
     pages_sub_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
-                                        takes_context=True)(gerbi_sub_menu)
+                                        takes_context=True)(pages_sub_menu)
 
 gerbi_sub_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
                                         takes_context=True)(gerbi_sub_menu)
@@ -148,8 +155,10 @@ def gerbi_siblings_menu(context, page, url='/'):
         context.update({'children': children, 'page': page})
     return context
 if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+    def pages_siblings_menu( context, page, url='/'):
+        return gerbi_siblings_menu( context, page, url )
     pages_siblings_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
-                                    takes_context=True)(gerbi_siblings_menu)
+                                    takes_context=True)(pages_siblings_menu)
 
 gerbi_siblings_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
                                     takes_context=True)(gerbi_siblings_menu)
@@ -170,7 +179,7 @@ def gerbi_admin_menu(context, page):
     context.update({'expanded': expanded, 'page': page})
     return context
 gerbi_admin_menu = register.inclusion_tag('admin/django_gerbi/page/menu.html',
-                                        takes_context=True)(gerbi_admin_menu)
+                                          takes_context=True)(gerbi_admin_menu)
 
 
 def show_content(context, page, content_type, lang=None, fallback=True):

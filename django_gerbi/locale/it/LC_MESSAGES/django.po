@@ -21,17 +21,17 @@ msgstr ""
 msgid "Published"
 msgstr "Pubblicato"
 
-#: models.py:58 templates/admin/gerbi_cms/page/menu.html:79
-#: templates/admin/gerbi_cms/page/menu.html:86
+#: models.py:58 templates/admin/django_gerbi/page/menu.html:79
+#: templates/admin/django_gerbi/page/menu.html:86
 msgid "Hidden"
 msgstr "Nascosto"
 
-#: models.py:59 templates/admin/gerbi_cms/page/menu.html:77
-#: templates/admin/gerbi_cms/page/menu.html:84
+#: models.py:59 templates/admin/django_gerbi/page/menu.html:77
+#: templates/admin/django_gerbi/page/menu.html:84
 msgid "Draft"
 msgstr "Bozza"
 
-#: models.py:66 templates/admin/gerbi_cms/page/change_list_table.html:14
+#: models.py:66 templates/admin/django_gerbi/page/change_list_table.html:14
 msgid "author"
 msgstr "autore"
 
@@ -71,7 +71,7 @@ msgstr "data dell'ultima modifica"
 msgid "status"
 msgstr "stato"
 
-#: models.py:82 templates/admin/gerbi_cms/page/change_list_table.html:13
+#: models.py:82 templates/admin/django_gerbi/page/change_list_table.html:13
 msgid "template"
 msgstr "modello"
 
@@ -269,138 +269,138 @@ msgstr "Blocco"
 msgid "Non pubblicare alcun contenuto dopo questa data. Il formato è 'Y-m-d H:M:S'"
 msgstr ""
 
-#: templates/admin/gerbi_cms/page/change_form.html:4
+#: templates/admin/django_gerbi/page/change_form.html:4
 msgid "Edit"
 msgstr "Modifica"
 
-#: templates/admin/gerbi_cms/page/change_form.html:17
+#: templates/admin/django_gerbi/page/change_form.html:17
 msgid "View on site"
 msgstr "Guarda sul sito"
 
-#: templates/admin/gerbi_cms/page/change_form.html:31
+#: templates/admin/django_gerbi/page/change_form.html:31
 msgid "Translation helper"
 msgstr "Assistente alla traduzione"
 
-#: templates/admin/gerbi_cms/page/change_form.html:33
+#: templates/admin/django_gerbi/page/change_form.html:33
 msgid "Language:"
 msgstr "Lingua:"
 
-#: templates/admin/gerbi_cms/page/change_list.html:4
+#: templates/admin/django_gerbi/page/change_list.html:4
 msgid "List of pages"
 msgstr "Lista delle pagine"
 
-#: templates/admin/gerbi_cms/page/change_list.html:10
+#: templates/admin/django_gerbi/page/change_list.html:10
 msgid "Home"
 msgstr "Principale"
 
-#: templates/admin/gerbi_cms/page/change_list.html:32
+#: templates/admin/django_gerbi/page/change_list.html:32
 #, python-format
 msgid "Add %(name)s"
 msgstr "Aggiungi %(name)s"
 
-#: templates/admin/gerbi_cms/page/change_list.html:45
-#: templates/gerbi_cms/examples/index.html:74
+#: templates/admin/django_gerbi/page/change_list.html:45
+#: templates/django_gerbi/examples/index.html:74
 msgid "Search"
 msgstr "Cerca"
 
-#: templates/admin/gerbi_cms/page/change_list.html:47
+#: templates/admin/django_gerbi/page/change_list.html:47
 msgid "Go"
 msgstr "Vai"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:9
+#: templates/admin/django_gerbi/page/change_list_table.html:9
 #: testproj/documents/models.py:9
 msgid "title"
 msgstr "titolo"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:10
+#: templates/admin/django_gerbi/page/change_list_table.html:10
 msgid "languages"
 msgstr "lingue"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:11
+#: templates/admin/django_gerbi/page/change_list_table.html:11
 msgid "last modification"
 msgstr "ultima modifica"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:12
+#: templates/admin/django_gerbi/page/change_list_table.html:12
 msgid "published"
 msgstr "pubblicato"
 
-#: templates/admin/gerbi_cms/page/menu.html:22
+#: templates/admin/django_gerbi/page/menu.html:22
 msgid "This page contain broken links"
 msgstr "La pagina contiene collegamenti rotti"
 
-#: templates/admin/gerbi_cms/page/menu.html:26
+#: templates/admin/django_gerbi/page/menu.html:26
 msgid "view this page"
 msgstr "guarda questa pagina"
 
-#: templates/admin/gerbi_cms/page/menu.html:27
+#: templates/admin/django_gerbi/page/menu.html:27
 msgid "move this page"
 msgstr "sposta questa pagina"
 
-#: templates/admin/gerbi_cms/page/menu.html:28
+#: templates/admin/django_gerbi/page/menu.html:28
 msgid "insert a new page here"
 msgstr "inserisci una nuova pagina qui"
 
-#: templates/admin/gerbi_cms/page/menu.html:30
+#: templates/admin/django_gerbi/page/menu.html:30
 msgid "delete this page"
 msgstr "cancella questa pagina"
 
-#: templates/admin/gerbi_cms/page/menu.html:34
+#: templates/admin/django_gerbi/page/menu.html:34
 msgid "don&#x27;t move this page"
 msgstr "non muovere questa pagina"
 
-#: templates/admin/gerbi_cms/page/menu.html:34
-#: templates/admin/gerbi_cms/page/menu.html:38
+#: templates/admin/django_gerbi/page/menu.html:34
+#: templates/admin/django_gerbi/page/menu.html:38
 msgid "cancel"
 msgstr "annulla"
 
-#: templates/admin/gerbi_cms/page/menu.html:38
+#: templates/admin/django_gerbi/page/menu.html:38
 msgid "don&#x27;t insert a new page here"
 msgstr "non inserire una nuova pagina qui"
 
-#: templates/admin/gerbi_cms/page/menu.html:39
+#: templates/admin/django_gerbi/page/menu.html:39
 msgid "insert above"
 msgstr "inserisci sopra"
 
-#: templates/admin/gerbi_cms/page/menu.html:40
+#: templates/admin/django_gerbi/page/menu.html:40
 msgid "insert below"
 msgstr "inserisci sotto"
 
-#: templates/admin/gerbi_cms/page/menu.html:41
+#: templates/admin/django_gerbi/page/menu.html:41
 msgid "insert as child"
 msgstr "inserisci come figlio"
 
-#: templates/admin/gerbi_cms/page/menu.html:54
+#: templates/admin/django_gerbi/page/menu.html:54
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "modifica la traduzione %(lang)s"
 
-#: templates/admin/gerbi_cms/page/menu.html:57
+#: templates/admin/django_gerbi/page/menu.html:57
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "crea la traduzione %(lang)s"
 
-#: templates/admin/gerbi_cms/page/menu.html:64 templates/gerbi_cms/revisions.html:6
+#: templates/admin/django_gerbi/page/menu.html:64 templates/django_gerbi/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr "DATETIME_FORMAT"
 
-#: templates/admin/gerbi_cms/page/menu.html:78
-#: templates/admin/gerbi_cms/page/menu.html:85
+#: templates/admin/django_gerbi/page/menu.html:78
+#: templates/admin/django_gerbi/page/menu.html:85
 msgid "In navigation"
 msgstr "Nel menu di navigazione"
 
-#: templates/gerbi_cms/contact.html:4
+#: templates/django_gerbi/contact.html:4
 msgid "Send"
 msgstr "Invia"
 
-#: templates/gerbi_cms/revisions.html:4
+#: templates/django_gerbi/revisions.html:4
 msgid "Revisions"
 msgstr "Revisioni"
 
-#: templates/gerbi_cms/traduction_helper.html:4
+#: templates/django_gerbi/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "La lingua richiesta non è ancora stata tradotta"
 
-#: templates/gerbi_cms/widgets/languages.html:20
+#: templates/django_gerbi/widgets/languages.html:20
 msgid "Delete this translation"
 msgstr "Cancella questa traduzione"
 

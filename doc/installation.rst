@@ -26,7 +26,7 @@ And then, run the example project::
     python manage.py build_static django_gerbi
     python manage.py runserver
 
-Then visit http://127.0.0.1:8000/admin/ and create a few django_gerbi.
+Then visit http://127.0.0.1:8000/admin/ and create a few pages.
 
 
 Install dependencies by using pip
@@ -73,12 +73,12 @@ Basically you need to have something like this::
 
     urlpatterns = patterns('',
         ...
-        url(r'^django_gerbi.', include('django_gerbi.urls')),
+        url(r'^pages/', include('django_gerbi.urls')),
         (r'^admin/', include(admin.site.urls)),
     )
 
-When you will visit the site the first time (``/django_gerbi.``), you will get a 404 error
-because there is no published page. Go to the admin first and create and publish some django_gerbi.
+When you will visit the site the first time (``/django_gerbi/``), you will get a 404 error
+because there is no published page. Go to the admin first and create and publish some pages.
 
 You will certainly want to activate the static file serve view in your ``urls.py`` if you are in developement mode::
 
@@ -104,9 +104,9 @@ Gerbi CMS require several of these settings to be set. They are marked in this d
 Default template
 ----------------
 
-You *must* set ``GERBI_CMS_DEFAULT_TEMPLATE`` to the path of your default CMS template::
+You *must* set ``DJANGO_GERBI_DEFAULT_TEMPLATE`` to the path of your default CMS template::
 
-    GERBI_CMS_DEFAULT_TEMPLATE = 'django_gerbi/index.html'
+    DJANGO_GERBI_DEFAULT_TEMPLATE = 'django_gerbi/index.html'
 
 This template must exist somewhere in your project. If you want you can copy the example templates
 from the directory ``django_gerbi/templates/django_gerbi/examples/`` into the directory ``django_gerbi`` of your root template directory.
@@ -114,10 +114,10 @@ from the directory ``django_gerbi/templates/django_gerbi/examples/`` into the di
 Additional templates
 --------------------
 
-Optionally you can set ``GERBI_CMS_TEMPLATES`` if you want additional templates choices.
+Optionally you can set ``DJANGO_GERBI_TEMPLATES`` if you want additional templates choices.
 In the the example application you have actually this::
 
-    GERBI_CMS_TEMPLATES = (
+    DAJNGO_GERBI_TEMPLATES = (
         ('django_gerbi/nice.html', 'nice one'),
         ('django_gerbi/cool.html', 'cool one'),
     )
@@ -147,7 +147,7 @@ Please first read how django handle languages
 * http://docs.djangoproject.com/en/dev/ref/settings/#languages
 * http://docs.djangoproject.com/en/dev/ref/settings/#language-code
 
-This CMS use the ``GERBI_CMS_LANGUAGES`` setting in order to present which language are supported by the CMS.
+This CMS use the ``DJANGO_GERBI_LANGUAGES`` setting in order to present which language are supported by the CMS.
 
 Django itself use the ``LANGUAGES`` setting to set the ``request.LANGUAGE_CODE`` value that is used by this CMS.
 So if the language you want to support is not present in the ``LANGUAGES``
@@ -164,14 +164,14 @@ A possible solution is to redefine ``settings.LANGUAGES``. For example you can d
     gettext_noop = lambda s: s
 
     # here is all the languages supported by the CMS
-    GERBI_CMS_LANGUAGES = (
+    DJANGO_GERBI_LANGUAGES = (
         ('de', gettext_noop('German')),
         ('fr-ch', gettext_noop('Swiss french')),
         ('en-us', gettext_noop('US English')),
     )
 
-    # copy GERBI_CMS_LANGUAGES
-    languages = list(GERBI_CMS_LANGUAGES)
+    # copy DJANGO_GERBI_LANGUAGES
+    languages = list(DJANGO_GERBI_LANGUAGES)
 
     # redefine the LANGUAGES setting in order to be sure to have the correct request.LANGUAGE_CODE
     LANGUAGES = languages
@@ -218,9 +218,9 @@ The sites framework
 -------------------
 
 If you want to use the `Django sites framework <http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites>`_
-with Gerbi CMS, you *must* define the ``SITE_ID`` and ``GERBI_CMS_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
+with Gerbi CMS, you *must* define the ``SITE_ID`` and ``DJANGO_GERBI_USE_SITE_ID`` settings and create the appropriate Site object into the admin interface::
 
-    GERBI_CMS_USE_SITE_ID = True
+    DJANGO_GERBI_USE_SITE_ID = True
     SITE_ID = 1
 
 The Site object should have the domain that match your actual domain (ie: 127.0.0.1:8000)
@@ -231,7 +231,7 @@ Tagging
 
 Tagging is optional and disabled by default.
 
-If you want to use it set ``GERBI_CMS_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
+If you want to use it set ``DJANGO_GERBI_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
 
     INSTALLED_APPS = (
         'django.contrib.auth',

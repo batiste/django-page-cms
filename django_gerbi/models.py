@@ -490,7 +490,7 @@ class Page(MPTTModel):
         beyond a root node to another tree.
         """
 
-        ## get_descendants() looks expansive: load the whole django_gerbi ?
+        ## get_descendants() looks expansive: load the whole pages ?
         ## Better way to do that ? trying get_descendant_count() + []
 
         if not self.is_root_node():

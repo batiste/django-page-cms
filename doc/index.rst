@@ -34,6 +34,8 @@ Table of content
     changelog.rst
     page-api.rst
 
+    migration.rst
+
 
 Indices and tables
 ==================

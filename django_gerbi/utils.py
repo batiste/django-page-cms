@@ -84,7 +84,7 @@ content_id=%s"""
 
 def export_po_files(path='poexport', stdout=None):
     """
-    Export all the content from the published django_gerbi into
+    Export all the content from the published pages into
     po files. The files will be automatically updated
     with the new content if you run the command again.
     """
@@ -140,7 +140,7 @@ def export_po_files(path='poexport', stdout=None):
 def import_po_files(path='poexport', stdout=None):
     """
     Import all the content updates from the po files into
-    the django_gerbi.
+    the pages.
     """
     import polib
     import os

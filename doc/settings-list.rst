@@ -10,8 +10,8 @@ are available in the ``django_gerbi`` admin.  Templates should be assigned in
 the following format::
 
     DJANGO_GERBI_TEMPLATES = (
-        ('django_gerbi.nice.html', 'nice one'),
-        ('django_gerbi.cool.html', 'cool one'),
+        ('django_gerbi/nice.html', 'nice one'),
+        ('django_gerbi/cool.html', 'cool one'),
     )
 
 One can also assign a callable (which should return the tuple) to this
@@ -46,13 +46,13 @@ DJANGO_GERBI_DEFAULT_TEMPLATE
 
 You *must* set ``DJANGO_GERBI_DEFAULT_TEMPLATE`` to the path of your default template::
 
-    DJANGO_GERBI_DEFAULT_TEMPLATE = 'django_gerbi.index.html'
+    DJANGO_GERBI_DEFAULT_TEMPLATE = 'django_gerbi/index.html'
 
 
 DJANGO_GERBI_LANGUAGES
 ==================================
 
-A list tuples that defines the languages that django_gerbi.can be translated into::
+A list tuples that defines the languages that pages can be translated into::
 
     gettext_noop = lambda s: s
 
@@ -120,7 +120,7 @@ PAGES_MEDIA_URL
 
 URL that handles django_gerbi.media. If not set the default value is::
 
-    <STATIC_URL|MEDIA_URL>django_gerbi.
+    <STATIC_URL|MEDIA_URL>django_gerbi/
 
 DJANGO_GERBI_UNIQUE_SLUG_REQUIRED
 ==================================
@@ -177,7 +177,7 @@ DJANGO_GERBI_SHOW_START_DATE
 Show the publication start date field in the admin.  Allows for future dating
 Changing the ``DJANGO_GERBI_SHOW_START_DATE``  from ``True`` to ``False``
 after adding data could cause some weirdness.  If you must do this, you
-should update your database to correct any future dated django_gerbi.
+should update your database to correct any future dated pages.
 
 DJANGO_GERBI_SHOW_END_DATE
 ==================================
@@ -185,7 +185,7 @@ DJANGO_GERBI_SHOW_END_DATE
 Show the publication end date field in the admin, allows for page expiration
 Changing ``DJANGO_GERBI_SHOW_END_DATE`` from ``True`` to ``False`` after adding
 data could cause some weirdness.  If you must do this, you should update
-your database and null any django_gerbi.with ``publication_end_date`` set.
+your database and null any pages with ``publication_end_date`` set.
 
 DJANGO_GERBI_CONNECTED_MODELS
 ==================================
@@ -227,4 +227,4 @@ DJANGO_GERBI_EXTRA_CONTEXT
 ==================================
 
 This setting is a function that can be defined if you need to pass extra
-context data to the django_gerbi.templates.
+context data to the pages templates.

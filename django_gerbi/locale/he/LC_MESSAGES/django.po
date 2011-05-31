@@ -19,15 +19,15 @@ msgstr ""
 msgid "Published"
 msgstr "פורסם"
 
-#: models.py:51 templates/admin/gerbi_cms/page/menu.html:73
+#: models.py:51 templates/admin/django_gerbi/page/menu.html:73
 msgid "Hidden"
 msgstr "מוסתר"
 
-#: models.py:52 templates/admin/gerbi_cms/page/menu.html:71
+#: models.py:52 templates/admin/django_gerbi/page/menu.html:71
 msgid "Draft"
 msgstr "טיוטה"
 
-#: models.py:62 templates/admin/gerbi_cms/page/change_list_table.html:24
+#: models.py:62 templates/admin/django_gerbi/page/change_list_table.html:24
 msgid "author"
 msgstr "מחבר"
 
@@ -71,7 +71,7 @@ msgstr "תאריך שינוי אחרון"
 msgid "status"
 msgstr "סטטוס"
 
-#: models.py:78 templates/admin/gerbi_cms/page/change_list_table.html:23
+#: models.py:78 templates/admin/django_gerbi/page/change_list_table.html:23
 msgid "template"
 msgstr "תבנית"
 
@@ -212,128 +212,128 @@ msgstr "נא לשמור את העמוד כדי להציג את שדה התמונ
 msgid "Current file: "
 msgstr "קובת נוכחי: "
 
-#: templates/admin/gerbi_cms/page/change_form.html:4
+#: templates/admin/django_gerbi/page/change_form.html:4
 msgid "Edit"
 msgstr "עריכה"
 
-#: templates/admin/gerbi_cms/page/change_form.html:17
+#: templates/admin/django_gerbi/page/change_form.html:17
 msgid "View on site"
 msgstr "צפיה באתר"
 
-#: templates/admin/gerbi_cms/page/change_form.html:31
+#: templates/admin/django_gerbi/page/change_form.html:31
 msgid "Translation helper"
 msgstr "עוזר תרגום"
 
-#: templates/admin/gerbi_cms/page/change_form.html:33
-#: templates/admin/gerbi_cms/page/includes/fieldset.html:19
+#: templates/admin/django_gerbi/page/change_form.html:33
+#: templates/admin/django_gerbi/page/includes/fieldset.html:19
 msgid "Language:"
 msgstr "שפה:"
 
-#: templates/admin/gerbi_cms/page/change_list.html:4
+#: templates/admin/django_gerbi/page/change_list.html:4
 msgid "List of pages"
 msgstr "רשימת עמודים"
 
-#: templates/admin/gerbi_cms/page/change_list.html:10
+#: templates/admin/django_gerbi/page/change_list.html:10
 msgid "Home"
 msgstr "דף הבית"
 
-#: templates/admin/gerbi_cms/page/change_list.html:31
+#: templates/admin/django_gerbi/page/change_list.html:31
 #, python-format
 msgid "Add %(name)s"
 msgstr "הוספת %(name)s"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:6
+#: templates/admin/django_gerbi/page/change_list_table.html:6
 msgid "Search"
 msgstr "חיפוש"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:8
+#: templates/admin/django_gerbi/page/change_list_table.html:8
 msgid "Go"
 msgstr "בצע"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:19
+#: templates/admin/django_gerbi/page/change_list_table.html:19
 msgid "title"
 msgstr "כותרת"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:20
+#: templates/admin/django_gerbi/page/change_list_table.html:20
 msgid "languages"
 msgstr "שפות"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:21
+#: templates/admin/django_gerbi/page/change_list_table.html:21
 msgid "last modification"
 msgstr "שינוי אחרון"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:22
+#: templates/admin/django_gerbi/page/change_list_table.html:22
 msgid "published"
 msgstr "פורסם"
 
-#: templates/admin/gerbi_cms/page/menu.html:21
+#: templates/admin/django_gerbi/page/menu.html:21
 msgid "This page contain broken links"
 msgstr "עמוד זה מכיל קישורים שבורים"
 
-#: templates/admin/gerbi_cms/page/menu.html:26
+#: templates/admin/django_gerbi/page/menu.html:26
 msgid "view this page"
 msgstr "צפיה בעמוד"
 
-#: templates/admin/gerbi_cms/page/menu.html:27
+#: templates/admin/django_gerbi/page/menu.html:27
 msgid "move this page"
 msgstr "הזזת העמוד"
 
-#: templates/admin/gerbi_cms/page/menu.html:28
+#: templates/admin/django_gerbi/page/menu.html:28
 msgid "insert a new page here"
 msgstr "הכנסת עמוד חדש כאן"
 
-#: templates/admin/gerbi_cms/page/menu.html:30
+#: templates/admin/django_gerbi/page/menu.html:30
 msgid "delete this page"
 msgstr "מחיקת העמוד"
 
-#: templates/admin/gerbi_cms/page/menu.html:34
+#: templates/admin/django_gerbi/page/menu.html:34
 msgid "don&#x27;t move this page"
 msgstr "לא להזיז עמוד זה"
 
-#: templates/admin/gerbi_cms/page/menu.html:34
-#: templates/admin/gerbi_cms/page/menu.html:38
+#: templates/admin/django_gerbi/page/menu.html:34
+#: templates/admin/django_gerbi/page/menu.html:38
 msgid "cancel"
 msgstr "ביטול"
 
-#: templates/admin/gerbi_cms/page/menu.html:38
+#: templates/admin/django_gerbi/page/menu.html:38
 msgid "don&#x27;t insert a new page here"
 msgstr "לא להכניס עמוד חדש כאן"
 
-#: templates/admin/gerbi_cms/page/menu.html:39
+#: templates/admin/django_gerbi/page/menu.html:39
 msgid "insert above"
 msgstr "להכניס מעל"
 
-#: templates/admin/gerbi_cms/page/menu.html:40
+#: templates/admin/django_gerbi/page/menu.html:40
 msgid "insert below"
 msgstr "להכניס מתחת"
 
-#: templates/admin/gerbi_cms/page/menu.html:41
+#: templates/admin/django_gerbi/page/menu.html:41
 msgid "insert as child"
 msgstr "להכניס כילד"
 
-#: templates/admin/gerbi_cms/page/menu.html:50
+#: templates/admin/django_gerbi/page/menu.html:50
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "עריכת תרגום %(lang)s"
 
-#: templates/admin/gerbi_cms/page/menu.html:52
+#: templates/admin/django_gerbi/page/menu.html:52
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "יצירת תרגום %(lang)s"
 
-#: templates/admin/gerbi_cms/page/menu.html:59 templates/gerbi_cms/revisions.html:6
+#: templates/admin/django_gerbi/page/menu.html:59 templates/django_gerbi/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr ""
 
-#: templates/admin/gerbi_cms/page/menu.html:72
+#: templates/admin/django_gerbi/page/menu.html:72
 msgid "In navigation"
 msgstr "בתפריט הניווט"
 
-#: templates/admin/gerbi_cms/page/includes/fieldset.html:37
+#: templates/admin/django_gerbi/page/includes/fieldset.html:37
 msgid "Delete this translation"
 msgstr "מחיקת תרגום זה"
 
-#: templates/gerbi_cms/traduction_helper.html:4
+#: templates/django_gerbi/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "השפה המבוקשת לא תורגמה עדיין"
 

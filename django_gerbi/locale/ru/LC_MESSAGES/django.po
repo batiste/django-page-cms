@@ -59,7 +59,7 @@ msgstr ""
 msgid "status"
 msgstr "статус"
 
-#: models.py:45 templates/admin/gerbi_cms/page/change_list_table.html:9
+#: models.py:45 templates/admin/django_gerbi/page/change_list_table.html:9
 msgid "template"
 msgstr "Шаблон"
 
@@ -183,80 +183,80 @@ msgstr "Шаблон используемый для отображения ко
 msgid "Another page with this slug already exists"
 msgstr "Другая страница с таким путём существует."
 
-#: templates/admin/gerbi_cms/page/change_form.html:3
+#: templates/admin/django_gerbi/page/change_form.html:3
 msgid "Change a page"
 msgstr "Изменить страницу"
 
-#: templates/admin/gerbi_cms/page/change_form.html:16
+#: templates/admin/django_gerbi/page/change_form.html:16
 msgid "View on site"
 msgstr "Просмотреть на сайте"
 
-#: templates/admin/gerbi_cms/page/change_form.html:28
+#: templates/admin/django_gerbi/page/change_form.html:28
 msgid "Translation helper"
 msgstr "Помошник перевода"
 
-#: templates/admin/gerbi_cms/page/change_form.html:30
+#: templates/admin/django_gerbi/page/change_form.html:30
 msgid "Language:"
 msgstr "Язык:"
 
-#: templates/admin/gerbi_cms/page/change_list.html:3
+#: templates/admin/django_gerbi/page/change_list.html:3
 msgid "List of pages"
 msgstr "Список страниц"
 
-#: templates/admin/gerbi_cms/page/change_list.html:8
+#: templates/admin/django_gerbi/page/change_list.html:8
 msgid "Home"
 msgstr "Начало"
 
-#: templates/admin/gerbi_cms/page/change_list.html:27
+#: templates/admin/django_gerbi/page/change_list.html:27
 #, python-format
 msgid "Add %(name)s"
 msgstr "Добавить %(name)s"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:5
+#: templates/admin/django_gerbi/page/change_list_table.html:5
 msgid "title"
 msgstr "Заголовок"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:6
+#: templates/admin/django_gerbi/page/change_list_table.html:6
 msgid "quick actions"
 msgstr "Быстрые действия"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:7
+#: templates/admin/django_gerbi/page/change_list_table.html:7
 msgid "translations"
 msgstr "Переводы"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:8
+#: templates/admin/django_gerbi/page/change_list_table.html:8
 msgid "published"
 msgstr "Опубликовано"
 
-#: templates/admin/gerbi_cms/page/change_list_table.html:10
+#: templates/admin/django_gerbi/page/change_list_table.html:10
 msgid "creator"
 msgstr "Автор"
 
-#: templates/admin/gerbi_cms/page/menu.html:18
+#: templates/admin/django_gerbi/page/menu.html:18
 msgid "move"
 msgstr "передвинуть"
 
-#: templates/admin/gerbi_cms/page/menu.html:19
+#: templates/admin/django_gerbi/page/menu.html:19
 msgid "add"
 msgstr "добавить"
 
-#: templates/admin/gerbi_cms/page/menu.html:20
+#: templates/admin/django_gerbi/page/menu.html:20
 msgid "view"
 msgstr "просмотреть"
 
-#: templates/admin/gerbi_cms/page/menu.html:21
+#: templates/admin/django_gerbi/page/menu.html:21
 msgid "delete"
 msgstr "удалить"
 
-#: templates/gerbi_cms/revisions.html:4
+#: templates/django_gerbi/revisions.html:4
 msgid "Revisions"
 msgstr "Ревизии"
 
-#: templates/gerbi_cms/revisions.html:8
+#: templates/django_gerbi/revisions.html:8
 msgid "DATETIME_FORMAT"
 msgstr "j. N Y, H:i"
 
-#: templates/gerbi_cms/traduction_helper.html:4
+#: templates/django_gerbi/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Запрошенный язык ещё не был переведён."
 

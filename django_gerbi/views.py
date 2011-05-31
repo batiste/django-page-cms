@@ -16,7 +16,7 @@ LANGUAGE_KEYS = [key for (key, value) in settings.DJANGO_GERBI_LANGUAGES]
 
 class Details(object):
     """
-    This class based view get the root django_gerbi for navigation
+    This class based view get the root pages for navigation
     and the current page to display if there is any.
 
     All is rendered with the current page's template.
@@ -53,7 +53,7 @@ class Details(object):
 
         current_page = self.resolve_page(request, context, is_staff)
 
-        # if no django_gerbi has been found, we will try to find it via an Alias
+        # if no page has been found, we will try to find it via an Alias
         if not current_page:
             redirection = self.resolve_alias(request, path, lang)
             if redirection:
@@ -61,8 +61,8 @@ class Details(object):
         else:
             context['current_page'] = current_page
 
-        # If unauthorized to see the django_gerbi, raise a 404, That can
-        # happen with expired django_gerbi.
+        # If unauthorized to see the pages, raise a 404, That can
+        # happen with expired pages.
         if not is_staff and not current_page.visible:
             raise Http404
 
@@ -129,7 +129,7 @@ class Details(object):
                 current_page.redirect_to.get_url_path(lang))
 
     def get_navigation(self, request, path, lang):
-        """Get the django_gerbi that are at the root level."""
+        """Get the pages that are at the root level."""
         return Page.objects.navigation().order_by("tree_id")
 
     def choose_language(self, lang, request):

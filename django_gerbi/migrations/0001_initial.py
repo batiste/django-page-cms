@@ -29,7 +29,7 @@ class Migration:
                ('tree_id', orm['django_gerbi.Page:tree_id']),
                ('level', orm['django_gerbi.Page:level'])
                ]
-        if settings.DJANGO_GERBI_TAGGING:
+        if settings.GERBI_TAGGING:
             django_gerbi_page.append(('tags', orm['django_gerbi.Page:tags']))
         db.create_table('django_gerbi_page', django_gerbi_page)
         db.send_create_signal('pages', ['Page'])
@@ -62,7 +62,7 @@ class Migration:
         ))
         db.send_create_signal('pages', ['PagePermission'])
         
-        if settings.DJANGO_GERBI_USE_SITE_ID:
+        if settings.GERBI_USE_SITE_ID:
             # Adding ManyToManyField 'Page.sites'
             db.create_table('django_gerbi_page_sites', (
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
@@ -86,7 +86,7 @@ class Migration:
         # Deleting model 'PagePermission'
         db.delete_table('django_gerbi_pagepermission')
         
-        if settings.DJANGO_GERBI_USE_SITE_ID:
+        if settings.GERBI_USE_SITE_ID:
             # Dropping ManyToManyField 'Page.sites'
             db.delete_table('django_gerbi_page_sites')
         
@@ -109,9 +109,9 @@ class Migration:
             'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
             }
-    if settings.DJANGO_GERBI_TAGGING:
+    if settings.GERBI_TAGGING:
         page['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
-    if settings.DJANGO_GERBI_USE_SITE_ID:
+    if settings.GERBI_USE_SITE_ID:
         page['sites'] = ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"})
         
     models = {

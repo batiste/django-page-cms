@@ -102,9 +102,9 @@ class Migration:
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
-    if settings.DJANGO_GERBI_TAGGING:
+    if settings.GERBI_TAGGING:
         models['django_gerbi.page']['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
-    if settings.DJANGO_GERBI_USE_SITE_ID:
+    if settings.GERBI_USE_SITE_ID:
         models['django_gerbi.page']['sites'] = ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"})
     
     complete_apps = ['pages']

@@ -46,7 +46,7 @@ def modify_content(request, page_id, content_type, language_id):
         if not content:
             raise Http404
         page = Page.objects.get(pk=page_id)
-        if settings.DJANGO_GERBI_CONTENT_REVISION:
+        if settings.GERBI_CONTENT_REVISION:
             Content.objects.create_content_if_changed(page, language_id,
                                                       content_type, content)
         else:
@@ -136,7 +136,7 @@ def sub_menu(request, page_id):
     template."""
     page = Page.objects.get(id=page_id)
     page_set = page.children.all()
-    page_languages = settings.DJANGO_GERBI_LANGUAGES
+    page_languages = settings.GERBI_LANGUAGES
     return "admin/django_gerbi/page/sub_menu.html", {
         'page':page,
         'pages':page_set,

@@ -5,11 +5,11 @@ from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
 
 def get_connected():
-    if not settings.DJANGO_GERBI_CONNECTED_MODELS:
+    if not settings.GERBI_CONNECTED_MODELS:
         return []
 
     models = []
-    for capp in settings.DJANGO_GERBI_CONNECTED_MODELS:
+    for capp in settings.GERBI_CONNECTED_MODELS:
         model = {}
         mod_name, model_name = get_mod_func(capp['model'])
         model['model_name'] = model_name

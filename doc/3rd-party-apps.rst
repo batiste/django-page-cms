@@ -113,9 +113,9 @@ For this you need an object with foreign key pointing to a page::
         class Meta:
             model = Document
 
-After that you need to set up the DJANGO_GERBI_CONNECTED_MODELS into your settings similar to this one::
+After that you need to set up the GERBI_CONNECTED_MODELS into your settings similar to this one::
 
-    DJANGO_GERBI_CONNECTED_MODELS = [{
+    GERBI_CONNECTED_MODELS = [{
         'model':'documents.models.Document',
         'form':'documents.models.DocumentForm',
         'options':{

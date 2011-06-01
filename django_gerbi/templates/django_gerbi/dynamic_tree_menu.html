@@ -1,4 +1,4 @@
-{% load django_gerbi_tags cache %}
+{% load gerbi_tags cache %}
 {% if page.calculated_status %}
 <li {% ifequal page current_page %}class="selected"{% endifequal %}>
 <a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>

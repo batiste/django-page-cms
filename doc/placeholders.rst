@@ -327,7 +327,7 @@ HTML editor based on `TinyMCE <http://tinymce.moxiecode.com/>`_
 1. You should install the `django-tinymce <http://pypi.python.org/pypi/django-tinymce/1.5>`_ application first
 2. Then in your settings you should activate the application::
 
-    DJANGO_GERBI_TINYMCE = True
+    GERBI_TINYMCE = True
 
 3. And add ``tinymce`` in your ``INSTALLED_APPS`` list.
 

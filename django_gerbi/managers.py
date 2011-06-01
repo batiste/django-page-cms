@@ -31,9 +31,9 @@ class PageManager(models.Manager):
         p.save()
         p = self.get(id=p.id)
         Content(body='page-' + str(p.id), type='title',
-            language=settings.DJANGO_GERBI_DEFAULT_LANGUAGE, page=p).save()
+            language=settings.GERBI_DEFAULT_LANGUAGE, page=p).save()
         Content(body='page-' + str(p.id), type='slug',
-            language=settings.DJANGO_GERBI_DEFAULT_LANGUAGE, page=p).save()
+            language=settings.GERBI_DEFAULT_LANGUAGE, page=p).save()
         for child in range(1, child + 1):
             self.populate_pages(parent=p, child=child, depth=(depth - 1))
 
@@ -43,7 +43,7 @@ class PageManager(models.Manager):
 
         :param site_id: specify the id of the site object to filter with.
         """
-        if settings.DJANGO_GERBI_USE_SITE_ID:
+        if settings.GERBI_USE_SITE_ID:
             if not site_id:
                 site_id = settings.SITE_ID
             return self.filter(sites=site_id)
@@ -65,15 +65,15 @@ class PageManager(models.Manager):
     def filter_published(self, queryset):
         """Filter the given pages :class:`QuerySet` to obtain only published
         page."""
-        if settings.DJANGO_GERBI_USE_SITE_ID:
+        if settings.GERBI_USE_SITE_ID:
             queryset = queryset.filter(sites=settings.SITE_ID)
 
         queryset = queryset.filter(status=self.model.PUBLISHED)
 
-        if settings.DJANGO_GERBI_SHOW_START_DATE:
+        if settings.GERBI_SHOW_START_DATE:
             queryset = queryset.filter(publication_date__lte=datetime.now())
 
-        if settings.DJANGO_GERBI_SHOW_END_DATE:
+        if settings.GERBI_SHOW_END_DATE:
             queryset = queryset.filter(
                 Q(publication_end_date__gt=datetime.now()) |
                 Q(publication_end_date__isnull=True)
@@ -90,7 +90,7 @@ class PageManager(models.Manager):
         """Creates a :class:`QuerySet` of drafts using the page's
         :attr:`Page.publication_date`."""
         pub = self.on_site().filter(status=self.model.DRAFT)
-        if settings.DJANGO_GERBI_SHOW_START_DATE:
+        if settings.GERBI_SHOW_START_DATE:
             pub = pub.filter(publication_date__gte=datetime.now())
         return pub
 
@@ -120,7 +120,7 @@ class PageManager(models.Manager):
         if exclude_drafts:
             pages_list = pages_list.exclude(status=self.model.DRAFT)
         if len(pages_list) == 1:
-            if(settings.DJANGO_GERBI_USE_STRICT_URL and
+            if(settings.GERBI_USE_STRICT_URL and
                 pages_list[0].get_complete_slug(lang) != complete_path):
                     return None
             return pages_list[0]
@@ -136,7 +136,7 @@ class PageManager(models.Manager):
 class ContentManager(models.Manager):
     """:class:`Content <django_gerbi.models.Content>` manager methods"""
 
-    DJANGO_GERBI_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
+    GERBI_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
 
     def sanitize(self, content):
         """Sanitize a string in order to avoid possible XSS using
@@ -156,7 +156,7 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param body: the content of the Content object.
         """
-        if settings.DJANGO_GERBI_SANITIZE_USER_INPUT:
+        if settings.GERBI_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
@@ -178,7 +178,7 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param body: the content of the Content object.
         """
-        if settings.DJANGO_GERBI_SANITIZE_USER_INPUT:
+        if settings.GERBI_SANITIZE_USER_INPUT:
             body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
@@ -191,10 +191,10 @@ class ContentManager(models.Manager):
                 type=ctype)
 
         # Delete old revisions
-        if settings.DJANGO_GERBI_CONTENT_REVISION_DEPTH:
+        if settings.GERBI_CONTENT_REVISION_DEPTH:
             oldest_content = self.filter(page=page, language=language,
                 type=ctype).order_by('-creation_date'
-                )[settings.DJANGO_GERBI_CONTENT_REVISION_DEPTH:]
+                )[settings.GERBI_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
 
@@ -222,10 +222,10 @@ class ContentManager(models.Manager):
         :param language_fallback: fallback to another language if ``True``.
         """
         if not language:
-            language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            language = settings.GERBI_DEFAULT_LANGUAGE
 
         frozen = int(bool(page.freeze_date))
-        key = self.DJANGO_GERBI_CONTENT_DICT_KEY % (page.id, ctype, frozen)
+        key = self.GERBI_CONTENT_DICT_KEY % (page.id, ctype, frozen)
 
         if page._content_dict is None:
             page._content_dict = dict()
@@ -240,7 +240,7 @@ class ContentManager(models.Manager):
         # Once generated the result is cached.
         if not content_dict:
             content_dict = {}
-            for lang in settings.DJANGO_GERBI_LANGUAGES:
+            for lang in settings.GERBI_LANGUAGES:
                 try:
                     content = self.get_content_object(page, lang[0], ctype)
                     content_dict[lang[0]] = content.body
@@ -253,7 +253,7 @@ class ContentManager(models.Manager):
             return filter_link(content_dict[language], page, language, ctype)
 
         if language_fallback:
-            for lang in settings.DJANGO_GERBI_LANGUAGES:
+            for lang in settings.GERBI_LANGUAGES:
                 if lang[0] in content_dict and content_dict[lang[0]]:
                     return filter_link(content_dict[lang[0]], page, lang[0],
                         ctype)
@@ -266,7 +266,7 @@ class ContentManager(models.Manager):
         :param slug: the wanted slug.
         """
         content = self.filter(type='slug', body=slug)
-        if settings.DJANGO_GERBI_USE_SITE_ID:
+        if settings.GERBI_USE_SITE_ID:
             content = content.filter(page__sites__id=settings.SITE_ID)
         try:
             content = content.latest('creation_date')

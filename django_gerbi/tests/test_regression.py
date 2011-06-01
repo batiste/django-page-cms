@@ -16,7 +16,7 @@ class RegressionTestCase(TestCase):
         Test the issue 100
         http://code.google.com/p/django-page-cms/issues/detail?id=100
         """
-        self.set_setting("DJANGO_GERBI_SHOW_START_DATE", True)
+        self.set_setting("GERBI_SHOW_START_DATE", True)
         c = self.get_admin_client()
         c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
@@ -211,7 +211,7 @@ class RegressionTestCase(TestCase):
         page = self.new_page()
         context = Context({'current_page': page, 'lang':'en-us'})
 
-        pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
+        pl1 = """{% load gerbi_tags %}{% gerbi_dynamic_tree_menu "wrong-slug" %}"""
         template = loader.get_template_from_string(pl1)
         self.assertEqual(template.render(context), u'\n')
 

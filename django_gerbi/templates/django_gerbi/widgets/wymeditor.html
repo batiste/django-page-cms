@@ -1,11 +1,11 @@
-{% load mptt_tags django_gerbi_tags %}
+{% load mptt_tags gerbi_tags %}
 <script type="text/javascript">
 <!--
     jQuery('#id_{{ name }}').wymeditor({
-        langPath: "{{ DJANGO_GERBI_MEDIA_URL }}wymeditor/lang/",
+        langPath: "{{ GERBI_MEDIA_URL }}wymeditor/lang/",
         lang: '{{ lang }}',
         skin: 'django',
-        skinPath: "{{ DJANGO_GERBI_MEDIA_URL }}javascript/wymeditor/skins/django/",
+        skinPath: "{{ GERBI_MEDIA_URL }}javascript/wymeditor/skins/django/",
         updateSelector: 'form',
         updateEvent: 'submit',
         containersItems: [
@@ -38,7 +38,7 @@
                      + "<a name='PageLink' href='#'"
                      + " title='Page link'"
                      + " style='background-image:"
-                     + " url({{ DJANGO_GERBI_MEDIA_URL }}javascript/wymeditor/skins/django/icons.png);"
+                     + " url({{ GERBI_MEDIA_URL }}javascript/wymeditor/skins/django/icons.png);"
                      + " background-position: 0 -623px;'>"
                      + "Page link"
                      + "</a></li>";

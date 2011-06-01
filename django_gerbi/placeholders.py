@@ -147,13 +147,13 @@ class PlaceholderNode(template.Node):
         # if this placeholder is untranslated, we save everything
         # in the default language
         if self.untranslated:
-            language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            language = settings.GERBI_DEFAULT_LANGUAGE
 
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
-            if(settings.DJANGO_GERBI_CONTENT_REVISION and self.name
-                not in settings.DJANGO_GERBI_CONTENT_REVISION_EXCLUDE_LIST):
+            if(settings.GERBI_CONTENT_REVISION and self.name
+                not in settings.GERBI_CONTENT_REVISION_EXCLUDE_LIST):
                 Content.objects.create_content_if_changed(
                     page,
                     language,
@@ -178,7 +178,7 @@ class PlaceholderNode(template.Node):
 
     def get_content(self, page_obj, lang, lang_fallback=True):
         if self.untranslated:
-            lang = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            lang = settings.GERBI_DEFAULT_LANGUAGE
             lang_fallback = False
         content = Content.objects.get_content(page_obj, lang, self.name,
             lang_fallback)
@@ -197,10 +197,10 @@ class PlaceholderNode(template.Node):
 
         if self.untranslated:
             lang_fallback = False
-            lang = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            lang = settings.GERBI_DEFAULT_LANGUAGE
         else:
             lang_fallback = True
-            lang = context.get('lang', settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+            lang = context.get('lang', settings.GERBI_DEFAULT_LANGUAGE)
         return self.get_content(context[self.page], lang, lang_fallback)
 
     def render(self, context):
@@ -233,7 +233,7 @@ class PlaceholderNode(template.Node):
 class ImagePlaceholderNode(PlaceholderNode):
     """A `PlaceholderNode` that saves one image on disk.
 
-    `DJANGO_GERBI_UPLOAD_ROOT` setting define where to save the image.
+    `GERBI_UPLOAD_ROOT` setting define where to save the image.
     """
 
     def get_field(self, page, language, initial=None):
@@ -260,7 +260,7 @@ class ImagePlaceholderNode(PlaceholderNode):
             if type(data) is unicode:
                 return
             filename = os.path.join(
-                settings.DJANGO_GERBI_UPLOAD_ROOT,
+                settings.GERBI_UPLOAD_ROOT,
                 'page_' + str(page.id),
                 self.name + '-' + str(time.time())
             )
@@ -280,7 +280,7 @@ class ImagePlaceholderNode(PlaceholderNode):
 class FilePlaceholderNode(PlaceholderNode):
     """A `PlaceholderNode` that saves one file on disk.
 
-    `DJANGO_GERBI_UPLOAD_ROOT` setting define where to save the file.
+    `GERBI_UPLOAD_ROOT` setting define where to save the file.
     """
 
     def get_field(self, page, language, initial=None):
@@ -307,7 +307,7 @@ class FilePlaceholderNode(PlaceholderNode):
             if type(data) is unicode:
                 return
             filename = os.path.join(
-                settings.DJANGO_GERBI_UPLOAD_ROOT,
+                settings.GERBI_UPLOAD_ROOT,
                 'page_' + str(page.id),
                 self.name + '-' + str(time.time())
             )

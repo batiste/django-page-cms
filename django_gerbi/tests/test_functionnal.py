@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Django page CMS functionnal tests suite module."""
+"""Gerbi CMS functionnal tests suite module."""
 from django_gerbi.models import Page, Content, PageAlias
 from django_gerbi.tests.testcase import TestCase
 
@@ -59,14 +59,14 @@ class FunctionnalTestCase(TestCase):
 
     def test_slug_collision(self):
         """Test a slug collision."""
-        self.set_setting("DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", True)
+        self.set_setting("GERBI_UNIQUE_SLUG_REQUIRED", True)
 
         c = self.get_admin_client()
 
         page_data = self.get_new_page_data()
         response = c.post('/admin/django_gerbi/page/add/', page_data)
         self.assertRedirects(response, '/admin/django_gerbi/page/')
-        self.set_setting("DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", False)
+        self.set_setting("GERBI_UNIQUE_SLUG_REQUIRED", False)
         response = c.post('/admin/django_gerbi/page/add/', page_data)
         self.assertEqual(response.status_code, 200)
 
@@ -131,8 +131,8 @@ class FunctionnalTestCase(TestCase):
 
         from django_gerbi import settings as pages_settings
 
-        # it's not possible to enforce DJANGO_GERBI_USE_SITE_ID in the tests
-        if not pages_settings.DJANGO_GERBI_USE_SITE_ID:
+        # it's not possible to enforce GERBI_USE_SITE_ID in the tests
+        if not pages_settings.GERBI_USE_SITE_ID:
             #TODO: use unittest.skip skip when 2.7
             return
 
@@ -186,7 +186,7 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Page.objects.on_site(2).count(), 2)
         self.assertEqual(Page.objects.on_site().count(), 2)
 
-        setattr(pages_settings, "DJANGO_GERBI_USE_SITE_ID", False)
+        setattr(pages_settings, "GERBI_USE_SITE_ID", False)
 
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)
@@ -284,7 +284,7 @@ class FunctionnalTestCase(TestCase):
         response = c.get(page.get_url_path())
         self.assertContains(response, 'changed body 2', 1)
 
-        self.set_setting("DJANGO_GERBI_CONTENT_REVISION", False)
+        self.set_setting("GERBI_CONTENT_REVISION", False)
 
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
@@ -311,7 +311,7 @@ class FunctionnalTestCase(TestCase):
         """
         Test diretory slugs
         """
-        self.set_setting("DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", False)
+        self.set_setting("GERBI_UNIQUE_SLUG_REQUIRED", False)
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
 
@@ -594,7 +594,7 @@ class FunctionnalTestCase(TestCase):
 
         # try to create a sibling with the same slug, via left, right
         from django_gerbi import settings as pages_settings
-        setattr(pages_settings, "DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", False)
+        setattr(pages_settings, "GERBI_UNIQUE_SLUG_REQUIRED", False)
         page_data['target'] = child_2.id
         page_data['position'] = 'left'
         response = c.post('/admin/django_gerbi/page/add/', page_data)
@@ -609,12 +609,12 @@ class FunctionnalTestCase(TestCase):
         del page_data['target']
         del page_data['position']
 
-        setattr(pages_settings, "DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", True)
+        setattr(pages_settings, "GERBI_UNIQUE_SLUG_REQUIRED", True)
         # cannot create because slug exists
         response = c.post('/admin/django_gerbi/page/add/', page_data)
         self.assertEqual(response.status_code, 200)
         # Now it should work beause the page is not a sibling
-        setattr(pages_settings, "DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", False)
+        setattr(pages_settings, "GERBI_UNIQUE_SLUG_REQUIRED", False)
         response = c.post('/admin/django_gerbi/page/add/', page_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Page.objects.count(), 4)
@@ -626,7 +626,7 @@ class FunctionnalTestCase(TestCase):
         page_data['slug'] = 'child-1'
         response = c.post('/admin/django_gerbi/page/%d/' % child_2.id, page_data)
         self.assertEqual(response.status_code, 200)
-        setattr(pages_settings, "DJANGO_GERBI_UNIQUE_SLUG_REQUIRED", True)
+        setattr(pages_settings, "GERBI_UNIQUE_SLUG_REQUIRED", True)
         response = c.post('/admin/django_gerbi/page/%d/' % child_2.id, page_data)
         self.assertEqual(response.status_code, 200)
 

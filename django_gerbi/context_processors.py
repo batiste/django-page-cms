@@ -6,10 +6,10 @@ from django_gerbi.models import Page
 def media(request):
     """Adds media-related variables to the `context`."""
     return {
-        'DJANGO_GERBI_MEDIA_URL': settings.DJANGO_GERBI_MEDIA_URL,
-        'DJANGO_GERBI_USE_SITE_ID': settings.DJANGO_GERBI_USE_SITE_ID,
-        'DJANGO_GERBI_HIDE_SITES': settings.DJANGO_GERBI_HIDE_SITES,
-        'DJANGO_GERBI_LANGUAGES': settings.DJANGO_GERBI_LANGUAGES,
+        'GERBI_MEDIA_URL': settings.GERBI_MEDIA_URL,
+        'GERBI_USE_SITE_ID': settings.GERBI_USE_SITE_ID,
+        'GERBI_HIDE_SITES': settings.GERBI_HIDE_SITES,
+        'GERBI_LANGUAGES': settings.GERBI_LANGUAGES,
     }
 
 

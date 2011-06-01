@@ -14,8 +14,6 @@ from django_gerbi.placeholders import parse_placeholder
 
 register = template.Library()
 
-print "Legacy tag names allowed ? %s " % ( gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES )
-
 def get_page_from_string_or_id(page_string, lang=None):
     """Return a Page object from a slug or an id."""
     if type(page_string) == int:
@@ -37,7 +35,7 @@ def _get_content(context, page, content_type, lang, fallback=True):
         return ''
 
     if not lang and 'lang' in context:
-        lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
 
     page = get_page_from_string_or_id(page, lang)
 
@@ -71,13 +69,13 @@ def gerbi_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if page:
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_menu ( context, page, url='/' ):
         return gerbi_menu ( context, page, url )
     pages_menu = register.inclusion_tag('django_gerbi/menu.html',
@@ -96,13 +94,13 @@ def gerbi_children_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if page:
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_children_menu( context, pages, url='/' ):
         return gerbi_children_menu ( context, pages, url )
     pages_children_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
@@ -120,14 +118,14 @@ def gerbi_sub_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if page:
         root = page.get_root()
         children = root.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_sub_menu( context, page, url='/' ):
         return pages_sub_menu ( context, page, url )
     pages_sub_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
@@ -144,7 +142,7 @@ def gerbi_siblings_menu(context, page, url='/'):
     :param page: the page where to start the menu from.
     :param url: not used anymore.
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if page:
         if page.parent:
@@ -154,7 +152,7 @@ def gerbi_siblings_menu(context, page, url='/'):
         children = root.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_siblings_menu( context, page, url='/'):
         return gerbi_siblings_menu( context, page, url )
     pages_siblings_menu = register.inclusion_tag('django_gerbi/sub_menu.html',
@@ -212,7 +210,7 @@ show_content = register.inclusion_tag('django_gerbi/content.html',
 def show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
     if not lang:
-        lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
 
     page = get_page_from_string_or_id(page, lang)
     if not page:
@@ -236,10 +234,10 @@ def show_absolute_url(context, page, lang=None):
 
     Keyword arguments:
     :param page: the page object, slug or id
-    :param lang: the wanted language (defaults to `settings.DJANGO_GERBI_DEFAULT_LANGUAGE`)
+    :param lang: the wanted language (defaults to `settings.GERBI_DEFAULT_LANGUAGE`)
     """
     if not lang:
-        lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if not page:
         return {'content': ''}
@@ -254,7 +252,7 @@ show_absolute_url = register.inclusion_tag('django_gerbi/content.html',
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``django_gerbi/revisions.html`` template"""
-    if not gerbi_settings.DJANGO_GERBI_CONTENT_REVISION:
+    if not gerbi_settings.GERBI_CONTENT_REVISION:
         return {'revisions': None}
     revisions = Content.objects.filter(page=page, language=lang,
                                 type=content_type).order_by('-creation_date')
@@ -276,7 +274,7 @@ def gerbi_dynamic_tree_menu(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     children = None
     if page and 'current_page' in context:
@@ -289,7 +287,7 @@ def gerbi_dynamic_tree_menu(context, page, url='/'):
             children = page.get_children_for_frontend()
     context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     pages_dynamic_tree_menu = register.inclusion_tag(
         'django_gerbi/dynamic_tree_menu.html',
         takes_context=True)(gerbi_dynamic_tree_menu)
@@ -308,14 +306,14 @@ def gerbi_breadcrumb(context, page, url='/'):
     :param page: the current page
     :param url: not used anymore
     """
-    lang = context.get('lang', gerbi_settings.DJANGO_GERBI_DEFAULT_LANGUAGE)
+    lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     pages_navigation = None
     if page:
         pages_navigation = page.get_ancestors()
     context.update({'pages_navigation': pages_navigation, 'page': page})
     return context
-if gerbi_settings.DJANGO_GERBI_LEGACY_TAG_NAMES:
+if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     pages_breadcrumb = register.inclusion_tag(
 	'django_gerbi/breadcrumb.html',
 	takes_context=True)(gerbi_breadcrumb)

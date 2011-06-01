@@ -6,7 +6,7 @@ from django_gerbi.models import Page
 from django_gerbi import settings
 
 permission_checks = []
-for perm_lang in settings.DJANGO_GERBI_LANGUAGES:
+for perm_lang in settings.GERBI_LANGUAGES:
     permission_checks.append('manage (' + perm_lang[0] + ')')
 
 permission_checks = permission_checks + ['freeze', 'manage hierarchy']

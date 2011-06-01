@@ -96,13 +96,13 @@ def export_po_files(path='poexport', stdout=None):
     import polib
     import os
     from django_gerbi.models import Page, Content
-    source_language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+    source_language = settings.GERBI_DEFAULT_LANGUAGE
     source_list = []
     for page in Page.objects.published():
         source_list.extend(page.content_by_language(source_language))
 
-    for lang in settings.DJANGO_GERBI_LANGUAGES:
-        if lang[0] != settings.DJANGO_GERBI_DEFAULT_LANGUAGE:
+    for lang in settings.GERBI_LANGUAGES:
+        if lang[0] != settings.GERBI_DEFAULT_LANGUAGE:
             try:
                 os.mkdir(path)
             except OSError:
@@ -145,7 +145,7 @@ def import_po_files(path='poexport', stdout=None):
     import polib
     import os
     from django_gerbi.models import Page, Content
-    source_language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+    source_language = settings.GERBI_DEFAULT_LANGUAGE
     source_list = []
     pages_to_invalidate = []
     for page in Page.objects.published():
@@ -156,8 +156,8 @@ def import_po_files(path='poexport', stdout=None):
     if not path.endswith('/'):
         path += '/'
 
-    for lang in settings.DJANGO_GERBI_LANGUAGES:
-        if lang[0] != settings.DJANGO_GERBI_DEFAULT_LANGUAGE:
+    for lang in settings.GERBI_LANGUAGES:
+        if lang[0] != settings.GERBI_DEFAULT_LANGUAGE:
             stdout.write("Update language %s.\n" % lang[0])
             po_path = path + lang[0] + '.po'
             po = polib.pofile(po_path)
@@ -208,7 +208,7 @@ def normalize_url(url):
         url = url[0:len(url) - 1]
     return url
 
-DJANGO_GERBI_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
+GERBI_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
 
 
 def filter_link(content, page, language, content_type):
@@ -218,7 +218,7 @@ def filter_link(content, page, language, content_type):
      >>> filter_link('<a class="page_1">hello</a>', page, 'en-us', body)
      '<a href="/django_gerbi/page-1" class="page_1">hello</a>'
     """
-    if not settings.DJANGO_GERBI_LINK_FILTER:
+    if not settings.GERBI_LINK_FILTER:
         return content
     if content_type in ('title', 'slug'):
         return content
@@ -231,7 +231,7 @@ def filter_link(content, page, language, content_type):
         tag_class = tag.get('class', False)
         if tag_class:
             # find page link with class 'page_ID'
-            result = DJANGO_GERBI_CLASS_ID_REGEX.search(content)
+            result = GERBI_CLASS_ID_REGEX.search(content)
             if result and result.group:
                 try:
                     # TODO: try the cache before fetching the Page object
@@ -239,6 +239,6 @@ def filter_link(content, page, language, content_type):
                     target_page = Page.objects.get(pk=int(result.group(1)))
                     tag['href'] = target_page.get_url_path(language)
                 except Page.DoesNotExist:
-                    cache.set(Page.DJANGO_GERBI_BROKEN_LINK_KEY % page.id, True)
+                    cache.set(Page.GERBI_BROKEN_LINK_KEY % page.id, True)
                     tag['class'] = 'pagelink_broken'
     return unicode(tree)

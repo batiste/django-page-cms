@@ -5,7 +5,7 @@ from django.conf.urls.defaults import handler404, handler500
 from django_gerbi.views import details
 from django_gerbi import settings
 
-if settings.DJANGO_GERBI_USE_LANGUAGE_PREFIX:
+if settings.GERBI_USE_LANGUAGE_PREFIX:
     urlpatterns = patterns('',
         url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
             name='django-gerbi-details-by-path'),

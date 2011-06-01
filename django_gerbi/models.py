@@ -16,10 +16,10 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
-if settings.DJANGO_GERBI_TAGGING:
+if settings.GERBI_TAGGING:
     from taggit.managers import TaggableManager
 
-DJANGO_GERBI_CONTENT_DICT_KEY = ContentManager.DJANGO_GERBI_CONTENT_DICT_KEY
+GERBI_CONTENT_DICT_KEY = ContentManager.GERBI_CONTENT_DICT_KEY
 
 
 class Page(MPTTModel):
@@ -60,9 +60,9 @@ class Page(MPTTModel):
         (DRAFT, _('Draft')),
     )
 
-    DJANGO_GERBI_LANGUAGES_KEY = "page_%d_languages"
-    DJANGO_GERBI_URL_KEY = "page_%d_url"
-    DJANGO_GERBI_BROKEN_LINK_KEY = "page_broken_link_%s"
+    GERBI_LANGUAGES_KEY = "page_%d_languages"
+    GERBI_URL_KEY = "page_%d_url"
+    GERBI_BROKEN_LINK_KEY = "page_broken_link_%s"
 
     author = models.ForeignKey(User, verbose_name=_('author'))
 
@@ -90,7 +90,7 @@ class Page(MPTTModel):
             null=True, blank=True, help_text=_("""Don't publish any content
             after this date."""))
 
-    if settings.DJANGO_GERBI_USE_SITE_ID:
+    if settings.GERBI_USE_SITE_ID:
         sites = models.ManyToManyField(Site, default=[settings.SITE_ID],
                 help_text=_('The site(s) the page is accessible at.'),
                 verbose_name=_('sites'))
@@ -103,7 +103,7 @@ class Page(MPTTModel):
     # Managers
     objects = PageManager()
 
-    if settings.DJANGO_GERBI_TAGGING:
+    if settings.GERBI_TAGGING:
         tags = TaggableManager()
 
     class Meta:
@@ -112,7 +112,7 @@ class Page(MPTTModel):
         get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
-        permissions = settings.DJANGO_GERBI_EXTRA_PERMISSIONS
+        permissions = settings.GERBI_EXTRA_PERMISSIONS
 
     def __init__(self, *args, **kwargs):
         """Instanciate the page object."""
@@ -132,7 +132,7 @@ class Page(MPTTModel):
             self.publication_date = datetime.now()
         # Drafts should not, unless they have been set to the future
         if self.status == self.DRAFT:
-            if settings.DJANGO_GERBI_SHOW_START_DATE:
+            if settings.GERBI_SHOW_START_DATE:
                 if (self.publication_date and
                         self.publication_date <= datetime.now()):
                     self.publication_date = None
@@ -140,10 +140,10 @@ class Page(MPTTModel):
                 self.publication_date = None
         self.last_modification_date = datetime.now()
         # let's assume there is no more broken links after a save
-        cache.delete(self.DJANGO_GERBI_BROKEN_LINK_KEY % self.id)
+        cache.delete(self.GERBI_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
         # fix sites many-to-many link when the're hidden from the form
-        if settings.DJANGO_GERBI_HIDE_SITES and self.sites.count() == 0:
+        if settings.GERBI_HIDE_SITES and self.sites.count() == 0:
             self.sites.add(Site.objects.get(pk=settings.SITE_ID))
 
     def _get_calculated_status(self):
@@ -151,11 +151,11 @@ class Page(MPTTModel):
         :attr:`Page.publication_date`,
         :attr:`Page.publication_end_date`,
         and :attr:`Page.status`."""
-        if settings.DJANGO_GERBI_SHOW_START_DATE and self.publication_date:
+        if settings.GERBI_SHOW_START_DATE and self.publication_date:
             if self.publication_date > datetime.now():
                 return self.DRAFT
 
-        if settings.DJANGO_GERBI_SHOW_END_DATE and self.publication_end_date:
+        if settings.GERBI_SHOW_END_DATE and self.publication_end_date:
             if self.publication_end_date < datetime.now():
                 return self.EXPIRED
 
@@ -179,8 +179,8 @@ class Page(MPTTModel):
     def invalidate(self):
         """Invalidate cached data for this page."""
 
-        cache.delete(self.DJANGO_GERBI_LANGUAGES_KEY % (self.id))
-        cache.delete('DJANGO_GERBI_FIRST_ROOT_ID')
+        cache.delete(self.GERBI_LANGUAGES_KEY % (self.id))
+        cache.delete('GERBI_FIRST_ROOT_ID')
         self._languages = None
         self._complete_slug = None
         self._content_dict = dict()
@@ -193,13 +193,13 @@ class Page(MPTTModel):
         # delete content cache, frozen or not
         for name in p_names:
             # frozen
-            cache.delete(DJANGO_GERBI_CONTENT_DICT_KEY %
+            cache.delete(GERBI_CONTENT_DICT_KEY %
                 (self.id, name, 1))
             # not frozen
-            cache.delete(DJANGO_GERBI_CONTENT_DICT_KEY %
+            cache.delete(GERBI_CONTENT_DICT_KEY %
                 (self.id, name, 0))
 
-        cache.delete(self.DJANGO_GERBI_URL_KEY % (self.id))
+        cache.delete(self.GERBI_URL_KEY % (self.id))
 
     def get_languages(self):
         """
@@ -207,7 +207,7 @@ class Page(MPTTModel):
         """
         if self._languages:
             return self._languages
-        self._languages = cache.get(self.DJANGO_GERBI_LANGUAGES_KEY % (self.id))
+        self._languages = cache.get(self.GERBI_LANGUAGES_KEY % (self.id))
         if self._languages is not None:
             return self._languages
 
@@ -217,7 +217,7 @@ class Page(MPTTModel):
         # remove duplicates
         languages = list(set(languages))
         languages.sort()
-        cache.set(self.DJANGO_GERBI_LANGUAGES_KEY % (self.id), languages)
+        cache.set(self.GERBI_LANGUAGES_KEY % (self.id), languages)
         self._languages = languages
         return languages
 
@@ -227,7 +227,7 @@ class Page(MPTTModel):
             return False
         if self._is_first_root is not None:
             return self._is_first_root
-        first_root_id = cache.get('DJANGO_GERBI_FIRST_ROOT_ID')
+        first_root_id = cache.get('GERBI_FIRST_ROOT_ID')
         if first_root_id is not None:
             self._is_first_root = first_root_id == self.id
             return self._is_first_root
@@ -236,13 +236,13 @@ class Page(MPTTModel):
         except IndexError:
             first_root_id = None
         if first_root_id is not None:
-            cache.set('DJANGO_GERBI_FIRST_ROOT_ID', first_root_id)
+            cache.set('GERBI_FIRST_ROOT_ID', first_root_id)
         self._is_first_root = self.id == first_root_id
         return self._is_first_root
 
     def get_url_path(self, language=None):
         """Return the URL's path component. Add the language prefix if
-        ``DJANGO_GERBI_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
+        ``GERBI_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
 
         :param language: the wanted url language.
         """
@@ -255,8 +255,8 @@ class Page(MPTTModel):
                 pass
         url = self.get_complete_slug(language)
         if not language:
-            language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
-        if settings.DJANGO_GERBI_USE_LANGUAGE_PREFIX:
+            language = settings.GERBI_DEFAULT_LANGUAGE
+        if settings.GERBI_USE_LANGUAGE_PREFIX:
             return reverse('django-gerbi-details-by-path',
                 args=[language, url])
         else:
@@ -278,18 +278,18 @@ class Page(MPTTModel):
 
         :param language: the wanted slug language."""
         if not language:
-            language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            language = settings.GERBI_DEFAULT_LANGUAGE
 
         if self._complete_slug and language in self._complete_slug:
             return self._complete_slug[language]
 
-        self._complete_slug = cache.get(self.DJANGO_GERBI_URL_KEY % (self.id))
+        self._complete_slug = cache.get(self.GERBI_URL_KEY % (self.id))
         if self._complete_slug is None:
             self._complete_slug = {}
         elif language in self._complete_slug:
             return self._complete_slug[language]
 
-        if hideroot and settings.DJANGO_GERBI_HIDE_ROOT_SLUG and self.is_first_root():
+        if hideroot and settings.GERBI_HIDE_ROOT_SLUG and self.is_first_root():
             url = u''
         else:
             url = u'%s' % self.slug(language)
@@ -297,7 +297,7 @@ class Page(MPTTModel):
             url = ancestor.slug(language) + u'/' + url
 
         self._complete_slug[language] = url
-        cache.set(self.DJANGO_GERBI_URL_KEY % (self.id), self._complete_slug)
+        cache.set(self.GERBI_URL_KEY % (self.id), self._complete_slug)
         return url
 
     def get_url(self, language=None):
@@ -332,7 +332,7 @@ class Page(MPTTModel):
         other languages.
         """
         if not language:
-            language = settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            language = settings.GERBI_DEFAULT_LANGUAGE
 
         return self.get_content(language, 'title', language_fallback=fallback)
 
@@ -383,7 +383,7 @@ class Page(MPTTModel):
         """
         Get the :attr:`template <Page.template>` of this page if
         defined or the closer parent's one if defined
-        or :attr:`django_gerbi.settings.DJANGO_GERBI_DEFAULT_TEMPLATE` otherwise.
+        or :attr:`django_gerbi.settings.GERBI_DEFAULT_TEMPLATE` otherwise.
         """
         if self.template:
             return self.template
@@ -395,7 +395,7 @@ class Page(MPTTModel):
                 break
 
         if not template:
-            template = settings.DJANGO_GERBI_DEFAULT_TEMPLATE
+            template = settings.GERBI_DEFAULT_TEMPLATE
 
         return template
 
@@ -403,7 +403,7 @@ class Page(MPTTModel):
         """
         Get the template name of this page if defined or if a closer
         parent has a defined template or
-        :data:`django_gerbi.settings.DJANGO_GERBI_DEFAULT_TEMPLATE` otherwise.
+        :data:`django_gerbi.settings.GERBI_DEFAULT_TEMPLATE` otherwise.
         """
         template = self.get_template()
         page_templates = settings.get_page_templates()
@@ -417,7 +417,7 @@ class Page(MPTTModel):
         Return ``True`` if the page have broken links to other pages
         into the content.
         """
-        return cache.get(self.DJANGO_GERBI_BROKEN_LINK_KEY % self.id)
+        return cache.get(self.GERBI_BROKEN_LINK_KEY % self.id)
 
     def valid_targets(self):
         """Return a :class:`QuerySet` of valid targets for moving a page

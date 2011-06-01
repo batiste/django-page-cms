@@ -11,7 +11,7 @@ from django.utils import translation
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-LANGUAGE_KEYS = [key for (key, value) in settings.DJANGO_GERBI_LANGUAGES]
+LANGUAGE_KEYS = [key for (key, value) in settings.GERBI_LANGUAGES]
 
 
 class Details(object):
@@ -34,7 +34,7 @@ class Details(object):
 
         # for the ones that might have forgotten to pass the language
         # the language is now removed from the page path
-        if settings.DJANGO_GERBI_USE_LANGUAGE_PREFIX and lang is None:
+        if settings.GERBI_USE_LANGUAGE_PREFIX and lang is None:
             maybe_lang = path.split("/")[0]
             if maybe_lang in LANGUAGE_KEYS:
                 lang = maybe_lang
@@ -140,7 +140,7 @@ class Details(object):
             lang = get_language_from_request(request)
 
         # Raise a 404 if the language is not in not in the list
-        if lang not in [key for (key, value) in settings.DJANGO_GERBI_LANGUAGES]:
+        if lang not in [key for (key, value) in settings.GERBI_LANGUAGES]:
             raise Http404
 
         # We're going to serve CMS django_gerbi in language lang;
@@ -159,9 +159,9 @@ class Details(object):
         return request.user.is_authenticated() and request.user.is_staff
 
     def extra_context(self, request, context):
-        """Call the DJANGO_GERBI_EXTRA_CONTEXT function if there is one."""
-        if settings.DJANGO_GERBI_EXTRA_CONTEXT:
-            context.update(settings.DJANGO_GERBI_EXTRA_CONTEXT())
+        """Call the GERBI_EXTRA_CONTEXT function if there is one."""
+        if settings.GERBI_EXTRA_CONTEXT:
+            context.update(settings.GERBI_EXTRA_CONTEXT())
 
     def delegate(self, request, context, delegation=True):
         # if there is a delegation to another view,

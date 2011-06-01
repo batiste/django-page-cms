@@ -1,4 +1,4 @@
-{% load django_gerbi_tags i18n adminmedia cache %}
+{% load gerbi_tags i18n adminmedia cache %}
 
 <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }} draggable">
     <td class="selection-cell"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
@@ -8,13 +8,13 @@
                 <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                     <span class="expand">+</span>
                     <span class="collapse">-</span>
-                    <img class="expand-loading" src="{{ DJANGO_GERBI_MEDIA_URL }}images/loading.gif" alt="loading" />
+                    <img class="expand-loading" src="{{ GERBI_MEDIA_URL }}images/loading.gif" alt="loading" />
                 </a>
             {% endif %}
             <a href="{{ page.id }}/" class="title changelink
             {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
             {% show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
-            <img class="redirected" src="{{ DJANGO_GERBI_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
+            <img class="redirected" src="{{ GERBI_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
 
             <span class="message"></span>
 
@@ -44,7 +44,7 @@
     </th>
     <td class="language-cell">
         <ul>
-            {% for lang in DJANGO_GERBI_LANGUAGES %}
+            {% for lang in GERBI_LANGUAGES %}
                 <li>
                     {% if page|has_content_in:lang.0 %}
                         {% if not page|language_content_up_to_date:lang.0 %}
@@ -66,11 +66,11 @@
     {% if can_publish %}
         <td class="publish-cell">
             {% ifequal page.status page.DRAFT %}
-                <img src="{{ DJANGO_GERBI_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
+                <img src="{{ GERBI_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
             {% else %}{% ifequal page.status page.PUBLISHED %}
-                <img src="{{ DJANGO_GERBI_MEDIA_URL }}images/icons/published.gif" alt="published" />
+                <img src="{{ GERBI_MEDIA_URL }}images/icons/published.gif" alt="published" />
             {% else %}
-                <img src="{{ DJANGO_GERBI_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
+                <img src="{{ GERBI_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
             {% endifequal %}{% endifequal %}
             &nbsp;
             <select class="publish-select" name="select-status-{{ page.id }}">

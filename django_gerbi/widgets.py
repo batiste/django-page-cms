@@ -2,8 +2,8 @@
 """Django CMS come with a set of ready to use widgets that you can enable
 in the admin via a placeholder tag in your template."""
 
-from django_gerbi.settings import DJANGO_GERBI_MEDIA_URL, DJANGO_GERBI_TAGGING
-from django_gerbi.settings import DJANGO_GERBI_TINYMCE, DJANGO_GERBI_LANGUAGES
+from django_gerbi.settings import GERBI_MEDIA_URL, GERBI_TAGGING
+from django_gerbi.settings import GERBI_TINYMCE, GERBI_LANGUAGES
 from django_gerbi.models import Page
 from django_gerbi.widgets_registry import register_widget
 
@@ -38,11 +38,11 @@ if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
         )]
         css = {
-            'all': [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+            'all': [join(GERBI_MEDIA_URL, path) for path in (
                 'css/rte.css',
             )]
         }
@@ -56,13 +56,13 @@ class RichTextarea(Textarea):
         rendered = super(RichTextarea, self).render(name, value, attrs)
         context = {
             'name': name,
-            'DJANGO_GERBI_MEDIA_URL': DJANGO_GERBI_MEDIA_URL,
+            'GERBI_MEDIA_URL': GERBI_MEDIA_URL,
         }
         return rendered + mark_safe(render_to_string(
             'django_gerbi/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
 
-if DJANGO_GERBI_TINYMCE:
+if GERBI_TINYMCE:
     from tinymce import widgets as tinymce_widgets
 
     class TinyMCE(tinymce_widgets.TinyMCE):
@@ -95,7 +95,7 @@ class CKEditor(Textarea):
     """CKEditor widget."""
 
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, 'ckeditor/ckeditor.js'),
+        js = [join(GERBI_MEDIA_URL, 'ckeditor/ckeditor.js'),
             join(settings.MEDIA_URL, 'filebrowser/js/FB_CKEditor.js'),
         ]
 
@@ -124,7 +124,7 @@ class WYMEditor(Textarea):
     """WYMEditor widget."""
 
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'javascript/jquery.ui.js',
             'javascript/jquery.ui.resizable.js',
@@ -133,7 +133,7 @@ class WYMEditor(Textarea):
         )]
 
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
-            js.append(join(DJANGO_GERBI_MEDIA_URL,
+            js.append(join(GERBI_MEDIA_URL,
             'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
 
     def __init__(self, language=None, attrs=None, **kwargs):
@@ -149,7 +149,7 @@ class WYMEditor(Textarea):
             'name': name,
             'lang': self.language[:2],
             'language': self.language,
-            'DJANGO_GERBI_MEDIA_URL': DJANGO_GERBI_MEDIA_URL,
+            'GERBI_MEDIA_URL': GERBI_MEDIA_URL,
         }
         context['page_link_wymeditor'] = 1
         context['page_list'] = Page.objects.all().order_by('tree_id', 'lft')
@@ -168,13 +168,13 @@ class markItUpMarkdown(Textarea):
     """markItUpMarkdown widget."""
 
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'markitup/jquery.markitup.js',
             'markitup/sets/markdown/set.js',
         )]
         css = {
-            'all': [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+            'all': [join(GERBI_MEDIA_URL, path) for path in (
                 'markitup/skins/simple/style.css',
                 'markitup/sets/markdown/style.css',
             )]
@@ -194,13 +194,13 @@ class markItUpRest(Textarea):
     """markItUpRest widget."""
 
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'markitup/jquery.markitup.js',
             'markitup/sets/rst/set.js',
         )]
         css = {
-            'all': [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+            'all': [join(GERBI_MEDIA_URL, path) for path in (
                 'markitup/skins/simple/style.css',
                 'markitup/sets/rst/style.css',
             )]
@@ -220,13 +220,13 @@ class markItUpHTML(Textarea):
     """markItUpHTML widget."""
 
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'markitup/jquery.markitup.js',
             'markitup/sets/default/set.js',
         )]
         css = {
-            'all': [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+            'all': [join(GERBI_MEDIA_URL, path) for path in (
                 'markitup/skins/simple/style.css',
                 'markitup/sets/default/style.css',
             )]
@@ -245,7 +245,7 @@ register_widget(markItUpHTML)
 class EditArea(Textarea):
     """EditArea is a html syntax coloured widget."""
     class Media:
-        js = [join(DJANGO_GERBI_MEDIA_URL, path) for path in (
+        js = [join(GERBI_MEDIA_URL, path) for path in (
             'edit_area/edit_area_full.js',
         )]
 
@@ -261,7 +261,7 @@ class EditArea(Textarea):
         context = {
             'name': name,
             'language': self.language,
-            'DJANGO_GERBI_MEDIA_URL': DJANGO_GERBI_MEDIA_URL,
+            'GERBI_MEDIA_URL': GERBI_MEDIA_URL,
         }
         return rendered + mark_safe(render_to_string(
             'django_gerbi/widgets/editarea.html', context))
@@ -378,7 +378,7 @@ class LanguageChoiceWidget(TextInput):
             'value': value,
             'page': self.page,
             'language': value,
-            'page_languages': DJANGO_GERBI_LANGUAGES
+            'page_languages': GERBI_LANGUAGES
         }
         return mark_safe(render_to_string(
             'django_gerbi/widgets/languages.html', context))

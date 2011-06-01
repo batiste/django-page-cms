@@ -11,7 +11,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-LANGUAGE_KEYS = [key for (key, value) in settings.DJANGO_GERBI_LANGUAGES]
+LANGUAGE_KEYS = [key for (key, value) in settings.GERBI_LANGUAGES]
 
 
 # TODO In Django 1.3 there is a new RequestFactory class
@@ -153,15 +153,15 @@ def get_template_from_request(request, page=None):
     """
     page_templates = settings.get_page_templates()
     if len(page_templates) == 0:
-        return settings.DJANGO_GERBI_DEFAULT_TEMPLATE
+        return settings.GERBI_DEFAULT_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \
             (template in dict(page_templates).keys() or
-            template == settings.DJANGO_GERBI_DEFAULT_TEMPLATE):
+            template == settings.GERBI_DEFAULT_TEMPLATE):
         return template
     if page is not None:
         return page.get_template()
-    return settings.DJANGO_GERBI_DEFAULT_TEMPLATE
+    return settings.GERBI_DEFAULT_TEMPLATE
 
 
 def get_language_from_request(request):
@@ -171,10 +171,10 @@ def get_language_from_request(request):
         return language
 
     if hasattr(request, 'LANGUAGE_CODE'):
-        lang = settings.DJANGO_GERBI_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        lang = settings.GERBI_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
         if lang not in LANGUAGE_KEYS:
-            return settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+            return settings.GERBI_DEFAULT_LANGUAGE
         else:
             return lang
     else:
-        return settings.DJANGO_GERBI_DEFAULT_LANGUAGE
+        return settings.GERBI_DEFAULT_LANGUAGE

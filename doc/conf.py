@@ -12,9 +12,9 @@ sys.path.append(os.path.abspath('..'))
 from django.conf import settings
 import django
 settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-    DJANGO_GERBI_DEFAULT_TEMPLATE='index.html',
-    DJANGO_GERBI_TEMPLATES=(),
-    DJANGO_GERBI_LANGUAGES=(),
+    GERBI_DEFAULT_TEMPLATE='index.html',
+    GERBI_TEMPLATES=(),
+    GERBI_LANGUAGES=(),
     TEMPLATE_DIRS=('/home/web-apps/myapp'))
 
 # General configuration

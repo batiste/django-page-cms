@@ -34,7 +34,7 @@ it must be unique among the other django_gerbi of the same level.')
     )
     language = forms.ChoiceField(
         label=_('Language'),
-        choices=settings.DJANGO_GERBI_LANGUAGES,
+        choices=settings.GERBI_LANGUAGES,
         widget=LanguageChoiceWidget()
     )
     template = forms.ChoiceField(
@@ -69,7 +69,7 @@ it must be unique among the other django_gerbi of the same level.')
         target = self.data.get('target', None)
         position = self.data.get('position', None)
 
-        if settings.DJANGO_GERBI_UNIQUE_SLUG_REQUIRED:
+        if settings.GERBI_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(
                     body=slug, type="slug").count():
@@ -77,8 +77,8 @@ it must be unique among the other django_gerbi of the same level.')
             elif Content.objects.filter(body=slug, type="slug").count():
                 raise forms.ValidationError(another_page_error)
 
-        if settings.DJANGO_GERBI_USE_SITE_ID:
-            if settings.DJANGO_GERBI_HIDE_SITES:
+        if settings.GERBI_USE_SITE_ID:
+            if settings.GERBI_HIDE_SITES:
                 site_ids = [settings.SITE_ID]
             else:
                 site_ids = [int(x) for x in self.data.getlist('sites')]
@@ -88,7 +88,7 @@ it must be unique among the other django_gerbi of the same level.')
             def intersects_sites(sibling):
                 return True
 
-        if not settings.DJANGO_GERBI_UNIQUE_SLUG_REQUIRED:
+        if not settings.GERBI_UNIQUE_SLUG_REQUIRED:
             if target and position:
                 target = Page.objects.get(pk=target)
                 if position in ['right', 'left']:

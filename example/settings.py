@@ -39,7 +39,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Absolute path to the directory that holds pages media.
-# DJANGO_GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'django_gerbi', 'media', 'django_gerbi')
+# GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'django_gerbi', 'media', 'django_gerbi')
 # Absolute path to the directory that holds media.
 ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
@@ -112,10 +112,10 @@ INSTALLED_APPS = (
     'haystack',
 )
 
-DJANGO_GERBI_TINYMCE = False
-DJANGO_GERBI_TAGGING = True
+GERBI_TINYMCE = False
+GERBI_TAGGING = True
 
-DJANGO_GERBI_CONNECTED_MODELS = [{
+GERBI_CONNECTED_MODELS = [{
     'model': 'django_gerbi.testproj.documents.models.Document',
     'form': 'django_gerbi.testproj.documents.models.DocumentForm',
     'options': {
@@ -133,16 +133,16 @@ LANGUAGE_CODE = 'en-us'
 gettext_noop = lambda s: s
 
 # languages you want to translate into the CMS.
-DJANGO_GERBI_LANGUAGES = (
+GERBI_LANGUAGES = (
     ('de', gettext_noop('German')),
     ('fr-ch', gettext_noop('Swiss french')),
     ('en-us', gettext_noop('US English')),
 )
 
 # You should add here all language you want to accept as valid client
-# language. By default we copy the DJANGO_GERBI_LANGUAGES constant and add some other
+# language. By default we copy the GERBI_LANGUAGES constant and add some other
 # similar languages.
-languages = list(DJANGO_GERBI_LANGUAGES)
+languages = list(GERBI_LANGUAGES)
 languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
@@ -155,27 +155,27 @@ def language_mapping(lang):
         return 'fr-ch'
     return lang
 
-DJANGO_GERBI_LANGUAGE_MAPPING = language_mapping
+GERBI_LANGUAGE_MAPPING = language_mapping
 
-DJANGO_GERBI_DEFAULT_TEMPLATE = 'django_gerbi/examples/index.html'
+GERBI_DEFAULT_TEMPLATE = 'django_gerbi/examples/index.html'
 
 
-DJANGO_GERBI_TEMPLATES = (
+GERBI_TEMPLATES = (
     ('django_gerbi/examples/nice.html', 'nice one'),
     ('django_gerbi/examples/cool.html', 'cool one'),
     ('django_gerbi/examples/editor.html', 'raw editor'),
 )
 
-DJANGO_GERBI_SANITIZE_USER_INPUT = True
+GERBI_SANITIZE_USER_INPUT = True
 
 SITE_ID = 1
-DJANGO_GERBI_USE_SITE_ID = False
+GERBI_USE_SITE_ID = False
 
 HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
-DJANGO_GERBI_REAL_TIME_SEARCH = False
+GERBI_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (
     "django_gerbi.migrations.*",

@@ -34,10 +34,10 @@ class TestCase(TestCase):
     def setUp(self):
         # useful to make sure the tests will be properly
         # executed in an exotic project.
-        self.set_setting('DJANGO_GERBI_TEMPLATES',
-            test_settings.DJANGO_GERBI_TEMPLATES)
-        self.set_setting('DJANGO_GERBI_DEFAULT_TEMPLATE',
-            test_settings.DJANGO_GERBI_DEFAULT_TEMPLATE)
+        self.set_setting('GERBI_TEMPLATES',
+            test_settings.GERBI_TEMPLATES)
+        self.set_setting('GERBI_DEFAULT_TEMPLATE',
+            test_settings.GERBI_DEFAULT_TEMPLATE)
 
         self.old_url_conf = getattr(settings, 'ROOT_URLCONF')
         setattr(settings, 'ROOT_URLCONF', 'django_gerbi.testproj.urls')
@@ -54,7 +54,7 @@ class TestCase(TestCase):
     def set_setting(self, name, value):
         old_value = getattr(pages_settings, name)
         setattr(pages_settings, name, value)
-        if name == 'DJANGO_GERBI_USE_LANGUAGE_PREFIX':
+        if name == 'GERBI_USE_LANGUAGE_PREFIX':
             self.reset_urlconf()
         if name not in self.settings_to_reset:
             self.settings_to_reset[name] = old_value
@@ -104,7 +104,7 @@ class TestCase(TestCase):
         author = User.objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
             template='django_gerbi/examples/index.html')
-        if pages_settings.DJANGO_GERBI_USE_SITE_ID:
+        if pages_settings.GERBI_USE_SITE_ID:
             page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache
         page.invalidate()

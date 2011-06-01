@@ -60,7 +60,7 @@ Placeholders
 Template tags
 =============
 
-.. automodule:: django_gerbi.templatetags.django_gerbi_tags
+.. automodule:: django_gerbi.templatetags.gerbi_tags
     :members:
 
 Widgets

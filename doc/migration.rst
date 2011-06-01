@@ -16,8 +16,8 @@ Update your settings.py
 _______________________
 
 All setting variable names previously prefixed by ``PAGE_`` are now
-prefixed by ``DJANGO_GERBI_`` as well as the ``PAGES_MEDIA_URL`` which
-is now known as ``DJANGO_GERBI_MEDIA_URL``. You should update your
+prefixed by ``GERBI_`` as well as the ``PAGES_MEDIA_URL`` which
+is now known as ``GERBI_MEDIA_URL``. You should update your
 settings.py file subsequently.
 
 
@@ -48,7 +48,7 @@ Migrate your templates
 
 All template tags previously prefixed by ``pages_`` are now prefixed
 by ``gerbi_``. To continue using the legacy tag names you can set the
-``DJANGO_GERBI_LEGACY_TAG_NAMES`` variable to ``True``.
+``GERBI_LEGACY_TAG_NAMES`` variable to ``True``.
 
 Note that the legacy tag names are deprecated and will be droped in a
 future release: you must not use them in new templates and should

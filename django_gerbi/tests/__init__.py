@@ -9,7 +9,7 @@ from django_gerbi.tests.test_auto_render import AutoRenderTestCase
 def suite():
     suite = unittest.TestSuite()
     from django_gerbi import settings
-    if not settings.DJANGO_GERBI_ENABLE_TESTS:
+    if not settings.GERBI_ENABLE_TESTS:
         return suite
     suite.addTest(unittest.makeSuite(UnitTestCase))
     suite.addTest(unittest.makeSuite(RegressionTestCase))

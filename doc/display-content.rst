@@ -5,7 +5,7 @@ Display page's content in templates
 Gerbi CMS provide several template tags to extract data from the CMS.
 To use these tags in your templates you must load them first::
 
-    {% load django_gerbi_tags %}
+    {% load gerbi_tags %}
 
 .. contents::
     :local:
@@ -83,7 +83,7 @@ Display content from other applications
 There is several ways to change the way the default view provided
 by the CMS render the pages. This list try explain the most common.
 
-Using the DJANGO_GERBI_EXTRA_CONTEXT setting
+Using the GERBI_EXTRA_CONTEXT setting
 ============================================
 
 Considering you have a simple news model::
@@ -104,7 +104,7 @@ And that you would like to display a list of news into some of your page's templ
     {% endfor %}
     </ul>
 
-Then you might want to use the `DJANGO_GERBI_EXTRA_CONTEXT` setting. You should set this setting to be a function.
+Then you might want to use the `GERBI_EXTRA_CONTEXT` setting. You should set this setting to be a function.
 This function should return a Python dictionary. This dictionary will be merged with the context of
 every page of your website.
 
@@ -115,7 +115,7 @@ Example in the case of the news::
         lastest_news = News.object.all()
         return {'news': lastest_news}
 
-    DJANGO_GERBI_EXTRA_CONTEXT = extra_context
+    GERBI_EXTRA_CONTEXT = extra_context
 
 Delegate the page rendering to another application
 ===================================================
@@ -146,7 +146,7 @@ And don't forget to redefine the urls to point to your new view with something s
     from YOUR_APP.views import details
     from django_gerbi import page_settings
 
-    if page_settings.DJANGO_GERBI_USE_LANGUAGE_PREFIX:
+    if page_settings.GERBI_USE_LANGUAGE_PREFIX:
         urlpatterns = patterns('',
             url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
                 name='django_gerbi.details-by-path')

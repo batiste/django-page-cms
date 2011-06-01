@@ -29,7 +29,7 @@ class RealTimePageIndex(RealTimeSearchIndex):
         """Used when the entire index for model is updated."""
         return Page.objects.published()
 
-if settings.DJANGO_GERBI_REAL_TIME_SEARCH:
+if settings.GERBI_REAL_TIME_SEARCH:
     site.register(Page, RealTimePageIndex)
 else:
     site.register(Page, PageIndex)

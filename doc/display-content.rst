@@ -5,7 +5,7 @@ Display page's content in templates
 Gerbi CMS provide several template tags to extract data from the CMS.
 To use these tags in your templates you must load them first::
 
-    {% load pages_tags %}
+    {% load gerbi_tags %}
 
 .. contents::
     :local:
@@ -83,8 +83,8 @@ Display content from other applications
 There is several ways to change the way the default view provided
 by the CMS render the pages. This list try explain the most common.
 
-Using the PAGE_EXTRA_CONTEXT setting
-======================================
+Using the GERBI_EXTRA_CONTEXT setting
+============================================
 
 Considering you have a simple news model::
 
@@ -104,7 +104,7 @@ And that you would like to display a list of news into some of your page's templ
     {% endfor %}
     </ul>
 
-Then you might want to use the `PAGE_EXTRA_CONTEXT` setting. You should set this setting to be a function.
+Then you might want to use the `GERBI_EXTRA_CONTEXT` setting. You should set this setting to be a function.
 This function should return a Python dictionary. This dictionary will be merged with the context of
 every page of your website.
 
@@ -115,7 +115,7 @@ Example in the case of the news::
         lastest_news = News.object.all()
         return {'news': lastest_news}
 
-    PAGE_EXTRA_CONTEXT = extra_context
+    GERBI_EXTRA_CONTEXT = extra_context
 
 Delegate the page rendering to another application
 ===================================================
@@ -129,7 +129,7 @@ New in 1.3.0: The default view is now a real class. That will
 help if you want to override some default behavior::
 
 
-    from pages.views import Details
+    from django_gerbi.views import Details
     from news.models import News
 
     class NewsView(Details):
@@ -144,14 +144,14 @@ And don't forget to redefine the urls to point to your new view with something s
 
     from django.conf.urls.defaults import url, include, patterns
     from YOUR_APP.views import details
-    from pages import page_settings
+    from django_gerbi import page_settings
 
-    if page_settings.PAGE_USE_LANGUAGE_PREFIX:
+    if page_settings.GERBI_USE_LANGUAGE_PREFIX:
         urlpatterns = patterns('',
             url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
-                name='pages-details-by-path')
+                name='django_gerbi.details-by-path')
         )
     else:
         urlpatterns = patterns('',
-            url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
+            url(r'^(?P<path>.*)$', details, name='django_gerbi.details-by-path')
         )

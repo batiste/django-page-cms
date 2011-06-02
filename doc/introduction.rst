@@ -24,8 +24,8 @@ Demo
 
 This admin interface is no up to date, but could give you an idea of what the software is doing:
 
- * admin : http://pagesdemo.piquadrat.ch/admin/
- * frontend : http://pagesdemo.piquadrat.ch/pages/
+ * admin : http://django_gerbi.emo.piquadrat.ch/admin/
+ * frontend : http://django_gerbi.emo.piquadrat.ch/django_gerbi.
 
 
 Key features
@@ -69,9 +69,9 @@ Dependencies & Compatibility
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
-  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
-  * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
-  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
+  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if GERBI_TAGGING = True)
+  * `html5lib <http://code.google.com/p/html5lib/>`_ (if GERBI_SANITIZE_USER_INPUT = True)
+  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if GERBI_TINYMCE = True)
   * Gerbi CMS is shipped with jQuery.
   * Gerbi CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
@@ -93,8 +93,8 @@ make your modifications in your branch. There is a things that is nice to do:
   * It's better if a new feature is not activated by default but with a new setting.
   * Be careful of performance regresssion.
   * Write tests so the test coverage stay over 90%.
-  * Every new CMS setting should start with PAGE_<something>
-  * Every new template_tag should start with pages_<something>
+  * Every new CMS setting should start with GERBI_<something>
+  * Every new template_tag should start with gerbi_<something>
 
 
 Ask for help

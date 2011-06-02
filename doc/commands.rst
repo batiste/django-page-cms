@@ -5,7 +5,7 @@ Commands
 .. contents::
 
 Export pages content into translatable PO files
-=======================================================
+===============================================
 
 The pages CMS provide a command for those that would prefer
 to use PO files instead of the admin inteface to translate the

@@ -1,0 +1,28 @@
+{% load i18n gerbi_tags %}
+
+<table cellspacing="0" id="page-table-dnd">
+    <thead>
+        <tr>
+            <th>
+                <input id="action-toggle" type="checkbox" style="display: inline;"/>
+            </th>
+            <th class="title-cell">{% trans "title" %}</th>
+            <th class="language-cell">{% trans "languages" %}</th>
+            <th class="last-modification-cell">{% trans "last modification" %}</th>
+            <th class="publish-cell">{% trans "published" %}</th>
+            <th class="template-cell">{% trans "template" %}</th>
+            <th class="author-cell">{% trans "author" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for page in pages %}
+            {% gerbi_admin_menu page %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+</script>

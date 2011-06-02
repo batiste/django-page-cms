@@ -39,7 +39,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Absolute path to the directory that holds pages media.
-# PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
+# GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'django_gerbi', 'media', 'django_gerbi')
 # Absolute path to the directory that holds media.
 ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
@@ -65,7 +65,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
     "django.core.context_processors.media",
-    "pages.context_processors.media",
+    "django_gerbi.context_processors.media",
     'django.core.context_processors.static',
 )
 
@@ -97,9 +97,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'pages.testproj.documents',
+    'django_gerbi.testproj.documents',
     'taggit',
-    'pages',
+    'django_gerbi',
     'mptt',
     'staticfiles',
     #'tinymce',
@@ -112,12 +112,12 @@ INSTALLED_APPS = (
     'haystack',
 )
 
-PAGE_TINYMCE = False
-PAGE_TAGGING = True
+GERBI_TINYMCE = False
+GERBI_TAGGING = True
 
-PAGE_CONNECTED_MODELS = [{
-    'model': 'pages.testproj.documents.models.Document',
-    'form': 'pages.testproj.documents.models.DocumentForm',
+GERBI_CONNECTED_MODELS = [{
+    'model': 'django_gerbi.testproj.documents.models.Document',
+    'form': 'django_gerbi.testproj.documents.models.DocumentForm',
     'options': {
             'extra': 3,
             'max_num': 10,
@@ -133,16 +133,16 @@ LANGUAGE_CODE = 'en-us'
 gettext_noop = lambda s: s
 
 # languages you want to translate into the CMS.
-PAGE_LANGUAGES = (
+GERBI_LANGUAGES = (
     ('de', gettext_noop('German')),
     ('fr-ch', gettext_noop('Swiss french')),
     ('en-us', gettext_noop('US English')),
 )
 
 # You should add here all language you want to accept as valid client
-# language. By default we copy the PAGE_LANGUAGES constant and add some other
+# language. By default we copy the GERBI_LANGUAGES constant and add some other
 # similar languages.
-languages = list(PAGE_LANGUAGES)
+languages = list(GERBI_LANGUAGES)
 languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
@@ -155,34 +155,34 @@ def language_mapping(lang):
         return 'fr-ch'
     return lang
 
-PAGE_LANGUAGE_MAPPING = language_mapping
+GERBI_LANGUAGE_MAPPING = language_mapping
 
-PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
+GERBI_DEFAULT_TEMPLATE = 'django_gerbi/examples/index.html'
 
 
-PAGE_TEMPLATES = (
-    ('pages/examples/nice.html', 'nice one'),
-    ('pages/examples/cool.html', 'cool one'),
-    ('pages/examples/editor.html', 'raw editor'),
+GERBI_TEMPLATES = (
+    ('django_gerbi/examples/nice.html', 'nice one'),
+    ('django_gerbi/examples/cool.html', 'cool one'),
+    ('django_gerbi/examples/editor.html', 'raw editor'),
 )
 
-PAGE_SANITIZE_USER_INPUT = True
+GERBI_SANITIZE_USER_INPUT = True
 
 SITE_ID = 1
-PAGE_USE_SITE_ID = False
+GERBI_USE_SITE_ID = False
 
 HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 
-PAGE_REAL_TIME_SEARCH = False
+GERBI_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (
-    "pages.migrations.*",
-    "pages.tests.*",
-    "pages.urls",
-    "pages.__init__",
-    "pages.search_indexes",
+    "django_gerbi.migrations.*",
+    "django_gerbi.tests.*",
+    "django_gerbi.urls",
+    "django_gerbi.__init__",
+    "django_gerbi.search_indexes",
 )
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False

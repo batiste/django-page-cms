@@ -7,14 +7,16 @@ include README.rst
 include THANKS
 include CHANGELOG
 include MANIFEST.in
+include FAQ
 recursive-include doc *
-recursive-include pages *
+recursive-include django_gerbi *
 recursive-include requirements *
-recursive-include pages/templates *
-recursive-include pages/static *
-recursive-include pages/ *.css
-recursive-include pages/ *.js
-recursive-include pages/ *.html
+recursive-include django_gerbi/templates *
+recursive-include django_gerbi/media *
+recursive-include django_gerbi/static *
+recursive-include django_gerbi/ *.css
+recursive-include django_gerbi/ *.js
+recursive-include django_gerbi/ *.html
 global-exclude *.pyc
 global-exclude coverage/*
 # this important to prune at the end

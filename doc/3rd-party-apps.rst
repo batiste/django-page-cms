@@ -13,17 +13,17 @@ to render a proper navigation.
 First you need a `urls.py` file that you can register to the CMS. It might look like this::
 
     from django.conf.urls.defaults import *
-    from pages.testproj.documents.views import document_view
-    from pages.http import pages_view
+    from django_gerbi.testproj.documents.views import document_view
+    from django_gerbi.http import django_gerbi.view
 
     urlpatterns = patterns('',
-        url(r'^doc-(?P<document_id>[0-9]+)$', pages_view(document_view), name='document_details'),
-        url(r'^$', pages_view(document_view), name='document_root'),
+        url(r'^doc-(?P<document_id>[0-9]+)$', django_gerbi.view(document_view), name='document_details'),
+        url(r'^$', django_gerbi.view(document_view), name='document_root'),
     )
 
 .. note::
 
-    The decorator `pages_view` call the CMS if the context variables `current_page` and `pages_navigation` are not present
+    The decorator `django_gerbi_view` call the CMS if the context variables `current_page` and `pages_navigation` are not present
     in the arguments.
 
     It's not necessary to decorate your views if you only call them via the CMS or you don't need those variables.
@@ -31,9 +31,9 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
 Then you need to register the urlconf module of your application to use it
 within the admin interface. Put this code in you urls.py `before` admin.autodiscover(). Here is an example for a document application.::
 
-    from pages.urlconf_registry import register_urlconf
+    from django_gerbi.urlconf_registry import register_urlconf
 
-    register_urlconf('Documents', 'pages.testproj.documents.urls',
+    register_urlconf('Documents', 'django_gerbi.testproj.documents.urls',
         label='Display documents')
 
     # this need to be executed after the registry happened.
@@ -41,7 +41,7 @@ within the admin interface. Put this code in you urls.py `before` admin.autodisc
 
 As soon as you have registered your `urls.py`, a new field will appear in the page administration.
 Choose the `Display documents`. The view used to render this page on the frontend
-is now choosen by `pages.testproj.documents.urls`.
+is now choosen by `django_gerbi.testproj.documents.urls`.
 
 .. note::
 
@@ -52,15 +52,15 @@ is now choosen by `pages.testproj.documents.urls`.
 
     If you want to have the reverse URLs with your delegated application, you will need to include your URLs into your main urls.py, eg::
 
-        (r'^pages/', include('pages.urls')),
+        (r'^pages/', include('django_gerbi.urls')),
         ...
-        (r'^pages/(?P<path>.*)', include('pages.testproj.documents.urls')),
+        (r'^pages/(?P<path>.*)', include('django_gerbi.testproj.documents.urls')),
 
 Here is an example of a valid view from the documents application::
 
     from django.shortcuts import render_to_response
     from django.template import RequestContext
-    from pages.testproj.documents.models import Document
+    from django_gerbi.testproj.documents.models import Document
 
     def document_view(request, *args, **kwargs):
         context = RequestContext(request, kwargs)
@@ -71,14 +71,14 @@ Here is an example of a valid view from the documents application::
             document = Document.objects.get(pk=int(kwargs['document_id']))
             context['document'] = document
         context['in_document_view'] = True
-        return render_to_response('pages/examples/index.html', context)
+        return render_to_response('django_gerbi/examples/index.html', context)
 
 The `document_view` will receive a bunch of extra parameters related to the CMS:
 
     * `current_page` the page object,
     * `path` the path used to reach the page,
     * `lang` the current language,
-    * `pages_navigation` the list of pages used to render navigation.
+    * `pages_navigation` the list of django_gerbi.used to render navigation.
 
 .. note::
 
@@ -113,9 +113,9 @@ For this you need an object with foreign key pointing to a page::
         class Meta:
             model = Document
 
-After that you need to set up the PAGE_CONNECTED_MODELS into your settings similar to this one::
+After that you need to set up the GERBI_CONNECTED_MODELS into your settings similar to this one::
 
-    PAGE_CONNECTED_MODELS = [{
+    GERBI_CONNECTED_MODELS = [{
         'model':'documents.models.Document',
         'form':'documents.models.DocumentForm',
         'options':{
@@ -133,15 +133,15 @@ Sitemaps
 
 Gerbi CMS provide 2 sitemaps classes to use with `Django sitemap framework <http://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_::
 
-    from pages.views import PageSitemap, MultiLanguagePageSitemap
+    from django_gerbi.views import PageSitemap, MultiLanguagePageSitemap
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': {'pages':PageSitemap}}),
+        {'sitemaps': {'django_gerbi':PageSitemap}}),
 
     # or for multi language:
 
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': {'pages':MultiLanguagePageSitemap}})
+        {'sitemaps': {'django_gerbi':MultiLanguagePageSitemap}})
 
 The `PageSitemap` class provide a sitemap for every published page in the default language.
 The `MultiLanguagePageSitemap` is gonna create an extra entry for every other language.

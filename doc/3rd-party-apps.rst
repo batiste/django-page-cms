@@ -78,7 +78,7 @@ The `document_view` will receive a bunch of extra parameters related to the CMS:
     * `current_page` the page object,
     * `path` the path used to reach the page,
     * `lang` the current language,
-    * `pages_navigation` the list of django_gerbi.used to render navigation.
+    * `pages_navigation` the list of pages used to render navigation.
 
 .. note::
 

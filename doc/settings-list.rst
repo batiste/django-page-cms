@@ -126,7 +126,7 @@ GERBI_UNIQUE_SLUG_REQUIRED
 ==================================
 
 Set ``GERBI_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names
-for all django_gerbi.
+for all pages.
 
 GERBI_CONTENT_REVISION
 ==================================

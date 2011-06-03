@@ -13,12 +13,12 @@ recursive-include django_gerbi *
 recursive-include requirements *
 recursive-include django_gerbi/templates *
 recursive-include django_gerbi/static *
-recursive-include django_gerbi *.css
-recursive-include django_gerbi *.js
-recursive-include django_gerbi *.html
+recursive-include django_gerbi/ *.css
+recursive-include django_gerbi/ *.js
+recursive-include django_gerbi/ *.html
 global-exclude *.pyc
 global-exclude coverage/*
-# this important to prun at the end
+# this important to prune at the end
 prune example
 prune dist
 

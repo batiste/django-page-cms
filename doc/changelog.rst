@@ -25,7 +25,7 @@ Release 1.4.3
     * Fix some outdated migrations.
     * New placeholder tag: fileplaceholder allows users to upload files.
     * Italian traduction.
-    * ...
+    * Added X-View headers to response in order to work with 'Edit this object' bookmarklet.
 
 Release 1.4.2
 ==============

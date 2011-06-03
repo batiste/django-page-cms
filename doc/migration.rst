@@ -2,7 +2,7 @@
 Django-Page-CMS to Django-Gerbi migration how-to
 ===================================================================================
 
-Previously known as PageCMS, the CMS is now know as Gerbi and its
+Previously known as Django-page-CMS, the CMS is now know as Gerbi and its
 Django application name is django_gerbi. This "rebranding" as some
 consequence on your existing installations of the CMS. You will find
 bellow instruction to guide you through the migration of your

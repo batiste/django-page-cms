@@ -12,7 +12,6 @@ recursive-include doc *
 recursive-include django_gerbi *
 recursive-include requirements *
 recursive-include django_gerbi/templates *
-recursive-include django_gerbi/media *
 recursive-include django_gerbi/static *
 recursive-include django_gerbi *.css
 recursive-include django_gerbi *.js

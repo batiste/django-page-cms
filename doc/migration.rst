@@ -65,6 +65,7 @@ instead of performing a classic ``python ./manage.py syncdb``::
     CREATE TABLE django_gerbi_pagealias AS TABLE pages_pagealias WITH DATA;
     CREATE TABLE django_gerbi_content AS TABLE pages_content WITH DATA;
     CREATE TABLE django_gerbi_pagepermission AS TABLE pages_pagepermission WITH DATA;
+    INSERT INTO django_gerbi_page ( id, author_id, parent_id, creation_date, publication_date, publication_end_date, last_modification_date, status, template, delegate_to, redirect_to_url, redirect_to_id, lft, rght, tree_id, level, freeze_date ) SELECT id, author_id, parent_id, creation_date, publication_date, publication_end_date, last_modification_date, status, template, delegate_to, redirect_to_url, redirect_to_id, lft, rght, tree_id, level, CAST( freeze_date AS timestamp ) FROM pages_page ;
 
 Note that the old tables will not be deleted. It is your
 responsability to delete them when your are shure you recovered all

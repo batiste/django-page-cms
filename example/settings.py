@@ -41,8 +41,8 @@ STATIC_URL = '/static/'
 # Absolute path to the directory that holds pages media.
 # GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'gerbi', 'media', 'gerbi')
 # Absolute path to the directory that holds media.
-ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
-ADMIN_MEDIA_PREFIX = '/admin_media/'
+ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin')
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]

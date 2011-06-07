@@ -109,7 +109,7 @@ class Page(MPTTModel):
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
-        # Gerbi was once called pages
+        # Gerbi module was once called pages
         db_table = 'pages_page'
         get_latest_by = "publication_date"
         verbose_name = _('page')

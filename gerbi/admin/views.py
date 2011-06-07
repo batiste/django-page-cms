@@ -86,10 +86,10 @@ def traduction(request, page_id, language_id):
         is None
     )
     return 'gerbi/traduction_helper.html', {
-        'page':page,
-        'lang':lang,
-        'language_error':language_error,
-        'placeholders':placeholders,
+        'page': page,
+        'lang': lang,
+        'language_error': language_error,
+        'placeholders': placeholders,
     }
 traduction = staff_member_required(traduction)
 traduction = auto_render(traduction)

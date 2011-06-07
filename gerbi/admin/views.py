@@ -28,9 +28,11 @@ change_status = staff_member_required(change_status)
 def list_pages_ajax(request, invalid_move=False):
     """Render pages table for ajax function."""
     language = get_language_from_request(request)
+    perms = PagePermission(request.user)
     page_set = Page.objects.root()
     context = {
         'invalid_move': invalid_move,
+        'can_publish': perms.check('publish'),
         'language': language,
         'pages': page_set,
     }

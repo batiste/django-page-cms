@@ -79,9 +79,9 @@ if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_menu ( context, page, url='/' ):
         return gerbi_menu ( context, page, url )
     pages_menu = register.inclusion_tag('gerbi/menu.html',
-				        takes_context=True)(pages_menu)
+        takes_context=True)(pages_menu)
 gerbi_menu = register.inclusion_tag('gerbi/menu.html',
-				    takes_context=True)(gerbi_menu)
+    takes_context=True)(gerbi_menu)
 
 
 def gerbi_children_menu(context, page, url='/'):
@@ -163,7 +163,7 @@ gerbi_siblings_menu = register.inclusion_tag('gerbi/sub_menu.html',
 
 
 def gerbi_admin_menu(context, page):
-    """Render the admin table of pages."""
+    """Return the necessary context to render the admin table of pages."""
     request = context.get('request', None)
 
     expanded = False
@@ -315,8 +315,8 @@ def gerbi_breadcrumb(context, page, url='/'):
     return context
 if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     pages_breadcrumb = register.inclusion_tag(
-	'gerbi/breadcrumb.html',
-	takes_context=True)(gerbi_breadcrumb)
+    'gerbi/breadcrumb.html',
+    takes_context=True)(gerbi_breadcrumb)
 gerbi_breadcrumb = register.inclusion_tag(
     'gerbi/breadcrumb.html',
     takes_context=True)(gerbi_breadcrumb)
@@ -540,3 +540,5 @@ def language_content_up_to_date(page, language):
         page=page).order_by('-creation_date')[0].creation_date
     return lang_modified > last_modified[0].creation_date
 register.filter(language_content_up_to_date)
+
+

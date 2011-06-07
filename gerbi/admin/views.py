@@ -94,12 +94,10 @@ def traduction(request, page_id, language_id):
 traduction = staff_member_required(traduction)
 traduction = auto_render(traduction)
 
-def get_content(request, page_id, content_type):
+def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
-    page = Page.objects.get(pk=page_id)
-    content = Content.objects.get_content(page, request.LANGUAGE_CODE,
-        content_type)
-    return HttpResponse(content)
+    content = Content.objects.get(pk=content_id)
+    return HttpResponse(content.body)
 get_content = staff_member_required(get_content)
 get_content = auto_render(get_content)
 
@@ -138,9 +136,9 @@ def sub_menu(request, page_id):
     page_set = page.children.all()
     page_languages = settings.GERBI_LANGUAGES
     return "admin/gerbi/page/sub_menu.html", {
-        'page':page,
-        'pages':page_set,
-        'page_languages':page_languages,
+        'page': page,
+        'pages': page_set,
+        'page_languages': page_languages,
     }
 sub_menu = staff_member_required(sub_menu)
 sub_menu = auto_render(sub_menu)

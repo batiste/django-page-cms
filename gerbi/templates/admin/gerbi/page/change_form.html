@@ -3,9 +3,10 @@
 
 {% block title %}{% trans "Edit" %}{% endblock %}
 
-{% block extrahead %}{{ block.super }}
+{% block extrahead %}
+<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{GERBI_MEDIA_URL}}";</script>
+{{ block.super }}
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
-<script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{GERBI_MEDIA_URL}}";:</script>
 {% endblock %}
 
 {% block content %}
@@ -42,12 +43,12 @@
                     </div>
                 </fieldset>
                 {% endif %}
-                
+
                 {% comment %}Close sidebar, open content{% endcomment %}
                 </div>
                 <div class="content">
             {% endif %}
-            
+
         {% endfor %}
         </div>{% comment %}Close content{% endcomment %}
 
@@ -56,7 +57,7 @@
             {% include inline_admin_formset.opts.template %}
         {% endfor %}
         </div>
-        
+
         {% submit_row %}
     </form>
 </div>

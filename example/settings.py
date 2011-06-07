@@ -39,7 +39,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Absolute path to the directory that holds pages media.
-# GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'django_gerbi', 'media', 'django_gerbi')
+# GERBI_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'gerbi', 'media', 'gerbi')
 # Absolute path to the directory that holds media.
 ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
 ADMIN_MEDIA_PREFIX = '/admin_media/'
@@ -65,7 +65,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
     "django.core.context_processors.media",
-    "django_gerbi.context_processors.media",
+    "gerbi.context_processors.media",
     'django.core.context_processors.static',
 )
 
@@ -97,9 +97,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'django_gerbi.testproj.documents',
+    'gerbi.testproj.documents',
     'taggit',
-    'django_gerbi',
+    'gerbi',
     'mptt',
     'staticfiles',
     #'tinymce',
@@ -116,8 +116,8 @@ GERBI_TINYMCE = False
 GERBI_TAGGING = True
 
 GERBI_CONNECTED_MODELS = [{
-    'model': 'django_gerbi.testproj.documents.models.Document',
-    'form': 'django_gerbi.testproj.documents.models.DocumentForm',
+    'model': 'gerbi.testproj.documents.models.Document',
+    'form': 'gerbi.testproj.documents.models.DocumentForm',
     'options': {
             'extra': 3,
             'max_num': 10,
@@ -157,13 +157,13 @@ def language_mapping(lang):
 
 GERBI_LANGUAGE_MAPPING = language_mapping
 
-GERBI_DEFAULT_TEMPLATE = 'django_gerbi/examples/index.html'
+GERBI_DEFAULT_TEMPLATE = 'gerbi/examples/index.html'
 
 
 GERBI_TEMPLATES = (
-    ('django_gerbi/examples/nice.html', 'nice one'),
-    ('django_gerbi/examples/cool.html', 'cool one'),
-    ('django_gerbi/examples/editor.html', 'raw editor'),
+    ('gerbi/examples/nice.html', 'nice one'),
+    ('gerbi/examples/cool.html', 'cool one'),
+    ('gerbi/examples/editor.html', 'raw editor'),
 )
 
 GERBI_SANITIZE_USER_INPUT = True
@@ -178,11 +178,11 @@ HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
 GERBI_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (
-    "django_gerbi.migrations.*",
-    "django_gerbi.tests.*",
-    "django_gerbi.urls",
-    "django_gerbi.__init__",
-    "django_gerbi.search_indexes",
+    "gerbi.migrations.*",
+    "gerbi.tests.*",
+    "gerbi.urls",
+    "gerbi.__init__",
+    "gerbi.search_indexes",
 )
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False

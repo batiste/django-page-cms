@@ -129,7 +129,7 @@ New in 1.3.0: The default view is now a real class. That will
 help if you want to override some default behavior::
 
 
-    from django_gerbi.views import Details
+    from gerbi.views import Details
     from news.models import News
 
     class NewsView(Details):
@@ -144,14 +144,14 @@ And don't forget to redefine the urls to point to your new view with something s
 
     from django.conf.urls.defaults import url, include, patterns
     from YOUR_APP.views import details
-    from django_gerbi import page_settings
+    from gerbi import page_settings
 
     if page_settings.GERBI_USE_LANGUAGE_PREFIX:
         urlpatterns = patterns('',
             url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
-                name='django_gerbi.details-by-path')
+                name='gerbi.details-by-path')
         )
     else:
         urlpatterns = patterns('',
-            url(r'^(?P<path>.*)$', details, name='django_gerbi.details-by-path')
+            url(r'^(?P<path>.*)$', details, name='gerbi.details-by-path')
         )

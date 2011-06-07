@@ -22,7 +22,7 @@ Use the following snippet in your template::
     {% endfor %}
     </ul>
 
-The gerbi_menu tag uses the `django_gerbi/menu.html` template to render the navigation menu.
+The gerbi_menu tag uses the `gerbi/menu.html` template to render the navigation menu.
 By default, the menu is rendered as a nested list::
 
     <ul>
@@ -30,7 +30,7 @@ By default, the menu is rendered as a nested list::
         ...
     </ul>
 
-You can of course change `django_gerbi/menu.html` with the Django override mechanism
+You can of course change `gerbi/menu.html` with the Django override mechanism
 to render things differently.
 
 gerbi_dynamic_tree_menu
@@ -57,7 +57,7 @@ Use the following snippet in your template::
     {% endfor %}
     </ul>
 
-The gerbi_dynamic_tree_menu tag uses the `django_gerbi/dynamic_tree_menu.html`
+The gerbi_dynamic_tree_menu tag uses the `gerbi/dynamic_tree_menu.html`
 template to render the navigation menu. By default, the menu is rendered
 as a nested list similar to the gerbi_menu tag.
 
@@ -74,7 +74,7 @@ children of the current root::
     {% gerbi_sub_menu current_page %}
     </ul>
 
-Again, the default template `django_gerbi/sub_menu.html` will render the items as a nested,
+Again, the default template `gerbi/sub_menu.html` will render the items as a nested,
 unordered list (see above).
 
 
@@ -92,7 +92,7 @@ children of the current root::
     {% gerbi_children_menu page %}
     </ul>
 
-Again, the default template `django_gerbi/sub_menu.html` will render the items as an
+Again, the default template `gerbi/sub_menu.html` will render the items as an
 unordered list (see above).
 
 gerbi_siblings_menu
@@ -107,7 +107,7 @@ immediate parent of the current page::
     {% gerbi_siblings_menu current_page %}
     </ul>
 
-Again, the default template `django_gerbi/sub_menu.html` will render the items as a nested,
+Again, the default template `gerbi/sub_menu.html` will render the items as a nested,
 unordered list (see above).
 
 
@@ -121,7 +121,7 @@ navigational pattern, consisting of a list of all parents of the current page::
     {% gerbi_breadcrumb current_page %}
     </ul>
 
-The output of the gerbi_breadcrumb tag is defined by the template `django_gerbi/breadcrumb.html`.
+The output of the gerbi_breadcrumb tag is defined by the template `gerbi/breadcrumb.html`.
 
 load_pages
 ==========
@@ -165,7 +165,7 @@ You can use them as follows::
      {% endfor %}
    </ul>
 
-See also the provided `django_gerbi/menu.html` and `django_gerbi/sub_menu.html` templates.
+See also the provided `gerbi/menu.html` and `gerbi/sub_menu.html` templates.
 
 Templates for the gerbi_breadcrumb tag
 =============================================
@@ -182,5 +182,5 @@ You can use them as follows::
   {% endfor %}
   &gt;&nbsp; {% show_content page 'title' %}
 
-See also the provided `django_gerbi/breadcrumb.html` templates.
+See also the provided `gerbi/breadcrumb.html` templates.
 

@@ -9,14 +9,14 @@ include CHANGELOG
 include MANIFEST.in
 include FAQ
 recursive-include doc *
-recursive-include django_gerbi *
+recursive-include gerbi *
 recursive-include requirements *
-recursive-include django_gerbi/templates *
-recursive-include django_gerbi/media *
-recursive-include django_gerbi/static *
-recursive-include django_gerbi/ *.css
-recursive-include django_gerbi/ *.js
-recursive-include django_gerbi/ *.html
+recursive-include gerbi/templates *
+recursive-include gerbi/media *
+recursive-include gerbi/static *
+recursive-include gerbi/ *.css
+recursive-include gerbi/ *.js
+recursive-include gerbi/ *.html
 global-exclude *.pyc
 global-exclude coverage/*
 # this important to prune at the end

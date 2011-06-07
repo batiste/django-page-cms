@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 from pkg_resources import require, DistributionNotFound
-import django_gerbi
+import gerbi
 import os
 package_name = 'django-gerbi'
-module_name = 'django_gerbi'
+module_name = 'gerbi'
 
 def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
@@ -34,17 +34,17 @@ for directory in os.walk( module_name + os.sep + 'static'):
     data_dirs.append( os.path.sep.join( directory[0].split(os.sep)[1:] ) + os.sep + '*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
-download_url = url_schema % (package_name, package_name, django_gerbi.__version__)
+download_url = url_schema % (package_name, package_name, gerbi.__version__)
 
 setup(
     name=package_name,
     test_suite= module_name + '.test_runner.run_tests',
-    version=django_gerbi.__version__,
-    description=django_gerbi.__doc__,
-    author=django_gerbi.__author__,
-    author_email=django_gerbi.__contact__,
-    url=django_gerbi.__homepage__,
-    license=django_gerbi.__license__,
+    version=gerbi.__version__,
+    description=gerbi.__doc__,
+    author=gerbi.__author__,
+    author_email=gerbi.__contact__,
+    url=gerbi.__homepage__,
+    license=gerbi.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     install_requires=required_to_install,

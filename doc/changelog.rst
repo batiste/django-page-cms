@@ -7,7 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.5.0
 ==============
 
-    * Renamed python module from pages to django_gerbi (see :doc:`Migration notes </migration>`).
+    * Renamed python module from pages to gerbi (see :doc:`Migration notes </migration>`).
     * ...
 
 Maintenance
@@ -51,7 +51,7 @@ Release 1.4.0
       this release but might be changed to `gerbi` in a near future.
     * Implement 2 classes for the Django sitemap framework. :ref:`Documentation on sitemap classes <sitemaps>`
     * Add a markitup REST editor.
-    * Fix a bug with `pages_dynamic_tree_menu` template tag and multiple roots in a django_gerbi.tree.
+    * Fix a bug with `pages_dynamic_tree_menu` template tag and multiple roots in a gerbi.tree.
     * Added a PAGES_STRICT_URLS setting. If set to `True` the CMS will check for the complete URL instead
       of just the slug. If the complete path doesn't match, a 404 error is raised in the view.
     * Added 2 managing commands for exporting and importing PO translation files into the CMS.
@@ -126,11 +126,11 @@ Release 1.1.3
 
     * Improved search index (url and title are included).
     * The setup now specify django-mptt-2 instead of django-mptt.
-    * New template tag for navigation called "django_gerbi.siblings_menu".
+    * New template tag for navigation called "gerbi.siblings_menu".
     * New object PageAdminWithDefaultContent: copy the official language text into new
       language page's content blocks
     * New setting PAGE_HIDE_SITES to hide the sites. When True the CMS only
-      show django_gerbi.from the current site used to access the
+      show gerbi.from the current site used to access the
       admin. This allows administration of separate page-cms sites with the same DB.
     * New admin template tag: language_content_up_to_date templatetag: mark the translations needing
       updating in the admin.
@@ -167,7 +167,7 @@ Release 1.1.0
     * `get_absolute_url` is renamed into `get_url_path`.
     * Admin widgets now needs to use a registery to be used within the admin.
       The placeholder template tag doesn't load load external modules for you anymore.
-    * RTL support for django_gerbi.in admin.
+    * RTL support for gerbi.in admin.
     * The context variable `pages` has been renamed to `pages_naviagtion` to avoid
       any name conflict with some pagination tags.
 

@@ -6,12 +6,12 @@ GERBI_TEMPLATES
 ==================================
 
 GERBI_TEMPLATES is a list of tuples that specifies the which templates
-are available in the ``django_gerbi`` admin.  Templates should be assigned in
+are available in the ``gerbi`` admin.  Templates should be assigned in
 the following format::
 
     GERBI_TEMPLATES = (
-        ('django_gerbi/nice.html', 'nice one'),
-        ('django_gerbi/cool.html', 'cool one'),
+        ('gerbi/nice.html', 'nice one'),
+        ('gerbi/cool.html', 'cool one'),
     )
 
 One can also assign a callable (which should return the tuple) to this
@@ -46,7 +46,7 @@ GERBI_DEFAULT_TEMPLATE
 
 You *must* set ``GERBI_DEFAULT_TEMPLATE`` to the path of your default template::
 
-    GERBI_DEFAULT_TEMPLATE = 'django_gerbi/index.html'
+    GERBI_DEFAULT_TEMPLATE = 'gerbi/index.html'
 
 
 GERBI_LANGUAGES
@@ -118,9 +118,9 @@ Enable that behavior here by assigning the following function to the
 PAGES_MEDIA_URL
 ==================================
 
-URL that handles django_gerbi.media. If not set the default value is::
+URL that handles gerbi.media. If not set the default value is::
 
-    <STATIC_URL|MEDIA_URL>django_gerbi/
+    <STATIC_URL|MEDIA_URL>gerbi/
 
 GERBI_UNIQUE_SLUG_REQUIRED
 ==================================
@@ -132,7 +132,7 @@ GERBI_CONTENT_REVISION
 ==================================
 
 Set ``GERBI_CONTENT_REVISION`` to ``False`` to disable the recording of
-django_gerbi.revision information in the database
+gerbi.revision information in the database
 
 SITE_ID
 ==================================

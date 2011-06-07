@@ -1,7 +1,7 @@
 """Default example views"""
 from gerbi import settings
 from gerbi.models import Page, PageAlias
-from gerbi.http import auto_render, get_language_from_request, remove_slug
+from gerbi.http import get_language_from_request, remove_slug
 from gerbi.urlconf_registry import get_urlconf
 
 from django.http import Http404, HttpResponsePermanentRedirect
@@ -80,7 +80,7 @@ class Details(object):
             if answer:
                 return answer
 
-        # do what the auto_render was used to do.
+        # if present, the page is not rendered
         if kwargs.get('only_context', False):
             return context
         template_name = kwargs.get('template_name', template_name)
@@ -186,8 +186,7 @@ class Details(object):
         if result:
             view, args, kwargs = result
             kwargs.update(context)
-            # for now the view is called as is. Usage of
-            # the auto_render decorator could simplify a few things.
+            # for now the view is called as is.
             return view(request, *args, **kwargs)
 
 

@@ -12,7 +12,6 @@ from gerbi.admin.views import list_pages_ajax
 from gerbi.admin.views import change_status, modify_content, delete_content
 from gerbi.admin.views import move_page
 from gerbi.permissions import PagePermission
-from gerbi.http import auto_render
 import gerbi.widgets
 
 from django.contrib import admin

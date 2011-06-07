@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from gerbi.testproj.documents.models import Document
-from gerbi.http import auto_render
+from django.shortcuts import render_to_response
 
 def document_view(request, *args, **kwargs):
     context = RequestContext(request, kwargs)
@@ -11,6 +11,5 @@ def document_view(request, *args, **kwargs):
         document = Document.objects.get(pk=int(kwargs['document_id']))
         context['document'] = document
     context['in_document_view'] = True
-    return 'gerbi/examples/index.html', context
+    return render_to_response('gerbi/examples/index.html', context)
 
-document_view = auto_render(document_view)

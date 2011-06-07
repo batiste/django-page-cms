@@ -55,45 +55,6 @@ def get_request_mock():
 
     return request
 
-
-class AutoRenderHttpError(Exception):
-    """Cannot return context dictionary because a view returned an
-    ``HttpResponse`` when a (template_name, context) tuple was expected."""
-    pass
-
-
-def auto_render(func):
-    """
-    This view decorator automatically calls the ``render_to_response``
-    shortcut. A view that use this decorator should return a tuple of this
-    form : (template name, context) instead of a ``HttpRequest`` object.
-    """
-    import warnings
-    warnings.warn(DeprecationWarning("auto_render decorator is a deprecated."))
-    def auto_render_decorator(request, *args, **kwargs):
-        template_override = kwargs.pop('template_name', None)
-        only_context = kwargs.pop('only_context', False)
-        only_response = kwargs.pop('only_response', False)
-        if only_context or only_response:
-            # return only context dictionary or response
-            response = func(request, *args, **kwargs)
-            if only_response:
-                return response
-            if isinstance(response, HttpResponse):
-                raise AutoRenderHttpError(AutoRenderHttpError.__doc__)
-            (template_name, context) = response
-            return context
-        response = func(request, *args, **kwargs)
-        if isinstance(response, HttpResponse):
-            return response
-        (template_name, context) = response
-        template_name = context['template_name'] = (template_override or
-            template_name)
-        return render_to_response(template_name, context,
-                            context_instance=RequestContext(request))
-    return auto_render_decorator
-
-
 def pages_view(view):
     """
     Make sure the decorated view gets the essential pages

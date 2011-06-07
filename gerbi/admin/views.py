@@ -3,10 +3,10 @@
 from gerbi import settings
 from gerbi.models import Page, Content
 from gerbi.utils import get_placeholders
-from gerbi.http import auto_render, get_language_from_request
+from gerbi.http import get_language_from_request
 from gerbi.permissions import PagePermission
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -36,9 +36,8 @@ def list_pages_ajax(request, invalid_move=False):
         'language': language,
         'pages': page_set,
     }
-    return "admin/gerbi/page/change_list_table.html", context
+    return render_to_response("admin/gerbi/page/change_list_table.html", context)
 list_pages_ajax = staff_member_required(list_pages_ajax)
-list_pages_ajax = auto_render(list_pages_ajax)
 
 def modify_content(request, page_id, content_type, language_id):
     """Modify the content of a page."""
@@ -89,22 +88,19 @@ def traduction(request, page_id, language_id):
         Content.objects.get_content(page, language_id, "title")
         is None
     )
-    return 'gerbi/traduction_helper.html', {
+    return render_to_response('gerbi/traduction_helper.html', {
         'page': page,
         'lang': lang,
         'language_error': language_error,
         'placeholders': placeholders,
-    }
+    })
 traduction = staff_member_required(traduction)
-traduction = auto_render(traduction)
 
 def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
     content = Content.objects.get(pk=content_id)
     return HttpResponse(content.body)
 get_content = staff_member_required(get_content)
-get_content = auto_render(get_content)
-
 
 def move_page(request, page_id, extra_context=None):
     """Move the page to the requested target, at the given
@@ -138,10 +134,10 @@ def sub_menu(request, page_id):
     page = Page.objects.get(id=page_id)
     page_set = page.children.all()
     page_languages = settings.GERBI_LANGUAGES
-    return "admin/gerbi/page/sub_menu.html", {
+    return render_to_response("admin/gerbi/page/sub_menu.html", {
         'page': page,
         'pages': page_set,
         'page_languages': page_languages,
-    }
+    })
 sub_menu = staff_member_required(sub_menu)
-sub_menu = auto_render(sub_menu)
+

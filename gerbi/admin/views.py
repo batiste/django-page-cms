@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 
+from mptt.exceptions import InvalidMove
+
 def change_status(request, page_id):
     """
     Switch the status of a page.
@@ -30,7 +32,7 @@ def list_pages_ajax(request, invalid_move=False):
     context = {
         'invalid_move': invalid_move,
         'language': language,
-        'gerbi': page_set,
+        'pages': page_set,
     }
     return "admin/gerbi/page/change_list_table.html", context
 list_pages_ajax = staff_member_required(list_pages_ajax)
@@ -120,7 +122,6 @@ def move_page(request, page_id, extra_context=None):
         else:
             page.invalidate()
             target.invalidate()
-            from mptt.exceptions import InvalidMove
             invalid_move = False
             try:
                 page.move_to(target, position)

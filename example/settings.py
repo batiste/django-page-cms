@@ -14,8 +14,8 @@ CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'cms.db'             # Or path to database file if using sqlite3.
+DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'cms.db'       # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -101,7 +101,8 @@ INSTALLED_APPS = (
     'taggit',
     'gerbi',
     'mptt',
-    'staticfiles',
+    'django.contrib.staticfiles',
+    #'staticfiles',
     #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',

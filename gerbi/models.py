@@ -109,6 +109,8 @@ class Page(MPTTModel):
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
+        # Gerbi was once called pages
+        db_table = 'pages_page'
         get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
@@ -472,8 +474,8 @@ class Page(MPTTModel):
             cnt = self.get_ancestors( ascending=True ).count()
             # Not interested by the root don't want to 'switch' tree.
             anc = self.get_ancestors( ascending=True )[0:cnt-1]
-            
-            for par in anc: 
+
+            for par in anc:
                 nxt = par.get_next_sibling()
                 if None != nxt:
                     return nxt
@@ -501,7 +503,7 @@ class Page(MPTTModel):
                 ## been added and then deleted. I guess this is an
                 ## MPTT bug (not a PageCMS bug) that needs to be
                 ## investigated.
-                
+
                 # cnt = sib.get_descendant_count()
                 # if 0 == cnt:
                 #     return sib
@@ -535,6 +537,7 @@ class Content(models.Model):
     objects = ContentManager()
 
     class Meta:
+        db_table = 'pages_content'
         get_latest_by = 'creation_date'
         verbose_name = _('content')
         verbose_name_plural = _('contents')
@@ -551,6 +554,7 @@ class PageAlias(models.Model):
     objects = PageAliasManager()
 
     class Meta:
+        db_table = 'pages_pagealias'
         verbose_name_plural = _('Aliases')
 
     def save(self, *args, **kwargs):

@@ -38,7 +38,7 @@ If the **widget** option is used to change the way the CMS administration interf
 By default the CMS will use a simple `TextInput` widget. Otherwise the CMS will use the
 widget of your choice. Widgets need to be registered before you can use them in the CMS::
 
-    from django_gerbi.widgets_registry import register_widget
+    from gerbi.widgets_registry import register_widget
     from django.forms import TextInput
 
     class NewWidget(TextInput):
@@ -147,17 +147,17 @@ If you want to include a simple contact form in your page, there is a contact pl
     {% contactplaceholder contact %}
 
 This placeholder use ´settings.ADMINS´ for recipients email. The template used to render
-the contact form is ´django_gerbi/contact.html´.
+the contact form is ´gerbi/contact.html´.
 
 
 Create your own placeholder
 ===========================
 
 If you want to create your own new type of placeholder,
-you can simply subclass the :class:`PlaceholderNode <django_gerbi.placeholders.PlaceholderNode>`::
+you can simply subclass the :class:`PlaceholderNode <gerbi.placeholders.PlaceholderNode>`::
 
-    from django_gerbi.placeholders import PlaceholderNode
-    from django_gerbi.templatetags.page_tags import parse_placeholder
+    from gerbi.placeholders import PlaceholderNode
+    from gerbi.templatetags.page_tags import parse_placeholder
     register = template.Library()
 
     class ContactFormPlaceholderNode(PlaceholderNode):
@@ -194,12 +194,12 @@ And use it in your templates as a normal placeholder::
 Changing the widget of the common placeholder
 =============================================
 
-If you want to just redefine the widget of the default :class:`PlaceholderNode <django_gerbi.placeholders.PlaceholderNode>`
+If you want to just redefine the widget of the default :class:`PlaceholderNode <gerbi.placeholders.PlaceholderNode>`
 without subclassing it, you can just you create a valid Django Widget that take an extra language paramater::
 
     from django.forms import Textarea
     from django.utils.safestring import mark_safe
-    from django_gerbi.widgets_registry import register_widget
+    from gerbi.widgets_registry import register_widget
 
     class CustomTextarea(Textarea):
         class Media:
@@ -225,7 +225,7 @@ and then you can simply use the placeholder syntax::
 
     {% placeholder custom_widget_example CustomTextarea parsed  %}
 
-More examples of custom widgets are available in :mod:`django_gerbi.widgets.py <django_gerbi.widgets>`.
+More examples of custom widgets are available in :mod:`gerbi.widgets.py <gerbi.widgets>`.
 
 .. _placeholder-widgets-list:
 
@@ -350,7 +350,7 @@ Allows to edit raw html code with syntax highlight based on this project: http:/
 Basic code (Javascript, CSS) for editarea is included into the codebase.
 If you want the full version you can get it there::
 
-    django_gerbi/media/django_gerbi.edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
+    gerbi/media/gerbi.edit_area -r29 https://editarea.svn.sourceforge.net/svnroot/editarea/trunk/edit_area
 
 Usage::
 

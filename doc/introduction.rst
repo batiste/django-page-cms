@@ -24,8 +24,8 @@ Demo
 
 This admin interface is no up to date, but could give you an idea of what the software is doing:
 
- * admin : http://django_gerbi.emo.piquadrat.ch/admin/
- * frontend : http://django_gerbi.emo.piquadrat.ch/django_gerbi.
+ * admin : http://gerbi.emo.piquadrat.ch/admin/
+ * frontend : http://gerbi.emo.piquadrat.ch/gerbi.
 
 
 Key features

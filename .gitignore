@@ -9,3 +9,5 @@ cms.db
 local_settings.py
 *.pyc
 .DS_Store
+django_gerbi/mlog.py
+django_gerbi/models.py

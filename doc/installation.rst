@@ -23,7 +23,7 @@ And then, run the example project::
 
     cd django-page-cms/example/
     python manage.py syncdb
-    python manage.py build_static django_gerbi
+    python manage.py build_static gerbi
     python manage.py runserver
 
 Then visit http://127.0.0.1:8000/admin/ and create a few pages.
@@ -73,11 +73,11 @@ Basically you need to have something like this::
 
     urlpatterns = patterns('',
         ...
-        url(r'^pages/', include('django_gerbi.urls')),
+        url(r'^pages/', include('gerbi.urls')),
         (r'^admin/', include(admin.site.urls)),
     )
 
-When you will visit the site the first time (``/django_gerbi/``), you will get a 404 error
+When you will visit the site the first time (``/gerbi/``), you will get a 404 error
 because there is no published page. Go to the admin first and create and publish some pages.
 
 You will certainly want to activate the static file serve view in your ``urls.py`` if you are in developement mode::
@@ -92,7 +92,7 @@ You will certainly want to activate the static file serve view in your ``urls.py
 Settings
 ========
 
-All the Gerbi CMS specific settings and options are listed and explained in the ``django_gerbi/settings.py`` file.
+All the Gerbi CMS specific settings and options are listed and explained in the ``gerbi/settings.py`` file.
 
 Gerbi CMS require several of these settings to be set. They are marked in this document with a bold "*must*".
 
@@ -106,10 +106,10 @@ Default template
 
 You *must* set ``GERBI_DEFAULT_TEMPLATE`` to the path of your default CMS template::
 
-    GERBI_DEFAULT_TEMPLATE = 'django_gerbi/index.html'
+    GERBI_DEFAULT_TEMPLATE = 'gerbi/index.html'
 
 This template must exist somewhere in your project. If you want you can copy the example templates
-from the directory ``django_gerbi/templates/django_gerbi/examples/`` into the directory ``django_gerbi`` of your root template directory.
+from the directory ``gerbi/templates/gerbi/examples/`` into the directory ``gerbi`` of your root template directory.
 
 Additional templates
 --------------------
@@ -118,15 +118,15 @@ Optionally you can set ``GERBI_TEMPLATES`` if you want additional templates choi
 In the the example application you have actually this::
 
     DAJNGO_GERBI_TEMPLATES = (
-        ('django_gerbi/nice.html', 'nice one'),
-        ('django_gerbi/cool.html', 'cool one'),
+        ('gerbi/nice.html', 'nice one'),
+        ('gerbi/cool.html', 'cool one'),
     )
 
 Media directory
 ---------------
 
 The django CMS come with some javascript and CSS files.
-These files are standing in the ``django_gerbi/media/django_gerbi`` directory.
+These files are standing in the ``gerbi/media/gerbi`` directory.
 
 To make these files accessible to your project you can simply copy them  or make a symbolic link into
 your media directory. That's necessary to have a fully functioning administration interface.
@@ -135,7 +135,7 @@ You can also look at how the example project is working to make a local setup. I
 `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
 files for you. After installation in your project just run::
 
-    $ python manage.py build_static django_gerbi
+    $ python manage.py build_static gerbi
 
 And the cms media files will be copied in your project's media directory.
 
@@ -187,7 +187,7 @@ You *must* have these context processors into your ``TEMPLATE_CONTEXT_PROCESSORS
         'django.core.context_processors.debug',
         'django.core.context_processors.media',
         'django.core.context_processors.request',
-        'django_gerbi.context_processors.media',
+        'gerbi.context_processors.media',
         ...
     )
 
@@ -241,6 +241,6 @@ If you want to use it set ``GERBI_TAGGING`` at ``True`` into your setting file a
         'django.contrib.sites',
         'mptt',
         'tagging',
-        'django_gerbi',
+        'gerbi',
         ...
     )

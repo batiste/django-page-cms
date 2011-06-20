@@ -1,5 +1,5 @@
 {% extends "admin/change_list.html" %}
-{% load adminmedia admin_list i18n gerbi_tags %}
+{% load adminmedia admin_list i18n gerbi_tags gerbi_admin_tags %}
 
 {% block title %}{% trans "List of pages" %}{% endblock %}
 
@@ -7,7 +7,7 @@
 
 {% if not is_popup %}{% block breadcrumbs %}
     <div class="breadcrumbs">
-    <a href="../../">{% trans "Home" %}</a> &rsaquo; 
+    <a href="../../">{% trans "Home" %}</a> &rsaquo;
     <a href="../">{{ app_label|capfirst|escape }}</a> &rsaquo; {{ opts.verbose_name_plural|capfirst|escape }}
     </div>
 {% endblock %}{% endif %}

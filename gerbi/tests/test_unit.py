@@ -103,7 +103,7 @@ class UnitTestCase(TestCase):
         p1 = self.new_page(content={'inher':'parent-content'})
         p2 = self.new_page()
         template = django.template.loader.get_template('gerbi/tests/test7.html')
-        context = Context({'current_page': p2, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': p2, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
 
         p2.move_to(p1, position='first-child')
@@ -112,7 +112,7 @@ class UnitTestCase(TestCase):
     def test_get_page_template_tag(self):
         """Test get_page template tag."""
         context = Context({})
-        pl1 = """{% load gerbi_tags %}{% get_page "get-page-slug" as toto %}{{ toto }}"""
+        pl1 = """{% load gerbi_tags %}{% gerbi_get_page "get-page-slug" as toto %}{{ toto }}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), u'None')
         page = self.new_page({'slug': 'get-page-slug'})
@@ -121,13 +121,13 @@ class UnitTestCase(TestCase):
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
-        context = Context({'current_page': page, 'lang': 'en-us'})
+        context = Context({'gerbi_current_page': page, 'lang': 'en-us'})
 
-        pl1 = """{% load gerbi_tags %}{% placeholder title as hello %}"""
+        pl1 = """{% load gerbi_tags %}{% gerbi_placeholder title as hello %}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), '')
 
-        pl1 = """{% load gerbi_tags %}{% placeholder title as hello %}{{ hello }}"""
+        pl1 = """{% load gerbi_tags %}{% gerbi_placeholder title as hello %}{{ hello }}"""
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), page.title())
 
@@ -136,9 +136,9 @@ class UnitTestCase(TestCase):
         setattr(settings, "DEBUG", True)
 
         page = self.new_page({'wrong': '{% wrong %}'})
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': page, 'lang':'en-us'})
 
-        pl2 = """{% load gerbi_tags %}{% placeholder wrong parsed %}"""
+        pl2 = """{% load gerbi_tags %}{% gerbi_placeholder wrong parsed %}"""
         template = get_template_from_string(pl2)
         from gerbi.placeholders import PLACEHOLDER_ERROR
         error = PLACEHOLDER_ERROR % {
@@ -148,19 +148,19 @@ class UnitTestCase(TestCase):
         self.assertEqual(template.render(context), error)
 
         # generate errors
-        pl3 = """{% load gerbi_tags %}{% placeholder %}"""
+        pl3 = """{% load gerbi_tags %}{% gerbi_placeholder %}"""
         try:
             template = get_template_from_string(pl3)
         except TemplateSyntaxError:
             pass
 
-        pl4 = """{% load gerbi_tags %}{% placeholder wrong wrong %}"""
+        pl4 = """{% load gerbi_tags %}{% gerbi_placeholder wrong wrong %}"""
         try:
             template = get_template_from_string(pl4)
         except TemplateSyntaxError:
             pass
 
-        pl5 = """{% load gerbi_tags %}{% placeholder wrong as %}"""
+        pl5 = """{% load gerbi_tags %}{% gerbi_placeholder wrong as %}"""
         try:
             template = get_template_from_string(pl5)
         except TemplateSyntaxError:
@@ -171,24 +171,24 @@ class UnitTestCase(TestCase):
         setattr(settings, "DEBUG", True)
         page = self.new_page({'title':'<b>{{ "hello"|capfirst }}</b>'})
         page.save()
-        context = Context({'current_page': page, 'lang':'en-us'})
-        pl_parsed = """{% load gerbi_tags %}{% placeholder title parsed %}"""
+        context = Context({'gerbi_current_page': page, 'lang':'en-us'})
+        pl_parsed = """{% load gerbi_tags %}{% gerbi_placeholder title parsed %}"""
         template = get_template_from_string(pl_parsed)
         self.assertEqual(template.render(context), '<b>Hello</b>')
         setattr(settings, "DEBUG", False)
         page = self.new_page({'title':'<b>{{ "hello"|wrong_filter }}</b>'})
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), u'')
 
 
     def test_video(self):
         """Test video placeholder."""
         page = self.new_page(content={
-            'title':'video-page',
-            'video':'http://www.youtube.com/watch?v=oHg5SJYRHA0\\\\'
+            'title': 'video-page',
+            'video': 'http://www.youtube.com/watch?v=oHg5SJYRHA0\\\\'
         })
-        context = Context({'current_page': page, 'lang':'en-us'})
-        pl1 = """{% load gerbi_tags %}{% videoplaceholder video %}"""
+        context = Context({'gerbi_current_page': page, 'lang': 'en-us'})
+        pl1 = """{% load gerbi_tags %}{% gerbi_video_placeholder video %}"""
         template = get_template_from_string(pl1)
         self.assertNotEqual(template.render(context), '')
         self.assertTrue(len(template.render(context)) > 10)
@@ -212,7 +212,7 @@ class UnitTestCase(TestCase):
         page = self.new_page()
         template = django.template.loader.get_template(
                 'gerbi/tests/untranslated.html')
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), '')
 
     def test_urlconf_registry(self):
@@ -289,11 +289,11 @@ class UnitTestCase(TestCase):
 
         context = RequestContext(MockRequest, {'page': page})
         template = Template('{% load gerbi_tags %}'
-                            '{% get_content page "title" "en-us" as content %}'
+                            '{% gerbi_get_content page "title" "en-us" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), page_data['title'])
         template = Template('{% load gerbi_tags %}'
-                            '{% get_content page "title" as content %}'
+                            '{% gerbi_get_content page "title" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), page_data['title'])
 
@@ -312,21 +312,21 @@ class UnitTestCase(TestCase):
         # default
         context = RequestContext(MockRequest, {'page': page})
         template = Template('{% load gerbi_tags %}'
-                            '{% get_content page "slug" as content %}'
+                            '{% gerbi_get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'english')
 
         # french specified
         context = RequestContext(MockRequest, {'page': page, 'lang': 'fr'})
         template = Template('{% load gerbi_tags %}'
-                            '{% get_content page "slug" as content %}'
+                            '{% gerbi_get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'french')
 
         # english specified
         context = RequestContext(MockRequest, {'page': page, 'lang': 'en-us'})
         template = Template('{% load gerbi_tags %}'
-                            '{% get_content page "slug" as content %}'
+                            '{% gerbi_get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'english')
 
@@ -342,10 +342,10 @@ class UnitTestCase(TestCase):
         context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
             'path':'/page-1/'})
         template = Template('{% load gerbi_tags %}'
-                            '{% show_content page "title" "en-us" %}')
+                            '{% gerbi_show_content page "title" "en-us" %}')
         self.assertEqual(template.render(context), page_data['title'])
         template = Template('{% load gerbi_tags %}'
-                            '{% show_content page "title" %}')
+                            '{% gerbi_show_content page "title" %}')
         self.assertEqual(template.render(context), page_data['title'])
 
     def test_gerbi_siblings_menu_tag(self):
@@ -379,11 +379,11 @@ class UnitTestCase(TestCase):
 
         context = RequestContext(MockRequest, {'page': page})
         template = Template('{% load gerbi_tags %}'
-                            '{% show_absolute_url page "en-us" %}')
+                            '{% gerbi_show_absolute_url page "en-us" %}')
         self.assertEqual(template.render(context),
             self.get_page_url(u'english'))
         template = Template('{% load gerbi_tags %}'
-                            '{% show_absolute_url page "fr-ch" %}')
+                            '{% gerbi_show_absolute_url page "fr-ch" %}')
         self.assertEqual(template.render(context),
             self.get_page_url('french'))
 
@@ -391,7 +391,7 @@ class UnitTestCase(TestCase):
         """
         Test that get_page_ids_by_slug work as intented.
         """
-        page_data = {'title':'test1', 'slug':'test1'}
+        page_data = {'title': 'test1', 'slug': 'test1'}
         page1 = self.new_page(page_data)
 
         self.assertEqual(
@@ -399,7 +399,7 @@ class UnitTestCase(TestCase):
             [page1.id]
         )
 
-        page_data = {'title':'test1', 'slug':'test1'}
+        page_data = {'title': 'test1', 'slug': 'test1'}
         page2 = self.new_page(page_data)
 
         self.assertEqual(
@@ -461,20 +461,20 @@ class UnitTestCase(TestCase):
         )
 
         self.assertEqual(details(req, page1.get_url_path(),
-            only_context=True)['current_page'],
+            only_context=True)['gerbi_current_page'],
             page1)
 
         self.assertEqual(details(req, path=page2.get_complete_slug(),
-            only_context=True)['current_page'], page2)
+            only_context=True)['gerbi_current_page'], page2)
 
         self.assertEqual(details(req, page2.get_url_path(),
-            only_context=True)['current_page'],
+            only_context=True)['gerbi_current_page'],
             page2)
 
         self.set_setting("GERBI_USE_LANGUAGE_PREFIX", False)
 
         self.assertEqual(details(req, page2.get_url_path(),
-            only_context=True)['current_page'],
+            only_context=True)['gerbi_current_page'],
             page2)
 
     def test_root_page_hidden_slug(self):
@@ -598,7 +598,7 @@ class UnitTestCase(TestCase):
         self.set_setting("GERBI_HIDE_ROOT_SLUG", False)
         page1.invalidate()
         page2.invalidate()
-        
+
         def _get_context_page(path):
             return details(req, path, 'en-us')
         self.assertEqual(_get_context_page('/').status_code, 200)
@@ -679,11 +679,11 @@ class UnitTestCase(TestCase):
         content = Content(page=page, language='en-us', type='test_id',
             body=page.id)
         content.save()
-        context = Context({'current_page': page})
+        context = Context({'gerbi_current_page': page})
         context = RequestContext(MockRequest, context)
         template = Template('{% load gerbi_tags %}'
-                            '{% placeholder test_id as str %}'
-                            '{% get_page str as p %}'
+                            '{% gerbi_placeholder test_id as str %}'
+                            '{% gerbi_get_page str as p %}'
                             '{{ p.slug }}')
         self.assertEqual(template.render(context), 'test')
 
@@ -691,23 +691,23 @@ class UnitTestCase(TestCase):
         """Test get_page_from_string_or_id with an slug context variable."""
         page = self.new_page({'slug': 'test'})
 
-        context = Context({'current_page': page})
+        context = Context({'gerbi_current_page': page})
         context = RequestContext(MockRequest, context)
         template = Template('{% load gerbi_tags %}'
-                            '{% placeholder slug as str %}'
-                            '{% get_page str as p %}'
+                            '{% gerbi_placeholder slug as str %}'
+                            '{% gerbi_get_page str as p %}'
                             '{{ p.slug }}')
         self.assertEqual(template.render(context), 'test')
 
         template = Template('{% load gerbi_tags %}'
-                            '{% get_page "test" as p %}'
+                            '{% gerbi_get_page "test" as p %}'
                             '{{ p.slug }}')
         self.assertEqual(template.render(context), 'test')
 
     def test_get_page_template_tag_with_page_arg_as_id(self):
         """Test get_page template tag with page argument given as a page id"""
         context = Context({})
-        pl1 = """{% load gerbi_tags %}{% get_page 1 as toto %}{{ toto }}"""
+        pl1 = """{% load gerbi_tags %}{% gerbi_get_page 1 as toto %}{{ toto }}"""
         template = get_template_from_string(pl1)
         page = self.new_page({'id': 1, 'slug': 'get-page-slug'})
         self.assertEqual(template.render(context), u'get-page-slug')
@@ -715,37 +715,37 @@ class UnitTestCase(TestCase):
     def test_get_page_template_tag_with_variable_containing_page_id(self):
         """Test get_page template tag with page argument given as a page id"""
         context = Context({})
-        pl1 = ('{% load gerbi_tags %}{% placeholder somepage as page_id %}'
-            '{% get_page page_id as toto %}{{ toto }}')
+        pl1 = ('{% load gerbi_tags %}{% gerbi_placeholder somepage as page_id %}'
+            '{% gerbi_get_page page_id as toto %}{{ toto }}')
         template = get_template_from_string(pl1)
         page = self.new_page({'id': 1, 'slug': 'get-page-slug',
             'somepage': '1'})
-        context = Context({'current_page': page})
+        context = Context({'gerbi_current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
 
     def test_get_page_template_tag_with_variable_containing_page_slug(self):
         """Test get_page template tag with page argument given as a page id"""
         context = Context({})
-        pl1 = ('{% load gerbi_tags %}{% placeholder somepage as slug %}'
-            '{% get_page slug as toto %}{{ toto }}')
+        pl1 = ('{% load gerbi_tags %}{% gerbi_placeholder somepage as slug %}'
+            '{% gerbi_get_page slug as toto %}{{ toto }}')
         template = get_template_from_string(pl1)
         page = self.new_page({'slug': 'get-page-slug', 'somepage':
             'get-page-slug' })
-        context = Context({'current_page': page})
+        context = Context({'gerbi_current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
-        
+
     def test_variable_disapear_in_block(self):
         """Try to test the disapearance of a context variable in a block."""
         tpl = ("{% load gerbi_tags %}"
-          "{% placeholder slug as test_value untranslated %}"
+          "{% gerbi_placeholder slug as test_value untranslated %}"
           "{% block someblock %}"
-          "{% get_page test_value as toto %}"
+          "{% gerbi_get_page test_value as toto %}"
           "{{ toto.slug }}"
           "{% endblock %}")
-          
+
         template = get_template_from_string(tpl)
         page = self.new_page({'slug': 'get-page-slug'})
-        context = Context({'current_page': page})
+        context = Context({'gerbi_current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
 
     def test_variable_disapear_in_overloaded_block(self):
@@ -755,15 +755,15 @@ class UnitTestCase(TestCase):
         place-holder that is outside of a block.
         """
         tpl = ("{% extends 'gerbi/examples/base.html' %}"
-	  "{% load gerbi_tags %}"
-	  "{% placeholder page_id  as test_value  with TextInput untranslated %}"
-	  "{% block someblock %}"
-	  "{% get_page test_value as toto %}{{toto.slug}}"
-	  "{% endblock %}")
+        "{% load gerbi_tags %}"
+        "{% gerbi_placeholder page_id  as test_value  with TextInput untranslated %}"
+        "{% block someblock %}"
+        "{% gerbi_get_page test_value as toto %}{{toto.slug}}"
+        "{% endblock %}")
 
         template = get_template_from_string ( tpl )
         page = self.new_page ( { 'slug': 'get-page-slug' } )
-        context = Context( { 'current_page': page } )
+        context = Context( { 'gerbi_current_page': page } )
         self.assertNotEqual(template.render(context), u'get-page-slug')
 
 
@@ -781,7 +781,7 @@ class UnitTestCase(TestCase):
         def page_factory( ):
             return Page( author=author, status=Page.PUBLISHED,
                          publication_date=now)
-        
+
         roots, page_set = mptt_mk_forest( self, page_factory, Page )
         tree = roots[1]
 
@@ -805,13 +805,13 @@ class UnitTestCase(TestCase):
         now = datetime.datetime.now()
 
         def page_factory( ):
-	    """
+            """
             Argument free closure wrapping the Page constructor to make
             it usable with the mptt_mk_forest() function.
             """
             return Page( author=author, status=Page.PUBLISHED,
-			 publication_date=now)
-            
+            publication_date=now)
+
         roots, page_set = mptt_mk_forest( self, page_factory, Page )
         tree = roots[1]
         cnt  = tree.get_descendant_count()
@@ -822,7 +822,7 @@ class UnitTestCase(TestCase):
             [ page.id for page in
               object_sequence_generator( tree,
                                          Page.get_prev_in_book ) ] )
-        
+
 
 # -----------------------------------------------------------------------------
 
@@ -845,7 +845,7 @@ def mptt_mk_forest( tc, mptt_model_factory, model=None ):
     """
     Creates the test fixture used to check :model:`Page` tree
     traversal functions/methods. It is the forest depicted below:
-    
+
       p1,
       p2 { p3 { p4, p5 { p6 { p7 } }, p8 { p9, p10 },  \
         p11 }, p12 { p13 { p14 { p15 } } }, p16 { p17 \
@@ -863,7 +863,7 @@ def mptt_mk_forest( tc, mptt_model_factory, model=None ):
 
     Returns a list of the tree roots and a list of all :model:`Pages`
     in the :model:`Page` forest built.
-    
+
     """
     if not model:
         model = mptt_model_factory
@@ -908,7 +908,7 @@ def mptt_mk_forest( tc, mptt_model_factory, model=None ):
         vertices += [ vertex ]
         if 2 > i or 30 == i :
             roots += [ vertex ]
-    
+
     for key in range(0,len(parenting)):
 
         if parenting[key]:
@@ -918,5 +918,5 @@ def mptt_mk_forest( tc, mptt_model_factory, model=None ):
     nodes = []
     for vertex in vertices:
         nodes += [ model.objects.get( pk=vertex.id ) ]
-        
+
     return ( nodes[0], nodes[1], nodes[-1] ), nodes

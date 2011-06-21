@@ -1,4 +1,4 @@
-{% load mptt_tags gerbi_tags %}
+{% load mptt_tags gerbi_tags gerbi_admin_tags %}
 <script type="text/javascript">
 <!--
     jQuery('#id_{{ name }}').wymeditor({
@@ -20,17 +20,17 @@
             {'name': 'border', 'title': 'Image border', 'expr': 'img'},
             {'name': 'external', 'title': 'External link', 'expr': 'a'}
         ],
-        
+
         editorStyles: [
             {'name': 'img', 'css': 'margin: 0 0 1.5em; max-width: 100%;'},
             {'name': 'p img', 'css': 'float: left; margin: 0.7em 0 0.8em 0; position: relative; width: 98%;'},
             {'name': 'p img.left', 'css': 'float: left; margin: 0.7em 1em 0.8em 0; width: auto;'},
             {'name': 'p img.right', 'css': 'float: right; margin: 0.7em 0 0.8em 1em; width: auto;'},
-            
+
             {'name': 'img', 'css': 'border: none;'},
             {'name': 'img.border', 'css': 'border: 2px solid #757575;'}
         ],
-        
+
         postInit: function(wym) {
             if ({{ page_link_wymeditor }}) {
                 //construct the button's html
@@ -58,14 +58,14 @@
                         if (sel.tagName.toLowerCase() == 'a') {
                             // do we have a selection?
                             if (sel.className != null){
-                                var page_id = sel.className.split('_'); 
+                                var page_id = sel.className.split('_');
                                 var selected_page_id = page_id[1];
                             }
                         }
                     }
                     //construct the dialog's html
                     html = "<body class='wym_dialog wym_dialog_pagelink'"
-                         + " onload='WYMeditor.INIT_DIALOG(" + WYMeditor.INDEX + ");jQuery(\".wym_select_pagelink option.page_" 
+                         + " onload='WYMeditor.INIT_DIALOG(" + WYMeditor.INDEX + ");jQuery(\".wym_select_pagelink option.page_"
                          + selected_page_id + "\").attr(\"selected\",\"selected\").addClass(\"selected\");'"
                          + ">"
                          + "<form>"
@@ -78,7 +78,7 @@
                          + "<label>Page</label>"
                          + "<select class='wym_select_pagelink'>"
                          {% for page in page_list %}
-                         + "<option class='page_{{page.id}}' value='{% show_absolute_url page language %}#{{page.id}}'>{% show_slug_with_level page language %}</option>"
+                         + "<option class='page_{{page.id}}' value='{% gerbi_show_absolute_url page language %}#{{page.id}}'>{% gerbi_show_slug_with_level page language %}</option>"
                          {% endfor %}
                          + "</select>"
                          + "</div>"
@@ -94,10 +94,10 @@
 
                     wym.dialog("Link Page", "menubar=no,titlebar=no,toolbar=no,resizable=no"
                                + ",width=560,height=200,top=0,left=0", html);
-                
+
                     return(false);
                 });
-            }           
+            }
             wym.resizable({handles: "s", maxHeight: 600});
 
 
@@ -112,7 +112,7 @@
                         var values = jQuery(body).find('.wym_select_pagelink').val().split('#');
                         wym.wrap('<a class="page_' + values[1] + '" href="' + values[0] + '" title="">', '</a>');
                         wdw.close();
-    
+
                     });
             }
             if ({{ filebrowser }}) {

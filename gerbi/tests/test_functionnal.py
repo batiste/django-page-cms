@@ -540,7 +540,7 @@ class FunctionnalTestCase(TestCase):
         from gerbi.utils import get_request_mock
         request = get_request_mock()
         context = details(request, path='/page1/', only_context=True)
-        self.assertEqual(context['current_page'], page1)
+        self.assertEqual(context['gerbi_current_page'], page1)
 
 
     def test_request_mockup(self):

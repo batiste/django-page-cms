@@ -13,7 +13,7 @@
             {% endif %}
             <a href="{{ page.id }}/" class="title changelink
             {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
-            {% show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
+            {% gerbi_show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
             <img class="redirected" src="{{ GERBI_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
 
             <span class="message"></span>
@@ -23,7 +23,7 @@
             {% endif %}
 
             <div class="actions-pages">
-                <a class="viewlink" href="{% show_absolute_url page %}" target="_blank" title="{% trans "view this page" %}"></a>
+                <a class="viewlink" href="{% gerbi_show_absolute_url page %}" target="_blank" title="{% trans "view this page" %}"></a>
                 <a class="movelink" id="move-link-{{ page.id }}" href="#" title="{% trans "move this page" %}"></a>
                 <a class="addlink" id="add-link-{{ page.id }}" href="#" title="{% trans "insert a new page here" %}"></a>
                 {% if not page.children.count %}
@@ -46,8 +46,8 @@
         <ul>
             {% for lang in GERBI_LANGUAGES %}
                 <li>
-                    {% if page|has_content_in:lang.0 %}
-                        {% if not page|language_content_up_to_date:lang.0 %}
+                    {% if page|gerbi_has_content_in:lang.0 %}
+                        {% if not page|gerbi_language_content_up_to_date:lang.0 %}
                         →
                         {% endif %}
                         <a href="{{ url }}{{ page.id }}/?language={{ lang.0 }}" class="changelink"

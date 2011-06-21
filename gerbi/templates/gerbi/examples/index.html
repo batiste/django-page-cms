@@ -1,10 +1,10 @@
 {% load cache gerbi_tags i18n %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ lang }}" xml:lang="{{ lang }}" >
 {% comment %}Important to enable other applications to inherit the template{% endcomment %}
-{% load_pages %}
+{% gerbi_load_pages %}
 <head>
 <title>
-    {% show_content current_page "title" %}
+    {% gerbi_show_content gerbi_current_page "title" %}
 </title>
 <script type="text/javascript" src="{{ GERBI_MEDIA_URL }}javascript/jquery.js" /></script>
 <style>
@@ -81,12 +81,12 @@
     {% endif %}
 </div>
 
-<h1 id="title" class="placeholder">{% placeholder title on current_page with TextInput %}</h1>
+<h1 id="title" class="placeholder">{% gerbi_placeholder title on gerbi_current_page with TextInput %}</h1>
 
 <h2>Navigation</h2>
 
 <ul>
-    {% for page in pages_navigation %}
+    {% for page in gerbi_navigation %}
         {% gerbi_menu page %}
     {% endfor %}
 </ul>
@@ -104,26 +104,26 @@
 {% endif %}
 <ul>
 {% for doc in documents %}
-<li><a href="{% url document_details path=current_page.get_complete_slug document_id=doc.id %}">{{ doc.title }}</a></li>
+<li><a href="{% url document_details path=gerbi_current_page.get_complete_slug document_id=doc.id %}">{{ doc.title }}</a></li>
 {% endfor %}
 </ul>
 {% endif %}
 
 {% block content %}
-    {% placeholder right-column with RichTextarea parsed as right_column %}
+    {% gerbi_placeholder right-column with RichTextarea parsed as right_column %}
     <div style="float:right;width:25%">
     <h3>Right column placeholder</h3>
     <div class="right_column">{{ right_column }}</div>
     </div>
 
-    {% if current_page %}
+    {% if gerbi_current_page %}
     <div style="width:70%">
 
         <div>Body placeholder
-            <div id="body" class="placeholder">{% placeholder body with RichTextarea %}</div>
+            <div id="body" class="placeholder">{% gerbi_placeholder body with RichTextarea %}</div>
         </div>
 
-        {% imageplaceholder body-image as imgsrc %}
+        {% gerbi_image_placeholder body-image as imgsrc %}
         {% if imgsrc %}
             <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
         {% endif %}
@@ -182,7 +182,7 @@ $(function(){
         p.html('<textarea style="width:'+width+'px;height:'+height+'px">'+ this.innerHTML +'</textarea><input type="submit" value="Save" />');
         $('input', p).click( function() {
             var content = $('textarea', p).val();
-            $.post('/admin/gerbi/page/{{ current_page.id }}/modify-content/'+p.attr('id')+'/{{ lang }}/', {'content':content}, function(response) {
+            $.post('/admin/gerbi/page/{{ gerbi_current_page.id }}/modify-content/'+p.attr('id')+'/{{ lang }}/', {'content':content}, function(response) {
                 if(response=="ok") {
                     p.html(content);
                     p.removeClass('edit');

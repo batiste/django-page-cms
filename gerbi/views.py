@@ -26,8 +26,6 @@ class Details(object):
     def __call__(self, request, path=None, lang=None, delegation=True,
             **kwargs):
 
-        current_page = False
-
         if path is None:
             raise ValueError(
                 "gerbi.views.Details class view requires the path argument. "
@@ -52,19 +50,19 @@ class Details(object):
 
         is_staff = self.is_user_staff(request)
 
-        current_page = self.resolve_page(request, context, is_staff)
+        gerbi_current_page = self.resolve_page(request, context, is_staff)
 
         # if no page has been found, we will try to find it via an Alias
-        if not current_page:
+        if not gerbi_current_page:
             redirection = self.resolve_alias(request, path, lang)
             if redirection:
                 return redirection
         else:
-            context['current_page'] = current_page
+            context['gerbi_current_page'] = gerbi_current_page
 
         # If unauthorized to see the pages, raise a 404, That can
         # happen with expired pages.
-        if not is_staff and not current_page.visible:
+        if not is_staff and not gerbi_current_page.visible:
             raise Http404
 
         redirection = self.resolve_redirection(request, context)
@@ -73,9 +71,11 @@ class Details(object):
 
         template_name = self.get_template(request, context)
 
+        # could change the current_page
         self.extra_context(request, context)
+        gerbi_current_page = context['gerbi_current_page']
 
-        if delegation and current_page.delegate_to:
+        if delegation and gerbi_current_page.delegate_to:
             answer = self.delegate(request, context, delegation, **kwargs)
             if answer:
                 return answer
@@ -86,8 +86,7 @@ class Details(object):
         template_name = kwargs.get('template_name', template_name)
         response = render_to_response(template_name,
             RequestContext(request, context))
-        current_page = context['current_page']
-        populate_xheaders(request, response, Page, current_page.id)
+        populate_xheaders(request, response, Page, gerbi_current_page.id)
         return response
 
     def resolve_page(self, request, context, is_staff):
@@ -122,14 +121,14 @@ class Details(object):
 
     def resolve_redirection(self, request, context):
         """Check for redirections."""
-        current_page = context['current_page']
+        gerbi_current_page = context['gerbi_current_page']
         lang = context['lang']
-        if current_page.redirect_to_url:
-            return HttpResponsePermanentRedirect(current_page.redirect_to_url)
+        if gerbi_current_page.redirect_to_url:
+            return HttpResponsePermanentRedirect(gerbi_current_page.redirect_to_url)
 
-        if current_page.redirect_to:
+        if gerbi_current_page.redirect_to:
             return HttpResponsePermanentRedirect(
-                current_page.redirect_to.get_url_path(lang))
+                gerbi_current_page.redirect_to.get_url_path(lang))
 
     def get_navigation(self, request, path, lang):
         """Get the pages that are at the root level."""
@@ -155,7 +154,7 @@ class Details(object):
 
     def get_template(self, request, context):
         """Just there in case you have special business logic."""
-        return context['current_page'].get_template()
+        return context['gerbi_current_page'].get_template()
 
     def is_user_staff(self, request):
         """Return True if the user is staff."""
@@ -169,16 +168,16 @@ class Details(object):
     def delegate(self, request, context, delegation=True):
         # if there is a delegation to another view,
         # call this view instead.
-        current_page = context['current_page']
+        gerbi_current_page = context['gerbi_current_page']
         path = context['path']
         delegate_path = path.replace(
-            current_page.get_complete_slug(hideroot=False), "")
+            gerbi_current_page.get_complete_slug(hideroot=False), "")
         # it seems that the urlconf path have to start with a slash
         if len(delegate_path) == 0:
             delegate_path = "/"
         if delegate_path.startswith("//"):
             delegate_path = delegate_path[1:]
-        urlconf = get_urlconf(current_page.delegate_to)
+        urlconf = get_urlconf(gerbi_current_page.delegate_to)
         try:
             result = resolve(delegate_path, urlconf)
         except Resolver404:

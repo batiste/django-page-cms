@@ -181,7 +181,7 @@ class RegressionTestCase(TestCase):
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test7.html')
         temp = loader.get_template('gerbi/tests/test6.html')
-        render = temp.render(RequestContext(request, {'current_page':page}))
+        render = temp.render(RequestContext(request, {'gerbi_current_page':page}))
 
         self.assertTrue('t1_'+page.get_url_path() in render)
         self.assertTrue('t2_'+page.get_url_path() in render)
@@ -209,7 +209,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=209
         """
         page = self.new_page()
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': page, 'lang':'en-us'})
 
         pl1 = """{% load gerbi_tags %}{% gerbi_dynamic_tree_menu "wrong-slug" %}"""
         template = loader.get_template_from_string(pl1)
@@ -221,7 +221,7 @@ class RegressionTestCase(TestCase):
         """
         p1 = self.new_page(content={'slug':'test', 'one':'one', 'two': 'two'})
         template = django.template.loader.get_template('gerbi/tests/extends.html')
-        context = Context({'current_page': p1, 'lang':'en-us'})
+        context = Context({'gerbi_current_page': p1, 'lang':'en-us'})
         renderer = template.render(context)
         self.assertTrue('one' in renderer)
         self.assertTrue('two' in renderer)

@@ -61,6 +61,34 @@ register.filter(gerbi_has_content_in)
 
 """Inclusion tags"""
 
+def gerbi_show_absolute_url(context, page, lang=None):
+    """Show the url of a page in the right language
+
+    Example ::
+
+        {% gerbi_show_absolute_url page_object %}
+
+    You can also use the slug of a page::
+
+        {% gerbi_show_absolute_url "my-page-slug" %}
+
+    Keyword arguments:
+    :param page: the page object, slug or id
+    :param lang: the wanted language
+        (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
+    """
+    if not lang:
+        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id(page, lang)
+    if not page:
+        return {'content': ''}
+    url = page.get_url_path(language=lang)
+    if url:
+        return {'content': url}
+    return {'content': ''}
+gerbi_show_absolute_url = register.inclusion_tag('gerbi/content.html',
+                                      takes_context=True)(gerbi_show_absolute_url)
+
 
 def gerbi_menu(context, page, url='/'):
     """Render a nested list of all the descendents of the given page,
@@ -186,13 +214,13 @@ def gerbi_dynamic_tree_menu(context, page, url='/'):
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     children = None
-    if page and 'current_page' in context:
-        current_page = context['current_page']
+    if page and 'gerbi_current_page' in context:
+        gerbi_current_page = context['gerbi_current_page']
         # if this node is expanded, we also have to render its children
         # a node is expanded if it is the current node or one of its ancestors
-        if(page.tree_id == current_page.tree_id and
-            page.lft <= current_page.lft and
-            page.rght >= current_page.rght):
+        if(page.tree_id == gerbi_current_page.tree_id and
+            page.lft <= gerbi_current_page.lft and
+            page.rght >= gerbi_current_page.rght):
             children = page.get_children_for_frontend()
     context.update({'children': children, 'page': page})
     return context
@@ -343,7 +371,7 @@ class LoadPagesNode(template.Node):
         if 'gerbi_navigation' not in context:
             page_set = Page.objects.navigation().order_by("tree_id")
             context.update({'gerbi_navigation': page_set})
-        if 'current_page' not in context:
+        if 'gerbi_current_page' not in context:
             context.update({'gerbi_current_page': None})
         return ''
 
@@ -356,13 +384,13 @@ def do_gerbi_load(parser, token):
 
         <ul>
             {% gerbi_load %}
-            {% for page in pages_navigation %}
+            {% for page in gerbi_navigation %}
                 {% gerbi_menu page %}
             {% endfor %}
         </ul>
     """
     return LoadPagesNode()
-register.tag('gerbi_load', do_gerbi_load)
+register.tag('gerbi_load_pages', do_gerbi_load)
 
 
 def do_placeholder(parser, token):

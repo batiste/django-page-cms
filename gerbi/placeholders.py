@@ -95,7 +95,7 @@ class PlaceholderNode(template.Node):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
-        self.page = page or 'current_page'
+        self.page = page or 'gerbi_current_page'
         self.name = name
         if widget:
             self.widget = widget
@@ -191,7 +191,7 @@ class PlaceholderNode(template.Node):
         return content
 
     def get_content_from_context(self, context):
-        # current_page can be set to None
+        # gerbi_current_page can be set to None
         if not self.page in context:
             return ''
 

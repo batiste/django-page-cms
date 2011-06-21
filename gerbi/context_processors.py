@@ -13,10 +13,10 @@ def media(request):
     }
 
 
-def pages_navigation(request):
+def gerbi_navigation(request):
     """Adds essential gerbi variables to the `context`."""
     page_set = Page.objects.navigation().order_by("tree_id")
     return {
-        'pages_navigation': page_set,
-        'current_page': None
+        'gerbi_navigation': page_set,
+        'gerbi_current_page': None
     }

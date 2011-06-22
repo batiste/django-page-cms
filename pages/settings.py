@@ -218,6 +218,9 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
 
+# Enable real time search indexation for the pages
+PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False):
+
 # Disable the tests by default so they don't execute when the user
 # execute manage.py test
 PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)

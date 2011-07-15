@@ -109,7 +109,7 @@ class TestCase(TestCase):
         # necessary to clear old URL cache
         page.invalidate()
         for key, value in content.items():
-            Content(page=page, language='en-us', type=key, body=value).save()
+            Content(page=page, language=language, type=key, body=value).save()
         return page
 
 

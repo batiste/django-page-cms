@@ -158,7 +158,8 @@ GERBI_USE_LANGUAGE_PREFIX = getattr(settings, 'GERBI_USE_LANGUAGE_PREFIX',
 
 # Set this to True to raise an error 404 if the used URL path is
 # not strictly the same than the page.
-GERBI_USE_STRICT_URL = getattr(settings, 'GERBI_USE_STRICT_URL', False)
+# This value is chanched to True by default in gerbi 1.5
+GERBI_USE_STRICT_URL = getattr(settings, 'GERBI_USE_STRICT_URL', True)
 
 # Assign a list of placeholders to GERBI_CONTENT_REVISION_EXCLUDE_LIST
 # to exclude them from the revision process.

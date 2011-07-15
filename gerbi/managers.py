@@ -105,6 +105,8 @@ class PageManager(models.Manager):
         the page's path."""
         if complete_path.endswith("/"):
             complete_path = complete_path[:-1]
+        if complete_path.startswith("/"):
+            complete_path = complete_path[1:]
         # just return the root page
         if complete_path == '':
             root_pages = self.root()
@@ -125,7 +127,7 @@ class PageManager(models.Manager):
                     return None
             return pages_list[0]
         # if more than one page is matching the slug,
-        # we need to use the full URL
+        # we need to use the full strict URL
         if len(pages_list) > 1:
             for page in pages_list:
                 if page.get_complete_slug(lang) == complete_path:

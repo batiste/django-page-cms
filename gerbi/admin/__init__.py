@@ -379,13 +379,13 @@ except AlreadyRegistered:
 
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')
-    list_filter = ('page',)
-    search_fields = ('body',)
+    list_filter = ('page', )
+    search_fields = ('body', )
 
 #admin.site.register(Content, ContentAdmin)
 
 class AliasAdmin(admin.ModelAdmin):
-    list_display = ('page', 'url',)
+    list_display = ('page', 'url', )
     list_editable = ('url', )
 
 try:

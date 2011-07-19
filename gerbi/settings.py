@@ -226,5 +226,4 @@ GERBI_ENABLE_TESTS = getattr(settings, 'GERBI_ENABLE_TESTS', False)
 # Enable use of legacy template tag names (prefixed by ``pages_``) as well as new
 # ``gerbi_*`̀` template tags names.
 
-GERBI_LEGACY_TAG_NAMES = getattr( settings, 'GERBI_LEGACY_TAG_NAMES',
-					 True )
+GERBI_LEGACY_TAG_NAMES = getattr( settings, 'GERBI_LEGACY_TAG_NAMES', True)

@@ -30,7 +30,7 @@ class PageForm(forms.ModelForm):
         label=_('Slug'),
         widget=forms.TextInput(),
         help_text=_('The slug will be used to create the page URL, \
-it must be unique among the other gerbi of the same level.')
+it must be unique among the other pages of the same level.')
     )
     language = forms.ChoiceField(
         label=_('Language'),

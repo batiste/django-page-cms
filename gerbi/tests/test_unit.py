@@ -460,20 +460,20 @@ class UnitTestCase(TestCase):
             kwargs={'lang': 'en-us', 'path': 'page1'})
         )
 
-        self.assertEqual(details(req, page1.get_url_path(),
+        self.assertEqual(details(req, page1.get_complete_slug(),
             only_context=True)['gerbi_current_page'],
             page1)
 
         self.assertEqual(details(req, path=page2.get_complete_slug(),
             only_context=True)['gerbi_current_page'], page2)
 
-        self.assertEqual(details(req, page2.get_url_path(),
+        self.assertEqual(details(req, page2.get_complete_slug(),
             only_context=True)['gerbi_current_page'],
             page2)
 
         self.set_setting("GERBI_USE_LANGUAGE_PREFIX", False)
 
-        self.assertEqual(details(req, page2.get_url_path(),
+        self.assertEqual(details(req, page2.get_complete_slug(),
             only_context=True)['gerbi_current_page'],
             page2)
 
@@ -541,6 +541,8 @@ class UnitTestCase(TestCase):
         Check that the strict handling of URLs work as
         intended.
         """
+        self.set_setting("GERBI_USE_STRICT_URL", False)
+
         page1 = self.new_page(content={'slug':'page1'})
         page2 = self.new_page(content={'slug':'page2'})
         page1.save()

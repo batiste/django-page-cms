@@ -197,7 +197,7 @@ class PageAdmin(admin.ModelAdmin):
         additional_fieldsets = []
         additional_fieldsets.append((_('Content'), {
             'fields': placeholder_fieldsets,
-            'classes': ('module-content',),
+            'classes': ('module-content', ),
         }))
 
         return default_fieldsets + additional_fieldsets

@@ -103,10 +103,7 @@ class PageManager(models.Manager):
     def from_path(self, complete_path, lang, exclude_drafts=True):
         """Return a :class:`Page <gerbi.models.Page>` according to
         the page's path."""
-        if complete_path.endswith("/"):
-            complete_path = complete_path[:-1]
-        if complete_path.startswith("/"):
-            complete_path = complete_path[1:]
+        complete_path = complete_path.strip("/")
         # just return the root page
         if complete_path == '':
             root_pages = self.root()

@@ -718,6 +718,7 @@ class FunctionnalTestCase(TestCase):
 
         page = Page.objects.from_path('after', None)
         page.freeze_date = limit
+        page.save()
         self.assertEqual(page.slug(), 'before')
         page.freeze_date = None
         page.save()

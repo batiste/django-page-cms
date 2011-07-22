@@ -119,8 +119,10 @@ class Page(MPTTModel):
     def __init__(self, *args, **kwargs):
         """Instanciate the page object."""
         # per instance cache
+        self.cache = None
         self._languages = None
         self._complete_slug = None
+        # structure of the dict
         self._content_dict = None
         self._is_first_root = None
         super(Page, self).__init__(*args, **kwargs)
@@ -144,6 +146,7 @@ class Page(MPTTModel):
         # let's assume there is no more broken links after a save
         cache.delete(self.GERBI_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
+        self.invalidate()
         # fix sites many-to-many link when the're hidden from the form
         if settings.GERBI_HIDE_SITES and self.sites.count() == 0:
             self.sites.add(Site.objects.get(pk=settings.SITE_ID))
@@ -183,24 +186,11 @@ class Page(MPTTModel):
 
         cache.delete(self.GERBI_LANGUAGES_KEY % (self.id))
         cache.delete('GERBI_FIRST_ROOT_ID')
+        key = "gerbi_page_%d" % (self.id)
+        cache.delete(key)
         self._languages = None
         self._complete_slug = None
-        self._content_dict = dict()
-
-        p_names = [p.name for p in get_placeholders(self.get_template())]
-        if 'slug' not in p_names:
-            p_names.append('slug')
-        if 'title' not in p_names:
-            p_names.append('title')
-        # delete content cache, frozen or not
-        for name in p_names:
-            # frozen
-            cache.delete(GERBI_CONTENT_DICT_KEY %
-                (self.id, name, 1))
-            # not frozen
-            cache.delete(GERBI_CONTENT_DICT_KEY %
-                (self.id, name, 0))
-
+        self.cache = None
         cache.delete(self.GERBI_URL_KEY % (self.id))
 
     def get_languages(self):
@@ -221,6 +211,8 @@ class Page(MPTTModel):
         languages.sort()
         cache.set(self.GERBI_LANGUAGES_KEY % (self.id), languages)
         self._languages = languages
+        if languages is None:
+            raise ValueError("")
         return languages
 
     def is_first_root(self):
@@ -432,6 +424,43 @@ class Page(MPTTModel):
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
 
+    def build_cache(self):
+
+        if not self.id:
+            raise ValueError("Page have no id")
+        key = "gerbi_page_%d" % (self.id)
+        self.cache = self.cache or cache.get(key)
+        if self.cache:
+            return self.cache
+
+        self.cache = {}
+
+        # fill the cache for each language, that will create
+        # P * L queries.
+        # L == number of language, P == number of placeholder in the page.
+        # Once generated the result is cached.
+        for lang in settings.GERBI_LANGUAGES:
+            lang = lang[0]
+            self.cache[lang] = {}
+            params = {
+                'language': lang,
+                'page': self
+            }
+            if self.freeze_date:
+                params['creation_date__lte'] = self.freeze_date
+            # get all the types
+            for content_type in Content.objects.filter(**params).values('type').annotate(models.Max("creation_date")):
+                ctype = content_type['type']
+
+                try:
+                    content = Content.objects.get_content_object(self, lang, ctype)
+                    self.cache[lang][ctype] = {'body': content.body, 'creation_date': content.creation_date}
+                except Content.DoesNotExist:
+                    pass#self.cache[lang][p_name] = None
+
+        cache.set(key, self.cache)
+        return self.cache
+
     def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
         spaces equal to simluate the level of page in the hierarchy."""
@@ -481,7 +510,7 @@ class Page(MPTTModel):
                     return nxt
         return None
 
-    def get_prev_in_book( self ):
+    def get_prev_in_book(self):
         """Returns the previous page in the tree as if it was
         traversed like a book.
 
@@ -535,6 +564,10 @@ class Content(models.Model):
     creation_date = models.DateTimeField(_('creation date'), editable=False,
         default=datetime.now)
     objects = ContentManager()
+
+    def save(self, *args, **kwargs):
+        self.page.invalidate()
+        super(Content, self).save(*args, **kwargs)
 
     class Meta:
         db_table = 'pages_content'

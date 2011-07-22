@@ -67,17 +67,20 @@ def gerbi_language_content_up_to_date(page, language):
     easily make "do nothing" changes to any content block when no
     change is required for a language.
     """
+    return True
     lang_code = getattr(settings, 'LANGUAGE_CODE', None)
     if lang_code == language:
         # official version is always "up to date"
         return True
     # get the last modified date for the official version
-    last_modified = Content.objects.filter(language=lang_code,
-        page=page).order_by('-creation_date')
+    last_modified = page.get_content(language=lang_code, fallback=False)
+    print last_modified
     if not last_modified:
         # no official version
         return True
-    lang_modified = Content.objects.filter(language=language,
-        page=page).order_by('-creation_date')[0].creation_date
-    return lang_modified > last_modified[0].creation_date
+    lang_modified = page.get_content(language=language, fallback=False)
+    if not lang_modified:
+        return True
+
+    return last_modified['creation_date'] > lang_modified['creation_date']
 register.filter(gerbi_language_content_up_to_date)

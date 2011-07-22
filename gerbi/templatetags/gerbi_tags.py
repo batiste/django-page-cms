@@ -55,7 +55,9 @@ def gerbi_has_content_in(page, language):
     :param page: the current page
     :param language: the language you want to look at
     """
-    return Content.objects.filter(page=page, language=language).count() > 0
+    if not page:
+        return False
+    return len(page.get_languages()) > 0
 register.filter(gerbi_has_content_in)
 
 

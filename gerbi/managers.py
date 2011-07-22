@@ -223,39 +223,23 @@ class ContentManager(models.Manager):
         if not language:
             language = settings.GERBI_DEFAULT_LANGUAGE
 
-        frozen = int(bool(page.freeze_date))
-        key = self.GERBI_CONTENT_DICT_KEY % (page.id, ctype, frozen)
+        content = page.build_cache()
 
-        if page._content_dict is None:
-            page._content_dict = dict()
-        if page._content_dict.get(key, None):
-            content_dict = page._content_dict.get(key)
-        else:
-            content_dict = cache.get(key)
+        def _get_content(language, ctype):
+            if(language in content and ctype in content[language]
+                and 'body' in content[language][ctype]):
+                return filter_link(content[language][ctype]['body'], page,
+                    language, ctype)
+            return None
 
-        # fill a dict object for each language, that will create
-        # P * L queries.
-        # L == number of language, P == number of placeholder in the page.
-        # Once generated the result is cached.
-        if not content_dict:
-            content_dict = {}
-            for lang in settings.GERBI_LANGUAGES:
-                try:
-                    content = self.get_content_object(page, lang[0], ctype)
-                    content_dict[lang[0]] = content.body
-                except self.model.DoesNotExist:
-                    content_dict[lang[0]] = ''
-            page._content_dict[key] = content_dict
-            cache.set(key, content_dict)
+        if _get_content(language, ctype):
+            return _get_content(language, ctype)
 
-        if language in content_dict and content_dict[language]:
-            return filter_link(content_dict[language], page, language, ctype)
+        if language_fallback and language != settings.GERBI_DEFAULT_LANGUAGE:
+            language = settings.GERBI_DEFAULT_LANGUAGE
+            if _get_content(language, ctype):
+                return _get_content(language, ctype)
 
-        if language_fallback:
-            for lang in settings.GERBI_LANGUAGES:
-                if lang[0] in content_dict and content_dict[lang[0]]:
-                    return filter_link(content_dict[lang[0]], page, lang[0],
-                        ctype)
         return ''
 
     def get_content_slug_by_slug(self, slug):

@@ -121,8 +121,6 @@ class Page(MPTTModel):
         self.cache = None
         self._languages = None
         self._complete_slug = None
-        # structure of the dict
-        self._content_dict = None
         self._is_first_root = None
         super(Page, self).__init__(*args, **kwargs)
 

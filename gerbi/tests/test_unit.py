@@ -317,7 +317,7 @@ class UnitTestCase(TestCase):
         self.assertEqual(template.render(context), 'english')
 
         # french specified
-        context = RequestContext(MockRequest, {'page': page, 'lang': 'fr'})
+        context = RequestContext(MockRequest, {'page': page, 'lang': 'fr-ch'})
         template = Template('{% load gerbi_tags %}'
                             '{% gerbi_get_content page "slug" as content %}'
                             '{{ content }}')

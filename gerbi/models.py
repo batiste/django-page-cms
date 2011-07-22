@@ -203,17 +203,16 @@ class Page(MPTTModel):
         if self._languages is not None:
             return self._languages
 
-        languages = [c['language'] for
-                            c in Content.objects.filter(page=self,
-                            type="slug").values('language')]
-        # remove duplicates
-        languages = list(set(languages))
-        languages.sort()
-        cache.set(self.GERBI_LANGUAGES_KEY % (self.id), languages)
-        self._languages = languages
-        if languages is None:
-            raise ValueError("")
-        return languages
+        self._languages = []
+        self.build_cache()
+        for lang in settings.GERBI_LANGUAGES:
+            lang = lang[0]
+            if lang self.cache and self.cache[lang]:
+                self._languages.append(lang)
+
+        self._languages.sort()
+        cache.set(self.GERBI_LANGUAGES_KEY % (self.id), self._languages)
+        return self._languages
 
     def is_first_root(self):
         """Return ``True`` if this page is the first root gerbi."""

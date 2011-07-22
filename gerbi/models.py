@@ -60,7 +60,6 @@ class Page(MPTTModel):
         (DRAFT, _('Draft')),
     )
 
-    GERBI_LANGUAGES_KEY = "page_%d_languages"
     GERBI_URL_KEY = "page_%d_url"
     GERBI_BROKEN_LINK_KEY = "page_broken_link_%s"
 
@@ -183,8 +182,6 @@ class Page(MPTTModel):
 
     def invalidate(self):
         """Invalidate cached data for this page."""
-
-        cache.delete(self.GERBI_LANGUAGES_KEY % (self.id))
         cache.delete('GERBI_FIRST_ROOT_ID')
         key = "gerbi_page_%d" % (self.id)
         cache.delete(key)
@@ -199,19 +196,14 @@ class Page(MPTTModel):
         """
         if self._languages:
             return self._languages
-        self._languages = cache.get(self.GERBI_LANGUAGES_KEY % (self.id))
-        if self._languages is not None:
-            return self._languages
 
         self._languages = []
         self.build_cache()
         for lang in settings.GERBI_LANGUAGES:
             lang = lang[0]
-            if lang self.cache and self.cache[lang]:
+            if lang in self.cache and self.cache[lang]:
                 self._languages.append(lang)
 
-        self._languages.sort()
-        cache.set(self.GERBI_LANGUAGES_KEY % (self.id), self._languages)
         return self._languages
 
     def is_first_root(self):

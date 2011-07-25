@@ -196,6 +196,8 @@ class Page(MPTTModel):
             return self._languages
 
         self._languages = []
+        # this a very expensive operation if there is
+        # many languages
         self.build_cache()
         for lang in settings.GERBI_LANGUAGES:
             lang = lang[0]
@@ -413,23 +415,27 @@ class Page(MPTTModel):
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
 
-    def build_cache(self):
+    def build_cache(self, language=None):
 
         if not self.id:
             raise ValueError("Page have no id")
         key = "gerbi_page_%d" % (self.id)
         self.cache = self.cache or cache.get(key)
-        if self.cache:
-            return self.cache
+        if self.cache is None:
+            self.cache = {}
 
-        self.cache = {}
+        if language:
+            languages = [language]
+        else:
+            languages = [lang[0] for lang in settings.GERBI_LANGUAGES]
 
-        # fill the cache for each language, that will create
+        needed_languages = [lang for lang in languages
+            if lang not in self.cache.keys()]
+        # fill the cache for each needed language, that will create
         # P * L queries.
         # L == number of language, P == number of placeholder in the page.
         # Once generated the result is cached.
-        for lang in settings.GERBI_LANGUAGES:
-            lang = lang[0]
+        for lang in needed_languages:
             self.cache[lang] = {}
             params = {
                 'language': lang,
@@ -437,17 +443,20 @@ class Page(MPTTModel):
             }
             if self.freeze_date:
                 params['creation_date__lte'] = self.freeze_date
-            # get all the types
-            for content_type in Content.objects.filter(**params).values('type').annotate(models.Max("creation_date")):
+            # get all the content types for one language
+            for content_type in Content.objects.filter(**params).values(
+                    'type').annotate(models.Max("creation_date")):
                 ctype = content_type['type']
 
                 try:
                     content = Content.objects.get_content_object(self, lang, ctype)
-                    self.cache[lang][ctype] = {'body': content.body, 'creation_date': content.creation_date}
+                    self.cache[lang][ctype] = {'body': content.body,
+                        'creation_date': content.creation_date}
                 except Content.DoesNotExist:
                     pass#self.cache[lang][p_name] = None
 
-        cache.set(key, self.cache)
+        if len(needed_languages):
+            cache.set(key, self.cache)
         return self.cache
 
     def slug_with_level(self, language=None):

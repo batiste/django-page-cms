@@ -223,7 +223,7 @@ class ContentManager(models.Manager):
         if not language:
             language = settings.GERBI_DEFAULT_LANGUAGE
 
-        content = page.build_cache()
+        content = page.build_cache(language=language)
 
         def _get_content(language, ctype):
             if(language in content and ctype in content[language]
@@ -237,6 +237,7 @@ class ContentManager(models.Manager):
 
         if language_fallback and language != settings.GERBI_DEFAULT_LANGUAGE:
             language = settings.GERBI_DEFAULT_LANGUAGE
+            content = page.build_cache(language=language)
             if _get_content(language, ctype):
                 return _get_content(language, ctype)
 

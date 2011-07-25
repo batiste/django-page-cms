@@ -22,14 +22,17 @@ $(function() {
 
     // Set the publication status
     var select = $('#id_status');
-    var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
-    var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(select);
-    // disable ajax post if page not already created (add view)
-    var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
 
-    select.change(function(e) {
-        pages.update_published_icon('', select, img, change_status);
-    });
+    if(select) {
+        var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
+        var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(select);
+        // disable ajax post if page not already created (add view)
+        var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
+
+        select.change(function(e) {
+            pages.update_published_icon('', select, img, change_status);
+        });
+    }
 
     // Translation helper
     $('#translation-helper-select').change(function() {

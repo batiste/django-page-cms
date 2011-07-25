@@ -303,10 +303,7 @@ class Page(MPTTModel):
         :param fallback: if ``True``, the slug will also be searched in other \
         languages.
         """
-
-        slug = self.get_content(language, 'slug', language_fallback=fallback)
-
-        return slug
+        return self.get_content(language, 'slug', language_fallback=fallback)
 
     def title(self, language=None, fallback=True):
         """
@@ -316,9 +313,6 @@ class Page(MPTTModel):
         :param fallback: if ``True``, the slug will also be searched in \
         other languages.
         """
-        if not language:
-            language = settings.GERBI_DEFAULT_LANGUAGE
-
         return self.get_content(language, 'title', language_fallback=fallback)
 
     def get_content(self, language, ctype, language_fallback=False):

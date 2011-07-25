@@ -96,7 +96,6 @@ $(function () {
         $('.publish-select', elements).change(function (e) {
             var url = this.name.split('status-')[1]+'/';
             var img = $(this).parent().find('img');
-
             pages.update_published_icon(url, this, img, 1);
         });
     }

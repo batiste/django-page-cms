@@ -1,9 +1,10 @@
 {% load i18n %}
 {% if revisions %}
-    <select class="revisions">
-        <option value="" selected="selected">{% trans "Revisions" %}</option>
+    <label class="revisions">{% trans "Revisions" %}
+    <select>
         {% for revision in revisions %}
-            <option value="./get-content/{{ revision.id }}/">{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</option>
+            <option value="./get-content/{{ revision.id }}/" {% if forloop.first %}selected="selected"{% endif %}>{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</option>
         {% endfor %}
     </select>
+    </label>
 {% endif %}

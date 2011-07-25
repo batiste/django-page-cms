@@ -25,7 +25,7 @@ class PageForm(forms.ModelForm):
 
     title = forms.CharField(
         label=_('Title'),
-        widget=forms.TextInput(),
+        widget=forms.Textarea,
     )
     slug = forms.CharField(
         label=_('Slug'),

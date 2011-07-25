@@ -72,7 +72,7 @@ $(function() {
     */
 
     // Content revision selector
-    $('.revisions').change(function () {
+    $('.revisions select').change(function () {
         var select = $(this);
         var val = select.val();
         var language = $('#id_language').val();

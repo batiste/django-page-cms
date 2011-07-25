@@ -34,18 +34,6 @@ $(function() {
         });
     }
 
-    // Translation helper
-    $('#translation-helper-select').change(function() {
-        var index = this.selectedIndex;
-        if (index) {
-            $.get(window.location.href.split('?')[0]+'traduction/'+this.options[index].value+'/', function(html) {
-                $('#translation-helper-content').html(html).show();
-            });
-        } else {
-            $('#translation-helper-content').hide();
-        }
-    });
-
     // Confirm language and template change if page is not saved
     // this code doesn't work with languages
     $.each(['language', 'template'], function(i, label) {

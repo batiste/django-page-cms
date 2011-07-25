@@ -110,7 +110,6 @@ $(function () {
                 init_publish_hanlder(changelist);
                 pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                 action = selected_page = '';
-                //bind_sortable()
             }
         );
     };

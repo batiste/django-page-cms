@@ -37,7 +37,8 @@ def list_pages_ajax(request, invalid_move=False):
         'language': language,
         'pages': page_set,
     }
-    return render_to_response("admin/gerbi/page/change_list_table.html", context)
+    return render_to_response("admin/gerbi/page/change_list_table.html",
+        RequestContext(request, context))
 list_pages_ajax = staff_member_required(list_pages_ajax)
 
 def modify_content(request, page_id, content_type, language_id):

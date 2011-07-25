@@ -27,23 +27,6 @@
             {% include "admin/gerbi/page/includes/fieldset.html" %}
 
             {% if forloop.first %}
-                {% if not add and traduction_languages %}
-                <fieldset class="module module-translation-helper aligned">
-                    <h2>{% trans "Translation helper" %}</h2>
-                    <div class="form-row">
-                        <label for="translation-helper-select" class="required">{% trans "Language:" %}</label>
-                        <select id="translation-helper-select">
-                            <option value="" selected="selected">---------</option>
-                            {% for lang in traduction_languages %}
-                                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-                            {% endfor %}
-                        </select>
-                        {% comment %}A little "smart" trick here to have this right column{% endcomment %}
-                        <div id="translation-helper-content"></div>
-                    </div>
-                </fieldset>
-                {% endif %}
-
                 {% comment %}Close sidebar, open content{% endcomment %}
                 </div>
                 <div class="content">

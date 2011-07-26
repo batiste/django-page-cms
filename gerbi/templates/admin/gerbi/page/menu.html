@@ -1,4 +1,4 @@
-{% load gerbi_tags gerbi_admin_tags i18n adminmedia cache %}
+{% load gerbi_tags gerbi_admin_tags i18n cache %}
 
 <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }} draggable">
     <td class="selection-cell"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
@@ -8,13 +8,18 @@
                 <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                     <span class="expand">+</span>
                     <span class="collapse">-</span>
-                    <img class="expand-loading" src="{{ GERBI_MEDIA_URL }}images/loading.gif" alt="loading" />
+                    <img class="expand-loading" src="{{ GERBI_MEDIA_URL }}images/loading.gif" alt='{% trans "Loading" %}' />
                 </a>
             {% endif %}
             <a href="{{ page.id }}/" class="title changelink
             {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
-            {% gerbi_show_content page "slug" %}{% if page.redirect_to or page.redirect_to_url %}
-            <img class="redirected" src="{{ GERBI_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
+            {% gerbi_show_content page "slug" %}</a>
+
+            {% if page.redirect %}
+            <a class="redirected" href="{{ page.redirect }}" target="_blank">
+                <img class="redirected" src="{{ GERBI_MEDIA_URL }}images/icons/redirect.gif" title='{% trans "Redirected" %}' />
+            </a>
+            {% endif %}
 
             <span class="message"></span>
 

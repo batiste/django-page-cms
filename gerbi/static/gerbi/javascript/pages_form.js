@@ -2,11 +2,11 @@
 
 $(function() {
     // Hide form rows containing only hidden inputs
-    $('.form-row').each(function() {
+    /*$('.form-row').each(function() {
         if (!$('p, label, select, input:not([type=hidden])', this).length) {
             $(this).hide();
         }
-    });
+    });*/
 
     // Focus the title
     $('#id_title').focus();
@@ -35,17 +35,14 @@ $(function() {
     }
 
     // Confirm language and template change if page is not saved
-    // this code doesn't work with languages
-    $.each(['language', 'template'], function(i, label) {
-        var select = $('#id_'+label);
-        if (select.length) {
-            var orig_ = select.val();
-            select.change(function() {
-                if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
-                    $('input[name=_continue]').click();
-            });
-        };
-    });
+    var select = $('#id_template');
+    if (select.length) {
+        var orig_ = select.val();
+        select.change(function() {
+            if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
+                $('input[name=_continue]').click();
+        });
+    };
 
     // Disable the page content if the page is a redirection
     /*

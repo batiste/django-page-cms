@@ -430,8 +430,7 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-
-    width: 305px;
+    width: 360px;
     float: left;
     display: inline; /* IE6 fix */
     margin-right: 1em;
@@ -446,9 +445,16 @@ html[dir=rtl] .change-form .sidebar {
     width: 90px; /* IE6 fix */
     line-height: 20px;
 }
-.change-form .sidebar input,
+.change-form .sidebar input {
+    width: 220px;
+}
+
+.change-form .content input {
+    width: 400px;
+}
+
 .change-form .sidebar select {
-    width: 148px;
+
 }
 
 .change-form .sidebar p.help,
@@ -477,15 +483,20 @@ html[dir=rtl] .change-form .sidebar {
 
 /* Status */
 
-.module-general #id_status {
+#id_status {
     width:140px;
 }
 
-.module-general .status img {
+.status img {
     width: 10px;
     height: 10px;
     margin-left:4px;
 }
+
+.redirected {
+    margin:0 2px;
+}
+
 html[dir=rtl] .module-general .status img {margin-left:0; margin-right:4px;}
 
 /* Options */
@@ -527,39 +538,48 @@ html[dir=rtl] .change-form .module-options .form-row {
     width: 94px;
 }
 /* Languages */
-.change-form .module-options .language ul {
+
+.change-form .language {
+    width:100%;
+}
+
+.change-form .language ul {
     margin: 0;
     padding: 3px 0;
 }
-.change-form .module-options .language li {
-    display: inline;
+.change-form .language li {
+    float:left;
     list-style: none;
     margin: 0;
     padding: 0
 }
-.change-form .module-options .language .editlink,
-.change-form .module-options .language .addlink,
-.change-form .module-options .language .current {
+
+.change-form .language a {
+
+}
+
+.change-form .language .editlink,
+.change-form .language .addlink,
+.change-form .language .current {
     float: left;
     display: inline; /* IE6 fix */
     margin: 0 6px 0 0;
-    padding: 0 12px 0 0;
+    padding: 0px 14px 0px 6px;
     line-height: 16px;
     font-weight: bold;
-    text-transform: uppercase;
     background: none;
 }
-.change-form .module-options .language .editlink:hover {
+.change-form .language .editlink:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
-.change-form .module-options .language .addlink {
+.change-form .language .addlink {
     color: #ccc;
 }
-.change-form .module-options .language .addlink:hover {
+.change-form .language .addlink:hover {
     color: #007418;
     background: url(../images/icons/add.gif) right 0.2em no-repeat;
 }
-.change-form .module-options .language .current {
+.change-form .language .current {
     margin-right: 16px;
     padding: 0 2px;
     border: 1px solid #888;
@@ -576,15 +596,16 @@ html[dir=rtl] .change-form .module-options .form-row {
     float: none;
     padding: 8px 12px;
 }
-.change-form .module-content .revisions {
-    position: absolute;
-    top: 8px;
-    right: 12px;
+.change-form .revisions {
     width: 18em;
+    float:right;
 }
-html[dir=rtl] .change-form .module-content .revisions {
-    left: 12px;
-    right: auto;
+.change-form .page-field {
+    float:left;
+    margin-right:20px;
+}
+
+html[dir=rtl] .change-form .revisions {
 }
 .change-form .module-content .wym_skin_django {
     padding: 0;
@@ -600,57 +621,7 @@ html[dir=rtl] .change-form .module-content .revisions {
     width: 60%;
 }
 
-/* Translation helper */
-.change-form .module-translation-helper #translation-helper-content {
-    overflow: hidden;
-    display: none;
-}
-.change-form .module-translation-helper .translation-helper-title {
-    margin-top: 1em !important;
-}
-.change-form .module-translation-helper .translation-helper-placeholder {
-    overflow: auto;
-    max-height: 400px;
-    padding: 1em;
-    background: #ffc;
-}
-.change-form .module-translation-helper .translation-helper-placeholder p,
-.change-form .module-translation-helper .translation-helper-placeholder h1,
-.change-form .module-translation-helper .translation-helper-placeholder h2,
-.change-form .module-translation-helper .translation-helper-placeholder h3,
-.change-form .module-translation-helper .translation-helper-placeholder h4,
-.change-form .module-translation-helper .translation-helper-placeholder h5,
-.change-form .module-translation-helper .translation-helper-placeholder h6,
-.change-form .module-translation-helper .translation-helper-placeholder pre {
-    margin: 0 0 5px !important; padding: 0;
-    line-height: 12px;
-    text-transform: none;
-    color: black; background: none;
-}
-.change-form .module-translation-helper .translation-helper-placeholder blockquote {
-    margin: 0 0 5px;
-    line-height: 12px;
-    color: black; background: none;
-}
-.change-form .module-translation-helper .translation-helper-placeholder h1,
-.change-form .module-translation-helper .translation-helper-placeholder h2,
-.change-form .module-translation-helper .translation-helper-placeholder h3,
-.change-form .module-translation-helper .translation-helper-placeholder h4,
-.change-form .module-translation-helper .translation-helper-placeholder h5,
-.change-form .module-translation-helper .translation-helper-placeholder h6 { font-weight: bold; }
-.change-form .module-translation-helper .translation-helper-placeholder h1 { font-size: 20px; line-height: 22px; }
-.change-form .module-translation-helper .translation-helper-placeholder h2 { font-size: 18px; line-height: 20px; }
-.change-form .module-translation-helper .translation-helper-placeholder h3 { font-size: 16px; line-height: 18px; }
-.change-form .module-translation-helper .translation-helper-placeholder h4 { font-size: 14px; line-height: 16px; }
-.change-form .module-translation-helper .translation-helper-placeholder h5 { font-size: 12px; line-height: 14px; }
-.change-form .module-translation-helper .translation-helper-placeholder h6 { font-size: 11px; line-height: 13px; }
-
 /* Submit */
 .change-form .submit-row {
     clear: both;
 }
-
-/* page link */
-.change-form .module-translation-helper .translation-helper-placeholder .externallink_broken,
-.change-form .module-translation-helper .translation-helper-placeholder .pagelink_broken { text-decoration: line-through; }
-

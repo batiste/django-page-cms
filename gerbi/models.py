@@ -164,6 +164,13 @@ class Page(MPTTModel):
         return self.status
     calculated_status = property(_get_calculated_status)
 
+    def redirect(self):
+        if self.redirect_to_url:
+            return self.redirect_to_url
+
+        if self.redirect_to:
+            return self.redirect_to.get_url_path()
+
     def _visible(self):
         """Return True if the page is visible on the frontend."""
         return self.calculated_status in (self.PUBLISHED, self.HIDDEN)

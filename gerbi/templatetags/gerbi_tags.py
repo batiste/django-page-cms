@@ -57,7 +57,7 @@ def gerbi_has_content_in(page, language):
     """
     if not page:
         return False
-    return len(page.get_languages()) > 0
+    return language in page.get_languages()
 register.filter(gerbi_has_content_in)
 
 

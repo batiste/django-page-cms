@@ -22,18 +22,57 @@
 
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
         {% csrf_token %}
+
+        {% with form.language as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
+
+        {{ form.errors }}
+
         <div class="sidebar">
-        {% for fieldset in adminform %}
-            {% include "admin/gerbi/page/includes/fieldset.html" %}
 
-            {% if forloop.first %}
-                {% comment %}Close sidebar, open content{% endcomment %}
-                </div>
-                <div class="content">
-            {% endif %}
+            {% with form.slug as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
 
+            {% with form.status as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.template as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.freeze_date as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.redirect_to as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.redirect_to_url as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.target as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+            {% with form.position as field %}
+                {% include "admin/gerbi/page/includes/field.html" %}
+            {% endwith %}
+
+        </div>
+        <div class="content">
+        {% for field in form %}
+            {% for p in placeholders %}
+                {% ifequal p.name field.name %}
+                    {% include "admin/gerbi/page/includes/field.html" %}
+                {% endifequal %}
+            {% endfor %}
         {% endfor %}
-        </div>{% comment %}Close content{% endcomment %}
+        </div>
 
         <div style="clear:both">
         {% for inline_admin_formset in inline_admin_formsets %}

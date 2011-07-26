@@ -3,7 +3,9 @@
 from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_unicode
 
+from gerbi.utils import get_placeholders
 from gerbi import settings
 from gerbi.models import Page, Content
 from gerbi.urlconf_registry import get_choices
@@ -69,6 +71,45 @@ it must be unique among the other pages of the same level.')
 
     class Meta:
         model = Page
+
+    def __init__(self, *args, **kwargs):
+
+        language = kwargs.pop('language')
+        template = kwargs.pop('template')
+        page = kwargs.get('instance')
+
+        super(PageForm, self).__init__(*args, **kwargs)
+
+        del self.fields['author']
+        del self.fields['last_modification_date']
+
+        self.fields['language'].initial = language
+        self.fields['language'].widget = LanguageChoiceWidget(page=page, language=language)
+
+        if page:
+            initial_slug = page.slug(language=language, fallback=False)
+            initial_title = page.title(language=language, fallback=False)
+            self.fields['slug'].initial = initial_slug
+            self.fields['title'].initial = initial_title
+            #form.fields['slug'].label = _('Slug')
+
+        page_templates = settings.get_page_templates()
+        if len(page_templates) > 0:
+            template_choices = list(page_templates)
+            template_choices.insert(0, (settings.GERBI_DEFAULT_TEMPLATE,
+                    _('Default template')))
+            self.fields['template'].choices = template_choices
+            self.fields['template'].initial = force_unicode(template)
+
+        for placeholder in get_placeholders(template):
+            name = placeholder.name
+            if page:
+                initial = placeholder.get_content(page, language, name)
+            else:
+                initial = None
+            self.fields[name] = placeholder.get_field(page, language,
+                initial=initial)
+
 
     def clean_slug(self):
         """Handle move action on the gerbi"""

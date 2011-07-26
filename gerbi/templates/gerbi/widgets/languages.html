@@ -5,17 +5,22 @@
 <ul class="clearfix">
 {% for lang in page_languages %}
     {% ifequal value lang.0 %}
-        <li><span class="current">{{ lang.0 }}</span></li>
+        <li><span class="current">{{ lang.1 }}
+        <br>
+            {% if page|gerbi_has_content_in:language %}
+            <a class="deletelink js-confirm-delete" href="/admin/pages/page/{{ page.id }}/delete-content/{{ language }}/">
+            {% trans "Delete this translation" %}</a>
+            {% endif %}
+        </span>
+        </li>
     {% else %}
         {% if page|gerbi_has_content_in:lang.0 %}
-            <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
+            <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.1 }}</a></li>
         {% else %}
-            <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
+            <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.1 }}</a></li>
         {% endif %}
     {% endifequal %}
 {% endfor %}
+
 </ul>
-{% if page|gerbi_has_content_in:value %}
-<p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{
-page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>
-{% endif %}
+

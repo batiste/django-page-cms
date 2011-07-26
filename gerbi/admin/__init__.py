@@ -13,6 +13,7 @@ from gerbi.admin.views import change_status, modify_content, delete_content
 from gerbi.admin.views import move_page
 from gerbi.permissions import PagePermission
 import gerbi.widgets
+import copy
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
@@ -176,7 +177,7 @@ class PageAdmin(admin.ModelAdmin):
         # from the field list
         general_module = {
             'fields': list(self.general_fields),
-            'classes': ('module-general',),
+            'classes': ('module-general', ),
         }
 
         default_fieldsets = list(self.fieldsets)
@@ -205,7 +206,6 @@ class PageAdmin(admin.ModelAdmin):
         """Given a ModelForm return an unsaved instance. ``change`` is True if
         the object is being changed, and False if it's being added."""
         instance = super(PageAdmin, self).save_form(request, form, change)
-        instance.template = form.cleaned_data['template']
         if not change:
             instance.author = request.user
         return instance
@@ -214,47 +214,14 @@ class PageAdmin(admin.ModelAdmin):
         """Get a :class:`Page <gerbi.admin.forms.PageForm>` for the
         :class:`Page <gerbi.models.Page>` and modify its fields depending on
         the request."""
-        form = super(PageAdmin, self).get_form(request, obj, **kwargs)
-
-        language = get_language_from_request(request)
-        form.base_fields['language'].initial = language
-        if obj:
-            initial_slug = obj.slug(language=language, fallback=False)
-            initial_title = obj.title(language=language, fallback=False)
-            form.base_fields['slug'].initial = initial_slug
-            form.base_fields['title'].initial = initial_title
-            form.base_fields['slug'].label = _('Slug')
-
-        template = get_template_from_request(request, obj)
-        page_templates = settings.get_page_templates()
-        if len(page_templates) > 0:
-            template_choices = list(page_templates)
-            template_choices.insert(0, (settings.GERBI_DEFAULT_TEMPLATE,
-                    _('Default template')))
-            form.base_fields['template'].choices = template_choices
-            form.base_fields['template'].initial = force_unicode(template)
-
-        for placeholder in get_placeholders(template):
-            name = placeholder.name
-            if obj:
-                initial = placeholder.get_content(obj, language, name)
-            else:
-                initial = None
-            form.base_fields[name] = placeholder.get_field(obj,
-                language, initial=initial)
-
-        return form
+        return self.form
 
     def change_view(self, request, object_id, extra_context=None):
         """The ``change`` admin view for the
         :class:`Page <gerbi.models.Page>`."""
-        language = get_language_from_request(request)
-        extra_context = {
-            'language': language,
-            # don't see where it's used
-            #'lang': current_lang,
-            'page_languages': settings.GERBI_LANGUAGES,
-        }
+        model = self.model
+        opts = model._meta
+
         try:
             int(object_id)
         except ValueError:
@@ -267,26 +234,90 @@ class PageAdmin(admin.ModelAdmin):
             # permissions yet. We don't want an unauthenticated user to be able
             # to determine whether a given object exists.
             obj = None
+
+        language = get_language_from_request(request)
+        template = get_template_from_request(request, obj)
+        placeholders = get_placeholders(template)
+        form_cls = self.get_form(request, obj)
+
+        if request.method == 'POST':
+            form = form_cls(request.POST, request.FILES, instance=obj,
+                language=language, template=template)
+            if form.is_valid():
+                new_object = form.save(commit=False)
+                if not new_object.author:
+                    new_object.author = request.user
+                self.save_model(request, new_object, form, change=True)
+                return self.response_change(request, new_object)
         else:
-            template = get_template_from_request(request, obj)
-            extra_context['placeholders'] = get_placeholders(template)
-            extra_context['traduction_languages'] = [l for l in
-                settings.GERBI_LANGUAGES if Content.objects.get_content(obj,
-                                    l[0], "title") and l[0] != language]
-        extra_context['page'] = obj
-        return super(PageAdmin, self).change_view(request, object_id,
-                                                        extra_context)
+            form = form_cls(instance=obj, language=language, template=template)
+
+        # missing the inline media
+        media = self.media + form.media
+
+        traduction_languages = [l for l in
+            settings.GERBI_LANGUAGES if Content.objects.get_content(obj,
+            l[0], "title") and l[0] != language]
+
+        context = {
+            'page': obj,
+            'form': form,
+            'traduction_languages': traduction_languages,
+            'placeholders': placeholders,
+            'language': language,
+            'page_languages': settings.GERBI_LANGUAGES,
+            'title': _('Change %s') % force_unicode(opts.verbose_name),
+            'original': obj,
+            'is_popup': "_popup" in request.REQUEST,
+            'media': media,
+            #'inline_admin_formsets': inline_admin_formsets,
+            #'errors': helpers.AdminErrorList(form, formsets),
+            #'root_path': self.admin_site.root_path,
+            'app_label': opts.app_label,
+        }
+        context.update(extra_context or {})
+        return self.render_change_form(request, context, change=True, obj=obj)
 
     def add_view(self, request, form_url='', extra_context=None):
         """The ``add`` admin view for the :class:`Page <gerbi.models.Page>`."""
-        extra_context = {
-            'language': get_language_from_request(request),
-            'page_languages': settings.GERBI_LANGUAGES,
-        }
+        model = self.model
+        opts = model._meta
+        language = get_language_from_request(request)
         template = get_template_from_request(request)
-        #extra_context['placeholders'] = get_placeholders(template)
-        return super(PageAdmin, self).add_view(request, form_url,
-                                                            extra_context)
+        placeholders = get_placeholders(template)
+        form_cls = self.get_form(request)
+        traduction_languages = settings.GERBI_LANGUAGES
+
+        if request.method == 'POST':
+            form = form_cls(request.POST, request.FILES, instance=None,
+                language=language, template=template)
+            if form.is_valid():
+                new_object = form.save(commit=False)
+                new_object.author = request.user
+                self.save_model(request, new_object, form, change=True)
+                return self.response_change(request, new_object)
+        else:
+            form = form_cls(instance=None, language=language, template=template)
+
+        media = self.media + form.media
+        context = {
+            'show_delete': False,
+            'page': None,
+            'form': form,
+            'traduction_languages': traduction_languages,
+            'placeholders': placeholders,
+            'language': language,
+            'page_languages': settings.GERBI_LANGUAGES,
+            'title': _('Change %s') % force_unicode(opts.verbose_name),
+            'original': None,
+            'is_popup': "_popup" in request.REQUEST,
+            'media': media,
+            #'inline_admin_formsets': inline_admin_formsets,
+            #'errors': helpers.AdminErrorList(form, formsets),
+            #'root_path': self.admin_site.root_path,
+            'app_label': opts.app_label,
+        }
+        return self.render_change_form(request, context, form_url=form_url, add=True)
 
     def has_add_permission(self, request):
         """Return ``True`` if the current user has permission to add a new

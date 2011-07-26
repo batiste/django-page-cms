@@ -366,10 +366,9 @@ register_widget(VideoWidget)
 
 class LanguageChoiceWidget(TextInput):
 
-    def __init__(self, language=None, attrs=None, **kwargs):
+    def __init__(self, attrs=None, page=None, language=None):
         self.language = language
-        self.page = kwargs.get('page')
-        # page is None
+        self.page = page
         super(LanguageChoiceWidget, self).__init__(attrs)
 
     def render(self, name, value, attrs=None, **kwargs):

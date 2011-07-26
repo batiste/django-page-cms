@@ -554,8 +554,8 @@ html[dir=rtl] .change-form .module-options .form-row {
     padding: 0
 }
 
-.change-form .language a {
-
+.change-form .language label {
+    padding:0;
 }
 
 .change-form .language .editlink,

@@ -150,18 +150,20 @@ class PageAdmin(admin.ModelAdmin):
 
         for name in self.mandatory_placeholders:
             data = form.cleaned_data[name]
-            placeholder = PlaceholderNode(name)
-            extra_data = placeholder.get_extra_data(form.data)
-            placeholder.save(page, language, data, change,
-                extra_data=extra_data)
+            if data is not None:
+                placeholder = PlaceholderNode(name)
+                extra_data = placeholder.get_extra_data(form.data)
+                placeholder.save(page, language, data, change,
+                    extra_data=extra_data)
 
         for placeholder in get_placeholders(page.get_template()):
             if(placeholder.name in form.cleaned_data and placeholder.name
                     not in self.mandatory_placeholders):
-                data = form.cleaned_data[placeholder.name]
-                extra_data = placeholder.get_extra_data(form.data)
-                placeholder.save(page, language, data, change,
-                    extra_data=extra_data)
+                if data is not None:
+                    data = form.cleaned_data[placeholder.name]
+                    extra_data = placeholder.get_extra_data(form.data)
+                    placeholder.save(page, language, data, change,
+                        extra_data=extra_data)
 
         page.invalidate()
 

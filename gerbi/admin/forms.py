@@ -13,6 +13,7 @@ from gerbi.widgets import LanguageChoiceWidget
 from gerbi.templatetags.gerbi_tags import get_page_from_string_or_id
 
 # error messages
+slug_required = _('A page needs at least one slug')
 another_page_error = _('Another page with this slug already exists')
 sibling_position_error = _('A sibling with this slug already exists at the \
 targeted position')
@@ -30,6 +31,7 @@ class PageForm(forms.ModelForm):
         widget=forms.Textarea,
     )
     slug = forms.CharField(
+        required=False,
         label=_('Slug'),
         widget=forms.TextInput(),
         help_text=_('The slug will be used to create the page URL, \
@@ -75,6 +77,7 @@ it must be unique among the other pages of the same level.')
     def __init__(self, *args, **kwargs):
 
         language = kwargs.pop('language')
+        self.language = language
         template = kwargs.pop('template')
         page = kwargs.get('instance')
 
@@ -112,9 +115,16 @@ it must be unique among the other pages of the same level.')
 
 
     def clean_slug(self):
-        """Handle move action on the gerbi"""
+        """Handle slug of the page"""
 
-        slug = slugify(self.cleaned_data['slug'])
+        slug = slugify(self.cleaned_data['slug'].strip())
+        if not len(slug):
+            if Content.objects.filter(page=self.instance,
+                type="slug").exclude(language=self.language).count() > 0:
+                return ""
+            else:
+                raise forms.ValidationError(slug_required)
+
         target = self.data.get('target', None)
         position = self.data.get('position', None)
 

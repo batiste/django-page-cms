@@ -14,16 +14,24 @@ from gerbi.placeholders import parse_placeholder
 
 register = template.Library()
 
-def get_page_from_string_or_id(page_string, lang=None):
+def get_page_from_string_or_id( context,page_string, lang=None):
     """Return a Page object from a slug or an id."""
+    current_page = context.get('current_page', None)
+    model = Page
+    if current_page:
+        model = current_page.__class__
+        print "s_or_id %s, %s" % ( model, current_page )
+    else:
+        print "Warning: get_page_from_string_or_id(): context has no current page !"
+        
     if type(page_string) == int:
-        return Page.objects.get(pk=int(page_string))
+        return model.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates
     if (isinstance(page_string, SafeUnicode) or
         isinstance(page_string, unicode)):
         if page_string.isdigit():
-            return Page.objects.get(pk=int(page_string))
-        return Page.objects.from_path(page_string, lang)
+            return model.objects.get(pk=int(page_string))
+        return model.objects.from_path(page_string, lang)
     # in any other case we return the input becasue it's probably
     # a Page object.
     return page_string
@@ -36,8 +44,8 @@ def _get_content(context, page, content_type, lang, fallback=True):
 
     if not lang and 'lang' in context:
         lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-
-    page = get_page_from_string_or_id(page, lang)
+    print "_get_content(): lang is now: %s" % lang
+    page = get_page_from_string_or_id( context, page, lang)
 
     if not page:
         return ''
@@ -70,7 +78,7 @@ def gerbi_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
     if page:
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
@@ -79,9 +87,9 @@ if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_menu ( context, page, url='/' ):
         return gerbi_menu ( context, page, url )
     pages_menu = register.inclusion_tag('gerbi/menu.html',
-        takes_context=True)(pages_menu)
+				        takes_context=True)(pages_menu)
 gerbi_menu = register.inclusion_tag('gerbi/menu.html',
-    takes_context=True)(gerbi_menu)
+				    takes_context=True)(gerbi_menu)
 
 
 def gerbi_children_menu(context, page, url='/'):
@@ -95,7 +103,8 @@ def gerbi_children_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
+    print "gerbi_children_menu(): page is %s" % page
     if page:
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
@@ -119,7 +128,7 @@ def gerbi_sub_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
     if page:
         root = page.get_root()
         children = root.get_children_for_frontend()
@@ -127,7 +136,7 @@ def gerbi_sub_menu(context, page, url='/'):
     return context
 if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
     def pages_sub_menu( context, page, url='/' ):
-        return pages_sub_menu ( context, page, url )
+        return gerbi_sub_menu ( context, page, url )
     pages_sub_menu = register.inclusion_tag('gerbi/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
@@ -143,7 +152,7 @@ def gerbi_siblings_menu(context, page, url='/'):
     :param url: not used anymore.
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context,page, lang)
     if page:
         if page.parent:
             root = page.parent
@@ -163,7 +172,7 @@ gerbi_siblings_menu = register.inclusion_tag('gerbi/sub_menu.html',
 
 
 def gerbi_admin_menu(context, page):
-    """Return the necessary context to render the admin table of pages."""
+    """Render the admin table of pages."""
     request = context.get('request', None)
 
     expanded = False
@@ -212,7 +221,7 @@ def show_slug_with_level(context, page, lang=None, fallback=True):
     if not lang:
         lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
 
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context,page, lang)
     if not page:
         return ''
 
@@ -238,7 +247,8 @@ def show_absolute_url(context, page, lang=None):
     """
     if not lang:
         lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
+    
     if not page:
         return {'content': ''}
     url = page.get_url_path(language=lang)
@@ -275,7 +285,7 @@ def gerbi_dynamic_tree_menu(context, page, url='/'):
     :param url: not used anymore
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context,page, lang)
     children = None
     if page and 'current_page' in context:
         current_page = context['current_page']
@@ -307,7 +317,7 @@ def gerbi_breadcrumb(context, page, url='/'):
     :param url: not used anymore
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id(page, lang)
+    page = get_page_from_string_or_id( context,page, lang)
     pages_navigation = None
     if page:
         pages_navigation = page.get_ancestors()
@@ -347,7 +357,7 @@ class GetPageNode(template.Node):
 
     def render(self, context):
         page_or_id = self.page_filter.resolve(context)
-        page = get_page_from_string_or_id(page_or_id)
+        page = get_page_from_string_or_id( context, page_or_id)
         context[self.varname] = page
         return ''
 
@@ -437,11 +447,15 @@ do_get_content = register.tag('get_content', do_get_content)
 class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
-        if 'pages_navigation' not in context:
-            page_set = Page.objects.navigation().order_by("tree_id")
-            context.update({'pages_navigation': page_set})
         if 'current_page' not in context:
             context.update({'current_page': None})
+            print "Warning: LoadPagesNode::render(): context has no current page !"
+            model = Page
+        else:
+            model = context['current_page'].__class__
+        if 'pages_navigation' not in context:
+            page_set = model.objects.navigation().order_by("tree_id")
+            context.update({'pages_navigation': page_set})
         return ''
 
 

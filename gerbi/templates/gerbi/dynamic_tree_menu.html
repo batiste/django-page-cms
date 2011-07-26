@@ -1,7 +1,7 @@
 {% load gerbi_tags cache %}
 {% if page.calculated_status %}
-<li {% ifequal page current_page %}class="selected"{% endifequal %}>
-<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>
+<li {% ifequal page gerbi_current_page %}class="selected"{% endifequal %}>
+<a href="{% gerbi_show_absolute_url page %}">{% gerbi_show_content page "title" %}</a>
 {% if children %}
     <ul>{% for child in children %}{% gerbi_dynamic_tree_menu child url %}{% endfor %}</ul>
 {% endif %}

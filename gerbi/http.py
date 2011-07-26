@@ -62,8 +62,8 @@ def pages_view(view):
     """
     def pages_view_decorator(request, *args, **kwargs):
         # if the current page is already there
-        if(kwargs.get('current_page', False) or
-            kwargs.get('pages_navigation', False)):
+        if(kwargs.get('gerbi_current_page', False) or
+            kwargs.get('gerbi_navigation', False)):
             return view(request, *args, **kwargs)
 
         path = kwargs.pop('path', None)

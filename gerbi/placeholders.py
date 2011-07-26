@@ -95,7 +95,7 @@ class PlaceholderNode(template.Node):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
-        self.page = page or 'current_page'
+        self.page = page or 'gerbi_current_page'
         self.name = name
         if widget:
             self.widget = widget
@@ -191,7 +191,7 @@ class PlaceholderNode(template.Node):
         return content
 
     def get_content_from_context(self, context):
-        # current_page can be set to None
+        # gerbi_current_page can be set to None
         if not self.page in context:
             return ''
 
@@ -326,13 +326,13 @@ class FilePlaceholderNode(PlaceholderNode):
 
 
 class ContactForm(forms.Form):
-  
+
     email = forms.EmailField(label=_('Your email'))
-    subject = forms.CharField(label=_('Subject'), 
+    subject = forms.CharField(label=_('Subject'),
       max_length=150)
     message = forms.CharField(widget=forms.Textarea(),
       label=_('Your message'))
-    
+
 
 class ContactPlaceholderNode(PlaceholderNode):
     """A contact `PlaceholderNode` example."""
@@ -348,7 +348,7 @@ class ContactPlaceholderNode(PlaceholderNode):
                 data = form.cleaned_data
                 recipients = [adm[1] for adm in global_settings.ADMINS]
                 try:
-                    send_mail(data['subject'], data['message'], 
+                    send_mail(data['subject'], data['message'],
                         data['email'], recipients, fail_silently=False)
                     return _("Your email has been sent. Thank you.")
                 except:

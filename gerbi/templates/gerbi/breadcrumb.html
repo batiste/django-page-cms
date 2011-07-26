@@ -1,4 +1,4 @@
 {% load gerbi_tags cache %}
-{% for page in pages_navigation %}
-<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a> &raquo;
-{% endfor %}<a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>
+{% for page in gerbi_navigation %}
+<a href="{% gerbi_show_absolute_url page %}">{% gerbi_show_content page "title" %}</a> &raquo;
+{% endfor %}<a href="{% gerbi_show_absolute_url page %}">{% gerbi_show_content page "title" %}</a>

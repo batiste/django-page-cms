@@ -5,6 +5,7 @@ from gerbi.models import Page, Content
 from gerbi.utils import get_placeholders
 from gerbi.http import get_language_from_request
 from gerbi.permissions import PagePermission
+from django.template import RequestContext
 
 from django.shortcuts import get_object_or_404, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
@@ -36,7 +37,8 @@ def list_pages_ajax(request, invalid_move=False):
         'language': language,
         'pages': page_set,
     }
-    return render_to_response("admin/gerbi/page/change_list_table.html", context)
+    return render_to_response("admin/gerbi/page/change_list_table.html",
+        RequestContext(request, context))
 list_pages_ajax = staff_member_required(list_pages_ajax)
 
 def modify_content(request, page_id, content_type, language_id):
@@ -134,10 +136,14 @@ def sub_menu(request, page_id):
     page = Page.objects.get(id=page_id)
     page_set = page.children.all()
     page_languages = settings.GERBI_LANGUAGES
-    return render_to_response("admin/gerbi/page/sub_menu.html", {
+    perms = PagePermission(request.user)
+    context = {
         'page': page,
         'pages': page_set,
         'page_languages': page_languages,
-    })
+        'can_publish': perms.check('publish')
+    }
+    return render_to_response("admin/gerbi/page/sub_menu.html", RequestContext(request, context))
+
 sub_menu = staff_member_required(sub_menu)
 

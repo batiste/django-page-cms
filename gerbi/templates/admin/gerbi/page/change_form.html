@@ -3,9 +3,9 @@
 
 {% block title %}{% trans "Edit" %}{% endblock %}
 
-{% block extrahead %}
+{% block extrahead %}{{ block.super }}
 <script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{GERBI_MEDIA_URL}}";</script>
-{{ block.super }}
+<script type="text/javascript" src="{{ GERBI_MEDIA_URL }}javascript/pages_form.js"></script>
 <script type="text/javascript" src="{% admin_media_prefix %}js/urlify.js"></script>
 {% endblock %}
 
@@ -15,7 +15,7 @@
     {% block object-tools %}
         {% if change and not is_popup %}
             <ul class="object-tools">
-                {% if has_absolute_url %}<li><a href="{% show_absolute_url page %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
+                {% if has_absolute_url %}<li><a href="{% gerbi_show_absolute_url page %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
             </ul>
         {% endif %}
     {% endblock %}
@@ -27,23 +27,6 @@
             {% include "admin/gerbi/page/includes/fieldset.html" %}
 
             {% if forloop.first %}
-                {% if not add and traduction_languages %}
-                <fieldset class="module module-translation-helper aligned">
-                    <h2>{% trans "Translation helper" %}</h2>
-                    <div class="form-row">
-                        <label for="translation-helper-select" class="required">{% trans "Language:" %}</label>
-                        <select id="translation-helper-select">
-                            <option value="" selected="selected">---------</option>
-                            {% for lang in traduction_languages %}
-                                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-                            {% endfor %}
-                        </select>
-                        {% comment %}A little "smart" trick here to have this right column{% endcomment %}
-                        <div id="translation-helper-content"></div>
-                    </div>
-                </fieldset>
-                {% endif %}
-
                 {% comment %}Close sidebar, open content{% endcomment %}
                 </div>
                 <div class="content">
@@ -67,4 +50,5 @@ var add_form = {% if add %}1{% else %}0{% endif %};
 -->
 </script>
 <!-- END Content -->
+
 {% endblock %}

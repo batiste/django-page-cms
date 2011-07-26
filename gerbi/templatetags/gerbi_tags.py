@@ -1,4 +1,4 @@
-"""Page CMS page_tags template tags"""
+"""Gerbi CMS template tags"""
 from django import template
 from django.utils.safestring import SafeUnicode
 from django.template import TemplateSyntaxError
@@ -56,18 +56,48 @@ def _get_content(context, page, content_type, lang, fallback=True):
 """Filters"""
 
 
-def has_content_in(page, language):
+def gerbi_has_content_in(page, language):
     """Fitler that return ``True`` if the page has any content in a
     particular language.
 
     :param page: the current page
     :param language: the language you want to look at
     """
-    return Content.objects.filter(page=page, language=language).count() > 0
-register.filter(has_content_in)
+    if not page:
+        return False
+    return len(page.get_languages()) > 0
+register.filter(gerbi_has_content_in)
 
 
 """Inclusion tags"""
+
+def gerbi_show_absolute_url(context, page, lang=None):
+    """Show the url of a page in the right language
+
+    Example ::
+
+        {% gerbi_show_absolute_url page_object %}
+
+    You can also use the slug of a page::
+
+        {% gerbi_show_absolute_url "my-page-slug" %}
+
+    Keyword arguments:
+    :param page: the page object, slug or id
+    :param lang: the wanted language
+        (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
+    """
+    if not lang:
+        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
+    page = get_page_from_string_or_id( context, page, lang )
+    if not page:
+        return {'content': ''}
+    url = page.get_url_path(language=lang)
+    if url:
+        return {'content': url}
+    return {'content': ''}
+gerbi_show_absolute_url = register.inclusion_tag('gerbi/content.html',
+                                      takes_context=True)(gerbi_show_absolute_url)
 
 
 def gerbi_menu(context, page, url='/'):
@@ -83,11 +113,7 @@ def gerbi_menu(context, page, url='/'):
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    def pages_menu ( context, page, url='/' ):
-        return gerbi_menu ( context, page, url )
-    pages_menu = register.inclusion_tag('gerbi/menu.html',
-				        takes_context=True)(pages_menu)
+
 gerbi_menu = register.inclusion_tag('gerbi/menu.html',
 				    takes_context=True)(gerbi_menu)
 
@@ -96,7 +122,7 @@ def gerbi_children_menu(context, page, url='/'):
     """Get the direct children of the given page and render them as a
     list.
 
-    Unlike the pages_menu tag, this tag does not display the children's
+    Unlike the gerbi_menu tag, this tag does not display the children's
     children and so on, but only the direct children of the given page.
 
     :param page: the page where to start the menu from.
@@ -109,11 +135,6 @@ def gerbi_children_menu(context, page, url='/'):
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    def pages_children_menu( context, pages, url='/' ):
-        return gerbi_children_menu ( context, pages, url )
-    pages_children_menu = register.inclusion_tag('gerbi/sub_menu.html',
-                                                 takes_context=True)(pages_children_menu)
 
 gerbi_children_menu = register.inclusion_tag('gerbi/sub_menu.html',
                                              takes_context=True)(gerbi_children_menu)
@@ -134,14 +155,10 @@ def gerbi_sub_menu(context, page, url='/'):
         children = root.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    def pages_sub_menu( context, page, url='/' ):
-        return gerbi_sub_menu ( context, page, url )
-    pages_sub_menu = register.inclusion_tag('gerbi/sub_menu.html',
-                                        takes_context=True)(pages_sub_menu)
 
 gerbi_sub_menu = register.inclusion_tag('gerbi/sub_menu.html',
                                         takes_context=True)(gerbi_sub_menu)
+
 
 
 def gerbi_siblings_menu(context, page, url='/'):
@@ -161,35 +178,12 @@ def gerbi_siblings_menu(context, page, url='/'):
         children = root.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    def pages_siblings_menu( context, page, url='/'):
-        return gerbi_siblings_menu( context, page, url )
-    pages_siblings_menu = register.inclusion_tag('gerbi/sub_menu.html',
-                                    takes_context=True)(pages_siblings_menu)
 
 gerbi_siblings_menu = register.inclusion_tag('gerbi/sub_menu.html',
                                     takes_context=True)(gerbi_siblings_menu)
 
 
-def gerbi_admin_menu(context, page):
-    """Render the admin table of pages."""
-    request = context.get('request', None)
-
-    expanded = False
-    if request and "tree_expanded" in request.COOKIES:
-        cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
-        if cookie_string:
-            ids = [int(id) for id in
-                urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
-            if page.id in ids:
-                expanded = True
-    context.update({'expanded': expanded, 'page': page})
-    return context
-gerbi_admin_menu = register.inclusion_tag('admin/gerbi/page/menu.html',
-                                          takes_context=True)(gerbi_admin_menu)
-
-
-def show_content(context, page, content_type, lang=None, fallback=True):
+def gerbi_show_content(context, page, content_type, lang=None, fallback=True):
     """Display a content type from a page.
 
     Example::
@@ -212,65 +206,8 @@ def show_content(context, page, content_type, lang=None, fallback=True):
     """
     return {'content': _get_content(context, page, content_type, lang,
                                                                 fallback)}
-show_content = register.inclusion_tag('gerbi/content.html',
-                                      takes_context=True)(show_content)
-
-
-def show_slug_with_level(context, page, lang=None, fallback=True):
-    """Display slug with level by language."""
-    if not lang:
-        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-
-    page = get_page_from_string_or_id( context,page, lang)
-    if not page:
-        return ''
-
-    return {'content': page.slug_with_level(lang)}
-show_slug_with_level = register.inclusion_tag('gerbi/content.html',
-                                      takes_context=True)(show_slug_with_level)
-
-
-def show_absolute_url(context, page, lang=None):
-    """Show the url of a page in the right language
-
-    Example ::
-
-        {% show_absolute_url page_object %}
-
-    You can also use the slug of a page::
-
-        {% show_absolute_url "my-page-slug" %}
-
-    Keyword arguments:
-    :param page: the page object, slug or id
-    :param lang: the wanted language (defaults to `settings.GERBI_DEFAULT_LANGUAGE`)
-    """
-    if not lang:
-        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id( context, page, lang)
-    
-    if not page:
-        return {'content': ''}
-    url = page.get_url_path(language=lang)
-    if url:
-        return {'content': url}
-    return {'content': ''}
-show_absolute_url = register.inclusion_tag('gerbi/content.html',
-                                      takes_context=True)(show_absolute_url)
-
-
-def show_revisions(context, page, content_type, lang=None):
-    """Render the last 10 revisions of a page content with a list using
-        the ``gerbi/revisions.html`` template"""
-    if not gerbi_settings.GERBI_CONTENT_REVISION:
-        return {'revisions': None}
-    revisions = Content.objects.filter(page=page, language=lang,
-                                type=content_type).order_by('-creation_date')
-    if len(revisions) < 2:
-        return {'revisions': None}
-    return {'revisions': revisions[0:10]}
-show_revisions = register.inclusion_tag('gerbi/revisions.html',
-                                        takes_context=True)(show_revisions)
+gerbi_show_content = register.inclusion_tag('gerbi/content.html',
+                                      takes_context=True)(gerbi_show_content)
 
 
 def gerbi_dynamic_tree_menu(context, page, url='/'):
@@ -285,22 +222,19 @@ def gerbi_dynamic_tree_menu(context, page, url='/'):
     :param url: not used anymore
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id( context,page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
     children = None
-    if page and 'current_page' in context:
-        current_page = context['current_page']
+    if page and 'gerbi_current_page' in context:
+        gerbi_current_page = context['gerbi_current_page']
         # if this node is expanded, we also have to render its children
         # a node is expanded if it is the current node or one of its ancestors
-        if(page.tree_id == current_page.tree_id and
-            page.lft <= current_page.lft and
-            page.rght >= current_page.rght):
+        if(page.tree_id == gerbi_current_page.tree_id and
+            page.lft <= gerbi_current_page.lft and
+            page.rght >= gerbi_current_page.rght):
             children = page.get_children_for_frontend()
     context.update({'children': children, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    pages_dynamic_tree_menu = register.inclusion_tag(
-        'gerbi/dynamic_tree_menu.html',
-        takes_context=True)(gerbi_dynamic_tree_menu)
+
 gerbi_dynamic_tree_menu = register.inclusion_tag(
     'gerbi/dynamic_tree_menu.html',
     takes_context=True)(gerbi_dynamic_tree_menu)
@@ -317,16 +251,13 @@ def gerbi_breadcrumb(context, page, url='/'):
     :param url: not used anymore
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    page = get_page_from_string_or_id( context,page, lang)
+    page = get_page_from_string_or_id( context, page, lang)
     pages_navigation = None
     if page:
-        pages_navigation = page.get_ancestors()
-    context.update({'pages_navigation': pages_navigation, 'page': page})
+        gerbi_navigation = page.get_ancestors()
+    context.update({'gerbi_navigation': gerbi_navigation, 'page': page})
     return context
-if gerbi_settings.GERBI_LEGACY_TAG_NAMES:
-    pages_breadcrumb = register.inclusion_tag(
-    'gerbi/breadcrumb.html',
-    takes_context=True)(gerbi_breadcrumb)
+
 gerbi_breadcrumb = register.inclusion_tag(
     'gerbi/breadcrumb.html',
     takes_context=True)(gerbi_breadcrumb)
@@ -346,7 +277,7 @@ def do_csrf_token(parser, token):
 try:
     from django.views.decorators.csrf import csrf_protect
 except ImportError:
-    do_csrf_token = register.tag('csrf_token', do_csrf_token)
+    register.tag('csrf_token', do_csrf_token)
 
 
 class GetPageNode(template.Node):
@@ -381,7 +312,7 @@ def do_get_page(parser, token):
     page_filter = parser.compile_filter(bits[1])
     varname = bits[-1]
     return GetPageNode(page_filter, varname)
-do_get_page = register.tag('get_page', do_get_page)
+register.tag('gerbi_get_page', do_get_page)
 
 
 class GetContentNode(template.Node):
@@ -441,7 +372,7 @@ def do_get_content(parser, token):
     else:
         lang_filter = parser.compile_filter("lang")
     return GetContentNode(page, content_type, varname, lang, lang_filter)
-do_get_content = register.tag('get_content', do_get_content)
+register.tag('gerbi_get_content', do_get_content)
 
 
 class LoadPagesNode(template.Node):
@@ -459,21 +390,21 @@ class LoadPagesNode(template.Node):
         return ''
 
 
-def do_load_pages(parser, token):
-    """Load the pages_navigation, lang, and current_page variables into the
+def do_gerbi_load(parser, token):
+    """Load the gerbi_navigation, and gerbi_current_page variables into the
     current context.
 
     Example::
 
         <ul>
-            {% load_pages %}
-            {% for page in pages_navigation %}
+            {% gerbi_load %}
+            {% for page in gerbi_navigation %}
                 {% gerbi_menu page %}
             {% endfor %}
         </ul>
     """
     return LoadPagesNode()
-do_load_pages = register.tag('load_pages', do_load_pages)
+register.tag('gerbi_load_pages', do_gerbi_load)
 
 
 def do_placeholder(parser, token):
@@ -494,16 +425,16 @@ def do_placeholder(parser, token):
     """
     name, params = parse_placeholder(parser, token)
     return PlaceholderNode(name, **params)
-register.tag('placeholder', do_placeholder)
+register.tag('gerbi_placeholder', do_placeholder)
 
 
-def do_imageplaceholder(parser, token):
+def do_image_placeholder(parser, token):
     """
     Method that parse the imageplaceholder template tag.
     """
     name, params = parse_placeholder(parser, token)
     return ImagePlaceholderNode(name, **params)
-register.tag('imageplaceholder', do_imageplaceholder)
+register.tag('gerbi_image_placeholder', do_image_placeholder)
 
 def do_fileplaceholder(parser, token):
     """
@@ -511,48 +442,25 @@ def do_fileplaceholder(parser, token):
     """
     name, params = parse_placeholder(parser, token)
     return FilePlaceholderNode(name, **params)
-register.tag('fileplaceholder', do_fileplaceholder)
+register.tag('gerbi_file_placeholder', do_fileplaceholder)
 
-def do_videoplaceholder(parser, token):
+def do_video_placeholder(parser, token):
     """
     Method that parse the imageplaceholder template tag.
     """
     name, params = parse_placeholder(parser, token)
     return VideoPlaceholderNode(name, **params)
-register.tag('videoplaceholder', do_videoplaceholder)
+register.tag('gerbi_video_placeholder', do_video_placeholder)
 
-def do_contactplaceholder(parser, token):
+def do_contact_placeholder(parser, token):
     """
     Method that parse the contactplaceholder template tag.
     """
     name, params = parse_placeholder(parser, token)
     return ContactPlaceholderNode(name, **params)
-register.tag('contactplaceholder', do_contactplaceholder)
+register.tag('gerbi_contact_placeholder', do_contact_placeholder)
 
 
-def language_content_up_to_date(page, language):
-    """Tell if all the page content has been updated since the last
-    change of the official version (settings.LANGUAGE_CODE)
 
-    This is approximated by comparing the last modified date of any
-    content in the page, not comparing each content block to its
-    corresponding official language version.  That allows users to
-    easily make "do nothing" changes to any content block when no
-    change is required for a language.
-    """
-    lang_code = getattr(settings, 'LANGUAGE_CODE', None)
-    if lang_code == language:
-        # official version is always "up to date"
-        return True
-    # get the last modified date for the official version
-    last_modified = Content.objects.filter(language=lang_code,
-        page=page).order_by('-creation_date')
-    if not last_modified:
-        # no official version
-        return True
-    lang_modified = Content.objects.filter(language=language,
-        page=page).order_by('-creation_date')[0].creation_date
-    return lang_modified > last_modified[0].creation_date
-register.filter(language_content_up_to_date)
 
 

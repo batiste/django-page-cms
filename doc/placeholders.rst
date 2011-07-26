@@ -248,19 +248,19 @@ A multi line input::
 
     {% placeholder [name] with Textarea %}
 
-AdminTextInput
---------------
+AdminInputWidget
+-------------------
 
 A simple line input with Django admin CSS styling (better for larger input fields)::
 
-    {% placeholder [name] with AdminTextInput %}
+    {% placeholder [name] with AdminInputWidget %}
 
 AdminTextarea
--------------
+---------------
 
 A multi line input with Django admin CSS styling::
 
-    {% placeholder [name] with AdminTextarea %}
+    {% placeholder [name] with AdminTextareaWidget %}
 
 FileBrowseInput
 ---------------

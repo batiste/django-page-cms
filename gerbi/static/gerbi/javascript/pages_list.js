@@ -96,7 +96,6 @@ $(function () {
         $('.publish-select', elements).change(function (e) {
             var url = this.name.split('status-')[1]+'/';
             var img = $(this).parent().find('img');
-
             pages.update_published_icon(url, this, img, 1);
         });
     }
@@ -111,7 +110,6 @@ $(function () {
                 init_publish_hanlder(changelist);
                 pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                 action = selected_page = '';
-                //bind_sortable()
             }
         );
     };

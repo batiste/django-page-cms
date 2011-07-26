@@ -70,11 +70,11 @@ class PageAdmin(admin.ModelAdmin):
     fieldsets = (
         [_('General'), {
             'fields': general_fields,
-            'classes': ('module-general',),
+            'classes': ('module-general', ),
         }],
         (_('Options'), {
             'fields': normal_fields,
-            'classes': ('module-options',),
+            'classes': ('module-options', ),
         }),
     )
 
@@ -90,7 +90,6 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/jquery.rte.js',
             'javascript/jquery.query.js',
             'javascript/pages.js',
-            'javascript/pages_form.js',
         )]
 
     def urls(self):
@@ -197,7 +196,7 @@ class PageAdmin(admin.ModelAdmin):
         additional_fieldsets = []
         additional_fieldsets.append((_('Content'), {
             'fields': placeholder_fieldsets,
-            'classes': ('module-content',),
+            'classes': ('module-content', ),
         }))
 
         return default_fieldsets + additional_fieldsets
@@ -379,13 +378,13 @@ except AlreadyRegistered:
 
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')
-    list_filter = ('page',)
-    search_fields = ('body',)
+    list_filter = ('page', )
+    search_fields = ('body', )
 
 #admin.site.register(Content, ContentAdmin)
 
 class AliasAdmin(admin.ModelAdmin):
-    list_display = ('page', 'url',)
+    list_display = ('page', 'url', )
     list_editable = ('url', )
 
 try:

@@ -384,7 +384,7 @@ class PageAdminWithDefaultContent(PageAdmin):
 
         language = get_language_from_request(request)
 
-        if global_settings.LANGUAGE_CODE == language:
+        if settings.GERBI_DEFAULT_LANGUAGE == language:
             # this is the "official" language
             return form
 
@@ -397,7 +397,7 @@ class PageAdminWithDefaultContent(PageAdmin):
             name = placeholder.name
             form.base_fields[name] = placeholder.get_field(obj, language,
                 initial=Content.objects.get_content(obj,
-                    global_settings.LANGUAGE_CODE, name))
+                    settings.GERBI_DEFAULT_LANGUAGE, name))
         return form
 
 

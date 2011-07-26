@@ -4,6 +4,7 @@ in the admin via a placeholder tag in your template."""
 
 from gerbi.settings import GERBI_MEDIA_URL, GERBI_TAGGING
 from gerbi.settings import GERBI_TINYMCE, GERBI_LANGUAGES
+from gerbi import settings as gerbi_settings
 from gerbi.models import Page
 from gerbi.widgets_registry import register_widget
 
@@ -137,7 +138,7 @@ class WYMEditor(Textarea):
             'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
 
     def __init__(self, language=None, attrs=None, **kwargs):
-        self.language = language or getattr(settings, 'LANGUAGE_CODE')
+        self.language = gerbi_settings.GERBI_DEFAULT_LANGUAGE
         self.attrs = {'class': 'wymeditor'}
         if attrs:
             self.attrs.update(attrs)

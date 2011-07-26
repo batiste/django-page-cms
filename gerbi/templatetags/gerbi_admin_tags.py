@@ -1,11 +1,11 @@
 """Gerbi CMS admin template tags"""
-from gerbi import settings as gerbi_settings
+#from gerbi import settings
 from gerbi.models import Content
 from gerbi.templatetags.gerbi_tags import get_page_from_string_or_id
+from gerbi import settings
 
 from django import template
 import urllib
-from django.conf import settings
 
 register = template.Library()
 
@@ -31,7 +31,7 @@ register.inclusion_tag('admin/gerbi/page/menu.html',
 def gerbi_show_slug_with_level(context, page, lang=None, fallback=True):
     """Display slug with level by language."""
     if not lang:
-        lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
+        lang = context.get('lang', settings.GERBI_DEFAULT_LANGUAGE)
 
     page = get_page_from_string_or_id(page, lang)
     if not page:
@@ -46,7 +46,7 @@ register.inclusion_tag('gerbi/content.html', takes_context=True
 def gerbi_show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``gerbi/revisions.html`` template"""
-    if not gerbi_settings.GERBI_CONTENT_REVISION:
+    if not settings.GERBI_CONTENT_REVISION:
         return {'revisions': None}
     revisions = Content.objects.filter(page=page, language=lang,
                                 type=content_type).order_by('-creation_date')
@@ -59,16 +59,15 @@ register.inclusion_tag('gerbi/revisions.html', takes_context=True
 
 def gerbi_language_content_up_to_date(page, language):
     """Tell if all the page content has been updated since the last
-    change of the official version (settings.LANGUAGE_CODE)
+    change of the official version (settings.GERBI_DEFAULT_LANGUAGE)
 
     This is approximated by comparing the last modified date of any
     content in the page, not comparing each content block to its
     corresponding official language version.  That allows users to
     easily make "do nothing" changes to any content block when no
     change is required for a language.
-    """
-    return True
-    lang_code = getattr(settings, 'LANGUAGE_CODE', None)
+    #"""
+    lang_code = settings.GERBI_DEFAULT_LANGUAGE
     if lang_code == language:
         # official version is always "up to date"
         return True

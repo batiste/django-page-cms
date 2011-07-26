@@ -4,6 +4,7 @@ from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
+from django.conf import global_settings
 
 from gerbi.utils import get_placeholders
 from gerbi import settings
@@ -13,7 +14,7 @@ from gerbi.widgets import LanguageChoiceWidget
 from gerbi.templatetags.gerbi_tags import get_page_from_string_or_id
 
 # error messages
-slug_required = _('A page needs at least one slug')
+default_slug_required = _('Every page need a slug in the default language')
 another_page_error = _('Another page with this slug already exists')
 sibling_position_error = _('A sibling with this slug already exists at the \
 targeted position')
@@ -118,12 +119,13 @@ it must be unique among the other pages of the same level.')
         """Handle slug of the page"""
 
         slug = slugify(self.cleaned_data['slug'].strip())
-        if not len(slug):
-            if Content.objects.filter(page=self.instance,
-                type="slug").exclude(language=self.language).count() > 0:
-                return ""
-            else:
-                raise forms.ValidationError(slug_required)
+
+        if self.language == settings.GERBI_DEFAULT_LANGUAGE:
+            if not len(slug):
+                raise forms.ValidationError(default_slug_required)
+        else:
+            if not Content.objects.filter(page=self.instance, type="slug").count():
+                raise forms.ValidationError(default_slug_required)
 
         target = self.data.get('target', None)
         position = self.data.get('position', None)

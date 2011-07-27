@@ -21,24 +21,24 @@ $(function() {
     });
 
     // Set the publication status
-    var select = $('#id_status');
+    var status_select = $('#id_status');
 
-    if(select) {
-        var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
-        var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(select);
+    if(status_select) {
+        var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[status_select.val()];
+        var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(status_select);
         // disable ajax post if page not already created (add view)
         var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
 
-        select.change(function(e) {
-            pages.update_published_icon('', select, img, change_status);
+        status_select.change(function(e) {
+            pages.update_published_icon('', status_select, img, change_status);
         });
     }
 
     // Confirm language and template change if page is not saved
-    var select = $('#id_template');
-    if (select.length) {
-        var orig_ = select.val();
-        select.change(function() {
+    var template_select = $('#id_template');
+    if (template_select.length) {
+        var orig_ = template_select.val();
+        template_select.change(function() {
             if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
                 $('input[name=_continue]').click();
         });

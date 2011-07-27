@@ -23,7 +23,7 @@
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
         {% csrf_token %}
 
-        {{ form.errors }}
+        <!--{{ form.errors }}-->
 
         {% with form.language as field %}
             {% include "admin/gerbi/page/includes/field.html" %}

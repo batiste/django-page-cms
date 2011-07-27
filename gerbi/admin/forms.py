@@ -129,9 +129,6 @@ it must be unique among the other pages of the same level.')
             if not Content.objects.filter(page=self.instance, type="slug").count():
                 raise forms.ValidationError(default_slug_required)
 
-        target = self.data.get('target', None)
-        position = self.data.get('position', None)
-
         if settings.GERBI_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(
@@ -150,6 +147,9 @@ it must be unique among the other pages of the same level.')
         else:
             def intersects_sites(sibling):
                 return True
+
+        target = self.data.get('target', None)
+        position = self.data.get('position', None)
 
         if not settings.GERBI_UNIQUE_SLUG_REQUIRED:
             if target and position:

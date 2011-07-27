@@ -14,10 +14,12 @@
         </span>
         </li>
     {% else %}
+        {% if page %}
         {% if page|gerbi_has_content_in:lang.0 %}
             <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.1 }}</a></li>
         {% else %}
             <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.1 }}</a></li>
+        {% endif %}
         {% endif %}
     {% endifequal %}
 {% endfor %}

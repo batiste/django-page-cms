@@ -90,6 +90,9 @@ it must be unique among the other pages of the same level.')
         self.fields['language'].initial = language
         self.fields['language'].widget = LanguageChoiceWidget(page=page, language=language)
 
+        if settings.GERBI_USE_SITE_ID:
+            self.fields['sites'].initial = [settings.SITE_ID]
+
         if page:
             initial_slug = page.slug(language=language, fallback=False)
             initial_title = page.title(language=language, fallback=False)
@@ -113,7 +116,6 @@ it must be unique among the other pages of the same level.')
                 initial = None
             self.fields[name] = placeholder.get_field(page, language,
                 initial=initial)
-
 
     def clean_slug(self):
         """Handle slug of the page"""

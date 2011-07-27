@@ -69,7 +69,9 @@ class RegressionTestCase(TestCase):
         page_data['title'] = 'test-162-title'
         page_data['slug'] = 'test-162-slug'
         response = c.post('/admin/gerbi/page/add/', page_data)
+
         self.assertRedirects(response, '/admin/gerbi/page/')
+
         from gerbi.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test2.html')

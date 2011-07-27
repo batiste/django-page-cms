@@ -250,6 +250,7 @@ class PageAdmin(admin.ModelAdmin):
                 if not new_object.author:
                     new_object.author = request.user
                 self.save_model(request, new_object, form, change=True)
+                form.save_m2m()
                 return self.response_change(request, new_object)
         else:
             form = form_cls(instance=obj, language=language, template=template)
@@ -297,6 +298,7 @@ class PageAdmin(admin.ModelAdmin):
                 new_object = form.save(commit=False)
                 new_object.author = request.user
                 self.save_model(request, new_object, form, change=True)
+                form.save_m2m()
                 return self.response_change(request, new_object)
         else:
             form = form_cls(instance=None, language=language, template=template)

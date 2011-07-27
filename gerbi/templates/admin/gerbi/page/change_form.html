@@ -29,37 +29,43 @@
 
         <div class="sidebar">
 
-            {% with form.slug as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.slug as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.status as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.status as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.template as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.template as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.freeze_date as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.freeze_date as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.redirect_to as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.redirect_to as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.redirect_to_url as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.redirect_to_url as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.target as field %}
-                {% include "admin/gerbi/page/includes/field.html" %}
-            {% endwith %}
+        {% with form.target as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
 
-            {% with form.position as field %}
+        {% with form.position as field %}
+            {% include "admin/gerbi/page/includes/field.html" %}
+        {% endwith %}
+
+        {% if form.sites %}
+            {% with form.sites as field %}
                 {% include "admin/gerbi/page/includes/field.html" %}
             {% endwith %}
+        {% endif %}
 
         </div>
         <div class="content">

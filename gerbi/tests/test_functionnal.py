@@ -200,13 +200,16 @@ class FunctionnalTestCase(TestCase):
         c = self.get_admin_client()
         user = c.login(username='batiste', password='b')
 
+        page = self.create_new_page(c)
+
         # test that the client language setting is used in add page admin
         c.cookies["django_language"] = 'de'
-        response = c.get('/admin/gerbi/page/add/')
+
+        response = c.get('/admin/gerbi/page/%d/' % page.id)
 
         self.assertContains(response, 'value="de"')
         c.cookies["django_language"] = 'fr-ch'
-        response = c.get('/admin/gerbi/page/add/')
+        response = c.get('/admin/gerbi/page/%d/' % page.id)
         self.assertContains(response, 'value="fr-ch"')
 
         page_data = self.get_new_page_data()
@@ -214,7 +217,7 @@ class FunctionnalTestCase(TestCase):
         response = c.post('/admin/gerbi/page/add/', page_data)
         self.assertRedirects(response, '/admin/gerbi/page/')
 
-        page = Page.objects.all()[0]
+        page = Page.objects.from_path(page_data['slug'], 'en-us')
         self.assertEqual(page.get_languages(), ['en-us'])
 
         # test the language cache
@@ -470,7 +473,7 @@ class FunctionnalTestCase(TestCase):
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         # Activate a language other than settings.LANGUAGE_CODE
-        response = c.post('/i18n/setlang/', {'language':'fr-ch' })
+        response = c.post('/i18n/setlang/', {'language': 'fr-ch' })
         self.assertEqual(c.session.get('django_language', False), 'fr-ch')
 
         # Make sure we're in french
@@ -478,10 +481,12 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Auteur' in response.content)
 
-        # Create some gerbi (taken from test_tree_admin_interface)
+        # Create some page (taken from test_tree_admin_interface)
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
         response = c.post('/admin/gerbi/page/add/', page_data)
+        "Every page need a slug in the default language"
+        self.assertEqual(response.status_code, 302)
 
         root_page = Content.objects.get_content_slug_by_slug('root').page
         page_data['position'] = 'first-child'

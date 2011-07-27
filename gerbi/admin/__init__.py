@@ -285,7 +285,7 @@ class PageAdmin(admin.ModelAdmin):
         """The ``add`` admin view for the :class:`Page <gerbi.models.Page>`."""
         model = self.model
         opts = model._meta
-        language = get_language_from_request(request)
+        language = settings.GERBI_DEFAULT_LANGUAGE
         template = get_template_from_request(request)
         placeholders = get_placeholders(template)
         form_cls = self.get_form(request)

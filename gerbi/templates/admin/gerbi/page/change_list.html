@@ -31,19 +31,19 @@
 <div class="module" id="changelist">
 
 {% block result_list %}
-<form method="post" action="">
-{% csrf_token %}
-{% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
-
 <div id="toolbar">
 <form id="changelist-search" action="" method="post">
     <div>
         <label for="searchbar"><img src="{% load adminmedia %}{% admin_media_prefix %}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
-        <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
-        <input type="submit" name="g" value="{% trans "Go" %}" />
+        <input type="text" size="40" name="q" value="{{q}}" id="searchbar" />
+        <input type="submit" name="g" value="{% trans "Search" %}" />
     </div>
 </form>
 </div>
+
+<form id="changelist-form" action="" method="post">
+{% csrf_token %}
+{% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
 
 <div id="page-list">
 {% include "admin/gerbi/page/change_list_table.html" %}

@@ -49,11 +49,11 @@ Install dependencies by using easy_install
 
 On debian linux you can do::
 
-    $ sudo easy_install html5lib BeautifulSoup django django-staticfiles django-authority
+    $ sudo easy_install html5lib django
 
-Optionnaly::
+Optionnaly if you want search and extra permissions::
 
-    $ sudo easy_install django-haystack
+    $ sudo easy_install django-haystack django-authority
 
 If you are not using the source code version of the application then install it using::
 

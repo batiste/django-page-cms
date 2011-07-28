@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
 from gerbi import settings
-from gerbi.utils import normalize_url, filter_link
+from gerbi.utils import normalize_url
 from gerbi.http import get_slug
 
 from django.db import models, connection
@@ -228,8 +228,7 @@ class ContentManager(models.Manager):
         def _get_content(language, ctype):
             if(language in content and ctype in content[language]
                 and 'body' in content[language][ctype]):
-                return filter_link(content[language][ctype]['body'], page,
-                    language, ctype)
+                return content[language][ctype]['body']
             return None
 
         if _get_content(language, ctype):

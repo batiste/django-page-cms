@@ -203,14 +203,6 @@ and directly link a new instance of this model with your page in the admin::
 
     :ref:`Complete documentation on how to use this setting <3rd-party-apps>`
 
-GERBI_LINK_FILTER
-==================================
-
-The page link filter enable a output filter on you content links. The goal
-is to transform special page classes into real links at the last moment.
-This ensure that even if you move a page within the CMS, the URLs pointing on it
-will remain correct.
-
 
 GERBI_TAGGING
 ==================================

@@ -16,8 +16,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
-if settings.GERBI_TAGGING:
-    from taggit.managers import TaggableManager
 
 GERBI_CONTENT_DICT_KEY = ContentManager.GERBI_CONTENT_DICT_KEY
 
@@ -101,9 +99,6 @@ class Page(MPTTModel):
 
     # Managers
     objects = PageManager()
-
-    if settings.GERBI_TAGGING:
-        tags = TaggableManager()
 
     class Meta:
         """Make sure the default page ordering is correct."""

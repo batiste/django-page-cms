@@ -16,7 +16,7 @@ register = template.Library()
 
 def get_page_from_string_or_id( context,page_string, lang=None):
     """Return a Page object from a slug or an id."""
-    current_page = context.get('current_page', None)
+    current_page = context.get('gerbi_current_page', None)
     model = Page
     if current_page:
         model = current_page.__class__
@@ -378,12 +378,12 @@ register.tag('gerbi_get_content', do_get_content)
 class LoadPagesNode(template.Node):
     """Load page node."""
     def render(self, context):
-        if 'current_page' not in context:
-            context.update({'current_page': None})
+        if 'gerbi_current_page' not in context:
+            context.update({'gerbi_current_page': None})
             print "Warning: LoadPagesNode::render(): context has no current page !"
             model = Page
         else:
-            model = context['current_page'].__class__
+            model = context['gerbi_current_page'].__class__
         if 'pages_navigation' not in context:
             page_set = model.objects.navigation().order_by("tree_id")
             context.update({'pages_navigation': page_set})

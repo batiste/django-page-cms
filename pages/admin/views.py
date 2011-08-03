@@ -9,7 +9,9 @@ from pages.permissions import PagePermission
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def change_status(request, page_id):
     """
     Switch the status of a page.
@@ -36,6 +38,7 @@ def list_pages_ajax(request, invalid_move=False):
 list_pages_ajax = staff_member_required(list_pages_ajax)
 list_pages_ajax = auto_render(list_pages_ajax)
 
+@csrf_exempt
 def modify_content(request, page_id, content_type, language_id):
     """Modify the content of a page."""
     page = get_object_or_404(Page, pk=page_id)
@@ -60,6 +63,7 @@ def modify_content(request, page_id, content_type, language_id):
     raise Http404
 modify_content = staff_member_required(modify_content)
 
+@csrf_exempt
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
     perm = PagePermission(request.user).check('delete', page=page,
@@ -74,7 +78,6 @@ def delete_content(request, page_id, language_id):
         '/admin/pages/page/%s/' % page_id))
     return HttpResponseRedirect(destination)
 delete_content = staff_member_required(delete_content)
-
 
 def traduction(request, page_id, language_id):
     """Traduction helper."""
@@ -103,7 +106,7 @@ def get_content(request, page_id, content_type):
 get_content = staff_member_required(get_content)
 get_content = auto_render(get_content)
 
-
+@csrf_exempt
 def move_page(request, page_id, extra_context=None):
     """Move the page to the requested target, at the given
     position."""

@@ -14,13 +14,12 @@ from gerbi.placeholders import parse_placeholder
 
 register = template.Library()
 
-def get_page_from_string_or_id( context,page_string, lang=None):
+def get_page_from_string_or_id( context, page_string, lang=None):
     """Return a Page object from a slug or an id."""
     current_page = context.get('gerbi_current_page', None)
     model = Page
     if current_page:
         model = current_page.__class__
-        print "s_or_id %s, %s" % ( model, current_page )
     else:
         print "Warning: get_page_from_string_or_id(): context has no current page !"
         
@@ -44,7 +43,7 @@ def _get_content(context, page, content_type, lang, fallback=True):
 
     if not lang and 'lang' in context:
         lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
-    print "_get_content(): lang is now: %s" % lang
+
     page = get_page_from_string_or_id( context, page, lang)
 
     if not page:
@@ -85,7 +84,7 @@ def gerbi_show_absolute_url(context, page, lang=None):
     Keyword arguments:
     :param page: the page object, slug or id
     :param lang: the wanted language
-        (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
+        (defaults to `settings.GERBI_DEFAULT_LANGUAGE`)
     """
     if not lang:
         lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
@@ -130,7 +129,6 @@ def gerbi_children_menu(context, page, url='/'):
     """
     lang = context.get('lang', gerbi_settings.GERBI_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id( context, page, lang)
-    print "gerbi_children_menu(): page is %s" % page
     if page:
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})

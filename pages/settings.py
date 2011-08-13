@@ -219,7 +219,7 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
 
 # Enable real time search indexation for the pages
-PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False):
+PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
 
 # Disable the tests by default so they don't execute when the user
 # execute manage.py test

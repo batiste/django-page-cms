@@ -1,6 +1,6 @@
 """Django haystack `SearchIndex` module."""
 from gerbi.models import Page
-from django.conf import settings
+from gerbi import settings
 
 from haystack.indexes import SearchIndex, CharField, DateTimeField, RealTimeSearchIndex
 from haystack import site
@@ -33,4 +33,4 @@ if settings.GERBI_REAL_TIME_SEARCH:
     site.register(Page, RealTimePageIndex)
 else:
     site.register(Page, PageIndex)
-    
+

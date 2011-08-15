@@ -102,7 +102,7 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^$', self.list_pages, name='page-index'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
-            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_type>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',
                 get_content, name='page-get-content'),
             url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_type>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 modify_content, name='page-modify-content'),

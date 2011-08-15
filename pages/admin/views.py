@@ -97,11 +97,9 @@ def traduction(request, page_id, language_id):
 traduction = staff_member_required(traduction)
 traduction = auto_render(traduction)
 
-def get_content(request, page_id, content_type):
+def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
-    page = Page.objects.get(pk=page_id)
-    content = Content.objects.get_content(page, request.LANGUAGE_CODE,
-        content_type)
+    content = Content.objects.get(pk=content_id)
     return HttpResponse(content)
 get_content = staff_member_required(get_content)
 get_content = auto_render(get_content)

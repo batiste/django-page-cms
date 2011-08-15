@@ -29,7 +29,7 @@ class RealTimePageIndex(RealTimeSearchIndex):
         """Used when the entire index for model is updated."""
         return Page.objects.published()
 
-if settings.PAGE_REAL_TIME_SEARCH:
+if getattr(settings, 'PAGE_REAL_TIME_SEARCH', None):
     site.register(Page, RealTimePageIndex)
 else:
     site.register(Page, PageIndex)

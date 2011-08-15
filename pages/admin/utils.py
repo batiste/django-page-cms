@@ -3,6 +3,7 @@ from pages import settings
 from django.contrib import admin
 from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
+import django
 
 def get_connected():
     if not settings.PAGE_CONNECTED_MODELS:
@@ -35,11 +36,14 @@ def get_connected():
 
 
 def make_inline_admin(admin_class, model_class, options):
+
     class ModelOptions(admin_class):
         model = model_class
         fk_name = 'page'
         form = options.get('form', ModelForm)
         extra = options.get('extra', 3)
-        max_num = options.get('max_num', 0)
-    return ModelOptions
 
+        # Since Django 1.2, max_num=None sets unlimited inlines, 
+        # see https://docs.djangoproject.com/en/1.2/topics/forms/modelforms/#model-formsets-max-num
+        max_num = options.get('max_num', 0 if django.VERSION < (1, 2) else None)
+    return ModelOptions

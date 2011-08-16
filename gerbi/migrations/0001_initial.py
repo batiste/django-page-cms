@@ -29,10 +29,8 @@ class Migration:
                ('tree_id', orm['gerbi.Page:tree_id']),
                ('level', orm['gerbi.Page:level'])
                ]
-        if settings.GERBI_TAGGING:
-            gerbi_page.append(('tags', orm['gerbi.Page:tags']))
         db.create_table('gerbi_page', gerbi_page)
-        db.send_create_signal('pages', ['Page'])
+        db.send_create_signal('gerbi', ['Page'])
         
         # Adding model 'Content'
         db.create_table('gerbi_content', (
@@ -43,7 +41,7 @@ class Migration:
             ('page', orm['gerbi.Content:page']),
             ('creation_date', orm['gerbi.Content:creation_date']),
         ))
-        db.send_create_signal('pages', ['Content'])
+        db.send_create_signal('gerbi', ['Content'])
         
         # Adding model 'PageAlias'
         db.create_table('gerbi_pagealias', (
@@ -51,7 +49,7 @@ class Migration:
             ('page', orm['gerbi.PageAlias:page']),
             ('url', orm['gerbi.PageAlias:url']),
         ))
-        db.send_create_signal('pages', ['PageAlias'])
+        db.send_create_signal('gerbi', ['PageAlias'])
         
         # Adding model 'PagePermission'
         db.create_table('gerbi_pagepermission', (
@@ -60,7 +58,7 @@ class Migration:
             ('user', orm['gerbi.PagePermission:user']),
             ('type', orm['gerbi.PagePermission:type']),
         ))
-        db.send_create_signal('pages', ['PagePermission'])
+        db.send_create_signal('gerbi', ['PagePermission'])
         
         if settings.GERBI_USE_SITE_ID:
             # Adding ManyToManyField 'Page.sites'
@@ -109,8 +107,6 @@ class Migration:
             'template': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
             }
-    if settings.GERBI_TAGGING:
-        page['tags'] = ('tagging.fields.TagField', [], {'null': 'True'})
     if settings.GERBI_USE_SITE_ID:
         page['sites'] = ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"})
         
@@ -177,4 +173,4 @@ class Migration:
         }
     }
     
-    complete_apps = ['pages']
+    complete_apps = ['gerbi']

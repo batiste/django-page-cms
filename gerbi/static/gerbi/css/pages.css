@@ -301,7 +301,7 @@ html[dir=rtl] .change-list .actions-pages a {
     right: 0; top: -4px;
     height: 21px; /* IE6 fix */
 }
-html[dir=rtl] .change-list .insert { 
+html[dir=rtl] .change-list .insert {
     right:auto;
     left:0;
 }
@@ -430,7 +430,7 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-    
+
     width: 305px;
     float: left;
     display: inline; /* IE6 fix */
@@ -580,7 +580,7 @@ html[dir=rtl] .change-form .module-options .form-row {
     position: absolute;
     top: 8px;
     right: 12px;
-    width: 150px;
+    width: 18em;
 }
 html[dir=rtl] .change-form .module-content .revisions {
     left: 12px;

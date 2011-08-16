@@ -60,7 +60,6 @@ class Page(MPTTModel):
         (DRAFT, _('Draft')),
     )
 
-    GERBI_LANGUAGES_KEY = "page_%d_languages"
     GERBI_URL_KEY = "page_%d_url"
     GERBI_BROKEN_LINK_KEY = "page_broken_link_%s"
 
@@ -110,7 +109,6 @@ class Page(MPTTModel):
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
         # Gerbi module was once called pages
-        db_table = 'pages_page'
         get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
@@ -119,9 +117,9 @@ class Page(MPTTModel):
     def __init__(self, *args, **kwargs):
         """Instanciate the page object."""
         # per instance cache
+        self.cache = None
         self._languages = None
         self._complete_slug = None
-        self._content_dict = None
         self._is_first_root = None
         super(Page, self).__init__(*args, **kwargs)
 
@@ -144,6 +142,7 @@ class Page(MPTTModel):
         # let's assume there is no more broken links after a save
         cache.delete(self.GERBI_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
+        self.invalidate()
         # fix sites many-to-many link when the're hidden from the form
         if settings.GERBI_HIDE_SITES and self.sites.count() == 0:
             self.sites.add(Site.objects.get(pk=settings.SITE_ID))
@@ -180,27 +179,12 @@ class Page(MPTTModel):
 
     def invalidate(self):
         """Invalidate cached data for this page."""
-
-        cache.delete(self.GERBI_LANGUAGES_KEY % (self.id))
         cache.delete('GERBI_FIRST_ROOT_ID')
+        key = "gerbi_page_%d" % (self.id)
+        cache.delete(key)
         self._languages = None
         self._complete_slug = None
-        self._content_dict = dict()
-
-        p_names = [p.name for p in get_placeholders(self.get_template())]
-        if 'slug' not in p_names:
-            p_names.append('slug')
-        if 'title' not in p_names:
-            p_names.append('title')
-        # delete content cache, frozen or not
-        for name in p_names:
-            # frozen
-            cache.delete(GERBI_CONTENT_DICT_KEY %
-                (self.id, name, 1))
-            # not frozen
-            cache.delete(GERBI_CONTENT_DICT_KEY %
-                (self.id, name, 0))
-
+        self.cache = None
         cache.delete(self.GERBI_URL_KEY % (self.id))
 
     def get_languages(self):
@@ -209,19 +193,17 @@ class Page(MPTTModel):
         """
         if self._languages:
             return self._languages
-        self._languages = cache.get(self.GERBI_LANGUAGES_KEY % (self.id))
-        if self._languages is not None:
-            return self._languages
 
-        languages = [c['language'] for
-                            c in Content.objects.filter(page=self,
-                            type="slug").values('language')]
-        # remove duplicates
-        languages = list(set(languages))
-        languages.sort()
-        cache.set(self.GERBI_LANGUAGES_KEY % (self.id), languages)
-        self._languages = languages
-        return languages
+        self._languages = []
+        # this a very expensive operation if there is
+        # many languages
+        self.build_cache()
+        for lang in settings.GERBI_LANGUAGES:
+            lang = lang[0]
+            if lang in self.cache and self.cache[lang]:
+                self._languages.append(lang)
+
+        return self._languages
 
     def is_first_root(self):
         """Return ``True`` if this page is the first root gerbi."""
@@ -320,10 +302,7 @@ class Page(MPTTModel):
         :param fallback: if ``True``, the slug will also be searched in other \
         languages.
         """
-
-        slug = self.get_content(language, 'slug', language_fallback=fallback)
-
-        return slug
+        return self.get_content(language, 'slug', language_fallback=fallback)
 
     def title(self, language=None, fallback=True):
         """
@@ -333,9 +312,6 @@ class Page(MPTTModel):
         :param fallback: if ``True``, the slug will also be searched in \
         other languages.
         """
-        if not language:
-            language = settings.GERBI_DEFAULT_LANGUAGE
-
         return self.get_content(language, 'title', language_fallback=fallback)
 
     def get_content(self, language, ctype, language_fallback=False):
@@ -432,6 +408,50 @@ class Page(MPTTModel):
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
 
+    def build_cache(self, language=None):
+
+        if not self.id:
+            raise ValueError("Page have no id")
+        key = "gerbi_page_%d" % (self.id)
+        self.cache = self.cache or cache.get(key)
+        if self.cache is None:
+            self.cache = {}
+
+        if language:
+            languages = [language]
+        else:
+            languages = [lang[0] for lang in settings.GERBI_LANGUAGES]
+
+        needed_languages = [lang for lang in languages
+            if lang not in self.cache.keys()]
+        # fill the cache for each needed language, that will create
+        # P * L queries.
+        # L == number of language, P == number of placeholder in the page.
+        # Once generated the result is cached.
+        for lang in needed_languages:
+            self.cache[lang] = {}
+            params = {
+                'language': lang,
+                'page': self
+            }
+            if self.freeze_date:
+                params['creation_date__lte'] = self.freeze_date
+            # get all the content types for one language
+            for content_type in Content.objects.filter(**params).values(
+                    'type').annotate(models.Max("creation_date")):
+                ctype = content_type['type']
+
+                try:
+                    content = Content.objects.get_content_object(self, lang, ctype)
+                    self.cache[lang][ctype] = {'body': content.body,
+                        'creation_date': content.creation_date}
+                except Content.DoesNotExist:
+                    pass#self.cache[lang][p_name] = None
+
+        if len(needed_languages):
+            cache.set(key, self.cache)
+        return self.cache
+
     def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
         spaces equal to simluate the level of page in the hierarchy."""
@@ -481,7 +501,7 @@ class Page(MPTTModel):
                     return nxt
         return None
 
-    def get_prev_in_book( self ):
+    def get_prev_in_book(self):
         """Returns the previous page in the tree as if it was
         traversed like a book.
 
@@ -503,7 +523,7 @@ class Page(MPTTModel):
                 ## been added and then deleted. I guess this is an
                 ## MPTT bug (not a PageCMS bug) that needs to be
                 ## investigated.
-
+                
                 # cnt = sib.get_descendant_count()
                 # if 0 == cnt:
                 #     return sib
@@ -517,7 +537,9 @@ class Page(MPTTModel):
                     return sib
                 return dsc[cnt-1]
             else:
-                return self.parent
+                # Should be as simple as self.parent but this breaks
+                # ability to proxy the Page model.
+                return self.__class__.objects.get(id=self.parent.id)
         return None
 
 
@@ -536,8 +558,11 @@ class Content(models.Model):
         default=datetime.now)
     objects = ContentManager()
 
+    def save(self, *args, **kwargs):
+        self.page.invalidate()
+        super(Content, self).save(*args, **kwargs)
+
     class Meta:
-        db_table = 'pages_content'
         get_latest_by = 'creation_date'
         verbose_name = _('content')
         verbose_name_plural = _('contents')
@@ -554,7 +579,6 @@ class PageAlias(models.Model):
     objects = PageAliasManager()
 
     class Meta:
-        db_table = 'pages_pagealias'
         verbose_name_plural = _('Aliases')
 
     def save(self, *args, **kwargs):

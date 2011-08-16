@@ -22,26 +22,17 @@ $(function() {
 
     // Set the publication status
     var select = $('#id_status');
-    var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
-    var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(select);
-    // disable ajax post if page not already created (add view)
-    var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
 
-    select.change(function(e) {
-        pages.update_published_icon('', select, img, change_status);
-    });
+    if(select) {
+        var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
+        var img = $('<img src="'+page_media_url+'/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(select);
+        // disable ajax post if page not already created (add view)
+        var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
 
-    // Translation helper
-    $('#translation-helper-select').change(function() {
-        var index = this.selectedIndex;
-        if (index) {
-            $.get(window.location.href.split('?')[0]+'traduction/'+this.options[index].value+'/', function(html) {
-                $('#translation-helper-content').html(html).show();
-            });
-        } else {
-            $('#translation-helper-content').hide();
-        }
-    });
+        select.change(function(e) {
+            pages.update_published_icon('', select, img, change_status);
+        });
+    }
 
     // Confirm language and template change if page is not saved
     // this code doesn't work with languages
@@ -81,7 +72,7 @@ $(function() {
     */
 
     // Content revision selector
-    $('.revisions').change(function () {
+    $('.revisions select').change(function () {
         var select = $(this);
         var val = select.val();
         var language = $('#id_language').val();

@@ -8,6 +8,7 @@ from gerbi import settings
 from gerbi.models import Page, Content
 from gerbi.urlconf_registry import get_choices
 from gerbi.widgets import LanguageChoiceWidget
+from gerbi.templatetags.gerbi_tags import get_page_from_string_or_id
 
 # error messages
 another_page_error = _('Another page with this slug already exists')
@@ -24,13 +25,13 @@ class PageForm(forms.ModelForm):
 
     title = forms.CharField(
         label=_('Title'),
-        widget=forms.TextInput(),
+        widget=forms.Textarea,
     )
     slug = forms.CharField(
         label=_('Slug'),
         widget=forms.TextInput(),
         help_text=_('The slug will be used to create the page URL, \
-it must be unique among the other gerbi of the same level.')
+it must be unique among the other pages of the same level.')
     )
     language = forms.ChoiceField(
         label=_('Language'),
@@ -54,6 +55,13 @@ it must be unique among the other gerbi of the same level.')
         # those make tests fail miserably
         #widget=widgets.AdminSplitDateTime()
         #widget=widgets.AdminTimeWidget()
+    )
+
+    redirect_to = forms.IntegerField(
+        label=_('Redirect to'),
+        widget=forms.TextInput(),
+        help_text=_('Input the id of the page'),
+        required=False
     )
 
     target = forms.IntegerField(required=False, widget=forms.HiddenInput)

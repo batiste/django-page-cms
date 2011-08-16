@@ -91,7 +91,7 @@ class TestCase(TestCase):
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
         page_data = {'title': 'test page %d' % self.counter,
-            'slug': 'test-page-%d' % self.counter, 'language':'en-us',
+            'slug': 'test-page-%d' % self.counter, 'language': 'en-us',
             'sites': [1], 'status': Page.DRAFT if draft else Page.PUBLISHED,
             # used to disable an error with connected models
             'document_set-TOTAL_FORMS': 0, 'document_set-INITIAL_FORMS': 0,

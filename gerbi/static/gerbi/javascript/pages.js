@@ -1,5 +1,9 @@
 /* Common stuff used in pages_list.js as well as in pages_form.js */
 
+$(function() {
+
+window.pages = {};
+
 // http://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
 $('html').ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
@@ -22,8 +26,6 @@ $('html').ajaxSend(function(event, xhr, settings) {
         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     }
 });
-
-var pages = {};
 
 pages.cookie = function(name, value, options) {
     if (typeof value != 'undefined') { // name and value given, set cookie
@@ -123,14 +125,16 @@ pages.update_published_icon = function (url, select, img, change_status) {
 };
 
 
-$(function () {
-    // Ignore clicks on help popups, just hide the help message
-    $('a.popup .help, .popup a .help').click(function (e) {
-        var help = $(this).css('display', 'none')
-        help.closest('a').mouseout(function() {
-            help.css('display', '');
-        });
-        e.stopPropagation();
-        return false;
+
+// Ignore clicks on help popups, just hide the help message
+$('a.popup .help, .popup a .help').click(function (e) {
+    var help = $(this).css('display', 'none')
+    help.closest('a').mouseout(function() {
+        help.css('display', '');
     });
+    e.stopPropagation();
+    return false;
+});
+
+
 });

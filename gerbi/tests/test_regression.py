@@ -89,6 +89,8 @@ class RegressionTestCase(TestCase):
         Content(page=page, type='title', language='fr-ch',
             body="title-fr-ch").save()
 
+        page.invalidate()
+
         from gerbi.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test3.html')
@@ -97,7 +99,7 @@ class RegressionTestCase(TestCase):
 
         render = temp.render(RequestContext(
             request,
-            {'page':page, 'lang':'fr-ch'}
+            {'page': page, 'lang': 'fr-ch'}
         ))
         self.assertTrue('title-fr-ch' in render)
 
@@ -116,7 +118,7 @@ class RegressionTestCase(TestCase):
         from gerbi.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test5.html')
-        render = temp.render(RequestContext(request, {'page':None}))
+        render = temp.render(RequestContext(request, {'page': None}))
 
     def test_language_fallback_bug(self):
         """Language fallback doesn't work properly."""
@@ -124,6 +126,8 @@ class RegressionTestCase(TestCase):
 
         c = Content(page=page, type='new_type', body='toto', language='en-us')
         c.save()
+
+        page.invalidate()
 
         self.assertEqual(
             Content.objects.get_content(page, 'en-us', 'new_type'),
@@ -198,6 +202,7 @@ class RegressionTestCase(TestCase):
         placeholder = PlaceholderNode('test', page=page)
         placeholder.save(page, 'fr-ch', 'fr', True)
         placeholder.save(page, 'en-us', 'en', True)
+        page.invalidate()
         self.assertEqual(
             Content.objects.get_content(page, 'fr-ch', 'test'),
             'fr'

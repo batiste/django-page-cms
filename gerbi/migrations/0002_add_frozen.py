@@ -107,4 +107,4 @@ class Migration:
     if settings.GERBI_USE_SITE_ID:
         models['gerbi.page']['sites'] = ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']"})
     
-    complete_apps = ['pages']
+    complete_apps = ['gerbi']

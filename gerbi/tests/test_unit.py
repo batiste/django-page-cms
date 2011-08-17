@@ -676,7 +676,7 @@ class UnitTestCase(TestCase):
     def test_get_page_from_id_context_variable(self):
         """Test get_page_from_string_or_id with an id context variable."""
         page = self.new_page({'slug': 'test'})
-        self.assertEqual(get_page_from_string_or_id(unicode(page.id)), page)
+        self.assertEqual(get_page_from_string_or_id({}, unicode(page.id)), page)
 
         content = Content(page=page, language='en-us', type='test_id',
             body=page.id)

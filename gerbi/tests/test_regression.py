@@ -75,7 +75,8 @@ class RegressionTestCase(TestCase):
         from gerbi.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test2.html')
-        render = temp.render(RequestContext(request, {}))
+        page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+        render = temp.render(RequestContext(request, {'gerbi_current_page': page}))
         self.assertTrue('test-162-slug' in render)
 
     def test_bug_172(self):
@@ -174,7 +175,7 @@ class RegressionTestCase(TestCase):
         self.assert404(func)
 
         # login as a non staff user and we should get a 404
-        c.login(username= 'nonstaff', password='b')
+        c.login(username='nonstaff', password='b')
         def func():
             return c.get(self.get_page_url('page1/'))
         self.assert404(func)

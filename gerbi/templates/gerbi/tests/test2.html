@@ -1,6 +1,5 @@
 {% load cache gerbi_tags %}
 {% gerbi_load_pages %}
-{{ gerbi_navigation }}
 {% for page in gerbi_navigation %}
     {{ page.slug }}
 {% endfor %}

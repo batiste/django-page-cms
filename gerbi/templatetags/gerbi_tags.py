@@ -22,7 +22,7 @@ def get_page_from_string_or_id( context, page_string, lang=None):
         model = current_page.__class__
     else:
         print "Warning: get_page_from_string_or_id(): context has no current page !"
-        
+
     if type(page_string) == int:
         return model.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates

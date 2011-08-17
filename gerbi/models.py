@@ -104,7 +104,6 @@ class Page(MPTTModel):
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
         # Gerbi module was once called pages
-        db_table = 'pages_page'
         get_latest_by = "publication_date"
         verbose_name = _('page')
         verbose_name_plural = _('pages')
@@ -526,7 +525,7 @@ class Page(MPTTModel):
                 ## been added and then deleted. I guess this is an
                 ## MPTT bug (not a PageCMS bug) that needs to be
                 ## investigated.
-
+                
                 # cnt = sib.get_descendant_count()
                 # if 0 == cnt:
                 #     return sib
@@ -540,7 +539,9 @@ class Page(MPTTModel):
                     return sib
                 return dsc[cnt-1]
             else:
-                return self.parent
+                # Should be as simple as self.parent but this breaks
+                # ability to proxy the Page model.
+                return self.__class__.objects.get(id=self.parent.id)
         return None
 
 
@@ -564,7 +565,6 @@ class Content(models.Model):
         super(Content, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = 'pages_content'
         get_latest_by = 'creation_date'
         verbose_name = _('content')
         verbose_name_plural = _('contents')
@@ -581,7 +581,6 @@ class PageAlias(models.Model):
     objects = PageAliasManager()
 
     class Meta:
-        db_table = 'pages_pagealias'
         verbose_name_plural = _('Aliases')
 
     def save(self, *args, **kwargs):

@@ -1,6 +1,6 @@
 """Django haystack `SearchIndex` module."""
 from pages.models import Page
-from gerbi import settings
+from django.conf import settings
 
 from haystack.indexes import SearchIndex, CharField, DateTimeField, RealTimeSearchIndex
 from haystack import site

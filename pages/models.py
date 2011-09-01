@@ -103,7 +103,7 @@ class Page(MPTTModel):
     objects = PageManager()
 
     if settings.PAGE_TAGGING:
-        tags = TaggableManager()
+        tags = TaggableManager(blank=True)
 
     class Meta:
         """Make sure the default page ordering is correct."""

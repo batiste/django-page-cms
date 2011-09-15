@@ -100,9 +100,7 @@ pages_breadcrumb
 With the pages_breadcrumb tag, it is possible to use the "breadcrumb"/"you are here"
 navigational pattern, consisting of a list of all parents of the current page::
 
-    <ul>
     {% pages_breadcrumb current_page %}
-    </ul>
 
 The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`.
 

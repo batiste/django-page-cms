@@ -48,7 +48,7 @@ Retrieve a Page object and store it into a context variable that you can reuse a
 an example of the use of this template tag to display a list of news::
 
     <h2>Latest news</h2>
-    {% get_page "news" news_page %}
+    {% get_page "news" as news_page %}
     <ul>
     {% for new in news_page.get_children %}
     <li>

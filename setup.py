@@ -30,6 +30,9 @@ for directory in os.walk('pages/media'):
 for directory in os.walk('pages/static'):
     data_dirs.append(directory[0][6:] + '/*.*')
 
+for directory in os.walk('pages/locale'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 

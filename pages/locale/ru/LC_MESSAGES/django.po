@@ -1,266 +1,490 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: django-page-cms 1.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-23 23:00+0300\n"
-"PO-Revision-Date: 2009-02-23 23:00+0300\n"
-"Last-Translator: Michail Sychev <m.sychev@axion-rti.ru>\n"
+"POT-Creation-Date: 2011-12-20 12:01+0400\n"
+"PO-Revision-Date: 2011-12-20 14:18+0300\n"
+"Last-Translator: Natalia Yumatova <natalie.stepina@gmail.com>\n"
 "Language-Team: AXION-RTI localization group <m.sychev@axion-rti.ru>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:35
-msgid "Draft"
-msgstr "Черновик"
-
-#: models.py:36
+#: models.py:57
 msgid "Published"
 msgstr "Опубликовано"
 
-#: models.py:37
+#: models.py:58
+#: templates/admin/pages/page/menu.html:79
+#: templates/admin/pages/page/menu.html:86
 msgid "Hidden"
 msgstr "Скрыто"
 
-#: models.py:38
+#: models.py:59
+#: templates/admin/pages/page/menu.html:77
+#: templates/admin/pages/page/menu.html:84
+msgid "Draft"
+msgstr "Черновик"
+
+#: models.py:66
+#: templates/admin/pages/page/change_list_table.html:14
 msgid "author"
 msgstr "Автор"
 
-#: models.py:39
+#: models.py:69
 msgid "parent"
 msgstr "род."
 
-#: models.py:40 models.py:209
+#: models.py:70
+#: models.py:467
 msgid "creation date"
 msgstr "создано"
 
-#: models.py:41
+#: models.py:72
 msgid "publication date"
 msgstr "опубликовано"
 
-#: models.py:41
+#: models.py:73
 msgid ""
-"When the page should go live. Status must be \"Published\" for page to go "
-"live."
-msgstr ""
-"Для отображения на сайте эта страница должна быть опубликована"
+"When the page should go\n"
+"            live. Status must be \"Published\" for page to go live."
+msgstr "Когда страница должна стать доступна. Также должен быть выставлен статус \"Опубликовано\"."
 
-#: models.py:42
+#: models.py:75
 msgid "publication end date"
 msgstr "окончание публикации"
 
-#: models.py:42
-msgid "When to expire the page. Leave empty to never expire."
-msgstr ""
-"Когда страница должна устареть, оставьте пустым для отключения"
+#: models.py:76
+msgid ""
+"When to expire the page.\n"
+"            Leave empty to never expire."
+msgstr "Когда страница должна устареть. Оставьте пустым, чтобы страница действовала всегда."
 
-#: models.py:44
+#: models.py:79
+msgid "last modification date"
+msgstr "Дата последнего изменения"
+
+#: models.py:81
 msgid "status"
 msgstr "статус"
 
-#: models.py:45 templates/admin/pages/page/change_list_table.html:9
+#: models.py:82
+#: templates/admin/pages/page/change_list_table.html:13
 msgid "template"
 msgstr "Шаблон"
 
-#: models.py:46
+#: models.py:85
+msgid "delegate to"
+msgstr "Делегировать"
+
+#: models.py:88
+msgid "freeze date"
+msgstr "Дата заморозки"
+
+#: models.py:89
+msgid ""
+"Don't publish any content\n"
+"            after this date."
+msgstr "Прекратить публикацию содержимого после указанной даты."
+
+#: models.py:94
 msgid "The site(s) the page is accessible at."
 msgstr "Сайт(ы) на которых доступна эта страница"
 
-#: models.py:46
+#: models.py:95
 msgid "sites"
 msgstr "сайты"
 
-#: models.py:55 models.py:189 models.py:207 admin/__init__.py:268
+#: models.py:112
+#: models.py:465
+#: models.py:483
+#: admin/__init__.py:333
 msgid "page"
 msgstr "страница"
 
-#: models.py:56
+#: models.py:113
 msgid "pages"
 msgstr "страницы"
 
-#: models.py:185
-msgid "All"
-msgstr "Всё"
-
-#: models.py:186
-msgid "This page only"
-msgstr "Только эта страница"
-
-#: models.py:187
-msgid "This page and all childrens"
-msgstr "Эта страница и все подчинённые"
-
-#: models.py:190
-msgid "user"
-msgstr "пользователь"
-
-#: models.py:191 models.py:206
-msgid "type"
-msgstr "тип"
-
-#: models.py:196
-msgid "page permission"
-msgstr "права доступа к странице"
-
-#: models.py:197
-msgid "page permissions"
-msgstr "права доступа к странице"
-
-#: models.py:204
+#: models.py:461
 msgid "language"
 msgstr "язык"
 
-#: models.py:205
+#: models.py:462
 msgid "body"
 msgstr "содержимое"
 
-#: models.py:213 admin/__init__.py:146 admin/__init__.py:147
+#: models.py:463
+msgid "type"
+msgstr "тип"
+
+#: models.py:473
 msgid "content"
 msgstr "содержимое"
 
-#: models.py:214
+#: models.py:474
 msgid "contents"
 msgstr "содержимое"
 
-#: admin/__init__.py:47
-msgid "General"
-msgstr "Главное"
+#: models.py:488
+msgid "Aliases"
+msgstr "Синонимы"
 
-#: admin/__init__.py:51
-msgid "Options"
-msgstr "Настройки"
+#: placeholders.py:24
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Ошибка синтаксиса в метке %(name)s: %(error)s]"
 
-#: admin/__init__.py:54
-msgid "Note: This page reloads if you change the selection"
-msgstr "Внимание: Страница будет загружена заново при изменении"
-
-#: admin/__init__.py:184 admin/forms.py:15
-msgid "Slug"
-msgstr "Slug"
-
-#: admin/__init__.py:189
-msgid "Default template"
-msgstr "Шаблон по умолчанию"
-
-#: admin/__init__.py:196
+#: placeholders.py:138
 msgid "Note: This field is evaluated as template code."
 msgstr "Внимание: Это поле интерпретируется как код шаблона."
 
-#: admin/__init__.py:290
-msgid "Page could not been moved."
-msgstr "Страница не может быть передвинута."
+#: placeholders.py:332
+msgid "Your email"
+msgstr "Ваш e-mail"
 
-#: admin/forms.py:10
-msgid "Title"
-msgstr "Заголовок"
+#: placeholders.py:333
+msgid "Subject"
+msgstr "Тема"
 
-#: admin/forms.py:12
-msgid "The default title"
-msgstr "Standard-Titel"
+#: placeholders.py:336
+msgid "Your message"
+msgstr "Ваше сообщение"
 
-#: admin/forms.py:17
-msgid "The part of the title that is used in permalinks"
-msgstr "Часть заголовка используемая как постоянная ссылка"
+#: placeholders.py:355
+msgid "Your email has been sent. Thank you."
+msgstr "Ваше письмо отправлено. Спасибо."
 
-#: admin/forms.py:20
-msgid "Language"
-msgstr "Язык"
+#: placeholders.py:357
+msgid "An error as occured: your email has not been sent."
+msgstr "Произошла ошибка, Ваш e-mail не отправлен."
 
-#: admin/forms.py:22
-msgid "The current language of the content fields."
-msgstr "Текущий язык полей контента."
+#: urlconf_registry.py:35
+#, python-format
+msgid "The urlconf %s has already been registered."
+msgstr "urlconf %s уже зарегистрирован."
 
-#: admin/forms.py:26
-msgid "Template"
-msgstr "Шаблон"
+#: urlconf_registry.py:45
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr "urlconf %s не зарегистрирован."
 
-#: admin/forms.py:28
-msgid "The template used to render the content."
-msgstr "Шаблон используемый для отображения контента."
+#: widgets.py:280
+msgid "Please save the page to show the image field"
+msgstr "Пожалуйста, сохраните страницу для отображения изображения"
 
-#: admin/forms.py:43 admin/forms.py:45
+#: widgets.py:284
+#: widgets.py:307
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Текущий файл: %s<br/>"
+
+#: widgets.py:290
+msgid "Delete image"
+msgstr "Удалить изображение"
+
+#: widgets.py:303
+msgid "Please save the page to show the file field"
+msgstr "Пожалуйста, сохрание страницу для отображения файла"
+
+#: widgets.py:313
+msgid "Delete file"
+msgstr "Удалить файл"
+
+#: widgets_registry.py:29
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr "widget %s уже зарегистрирован."
+
+#: widgets_registry.py:41
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr "widget %s не зарегистрирован."
+
+#: admin/__init__.py:72
+msgid "General"
+msgstr "Главное"
+
+#: admin/__init__.py:76
+msgid "Options"
+msgstr "Настройки"
+
+#: admin/__init__.py:199
+msgid "Content"
+msgstr "Содержимое"
+
+#: admin/__init__.py:228
+#: admin/forms.py:30
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/__init__.py:235
+msgid "Default template"
+msgstr "Шаблон по умолчанию"
+
+#: admin/forms.py:13
 msgid "Another page with this slug already exists"
 msgstr "Другая страница с таким путём существует."
 
-#: templates/admin/pages/page/change_form.html:3
-msgid "Change a page"
-msgstr "Изменить страницу"
+#: admin/forms.py:14
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr "Другая страница с таким slug уже существует в указанной позиции."
 
-#: templates/admin/pages/page/change_form.html:16
+#: admin/forms.py:16
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Подчиненная страница с таким slug уже существует в указанной позиции."
+
+#: admin/forms.py:18
+msgid "A sibling with this slug already exists"
+msgstr "Другая страница с таким slug уже существует."
+
+#: admin/forms.py:19
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Другая с таким slug уже существует на верхнем уровне."
+
+#: admin/forms.py:26
+msgid "Title"
+msgstr "Заголовок"
+
+#: admin/forms.py:32
+msgid "The slug will be used to create the page URL, it must be unique among the other pages of the same level."
+msgstr "Slug будет использован в URL страницы, он должен быть уникальным среди страниц того же уровня."
+
+#: admin/forms.py:36
+msgid "Language"
+msgstr "Язык"
+
+#: admin/forms.py:42
+msgid "Template"
+msgstr "Шаблон"
+
+#: admin/forms.py:47
+#, fuzzy
+msgid "Delegate to application"
+msgstr "Делегировать приложению"
+
+#: admin/forms.py:52
+msgid "Freeze"
+msgstr "Блокировать"
+
+#: admin/forms.py:53
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr "Прекратить публикацию содержимого после указанной даты. Формат: ГГГГ-ММ-ДД ЧЧ:ММ:СС"
+
+#: templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Правка"
+
+#: templates/admin/pages/page/change_form.html:17
 msgid "View on site"
 msgstr "Просмотреть на сайте"
 
-#: templates/admin/pages/page/change_form.html:28
+#: templates/admin/pages/page/change_form.html:31
 msgid "Translation helper"
 msgstr "Помошник перевода"
 
-#: templates/admin/pages/page/change_form.html:30
+#: templates/admin/pages/page/change_form.html:33
 msgid "Language:"
 msgstr "Язык:"
 
-#: templates/admin/pages/page/change_list.html:3
+#: templates/admin/pages/page/change_list.html:4
 msgid "List of pages"
 msgstr "Список страниц"
 
-#: templates/admin/pages/page/change_list.html:8
+#: templates/admin/pages/page/change_list.html:10
 msgid "Home"
 msgstr "Начало"
 
-#: templates/admin/pages/page/change_list.html:27
+#: templates/admin/pages/page/change_list.html:32
 #, python-format
 msgid "Add %(name)s"
 msgstr "Добавить %(name)s"
 
-#: templates/admin/pages/page/change_list_table.html:5
+#: templates/admin/pages/page/change_list.html:41
+#: templates/pages/examples/index.html:73
+msgid "Search"
+msgstr "Поиск"
+
+#: templates/admin/pages/page/change_list.html:43
+msgid "Go"
+msgstr "Вперед"
+
+#: templates/admin/pages/page/change_list_table.html:9
+#: testproj/documents/models.py:9
 msgid "title"
 msgstr "Заголовок"
 
-#: templates/admin/pages/page/change_list_table.html:6
-msgid "quick actions"
-msgstr "Быстрые действия"
+#: templates/admin/pages/page/change_list_table.html:10
+msgid "languages"
+msgstr "Языки"
 
-#: templates/admin/pages/page/change_list_table.html:7
-msgid "translations"
-msgstr "Переводы"
+#: templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "Последнее изменение"
 
-#: templates/admin/pages/page/change_list_table.html:8
+#: templates/admin/pages/page/change_list_table.html:12
 msgid "published"
 msgstr "Опубликовано"
 
-#: templates/admin/pages/page/change_list_table.html:10
-msgid "creator"
-msgstr "Автор"
+#: templates/admin/pages/page/menu.html:22
+msgid "This page contain broken links"
+msgstr "Эта страница содержит битые ссылки"
 
-#: templates/admin/pages/page/menu.html:18
-msgid "move"
-msgstr "передвинуть"
+#: templates/admin/pages/page/menu.html:26
+msgid "view this page"
+msgstr "Смотреть страницу"
 
-#: templates/admin/pages/page/menu.html:19
-msgid "add"
-msgstr "добавить"
+#: templates/admin/pages/page/menu.html:27
+msgid "move this page"
+msgstr "Передвинуть страницу"
 
-#: templates/admin/pages/page/menu.html:20
-msgid "view"
-msgstr "просмотреть"
+#: templates/admin/pages/page/menu.html:28
+msgid "insert a new page here"
+msgstr "Вставить новую страницу сюда"
 
-#: templates/admin/pages/page/menu.html:21
-msgid "delete"
-msgstr "удалить"
+#: templates/admin/pages/page/menu.html:30
+msgid "delete this page"
+msgstr "Удалить страницу"
+
+#: templates/admin/pages/page/menu.html:34
+msgid "don&#x27;t move this page"
+msgstr "Не передвигать эту страницу"
+
+#: templates/admin/pages/page/menu.html:34
+#: templates/admin/pages/page/menu.html:38
+msgid "cancel"
+msgstr "Отмена"
+
+#: templates/admin/pages/page/menu.html:38
+msgid "don&#x27;t insert a new page here"
+msgstr "Не вставлять сюда новую страницу"
+
+#: templates/admin/pages/page/menu.html:39
+msgid "insert above"
+msgstr "Вставить над указанной"
+
+#: templates/admin/pages/page/menu.html:40
+msgid "insert below"
+msgstr "Вставить под указанной"
+
+#: templates/admin/pages/page/menu.html:41
+msgid "insert as child"
+msgstr "Вставить как подчиненную"
+
+#: templates/admin/pages/page/menu.html:54
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "Править перевод %(lang)s"
+
+#: templates/admin/pages/page/menu.html:57
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "Создать перевод %(lang)s"
+
+#: templates/admin/pages/page/menu.html:64
+#: templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "j. N Y, H:i"
+
+#: templates/admin/pages/page/menu.html:78
+#: templates/admin/pages/page/menu.html:85
+msgid "In navigation"
+msgstr "Опубликовано"
+
+#: templates/pages/contact.html:4
+msgid "Send"
+msgstr "Отправить"
 
 #: templates/pages/revisions.html:4
 msgid "Revisions"
 msgstr "Ревизии"
 
-#: templates/pages/revisions.html:8
-msgid "DATETIME_FORMAT"
-msgstr "j. N Y, H:i"
-
 #: templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Запрошенный язык ещё не был переведён."
 
-#: templatetags/pages_tags.py:14
-#, python-format
-msgid "[Placeholder %(name)s had syntax error: %(error)s]"
-msgstr "[Ошибка синтаксиса в метке %(name)s: %(error)s]"
+#: templates/pages/widgets/languages.html:20
+msgid "Delete this translation"
+msgstr "Удалить этот перевод"
+
+#: testproj/test_settings.py:138
+msgid "German"
+msgstr "Немецкий"
+
+#: testproj/test_settings.py:139
+msgid "Swiss french"
+msgstr "Швейцарский французский"
+
+#: testproj/test_settings.py:140
+msgid "US English"
+msgstr "Английский (США)"
+
+#: testproj/test_settings.py:147
+msgid "French"
+msgstr "Французский"
+
+#: testproj/test_settings.py:148
+msgid "Belgium french"
+msgstr "Бельгийский французский"
+
+#: testproj/test_settings.py:149
+msgid "Italian"
+msgstr "Итальянский"
+
+#: testproj/documents/models.py:10
+msgid "text"
+msgstr "Текст"
+
+#~ msgid "All"
+#~ msgstr "Всё"
+
+#~ msgid "This page only"
+#~ msgstr "Только эта страница"
+
+#~ msgid "This page and all childrens"
+#~ msgstr "Эта страница и все подчинённые"
+
+#~ msgid "user"
+#~ msgstr "пользователь"
+
+#~ msgid "page permission"
+#~ msgstr "права доступа к странице"
+
+#~ msgid "page permissions"
+#~ msgstr "права доступа к странице"
+
+#~ msgid "Note: This page reloads if you change the selection"
+#~ msgstr "Внимание: Страница будет загружена заново при изменении"
+
+#~ msgid "Page could not been moved."
+#~ msgstr "Страница не может быть передвинута."
+
+#~ msgid "The default title"
+#~ msgstr "Standard-Titel"
+
+#~ msgid "The part of the title that is used in permalinks"
+#~ msgstr "Часть заголовка используемая как постоянная ссылка"
+
+#~ msgid "The current language of the content fields."
+#~ msgstr "Текущий язык полей контента."
+
+#~ msgid "The template used to render the content."
+#~ msgstr "Шаблон используемый для отображения контента."
+
+#~ msgid "Change a page"
+#~ msgstr "Изменить страницу"
+
+#~ msgid "quick actions"
+#~ msgstr "Быстрые действия"
+
+#~ msgid "creator"
+#~ msgstr "Автор"
+
+#~ msgid "move"
+#~ msgstr "передвинуть"
+
+#~ msgid "add"
+#~ msgstr "добавить"
+
+#~ msgid "view"
+#~ msgstr "просмотреть"

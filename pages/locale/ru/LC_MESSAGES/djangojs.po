@@ -1,18 +1,33 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: django-page-cms 1.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-23 23:00+0300\n"
-"PO-Revision-Date: 2009-02-23 23:00+0300\n"
-"Last-Translator: Michail Sychev <m.sychev@axion-rti.ru>\n"
+"POT-Creation-Date: 2011-12-20 14:24+0400\n"
+"PO-Revision-Date: 2011-12-20 14:23+0300\n"
+"Last-Translator: Natalia Yumatova <natalie.stepina@gmail.com>\n"
 "Language-Team: AXION-RTI localization group <m.sychev@axion-rti.ru>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: media/pages/javascript/change_form.js:10
-msgid ""
-"Are you sure you want to change the %(field_name)s without saving the page "
-"first?"
-msgstr "Вы точно хотите изменить %(field_name)s не сохранив перед этим страницу?"
+#: static/pages/javascript/pages_form.js:48
+msgid "You may lose any changes you have done to the page. Are you sure?"
+msgstr "Вы можете потерять свои изменения этой страницы. Вы уверены?"
+
+#: static/pages/javascript/pages_form.js:112
+#, fuzzy
+msgid "Are you sure you want to delete this content?"
+msgstr "Вы уверены, что хотите удалить это содержимое?"
+
+#: static/pages/javascript/pages_list.js:204
+#: static/pages/javascript/pages_list.js:238
+msgid "Insert as sibling"
+msgstr "Вставить рядом"
+
+#: static/pages/javascript/pages_list.js:219
+msgid "Invalid move"
+msgstr "Неверное перемещение"
+
+#: static/pages/javascript/pages_list.js:235
+msgid "Insert as child"
+msgstr "Вставить подчиненной"

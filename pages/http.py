@@ -113,6 +113,11 @@ def pages_view(view):
                 only_context=True, delegation=False)
             context = response
             kwargs.update(context)
+            extra_context_var = kwargs.pop('extra_context_var',None)
+            if extra_context_var:
+                kwargs.update({extra_context_var:response})
+            else:
+                kwargs.update(context)
         return view(request, *args, **kwargs)
     return pages_view_decorator
 

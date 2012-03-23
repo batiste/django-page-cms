@@ -13,11 +13,11 @@ recursive-include requirements *
 recursive-include pages/templates *
 recursive-include pages/static *
 recursive-include pages/locale *
-recursive-include pages/ *.css
-recursive-include pages/ *.js
-recursive-include pages/ *.html
-recursive-include pages/ *.mo
-recursive-include pages/ *.po
+recursive-include pages *.css
+recursive-include pages *.js
+recursive-include pages *.html
+recursive-include pages *.mo
+recursive-include pages *.po
 global-exclude *.pyc
 global-exclude coverage/*
 # this important to prune at the end

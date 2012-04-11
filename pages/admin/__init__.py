@@ -11,6 +11,7 @@ from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
+from pages.admin.actions import export_pages_as_json
 from pages.permissions import PagePermission
 from pages.http import auto_render
 import pages.widgets
@@ -78,6 +79,8 @@ class PageAdmin(admin.ModelAdmin):
             'classes': ('module-options',),
         }),
     )
+
+    actions = [export_pages_as_json]
 
     class Media:
         css = {

@@ -442,6 +442,51 @@ class Page(MPTTModel):
         """Used in the admin menu to create the left margin."""
         return self.level * 2
 
+    def dump_json_data(self):
+        """
+        Return a python dict representation of this page for use as part of
+        a JSON export.
+        """
+        def langs(fn):
+            """Return a dict for each fn(lang) that returns something."""
+            out = [(lang, fn(lang)) for lang in self.get_languages()]
+            return dict((lang, val) for lang, val in out if val)
+
+        def content_dicts():
+            """Return content of each placeholder in each language."""
+            out = []
+            for p in get_placeholders(self.get_template()):
+                out.append((p.name, langs(
+                    lambda lang: self.get_content(lang, p.name,
+                        language_fallback=False))))
+            return dict(out)
+
+        return {
+            'complete_slug': langs(
+                lambda lang: self.get_complete_slug(lang, hideroot=False)),
+            'title': langs(lambda lang: self.title(lang, fallback=False)),
+            'author_email': self.author.email,
+            'creation_date': self.creation_date,
+            'publication_date': self.publication_date,
+            'last_modification_date': self.last_modification_date,
+            'status': {
+                Page.PUBLISHED: 'published',
+                Page.HIDDEN: 'hidden',
+                Page.DRAFT: 'draft'}[self.status],
+            'template': self.template,
+            #'delegate_to': self.delegate_to  # XXX: is this a good idea?
+            'freeze_date': self.freeze_date,
+            'sites': (
+                [site.domainname for site in self.sites]
+                if settings.PAGE_USE_SITE_ID else []),
+            'redirect_to_url': self.redirect_to_url,
+            'redirect_to_complete_slug': langs(
+                lambda lang: self.redirect_to.get_complete_slug(
+                    lang, hideroot=False)
+                ) if self.redirect_to is not None else None,
+            'content': content_dicts(),
+        }
+
     def __unicode__(self):
         """Representation of the page, saved or not."""
         if self.id:

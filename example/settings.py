@@ -94,7 +94,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'pages.testproj.documents',
-    'taggit',
+    #'taggit',
     'pages',
     'mptt',
     #'tinymce',
@@ -108,7 +108,7 @@ INSTALLED_APPS = (
 )
 
 PAGE_TINYMCE = False
-PAGE_TAGGING = True
+PAGE_TAGGING = False
 
 PAGE_CONNECTED_MODELS = [{
     'model': 'pages.testproj.documents.models.Document',
@@ -166,6 +166,7 @@ PAGE_SANITIZE_USER_INPUT = True
 SITE_ID = 1
 PAGE_USE_SITE_ID = False
 
+# haystack dev version
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
@@ -173,6 +174,12 @@ HAYSTACK_CONNECTIONS = {
         'INCLUDE_SPELLING': True,
     },
 }
+
+# haystack 1.2.7
+HAYSTACK_SITECONF = 'example.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+
 
 PAGE_REAL_TIME_SEARCH = False
 

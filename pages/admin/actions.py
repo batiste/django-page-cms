@@ -2,10 +2,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core.serializers.json import DjangoJSONEncoder
-from django.template.response import TemplateResponse
 from django.conf import settings as global_settings
 from django.db import transaction
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response
+from django.template import RequestContext
 
 from pages import settings
 from pages.http import get_language_from_request
@@ -49,12 +49,12 @@ def import_pages_from_json(request,
             pages_created.append(
                 Page.objects.create_and_update_from_json_data(p, request.user))
 
-    return TemplateResponse(request, template_name, {
+    return render_to_response(template_name, {
         'errors': errors,
         'pages_created': pages_created,
         'app_label': 'pages',
         'opts': Page._meta,
-    })
+    }, RequestContext(request))
 
 def validate_pages_json_data(d, preferred_lang):
     """

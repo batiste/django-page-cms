@@ -9,6 +9,8 @@ from django.db.models import Q
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.db.models import Avg, Max, Min, Count
+from django.contrib.sites.models import Site
+from django.conf import settings as global_settings
 
 from datetime import datetime
 
@@ -201,6 +203,16 @@ class PageManager(models.Manager):
         page.redirect_to_url = d['redirect_to_url']
 
         page.save()
+
+        if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
+            if d['sites']:
+                for site in d['sites']:
+                    try:
+                        page.sites.add(Site.objects.get(domain=site))
+                    except Site.DoesNotExist:
+                        pass
+            if not page.sites.count(): # need at least one site
+                page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
         from pages.models import Content
         languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)

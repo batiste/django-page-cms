@@ -478,7 +478,7 @@ class Page(MPTTModel):
             #'delegate_to': self.delegate_to  # XXX: is this a good idea?
             'freeze_date': self.freeze_date,
             'sites': (
-                [site.domainname for site in self.sites]
+                [site.domain for site in self.sites.all()]
                 if settings.PAGE_USE_SITE_ID else []),
             'redirect_to_url': self.redirect_to_url,
             'redirect_to_complete_slug': langs(

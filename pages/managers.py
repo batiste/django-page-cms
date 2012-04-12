@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.db.models import Avg, Max, Min, Count
 from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
+from django.utils.translation import ugettext_lazy as _
 
 from datetime import datetime
 
@@ -143,18 +144,24 @@ class PageManager(models.Manager):
         user is the User instance that will be used if the author can't
         be found in the DB.
 
-        return (page object, created) where created is True if this was a
-        new page or False if an existing page was updated.
+        returns (page object, created, messages).
+
+        created is True if this was a new page or False if an existing page
+        was updated.
+
+        messages is a list of strings warnings/messages about this import
         """
         page = None
         parent = None
         parent_required = True
         created = False
+        messages = []
 
         languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
 
         for lang, s in d['complete_slug'].items():
             if lang not in languages:
+                messages.append(_("Language '%s' not imported") % (lang,))
                 continue
 
             page = self.from_path(s, lang, exclude_drafts=False)
@@ -175,14 +182,23 @@ class PageManager(models.Manager):
             page.author = User.objects.get(email=d['author_email'])
         except User.DoesNotExist:
             page.author = user
+            messages.append(_("Original author '%s' not found")
+                % (d['author_email'],))
 
         rtcs = d['redirect_to_complete_slug']
         if rtcs:
+            s = ''
             for lang, s in rtcs.items():
+                if lang not in langyages:
+                    continue
                 r = self.from_path(s, lang, exclude_drafts=False)
                 if r:
                     page.redirect_to = r
                     break
+            else:
+                messages.append(_("Could not find page for redirect-to field"
+                    " '%s' (import again if page was created below)")
+                    % (s,))
 
         page.creation_date = datetime.strptime(d['creation_date'],
             ISODATE_FORMAT)
@@ -210,7 +226,8 @@ class PageManager(models.Manager):
                     try:
                         page.sites.add(Site.objects.get(domain=site))
                     except Site.DoesNotExist:
-                        pass
+                        messages.append(_("Could not add site '%s' to page")
+                            % (site,))
             if not page.sites.count(): # need at least one site
                 page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
@@ -233,7 +250,7 @@ class PageManager(models.Manager):
         for ctype, langs_bodies in d['content'].items():
             create_content(ctype, langs_bodies.items())
 
-        return page, created
+        return page, created, messages
 
 
 

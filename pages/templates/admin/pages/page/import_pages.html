@@ -23,13 +23,18 @@
 {% else %}
   <p>{% blocktrans %}Import completed.{% endblocktrans %}</p>
   <ul>
-    {% for page, created in pages_created %}
+    {% for page, created, messages in pages_created %}
       <li>
         <a href="../{{ page.id }}/">{{ page.get_complete_slug }} "{{ page.title }}"</a>
         {% if created %}
           {% trans "created" %}
         {% else %}
           {% trans "modified" %}
+        {% endif %}
+        {% if messages %}
+          <ul>
+            {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+          </ul>
         {% endif %}
       </li>
     {% endfor %}

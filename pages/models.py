@@ -2,7 +2,7 @@
 
 from pages.utils import get_placeholders, normalize_url
 from pages.managers import PageManager, ContentManager
-from pages.managers import PageAliasManager
+from pages.managers import PageAliasManager, ISODATE_FORMAT
 from pages import settings
 
 from datetime import datetime
@@ -461,22 +461,25 @@ class Page(MPTTModel):
                         language_fallback=False))))
             return dict(out)
 
+        def isoformat(d):
+            return None if d is None else d.strftime(ISODATE_FORMAT)
+
         return {
             'complete_slug': langs(
                 lambda lang: self.get_complete_slug(lang, hideroot=False)),
             'title': langs(lambda lang: self.title(lang, fallback=False)),
             'author_email': self.author.email,
-            'creation_date': self.creation_date,
-            'publication_date': self.publication_date,
-            'publication_end_date': self.publication_end_date,
-            'last_modification_date': self.last_modification_date,
+            'creation_date': isoformat(self.creation_date),
+            'publication_date': isoformat(self.publication_date),
+            'publication_end_date': isoformat(self.publication_end_date),
+            'last_modification_date': isoformat(self.last_modification_date),
             'status': {
                 Page.PUBLISHED: 'published',
                 Page.HIDDEN: 'hidden',
                 Page.DRAFT: 'draft'}[self.status],
             'template': self.template,
             #'delegate_to': self.delegate_to  # XXX: is this a good idea?
-            'freeze_date': self.freeze_date,
+            'freeze_date': isoformat(self.freeze_date),
             'sites': (
                 [site.domain for site in self.sites.all()]
                 if settings.PAGE_USE_SITE_ID else []),

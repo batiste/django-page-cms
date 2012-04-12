@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse
 from django.utils import simplejson
-from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings as global_settings
 from django.db import transaction
 from django.shortcuts import redirect, render_to_response
@@ -26,7 +25,7 @@ def export_pages_as_json(modeladmin, request, queryset):
     response.write(simplejson.dumps(
         {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
             'pages': [page.dump_json_data() for page in queryset]},
-        cls=DjangoJSONEncoder, indent=JSON_PAGE_EXPORT_INDENT))
+        indent=JSON_PAGE_EXPORT_INDENT))
     return response
 export_pages_as_json.short_description = _("Export pages as JSON")
 

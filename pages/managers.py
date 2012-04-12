@@ -189,7 +189,7 @@ class PageManager(models.Manager):
         if rtcs:
             s = ''
             for lang, s in rtcs.items():
-                if lang not in langyages:
+                if lang not in languages:
                     continue
                 r = self.from_path(s, lang, exclude_drafts=False)
                 if r:

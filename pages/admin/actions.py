@@ -5,6 +5,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.template.response import TemplateResponse
 from django.conf import settings as global_settings
 from django.db import transaction
+from django.shortcuts import redirect
 
 from pages import settings
 from pages.http import get_language_from_request
@@ -32,7 +33,10 @@ export_pages_as_json.short_description = _("Export pages as JSON")
 @transaction.commit_on_success
 def import_pages_from_json(request,
         template_name='admin/pages/page/import_pages.html'):
-    d = simplejson.load(request.FILES['json'])
+    try:
+        d = simplejson.load(request.FILES['json'])
+    except KeyError:
+        return redirect('admin:page-index')
 
     try:
         errors = validate_pages_json_data(d, get_language_from_request(request))

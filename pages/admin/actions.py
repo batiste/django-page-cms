@@ -45,7 +45,7 @@ def import_pages_from_json(request,
     if not errors:
         for p in d['pages']:
             pages_created.append(
-                Page.objects.create_and_update_from_json_data(p))
+                Page.objects.create_and_update_from_json_data(p, request.user))
 
     return TemplateResponse(request, template_name, {
         'errors': errors,
@@ -66,7 +66,10 @@ def validate_pages_json_data(d, preferred_lang):
     warnings = []
 
     seen_complete_slugs = dict(
-        (lang, set()) for lang in settings.PAGE_LANGUAGES)
+        (lang[0], set()) for lang in settings.PAGE_LANGUAGES)
+
+    valid_templates = set(settings.get_page_templates())
+    valid_templates.add(global_settings.PAGE_DEFAULT_TEMPLATE)
 
     if d[JSON_PAGE_EXPORT_NAME] != JSON_PAGE_EXPORT_VERSION:
         return [_('Unsupported file version: %s') % repr(
@@ -103,12 +106,13 @@ def validate_pages_json_data(d, preferred_lang):
             errors.append(_("%s did not include its parent page and a matching"
                 " one was not found on this site") % (slug,))
 
-        if p['template'] not in settings.get_page_templates():
+        if p['template'] not in valid_templates:
             errors.append(_("%s uses a template not found on this site: %s")
                 % (slug, p['template']))
             continue
 
-        if set(get_placeholders(p['template'])) != set(p['content'].keys()):
+        if set(p.name for p in get_placeholders(p['template'])) != set(
+                p['content'].keys()):
             errors.append(_("%s template contents are different than our "
                 "template: %s") % (slug, p['template']))
             continue

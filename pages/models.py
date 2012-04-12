@@ -468,6 +468,7 @@ class Page(MPTTModel):
             'author_email': self.author.email,
             'creation_date': self.creation_date,
             'publication_date': self.publication_date,
+            'publication_end_date': self.publication_end_date,
             'last_modification_date': self.last_modification_date,
             'status': {
                 Page.PUBLISHED: 'published',

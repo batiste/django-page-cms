@@ -12,7 +12,7 @@ from django.db.models import Avg, Max, Min, Count
 
 from datetime import datetime
 
-ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ' # for parsing dates from JSON
+ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
 
 
 class PageManager(models.Manager):
@@ -134,9 +134,9 @@ class PageManager(models.Manager):
                     return page
         return None
 
-    def create_and_update_from_json_data(p, user):
+    def create_and_update_from_json_data(self, d, user):
         """
-        Create or update page based on python dict p loaded from JSON data.
+        Create or update page based on python dict d loaded from JSON data.
 
         user is the User instance that will be used if the author can't
         be found in the DB.
@@ -149,22 +149,22 @@ class PageManager(models.Manager):
         parent_required = True
         created = False
 
-        for lang, s in p['complete_slug'].items():
+        for lang, s in d['complete_slug'].items():
             if lang not in settings.PAGE_LANGUAGES:
                 continue
 
-            page = Page.objects.from_path(s, lang, exclude_drafts=False)
+            page = self.from_path(s, lang, exclude_drafts=False)
             if page:
                 break
             if parent_required and parent is None:
                 if '/' in s:
-                    parent = Page.objects.from_path(s.rsplit('/', 1)[0], lang,
+                    parent = self.from_path(s.rsplit('/', 1)[0], lang,
                         exclude_drafts=False)
                 else:
                     parent_required = False
         else:
             # can't find it, need to create one
-            page = Page(parent=parent)
+            page = self.model(parent=parent)
             created = True
 
         try:
@@ -175,7 +175,7 @@ class PageManager(models.Manager):
         rtcs = d['redirect_to_complete_slug']
         if rtcs:
             for lang, s in rtcs.items():
-                r = Page.objects.from_path(s, lang, exclude_drafts=False)
+                r = self.from_path(s, lang, exclude_drafts=False)
                 if r:
                     page.redirect_to = r
                     break
@@ -189,9 +189,9 @@ class PageManager(models.Manager):
         page.last_modification_date = datetime.strptime(
             d['last_modification_date'], ISODATE_FORMAT)
         page.status = {
-            'published': Page.PUBLISHED,
-            'hidden': Page.HIDDEN,
-            'draft': Page.DRAFT,
+            'published': self.model.PUBLISHED,
+            'hidden': self.model.HIDDEN,
+            'draft': self.model.DRAFT,
             }[d['status']]
         page.template = d['template']
         page.freeze_date = datetime.strptime(d['freeze_date'],
@@ -200,25 +200,24 @@ class PageManager(models.Manager):
 
         page.save()
 
+        from pages.models import Content
+        languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
         def create_content(ctype, langs_bodies):
             """
             Create content for this page in each language provided.
             """
             for lang, body in langs_bodies:
-                if lang not in settings.PAGE_LANGUAGES:
+                if lang not in languages:
                     continue
-            Content.objects.create_content_if_changed(page, lang, ctype, body)
+                Content.objects.create_content_if_changed(page, lang, ctype,
+                    body)
 
-        create_content('title', d['title'])
+        create_content('title', d['title'].items())
         create_content('slug',
-            ((lang, s.rsplit('/', 1)[-1]) for lang, s in d['complete_slug']))
+            ((lang, s.rsplit('/', 1)[-1]) for lang, s
+                in d['complete_slug'].items()))
         for ctype, langs_bodies in d['content'].items():
-            create_content(ctype, langs_bodies)
-
-
-
-
-
+            create_content(ctype, langs_bodies.items())
 
 
 

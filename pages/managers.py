@@ -12,6 +12,8 @@ from django.db.models import Avg, Max, Min, Count
 
 from datetime import datetime
 
+ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ' # for parsing dates from JSON
+
 
 class PageManager(models.Manager):
     """
@@ -131,6 +133,93 @@ class PageManager(models.Manager):
                 if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
+
+    def create_and_update_from_json_data(p, user):
+        """
+        Create or update page based on python dict p loaded from JSON data.
+
+        user is the User instance that will be used if the author can't
+        be found in the DB.
+
+        return (page object, created) where created is True if this was a
+        new page or False if an existing page was updated.
+        """
+        page = None
+        parent = None
+        parent_required = True
+        created = False
+
+        for lang, s in p['complete_slug'].items():
+            if lang not in settings.PAGE_LANGUAGES:
+                continue
+
+            page = Page.objects.from_path(s, lang, exclude_drafts=False)
+            if page:
+                break
+            if parent_required and parent is None:
+                if '/' in s:
+                    parent = Page.objects.from_path(s.rsplit('/', 1)[0], lang,
+                        exclude_drafts=False)
+                else:
+                    parent_required = False
+        else:
+            # can't find it, need to create one
+            page = Page(parent=parent)
+            created = True
+
+        try:
+            page.author = User.objects.get(email=d['author_email'])
+        except User.DoesNotExist:
+            page.author = user
+
+        rtcs = d['redirect_to_complete_slug']
+        if rtcs:
+            for lang, s in rtcs.items():
+                r = Page.objects.from_path(s, lang, exclude_drafts=False)
+                if r:
+                    page.redirect_to = r
+                    break
+
+        page.creation_date = datetime.strptime(d['creation_date'],
+            ISODATE_FORMAT)
+        page.publication_date = datetime.strptime(d['publication_date'],
+            ISODATE_FORMAT) if d['publication_date'] else None
+        page.publication_end_date = datetime.strptime(d['publication_end_date'],
+            ISODATE_FORMAT) if d['publication_end_date'] else None
+        page.last_modification_date = datetime.strptime(
+            d['last_modification_date'], ISODATE_FORMAT)
+        page.status = {
+            'published': Page.PUBLISHED,
+            'hidden': Page.HIDDEN,
+            'draft': Page.DRAFT,
+            }[d['status']]
+        page.template = d['template']
+        page.freeze_date = datetime.strptime(d['freeze_date'],
+            ISODATE_FORMAT) if d['freeze_date'] else None
+        page.redirect_to_url = d['redirect_to_url']
+
+        page.save()
+
+        def create_content(ctype, langs_bodies):
+            """
+            Create content for this page in each language provided.
+            """
+            for lang, body in langs_bodies:
+                if lang not in settings.PAGE_LANGUAGES:
+                    continue
+            Content.objects.create_content_if_changed(page, lang, ctype, body)
+
+        create_content('title', d['title'])
+        create_content('slug',
+            ((lang, s.rsplit('/', 1)[-1]) for lang, s in d['complete_slug']))
+        for ctype, langs_bodies in d['content'].items():
+            create_content(ctype, langs_bodies)
+
+
+
+
+
+
 
 
 class ContentManager(models.Manager):

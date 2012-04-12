@@ -11,7 +11,7 @@ from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
-from pages.admin.actions import export_pages_as_json
+from pages.admin.actions import export_pages_as_json, import_pages_from_json
 from pages.permissions import PagePermission
 from pages.http import auto_render
 import pages.widgets
@@ -117,6 +117,8 @@ class PageAdmin(admin.ModelAdmin):
                 move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
+            url(r'^import-json/$',
+                self.import_pages, name='import-pages-from-json'),
         )
         urlpatterns += super(PageAdmin, self).urls
 
@@ -343,6 +345,12 @@ class PageAdmin(admin.ModelAdmin):
         change_list = self.changelist_view(request, context)
 
         return change_list
+
+    def import_pages(self, request):
+        if not self.has_add_permission(request):
+            return admin.site.login(request)
+
+        return import_pages_from_json(request)
 
 
 class PageAdminWithDefaultContent(PageAdmin):

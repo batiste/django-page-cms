@@ -35,11 +35,9 @@ def import_pages_from_json(request,
     d = simplejson.load(request.FILES['json'])
 
     try:
-        errors, warnings = validate_pages_json_data(d,
-            get_language_from_request(request))
+        errors = validate_pages_json_data(d, get_language_from_request(request))
     except KeyError, e:
         errors = [_('JSON file is invalid: %s') % (e.args[0],)]
-        warnings = []
 
     pages_created = []
     if not errors:
@@ -49,7 +47,6 @@ def import_pages_from_json(request,
 
     return TemplateResponse(request, template_name, {
         'errors': errors,
-        'warnings': warnings,
         'pages_created': pages_created,
         'app_label': 'pages',
         'opts': Page._meta,
@@ -57,13 +54,12 @@ def import_pages_from_json(request,
 
 def validate_pages_json_data(d, preferred_lang):
     """
-    Check if an import of d will succeed, and return errors, warnings.
+    Check if an import of d will succeed, and return errors.
 
-    errors, warnings are lists of strings.  If errors is not empty then
-    the import should not proceed.
+    errors is a list of strings.  The import should proceed only if errors
+    is empty.
     """
     errors = []
-    warnings = []
 
     seen_complete_slugs = dict(
         (lang[0], set()) for lang in settings.PAGE_LANGUAGES)
@@ -76,7 +72,7 @@ def validate_pages_json_data(d, preferred_lang):
             d[JSON_PAGE_EXPORT_NAME])], []
     pages = d['pages']
     for p in pages:
-        # use the complete slug as a way to identify pages in errors/warnings
+        # use the complete slug as a way to identify pages in errors
         slug = p['complete_slug'].get(preferred_lang, None)
         seen_parent = False
         for lang, s in p['complete_slug'].items():
@@ -117,7 +113,7 @@ def validate_pages_json_data(d, preferred_lang):
                 "template: %s") % (slug, p['template']))
             continue
 
-    return errors, warnings
+    return errors
 
 
 

@@ -31,7 +31,7 @@ export_pages_as_json.short_description = _("Export pages as JSON")
 
 @transaction.commit_on_success
 def import_pages_from_json(request,
-        template_name='admin/pages/import_pages.html'):
+        template_name='admin/pages/page/import_pages.html'):
     d = simplejson.load(request.FILES['json'])
 
     try:

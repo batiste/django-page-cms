@@ -56,9 +56,11 @@
 </form>
 
 <form action="import-json/" method="post" enctype="multipart/form-data">
+<div class="actions">
 {% csrf_token %}
-<input type="file" name="json" size="40" />
-<input type="submit" name="j" value="{% trans "Import pages from JSON" %}" />
+<label>Import pages: <input type="file" name="json" size="40" /></label>
+<input type="submit" name="j" value="{% trans "Import" %}" />
+</div>
 </form>
 
 {% endblock %}

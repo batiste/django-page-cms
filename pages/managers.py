@@ -219,6 +219,8 @@ class PageManager(models.Manager):
         for ctype, langs_bodies in d['content'].items():
             create_content(ctype, langs_bodies.items())
 
+        return page, created
+
 
 
 class ContentManager(models.Manager):

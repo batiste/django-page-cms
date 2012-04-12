@@ -68,7 +68,7 @@ def validate_pages_json_data(d, preferred_lang):
     seen_complete_slugs = dict(
         (lang[0], set()) for lang in settings.PAGE_LANGUAGES)
 
-    valid_templates = set(settings.get_page_templates())
+    valid_templates = set(t[0] for t in settings.get_page_templates())
     valid_templates.add(global_settings.PAGE_DEFAULT_TEMPLATE)
 
     if d[JSON_PAGE_EXPORT_NAME] != JSON_PAGE_EXPORT_VERSION:

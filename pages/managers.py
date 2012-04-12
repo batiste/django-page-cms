@@ -149,8 +149,10 @@ class PageManager(models.Manager):
         parent_required = True
         created = False
 
+        languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
+
         for lang, s in d['complete_slug'].items():
-            if lang not in settings.PAGE_LANGUAGES:
+            if lang not in languages:
                 continue
 
             page = self.from_path(s, lang, exclude_drafts=False)

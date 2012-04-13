@@ -12,7 +12,7 @@ from pages.utils import get_placeholders
 from pages.models import Page
 
 JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
-JSON_PAGE_EXPORT_VERSION = 1
+JSON_PAGE_EXPORT_VERSION = 2
 JSON_PAGE_EXPORT_FILENAME = 'cms_pages.json'
 
 # make it readable -- there are better ways to save space
@@ -27,7 +27,7 @@ def export_pages_as_json(modeladmin, request, queryset):
     response.write(simplejson.dumps(
         {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
             'pages': [page.dump_json_data() for page in queryset]},
-        indent=JSON_PAGE_EXPORT_INDENT))
+        indent=JSON_PAGE_EXPORT_INDENT, sort_keys=True))
     return response
 export_pages_as_json.short_description = _("Export pages as JSON")
 
@@ -78,9 +78,9 @@ def validate_pages_json_data(d, preferred_lang):
     pages = d['pages']
     for p in pages:
         # use the complete slug as a way to identify pages in errors
-        slug = p['complete_slug'].get(preferred_lang, None)
+        slug = dict(p['complete_slug']).get(preferred_lang, None)
         seen_parent = False
-        for lang, s in p['complete_slug'].items():
+        for lang, s in p['complete_slug']:
             if lang not in seen_complete_slugs:
                 continue
             seen_complete_slugs[lang].add(s)

@@ -447,29 +447,40 @@ class Page(MPTTModel):
         Return a python dict representation of this page for use as part of
         a JSON export.
         """
-        def langs(fn):
-            """Return a dict for each fn(lang) that returns something."""
-            out = [(lang, fn(lang)) for lang in self.get_languages()]
-            return dict((lang, val) for lang, val in out if val)
+        # FIXME: number of queries = langs * placeholders * pages
 
-        def content_dicts():
+        def content_langs_ordered(ctype):
+            """
+            Return a list of [lang, content] lists ordered by the content
+            creation date.
+            """
+            content_objects = []
+            for lang in self.get_languages():
+                try:
+                    content_objects.append(Content.objects.get_content_object(
+                        self, lang, ctype))
+                except Content.DoesNotExist:
+                    pass
+            content_objects.sort(key=lambda c: c.creation_date)
+            return [[c.language, c.body] for c in content_objects]
+
+        def placeholder_content():
             """Return content of each placeholder in each language."""
-            out = []
+            out = {}
             for p in get_placeholders(self.get_template()):
                 if p.name in ('title', 'slug'):
                     continue # these were already included
-                out.append((p.name, langs(
-                    lambda lang: self.get_content(lang, p.name,
-                        language_fallback=False))))
-            return dict(out)
+                out[p.name] = content_langs_ordered(p.name)
+            return out
 
         def isoformat(d):
             return None if d is None else d.strftime(ISODATE_FORMAT)
 
         return {
-            'complete_slug': langs(
-                lambda lang: self.get_complete_slug(lang, hideroot=False)),
-            'title': langs(lambda lang: self.title(lang, fallback=False)),
+            'complete_slug': [
+                [lang, self.get_complete_slug(lang, hideroot=False)]
+                for lang, s in content_langs_ordered('slug')],
+            'title': content_langs_ordered('title'),
             'author_email': self.author.email,
             'creation_date': isoformat(self.creation_date),
             'publication_date': isoformat(self.publication_date),
@@ -480,17 +491,17 @@ class Page(MPTTModel):
                 Page.HIDDEN: 'hidden',
                 Page.DRAFT: 'draft'}[self.status],
             'template': self.template,
-            #'delegate_to': self.delegate_to  # XXX: is this a good idea?
             'freeze_date': isoformat(self.freeze_date),
             'sites': (
                 [site.domain for site in self.sites.all()]
                 if settings.PAGE_USE_SITE_ID else []),
             'redirect_to_url': self.redirect_to_url,
-            'redirect_to_complete_slug': langs(
-                lambda lang: self.redirect_to.get_complete_slug(
-                    lang, hideroot=False)
-                ) if self.redirect_to is not None else None,
-            'content': content_dicts(),
+            'redirect_to_complete_slug': [
+                [lang, self.redirect_to.get_complete_slug(
+                    lang, hideroot=False)]
+                for lang in self.get_languages()
+                ] if self.redirect_to is not None else None,
+            'content': placeholder_content(),
         }
 
     def __unicode__(self):

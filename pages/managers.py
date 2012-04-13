@@ -165,7 +165,7 @@ class PageManager(models.Manager):
 
         languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
 
-        for lang, s in d['complete_slug'].items():
+        for lang, s in d['complete_slug']:
             if lang not in languages:
                 messages.append(_("Language '%s' not imported") % (lang,))
                 continue
@@ -186,7 +186,7 @@ class PageManager(models.Manager):
 
         try:
             page.author = User.objects.get(email=d['author_email'])
-        except User.DoesNotExist:
+        except (User.DoesNotExist, User.MultipleObjectsReturned):
             page.author = user
             messages.append(_("Original author '%s' not found")
                 % (d['author_email'],))
@@ -194,7 +194,7 @@ class PageManager(models.Manager):
         rtcs = d['redirect_to_complete_slug']
         if rtcs:
             s = ''
-            for lang, s in rtcs.items():
+            for lang, s in rtcs:
                 if lang not in languages:
                     continue
                 r = self.from_path(s, lang, exclude_drafts=False)
@@ -249,12 +249,12 @@ class PageManager(models.Manager):
                 Content.objects.create_content_if_changed(page, lang, ctype,
                     body)
 
-        create_content('title', d['title'].items())
+        create_content('title', d['title'])
         create_content('slug',
             ((lang, s.rsplit('/', 1)[-1]) for lang, s
-                in d['complete_slug'].items()))
+                in d['complete_slug']))
         for ctype, langs_bodies in d['content'].items():
-            create_content(ctype, langs_bodies.items())
+            create_content(ctype, langs_bodies)
 
         return page, created, messages
 

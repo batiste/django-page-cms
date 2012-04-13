@@ -11,10 +11,16 @@ recursive-include doc *
 recursive-include pages *
 recursive-include requirements *
 recursive-include pages/templates *
-recursive-include pages/media *
-global-include *.css
-global-include *.js
-global-include *.html
+recursive-include pages/static *
+recursive-include pages/locale *
+recursive-include pages *.css
+recursive-include pages *.js
+recursive-include pages *.html
+recursive-include pages *.mo
+recursive-include pages *.po
 global-exclude *.pyc
+global-exclude coverage/*
+# this important to prune at the end
 prune example
+prune dist
 

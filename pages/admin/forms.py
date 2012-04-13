@@ -21,7 +21,7 @@ level')
 
 class PageForm(forms.ModelForm):
     """Form for page creation"""
-    
+
     title = forms.CharField(
         label=_('Title'),
         widget=forms.TextInput(),
@@ -55,25 +55,20 @@ it must be unique among the other pages of the same level.')
         #widget=widgets.AdminSplitDateTime()
         #widget=widgets.AdminTimeWidget()
     )
-    
+
     target = forms.IntegerField(required=False, widget=forms.HiddenInput)
     position = forms.CharField(required=False, widget=forms.HiddenInput)
-    
-    if settings.PAGE_TAGGING:
-        from tagging.forms import TagField
-        from pages.widgets import AutoCompleteTagInput
-        tags = TagField(widget=AutoCompleteTagInput(), required=False)
 
     class Meta:
         model = Page
 
     def clean_slug(self):
         """Handle move action on the pages"""
-        
+
         slug = slugify(self.cleaned_data['slug'])
         target = self.data.get('target', None)
         position = self.data.get('position', None)
-        
+
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(
@@ -98,7 +93,7 @@ it must be unique among the other pages of the same level.')
                 target = Page.objects.get(pk=target)
                 if position in ['right', 'left']:
                     slugs = [sibling.slug() for sibling in
-                             target.get_siblings() 
+                             target.get_siblings()
                              if intersects_sites(sibling)]
                     slugs.append(target.slug())
                     if slug in slugs:

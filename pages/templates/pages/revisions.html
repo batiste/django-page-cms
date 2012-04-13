@@ -1,7 +1,7 @@
 {% load i18n %}
 {% if revisions %}
     <select class="revisions">
-        <option value="" selected="selected">Revisions</option>
+        <option value="" selected="selected">{% trans "Revisions" %}</option>
         {% for revision in revisions %}
             <option value="./get-content/{{ revision.id }}/">{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</option>
         {% endfor %}

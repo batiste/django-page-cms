@@ -7,9 +7,11 @@ from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
-from pages.admin.views import traduction, get_content, sub_menu, list_pages_ajax
+from pages.admin.views import traduction, get_content, sub_menu
+from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
+from pages.admin.actions import export_pages_as_json, import_pages_from_json
 from pages.permissions import PagePermission
 from pages.http import auto_render
 import pages.widgets
@@ -42,7 +44,7 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
         general_fields.append('sites')
     insert_point = general_fields.index('status') + 1
-    
+
     # Strange django behavior. If not provided, django will try to find
     # 'page' foreign key in all registered models
     inlines = []
@@ -78,6 +80,8 @@ class PageAdmin(admin.ModelAdmin):
         }),
     )
 
+    actions = [export_pages_as_json]
+
     class Media:
         css = {
             'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
@@ -101,9 +105,9 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^$', self.list_pages, name='page-index'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
-            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',
                 get_content, name='page-get-content'),
-            url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_id>[-\w]+)/(?P<language_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_type>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 modify_content, name='page-modify-content'),
             url(r'^(?P<page_id>[0-9]+)/delete-content/(?P<language_id>[-\w]+)/$',
                 delete_content, name='page-delete-content'),
@@ -113,9 +117,11 @@ class PageAdmin(admin.ModelAdmin):
                 move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
+            url(r'^import-json/$',
+                self.import_pages, name='import-pages-from-json'),
         )
         urlpatterns += super(PageAdmin, self).urls
-        
+
         return urlpatterns
 
     urls = property(urls)
@@ -162,7 +168,7 @@ class PageAdmin(admin.ModelAdmin):
                 extra_data = placeholder.get_extra_data(form.data)
                 placeholder.save(page, language, data, change,
                     extra_data=extra_data)
-        
+
         page.invalidate()
 
     def get_fieldsets(self, request, obj=None):
@@ -257,6 +263,11 @@ class PageAdmin(admin.ModelAdmin):
             'page_languages': settings.PAGE_LANGUAGES,
         }
         try:
+            int(object_id)
+        except ValueError:
+            raise Http404('The "%s" part of the location is invalid.'
+                % str(object_id))
+        try:
             obj = self.model.objects.get(pk=object_id)
         except self.model.DoesNotExist:
             # Don't raise Http404 just yet, because we haven't checked
@@ -308,7 +319,7 @@ class PageAdmin(admin.ModelAdmin):
         if not self.admin_site.has_permission(request):
             return self.admin_site.login(request)
         language = get_language_from_request(request)
-        
+
         query = request.POST.get('q', '').strip()
 
         if query:
@@ -334,6 +345,12 @@ class PageAdmin(admin.ModelAdmin):
         change_list = self.changelist_view(request, context)
 
         return change_list
+
+    def import_pages(self, request):
+        if not self.has_add_permission(request):
+            return admin.site.login(request)
+
+        return import_pages_from_json(request)
 
 
 class PageAdminWithDefaultContent(PageAdmin):

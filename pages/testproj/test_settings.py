@@ -16,12 +16,16 @@ CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'cms.db'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'test.db'
+    }
+}
+
+# We still want to be ale to test with 1.1.X
+DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'test.db'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -54,17 +58,10 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    # this syntax is deprecated with django 1.2
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-    # could help
-    'django.template.loaders.eggs.load_template_source',
-)
-
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
+    # fails on Django 1.1.4
+    #"django.contrib.auth.context_processors.auth",
+    'django.core.context_processors.auth',
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
@@ -100,6 +97,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     TEST_PROJ + '.documents',
     #'tagging',
     'pages',
@@ -148,6 +146,7 @@ PAGE_LANGUAGES = (
 languages = list(PAGE_LANGUAGES)
 languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
+languages.append(('it-it', gettext_noop('Italian')))
 LANGUAGES = languages
 
 # This enable you to map a language(s) to another one, these languages should
@@ -183,9 +182,13 @@ COVERAGE_EXCLUDE_MODULES = (
     "pages.urls",
     "pages.__init__",
     "pages.search_indexes",
+    "pages.management.commands.*",
 )
+
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
+
+PAGE_ENABLE_TESTS = True
 
 #TEST_RUNNER = 'example.test_runner.run_tests'
 

@@ -1,21 +1,50 @@
 """Page CMS functions related to the ``request`` object."""
+from pages import settings
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from pages import settings
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
+LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
+
+
+# TODO In Django 1.3 there is a new RequestFactory class
+# that can replace the following function.
 def get_request_mock():
-    """Build a ``request`` mock up that can be used for testing."""
+    """Build a ``request`` mock up that is used in to render
+    the templates in the most fidel environement as possible.
+
+    This fonction is used in the get_placeholders method to
+    render the input template and search for the placeholder
+    within.
+    """
     basehandler = BaseHandler()
     basehandler.load_middleware()
+    # http://www.python.org/dev/peps/pep-0333/
     request = WSGIRequest({
+        'HTTP_COOKIE': '',
+        'PATH_INFO': '/',
+        'QUERY_STRING': '',
+        'REMOTE_ADDR': '127.0.0.1',
         'REQUEST_METHOD': 'GET',
-        'SERVER_NAME': 'test',
-        'SERVER_PORT': '8000',
-        'HTTP_HOST': 'testhost',
+        'SERVER_NAME': 'page-request-mock',
+        'SCRIPT_NAME': '',
+        'SERVER_PORT': '80',
+        'SERVER_PROTOCOL': 'HTTP/1.1',
+        'HTTP_HOST': 'page-request-host',
+        'CONTENT_TYPE': 'text/html; charset=utf-8',
+        'wsgi.version': (1, 0),
+        'wsgi.url_scheme': 'http',
+        'wsgi.multiprocess': True,
+        'wsgi.multithread':  False,
+        'wsgi.run_once':     False,
+        'wsgi.input': StringIO("")
     })
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
@@ -23,12 +52,15 @@ def get_request_mock():
         # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.im_class):
             response = middleware_method(request)
+
     return request
+
 
 class AutoRenderHttpError(Exception):
     """Cannot return context dictionary because a view returned an
     ``HttpResponse`` when a (template_name, context) tuple was expected."""
     pass
+
 
 def auto_render(func):
     """
@@ -36,6 +68,8 @@ def auto_render(func):
     shortcut. A view that use this decorator should return a tuple of this
     form : (template name, context) instead of a ``HttpRequest`` object.
     """
+    import warnings
+    warnings.warn(DeprecationWarning("auto_render decorator is a deprecated."))
     def auto_render_decorator(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
         only_context = kwargs.pop('only_context', False)
@@ -46,56 +80,75 @@ def auto_render(func):
             if only_response:
                 return response
             if isinstance(response, HttpResponse):
-                raise AutoRenderHttpError
+                raise AutoRenderHttpError(AutoRenderHttpError.__doc__)
             (template_name, context) = response
             return context
         response = func(request, *args, **kwargs)
         if isinstance(response, HttpResponse):
             return response
         (template_name, context) = response
-        template_name = context['template_name'] = template_override or template_name
+        template_name = context['template_name'] = (template_override or
+            template_name)
         return render_to_response(template_name, context,
                             context_instance=RequestContext(request))
     return auto_render_decorator
 
+
 def pages_view(view):
     """
-    Provide the essential pages variables to the decorated view
-    by using the default pages.views.details view.
+    Make sure the decorated view gets the essential pages
+    variables.
     """
     def pages_view_decorator(request, *args, **kwargs):
+        # if the current page is already there
+        if(kwargs.get('current_page', False) or
+            kwargs.get('pages_navigation', False)):
+            return view(request, *args, **kwargs)
+
         path = kwargs.pop('path', None)
         lang = kwargs.pop('lang', None)
-        if path or lang:
+        if path:
             from pages.views import details
             response = details(request, path=path, lang=lang,
                 only_context=True, delegation=False)
             context = response
-            kwargs.update(context)
+            extra_context_var = kwargs.pop('extra_context_var', None)
+            if extra_context_var:
+                kwargs.update({extra_context_var: context})
+            else:
+                kwargs.update(context)
         return view(request, *args, **kwargs)
     return pages_view_decorator
 
 
-def get_slug_and_relative_path(path, lang=None, path_lang_stripped=False):
+def get_slug(path):
     """
-    Return the page's slug, relative path and language.
+    Return the page's slug
 
-    path_lang_stripped -- True if language portion of path has already
-                          been removed
-    
-        >>> get_slug_and_relative_path('/test/function/')
-        ('function', 'test/function', None)
+        >>> get_slug('/test/function/')
+        function
     """
-    root = reverse('pages-root')
-    if path.startswith(root):
-        path = path[len(root):]
-    if len(path) and path[-1] == '/':
+    if path.endswith('/'):
         path = path[:-1]
-    slug = path.split("/")[-1]
-    if settings.PAGE_USE_LANGUAGE_PREFIX and not path_lang_stripped:
-        lang = path.split("/")[0]
-        path = path[(len(lang) + 1):]
-    return slug, path, lang
+    return path.split("/")[-1]
+
+
+def remove_slug(path):
+    """
+    Return the remainin part of the path
+
+        >>> remove_slug('/test/some/function/')
+        test/some
+    """
+    if path.endswith('/'):
+        path = path[:-1]
+    if path.startswith('/'):
+        path = path[1:]
+    if "/" not in path or not path:
+        return None
+    parts = path.split("/")[:-1]
+    return "/".join(parts)
+
 
 def get_template_from_request(request, page=None):
     """
@@ -114,6 +167,7 @@ def get_template_from_request(request, page=None):
         return page.get_template()
     return settings.PAGE_DEFAULT_TEMPLATE
 
+
 def get_language_from_request(request):
     """Return the most obvious language according the request."""
     language = request.GET.get('language', None)
@@ -121,7 +175,10 @@ def get_language_from_request(request):
         return language
 
     if hasattr(request, 'LANGUAGE_CODE'):
-        return settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        lang = settings.PAGE_LANGUAGE_MAPPING(str(request.LANGUAGE_CODE))
+        if lang not in LANGUAGE_KEYS:
+            return settings.PAGE_DEFAULT_LANGUAGE
+        else:
+            return lang
     else:
         return settings.PAGE_DEFAULT_LANGUAGE
-

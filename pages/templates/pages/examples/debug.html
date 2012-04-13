@@ -1,4 +1,5 @@
 {% if sql_queries %}
+    <a href="#" id="show-sql">Show SQL queries</a>
     <div id="debug-queries">
         <p class="info"></p>
         <table class="sortable">
@@ -28,4 +29,11 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $('#debug-queries').hide()
+        $('#show-sql').text($('#show-sql').text() + ' (' + $('#debug-queries .query').length + ')')
+        $('#show-sql').click(function() {
+            $('#debug-queries').show();
+        });
+    </script>
 {% endif %}

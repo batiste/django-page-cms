@@ -3,12 +3,14 @@
 from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content
-from pages.widgets import ImageInput, VideoWidget
+from pages.widgets import ImageInput, VideoWidget, FileInput
 
+from django import forms
+from django.core.mail import send_mail
 from django import template
 from django.template import TemplateSyntaxError
-from django.core.files.storage import FileSystemStorage
-from django.forms import Textarea, ImageField, CharField
+from django.core.files.storage import default_storage
+from django.forms import Textarea, ImageField, CharField, FileField
 from django.forms import TextInput
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
@@ -20,6 +22,7 @@ import time
 import re
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
+
 
 def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.
@@ -119,11 +122,13 @@ class PlaceholderNode(template.Node):
 
     def get_extra_data(self, data):
         """Get eventual extra data for this placeholder from the
-        POST dictionary."""
+        admin form. This method is called when the Page is
+        saved in the admin and passed to the placeholder save
+        method."""
         result = {}
         for key in data.keys():
-            if key.startswith(self.name+'-'):
-                new_key = key.replace(self.name+'-', '')
+            if key.startswith(self.name + '-'):
+                new_key = key.replace(self.name + '-', '')
                 result[new_key] = data[key]
         return result
 
@@ -143,7 +148,7 @@ class PlaceholderNode(template.Node):
         # in the default language
         if self.untranslated:
             language = settings.PAGE_DEFAULT_LANGUAGE
-        
+
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
@@ -203,7 +208,7 @@ class PlaceholderNode(template.Node):
     def render(self, context):
         """Output the content of the `PlaceholdeNode` in the template."""
 
-        content = self.get_content_from_context(context)
+        content = mark_safe(self.get_content_from_context(context))
         if not content:
             return ''
         if self.parsed:
@@ -256,10 +261,9 @@ class ImagePlaceholderNode(PlaceholderNode):
             # the image URL is posted if not changed
             if type(data) is unicode:
                 return
-            storage = FileSystemStorage()
             filename = os.path.join(
                 settings.PAGE_UPLOAD_ROOT,
-                'page_'+str(page.id),
+                'page_' + str(page.id),
                 self.name + '-' + str(time.time())
             )
 
@@ -267,13 +271,95 @@ class ImagePlaceholderNode(PlaceholderNode):
             if m is not None:
                 filename += m.group(0).lower()
 
-            filename = storage.save(filename, data)
+            filename = default_storage.save(filename, data)
             return super(ImagePlaceholderNode, self).save(
                 page,
                 language,
                 filename,
                 change
             )
+
+class FilePlaceholderNode(PlaceholderNode):
+    """A `PlaceholderNode` that saves one file on disk.
+
+    `PAGE_UPLOAD_ROOT` setting define where to save the file.
+    """
+
+    def get_field(self, page, language, initial=None):
+        help_text = ""
+        widget = FileInput(page, language)
+        return FileField(
+            widget=widget,
+            initial=initial,
+            help_text=help_text,
+            required=False
+        )
+
+    def save(self, page, language, data, change, extra_data=None):
+        if 'delete' in extra_data:
+            return super(FilePlaceholderNode, self).save(
+                page,
+                language,
+                "",
+                change
+            )
+        filename = ''
+        if change and data:
+            # the image URL is posted if not changed
+            if type(data) is unicode:
+                return
+            filename = os.path.join(
+                settings.PAGE_UPLOAD_ROOT,
+                'page_' + str(page.id),
+                self.name + '-' + str(time.time())
+            )
+
+            m = re.search('\.[a-zA-Z]{1,4}$', str(data))
+            if m is not None:
+                filename += m.group(0).lower()
+
+            filename = default_storage.save(filename, data)
+            return super(FilePlaceholderNode, self).save(
+                page,
+                language,
+                filename,
+                change
+            )
+
+
+class ContactForm(forms.Form):
+  
+    email = forms.EmailField(label=_('Your email'))
+    subject = forms.CharField(label=_('Subject'), 
+      max_length=150)
+    message = forms.CharField(widget=forms.Textarea(),
+      label=_('Your message'))
+    
+
+class ContactPlaceholderNode(PlaceholderNode):
+    """A contact `PlaceholderNode` example."""
+
+    def render(self, context):
+        content = self.get_content_from_context(context)
+        request = context.get('request', None)
+        if not request:
+            raise ValueError('request no available in the context.')
+        if request.method == 'POST':
+            form = ContactForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                recipients = [adm[1] for adm in global_settings.ADMINS]
+                try:
+                    send_mail(data['subject'], data['message'], 
+                        data['email'], recipients, fail_silently=False)
+                    return _("Your email has been sent. Thank you.")
+                except:
+                    return _("An error as occured: your email has not been sent.")
+        else:
+            form = ContactForm()
+        renderer = render_to_string('pages/contact.html', {'form':form})
+        return mark_safe(renderer)
+
 
 class VideoPlaceholderNode(PlaceholderNode):
     """A youtube `PlaceholderNode`, just here as an example."""
@@ -288,12 +374,12 @@ class VideoPlaceholderNode(PlaceholderNode):
             video_url, w, h = content.split('\\')
             m = re.search('youtube\.com\/watch\?v=([^&]+)', content)
             if m:
-                video_url = 'http://www.youtube.com/v/'+m.group(1)
+                video_url = 'http://www.youtube.com/v/' + m.group(1)
             if not w:
                 w = 425
             if not h:
                 h = 344
-            context = {'video_url': video_url, 'w':w, 'h':h}
+            context = {'video_url': video_url, 'w': w, 'h': h}
             renderer = render_to_string('pages/embed.html', context)
             return mark_safe(renderer)
         return ''

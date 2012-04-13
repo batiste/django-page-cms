@@ -1,4 +1,4 @@
-{% load cache pages_tags %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load cache pages_tags i18n %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ lang }}" xml:lang="{{ lang }}" >
 {% comment %}Important to enable other applications to inherit the template{% endcomment %}
 {% load_pages %}
@@ -9,7 +9,7 @@
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/jquery.js" /></script>
 <style>
     .placeholder-editable {
-        border:1px #bbb solid;
+        border:1px #ccc solid;
         background:#fff;
         min-height:1em;
         padding:5px;
@@ -37,20 +37,23 @@
 
     body {
         font-family:sans-serif;
-        font-size:75%;
-        background:#b5b185;
         color:#333;
+        font-size:14px;
     }
 
     #main {
-        width:600px;
+        max-width:960px;
         padding:20px;
         margin:0 auto;
         border:1px #999 solid;
+        -webkit-border-radius:10px;
+        -webkit-box-shadow: inset 2px 5px 10px rgba(180,180,180,0.2);
+        -moz-border-radius:10px;
+        -moz-box-shadow: inset 2px 5px 10px rgba(180,180,180,0.2);
+        border-radius:10px;
+        box-shadow: inset 2px 5px 10px rgba(180,180,180,0.2);
         margin-bottom:40px;
         overflow:hidden;
-        height:1%;
-        background:#fffdca;
     }
 
     h1, h2 {
@@ -65,32 +68,28 @@
 </head>
 <body>
 <div id="main">
-<p style="float:right">
+<div style="float:right">
+    <form action="/search/" method="get" style="float:left;margin-right:10px;">
+        <label>{% trans "Search" %} <input type="text" name="q"></label>
+        <input type=hidden value="pages.page" name="models" >
+    </form>
+
     {% if user.is_authenticated %}
         <a href="/admin/logout/">log out</a>
     {% else %}
         <a href="/admin/">log in</a>
     {% endif %}
-</p>
-<h1>{% block title %}Django CMS based on page objects{% endblock %}</h1>
+</div>
 
-<h3>site: {{ site.name }}</h3>
+<h1 id="title" class="placeholder">{% placeholder title on current_page with TextInput %}</h1>
 
-<h2>Complete navigation (as a nested list)</h2>
+<h2>Navigation</h2>
 
 <ul>
     {% for page in pages_navigation %}
         {% pages_menu page %}
     {% endfor %}
 </ul>
-
-<h2>Display the sub menu of the root page (as a nested list)</h2>
-
-{% if current_page %}
-<ul>
-    {% pages_sub_menu current_page %}
-</ul>
-{% endif %}
 
 <h2>Content</h2>
 
@@ -116,23 +115,18 @@
     <h3>Right column placeholder</h3>
     <div class="right_column">{{ right_column }}</div>
     </div>
-    
+
     {% if current_page %}
     <div style="width:70%">
-        <h3>title placeholder 
-            <div id="title" class="placeholder">{% placeholder title on current_page with TextInput %}</div>
-        </h3>
-        <div>body placeholder
+
+        <div>Body placeholder
             <div id="body" class="placeholder">{% placeholder body with RichTextarea %}</div>
-            {% imageplaceholder body-image as imgsrc %}
-            {% if imgsrc %}
-                <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
-            {% endif %}
         </div>
 
-        <div id="content2" class="placeholder">
-        {% placeholder content2 %}
-        </div>
+        {% imageplaceholder body-image as imgsrc %}
+        {% if imgsrc %}
+            <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
+        {% endif %}
 
     </div>
     {% endif %}
@@ -141,20 +135,42 @@
 </div>
 
 <script type="text/javascript">
+$('html').ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+        // Only send the token to relative URLs i.e. locally.
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
 $(function(){
     // quick and dirty edit in place example
     {% if request.user.is_authenticated %}
         $('.placeholder').addClass('placeholder-editable');
     {% endif %}
-    
+
     $('.placeholder-editable').mouseover(function() {
         $(this).addClass('placeholder-over');
     });
-    
+
     $('.placeholder-editable').mouseout(function() {
         $(this).removeClass('placeholder-over');
     });
-    
+
     $('.placeholder-editable').click(function() {
         var p = $(this);
         if(p.hasClass('edit')) {

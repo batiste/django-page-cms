@@ -4,13 +4,13 @@ Placeholders template tag
 
 .. contents::
 
-The placeholder template tag is what make Django Page CMS special. The workflow
+The placeholder template tag is what make Gerbi CMS special. The workflow
 is that you design your template first according to the page design.
 Then you put placeholder tag where you want dynamic content.
 
 For each placeholder you will have a corresponding field appearing automaticaly
-in the administration interface. You can make as many templates as you want,
-use the Django template inheritance, and then CMS will still behave as intended.
+in the administration interface. You can make as many templates as you want, even
+use the template inheritance: this CMS administration will still behave as intended.
 
 The syntax for a placeholder tag is the following::
 
@@ -24,7 +24,7 @@ the **on** option
 
 If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
-to get the content of the placeholder. 
+to get the content of the placeholder.
 
 Template syntax example::
 
@@ -33,27 +33,33 @@ Template syntax example::
 the **widget** option
 ----------------------
 
-If the **widget** option is omitted the CMS will render a simple `TextInput`.
-Otherwise the CMS will use the widget that you suggested. Widgets need to be registered
-before you can use them in the CMS::
+The **widget** option is used to change the placeholders widgets in the administration interface.
+
+By default the CMS will use a simple `TextInput` widget. Otherwise the CMS will use the
+widget of your choice. Widgets need to be registered before you can use them in the CMS::
 
     from pages.widgets_registry import register_widget
     from django.forms import TextInput
 
     class NewWidget(TextInput):
         pass
-    
+
     register_widget(NewWidget)
 
 Template syntax example::
 
     {% placeholder body with NewWidget %}
 
+
+.. note::
+
+    This CMS is shipped with :ref:`a list of useful widgets <placeholder-widgets-list>` .
+
 The **as** option
 ------------------
 
-If you use the option **as** the content of the placeholder will not be displayed but
-a variable will be defined within the template's context instead.
+If you use the option **as** the content of the placeholder content will not be displayed:
+a variable of your choice will be defined within the template's context.
 
 Template syntax example::
 
@@ -70,14 +76,13 @@ a note in the admin interface noting its ability to be evaluated as template.
 
 Template syntax example::
 
-    {% placeholder image as image_src %}
-    <img src="{{ img_src }}" alt=""/>
+    {% placeholder special-content parsed %}
 
 The **inherited** keyword
 -------------------------
 
-If you add the keyword **inherited** the placeholder's content
-will be retrieved from the closest parent. But only if there is no
+If you add the keyword **inherited** the placeholder's content displayed
+on the frontend will be retrieved from the closest parent. But only if there is no
 content for the current page.
 
 Template syntax example::
@@ -111,7 +116,7 @@ This is a list of different possible syntaxes for this template tag::
 Image placeholder
 =================
 
-You can also use a special placeholder for images::
+There is a special placeholder for images::
 
     {% imageplaceholder body-image as imgsrc %}
     {% if imgsrc %}
@@ -119,6 +124,30 @@ You can also use a special placeholder for images::
     {% endif %}
 
 A file upload field will appears into the page admin interface.
+
+
+File placeholder
+================
+
+There is also a more general placeholder for files::
+
+    {% fileplaceholder uploaded_file as filesrc %}
+    {% if filesrc %}
+        <a href="{{ MEDIA_URL }}{{ filesrc }}">Download file</a>
+    {% endif %}
+
+A file upload field will appears into the page admin interface.
+
+
+Contact placeholder
+===================
+
+If you want to include a simple contact form in your page, there is a contact placeholder::
+
+    {% contactplaceholder contact %}
+
+This placeholder use ´settings.ADMINS´ for recipients email. The template used to render
+the contact form is ´pages/contact.html´.
 
 
 Create your own placeholder
@@ -157,7 +186,7 @@ you can simply subclass the :class:`PlaceholderNode <pages.placeholders.Placehol
         return ContactFormPlaceholderNode(name, **params)
     register.tag('contactplaceholder', do_contactplaceholder)
 
-And use it your templates as a normal placeholder::
+And use it in your templates as a normal placeholder::
 
     {% contactplaceholder contact %}
 
@@ -289,14 +318,6 @@ A HTML editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
     {% placeholder [name] with markItUpHTML %}
 
 .. image:: http://t37.net/files/markitup-081127.jpg
-
-AutoCompleteTagInput
----------------------
-
-Provide a dynamic auto complete widget for tags used on pages::
-
-    {% placeholder [name] with AutoCompleteTagInput %}
-
 
 TinyMCE
 -------

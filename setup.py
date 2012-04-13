@@ -1,18 +1,37 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from pkg_resources import require, DistributionNotFound
 import pages
+import os
 package_name = 'django-page-cms'
+
 
 def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
-import os
+requirements = local_open('requirements/external_apps.txt')
+
+# Build the list of dependency to install
+required_to_install = []
+for dist in requirements.readlines():
+    dist = dist.strip()
+    try:
+        require(dist)
+    except DistributionNotFound:
+        required_to_install.append(dist)
+
 data_dirs = []
 for directory in os.walk('pages/templates'):
-    data_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:] + '/*.*')
 
 for directory in os.walk('pages/media'):
-    data_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/static'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/locale'):
+    data_dirs.append(directory[0][6:] + '/*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
@@ -28,18 +47,7 @@ setup(
     license=pages.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
-    install_requires=[
-        'BeautifulSoup',
-        'Django',
-        'html5lib>=0.10',
-        'django-tagging>0.2.1',
-        'django-mptt-2>0.2.1',
-        'django-authority',
-        'django-staticfiles',
-        'django-haystack',
-        # necessary for tests
-        'coverage',
-    ],
+    install_requires=required_to_install,
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
     package_data={'pages': data_dirs},

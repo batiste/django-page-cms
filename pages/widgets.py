@@ -26,6 +26,7 @@ register_widget(AdminTextareaWidget)
 
 if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
     from filebrowser.fields import FileBrowseWidget
+
     class FileBrowseInput(FileBrowseWidget):
         """FileBrowseInput widget."""
 
@@ -33,38 +34,6 @@ if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
             super(FileBrowseInput, self).__init__(attrs)
     register_widget(FileBrowseInput)
 
-
-if PAGE_TAGGING:
-    from tagging.models import Tag
-    from django.utils import simplejson
-
-    class AutoCompleteTagInput(TextInput):
-        """An autocompete widget"""
-        class Media:
-            js = [join(PAGES_MEDIA_URL, path) for path in (
-                'javascript/jquery.js',
-                'javascript/jquery.bgiframe.min.js',
-                'javascript/jquery.ajaxQueue.js',
-                'javascript/jquery.autocomplete.min.js'
-            )]
-
-        def __init__(self, language=None, attrs=None, **kwargs):
-            self.language = language
-            super(AutoCompleteTagInput, self).__init__(attrs)
-
-        def render(self, name, value, language=None, attrs=None, **kwargs):
-            rendered = super(AutoCompleteTagInput, self).render(
-                name, value, attrs)
-            page_tags = Tag.objects.usage_for_model(Page)
-            context = {
-                'name': name,
-                'tags': simplejson.dumps([tag.name for tag in page_tags],
-                    ensure_ascii=False),
-            }
-            return rendered + mark_safe(render_to_string(
-            'pages/widgets/autocompletetaginput.html', context))
-
-    register_widget(AutoCompleteTagInput)
 
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
@@ -121,6 +90,7 @@ if PAGE_TINYMCE:
             super(TinyMCE, self).__init__(language, attrs, mce_attrs)
     register_widget(TinyMCE)
 
+
 class CKEditor(Textarea):
     """CKEditor widget."""
 
@@ -148,6 +118,7 @@ class CKEditor(Textarea):
             'pages/widgets/ckeditor.html', context))
 
 register_widget(CKEditor)
+
 
 class WYMEditor(Textarea):
     """WYMEditor widget."""
@@ -181,7 +152,7 @@ class WYMEditor(Textarea):
             'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         context['page_link_wymeditor'] = 1
-        context['page_list'] = Page.objects.all().order_by('tree_id','lft')
+        context['page_list'] = Page.objects.all().order_by('tree_id', 'lft')
 
         context['filebrowser'] = 0
         if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
@@ -191,6 +162,7 @@ class WYMEditor(Textarea):
             'pages/widgets/wymeditor.html', context))
 
 register_widget(WYMEditor)
+
 
 class markItUpMarkdown(Textarea):
     """markItUpMarkdown widget."""
@@ -216,6 +188,33 @@ class markItUpMarkdown(Textarea):
         return rendered + mark_safe(render_to_string(
             'pages/widgets/markitupmarkdown.html', context))
 register_widget(markItUpMarkdown)
+
+
+class markItUpRest(Textarea):
+    """markItUpRest widget."""
+
+    class Media:
+        js = [join(PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'markitup/jquery.markitup.js',
+            'markitup/sets/rst/set.js',
+        )]
+        css = {
+            'all': [join(PAGES_MEDIA_URL, path) for path in (
+                'markitup/skins/simple/style.css',
+                'markitup/sets/rst/style.css',
+            )]
+        }
+
+    def render(self, name, value, attrs=None, **kwargs):
+        rendered = super(markItUpRest, self).render(name, value, attrs)
+        context = {
+            'name': name,
+        }
+        return rendered + mark_safe(render_to_string(
+            'pages/widgets/markituprest.html', context))
+register_widget(markItUpRest)
+
 
 class markItUpHTML(Textarea):
     """markItUpHTML widget."""
@@ -268,6 +267,7 @@ class EditArea(Textarea):
             'pages/widgets/editarea.html', context))
 register_widget(EditArea)
 
+
 class ImageInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
@@ -291,6 +291,29 @@ class ImageInput(FileInput):
         return mark_safe(field_content)
 register_widget(ImageInput)
 
+class FileInput(FileInput):
+
+    def __init__(self, page=None, language=None, attrs=None, **kwargs):
+        self.language = language
+        self.page = page
+        super(FileInput, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None, **kwargs):
+        if not self.page:
+            field_content = _('Please save the page to show the file field')
+        else:
+            field_content = ''
+            if value:
+                field_content += _('Current file: %s<br/>') % value
+            field_content += super(FileInput, self).render(name, attrs)
+            if value:
+                field_content += '''<br><label for="%s-delete">%s</label>
+                    <input name="%s-delete" id="%s-delete"
+                    type="checkbox" value="true">
+                    ''' % (name, _('Delete file'), name, name)
+        return mark_safe(field_content)
+register_widget(FileInput)
+
 
 class VideoWidget(MultiWidget):
     '''A youtube `Widget` for the admin.'''
@@ -312,7 +335,7 @@ class VideoWidget(MultiWidget):
     def value_from_datadict(self, data, files, name):
         value = [u'', u'', u'']
         for da in filter(lambda x: x.startswith(name), data):
-            index = int(da[len(name)+1:])
+            index = int(da[len(name) + 1:])
             value[index] = data[da]
         if value[0] == value[1] == value[2] == u'':
             return None
@@ -352,10 +375,10 @@ class LanguageChoiceWidget(TextInput):
     def render(self, name, value, attrs=None, **kwargs):
         context = {
             'name': name,
-            'value':value,
-            'page':self.page,
+            'value': value,
+            'page': self.page,
             'language': value,
-            'page_languages':PAGE_LANGUAGES
+            'page_languages': PAGE_LANGUAGES
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))

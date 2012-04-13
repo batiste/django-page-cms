@@ -14,12 +14,15 @@ CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'cms.db'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'cms.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -35,14 +38,8 @@ USE_I18N = True
 MEDIA_ROOT = STATIC_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
-STATIC_URL = MEDIA_URL + 'static/'
-
-# Absolute path to the directory that holds pages media.
-# PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
-# Absolute path to the directory that holds media.
-ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
-ADMIN_MEDIA_PREFIX = '/admin_media/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = '/static/'
 
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
@@ -52,21 +49,18 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    # this syntax is deprecated with django 1.2
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-    # could help
-    'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
     "django.core.context_processors.media",
     "pages.context_processors.media",
-    #"staticfiles.context_processors.static_url",
+    'django.core.context_processors.static',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -77,6 +71,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'example.urls'
@@ -96,11 +92,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
     'pages.testproj.documents',
-    #'tagging',
+    'taggit',
     'pages',
     'mptt',
-    'staticfiles',
     #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',
@@ -112,12 +108,12 @@ INSTALLED_APPS = (
 )
 
 PAGE_TINYMCE = False
-#PAGE_TAGGING = True
+PAGE_TAGGING = True
 
 PAGE_CONNECTED_MODELS = [{
-    'model':'pages.testproj.documents.models.Document',
-    'form':'pages.testproj.documents.models.DocumentForm',
-    'options':{
+    'model': 'pages.testproj.documents.models.Document',
+    'form': 'pages.testproj.documents.models.DocumentForm',
+    'options': {
             'extra': 3,
             'max_num': 10,
         },
@@ -158,6 +154,7 @@ PAGE_LANGUAGE_MAPPING = language_mapping
 
 PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
+
 PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),
@@ -169,9 +166,15 @@ PAGE_SANITIZE_USER_INPUT = True
 SITE_ID = 1
 PAGE_USE_SITE_ID = False
 
-HAYSTACK_SITECONF = 'example.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'INCLUDE_SPELLING': True,
+    },
+}
+
+PAGE_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (
     "pages.migrations.*",

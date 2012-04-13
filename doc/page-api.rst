@@ -9,7 +9,7 @@ Page CMS reference API
 The application model
 ======================
 
-Django page CMS declare rather simple models: :class:`Page <pages.models.Page>`
+Gerbi CMS declare rather simple models: :class:`Page <pages.models.Page>`
 :class:`Content <pages.models.Content>` and :class:`PageAlias <pages.models.PageAlias>`.
 
 Those Django models have the following relations:
@@ -82,6 +82,12 @@ Page Manager
 .. autoclass:: pages.managers.PageManager
     :members:
     :undoc-members:
+
+Page view
+==========
+
+.. autoclass:: pages.views.Details
+    :members:
 
 Content Model
 =============

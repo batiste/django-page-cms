@@ -2,13 +2,13 @@
 Introduction
 ============
 
-This Django CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
+Gerbi CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
 
-Django page CMS is based around a placeholders concept. A placeholder is special template tag that
+Gerbi CMS is based around a placeholders concept. A placeholder is special template tag that
 you use in your page templates. Every time you add a placeholder in your template  a field
 dynamically appears in the page admin.
 
-The project repository code repository is found at this address: http://github.com/batiste/django-page-cms
+The project code repository is found at this address: http://github.com/batiste/django-page-cms
 
 .. contents::
     :local:
@@ -45,7 +45,7 @@ Key features
   * Directory-like page hierarchy (page can have the same name if they are not in the same directory).
   * Every page can have multiple alias URLs. It's especially useful to migrate websites.
   * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`.
-  
+
 
 Other features
 ==============
@@ -69,11 +69,11 @@ Dependencies & Compatibility
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
-  * `django-tagging <http://code.google.com/p/django-tagging/>`_ (if PAGE_TAGGING = True)
+  * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
-  * Django page CMS is shipped with jQuery.
-  * Django page CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
+  * Gerbi CMS is shipped with jQuery.
+  * Gerbi CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
 
 .. note::
@@ -100,7 +100,7 @@ make your modifications in your branch. There is a things that is nice to do:
 Ask for help
 ============
 
-`Django page CMS Google Group <http://groups.google.com/group/django-page-cms>`_
+`Gerbi CMS Google Group <http://groups.google.com/group/django-page-cms>`_
 
 Test it
 -------
@@ -124,7 +124,7 @@ And then, run the development server::
     $ python manage.py manage.py runserver
 
 
-Django Page CMS try to keep the code base stable. The test coverage is higher
+Gerbi CMS try to keep the code base stable. The test coverage is higher
 than 80% and we try to keep it this way. To run the test suite::
 
     python setup.py test
@@ -137,7 +137,7 @@ than 80% and we try to keep it this way. To run the test suite::
 Handling images and files
 ---------------------------
 
-Django page CMS include a image placeholder for basic needs. For a more advanced
+Gerbi include a image placeholder for basic needs. For a more advanced
 files browser you could use django-filebrowser:
 
   * http://code.google.com/p/django-filebrowser/

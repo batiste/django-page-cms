@@ -1,7 +1,6 @@
 {% extends 'pages/examples/index.html' %}
 
 {% block content %}
-    <h2>Search</h2>
 
     <form method="get" action=".">
         <table>
@@ -15,14 +14,14 @@
         </table>
 
         {% if query %}
-            <h3>Results</h3>
+            <h3>Search results</h3>
 
             {% for result in page.object_list %}
                 <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
                 </p>
             {% empty %}
-                <p>No results found.</p>
+                <p>No results found. Did you build the search index? (python manage.py rebuild_index)</p>
             {% endfor %}
         {% else %}
             {# Show some example queries to run, maybe query syntax, something else? #}

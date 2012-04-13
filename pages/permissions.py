@@ -7,9 +7,10 @@ from pages import settings
 
 permission_checks = []
 for perm_lang in settings.PAGE_LANGUAGES:
-    permission_checks.append('manage ('+perm_lang[0]+')')
+    permission_checks.append('manage (' + perm_lang[0] + ')')
 
 permission_checks = permission_checks + ['freeze', 'manage hierarchy']
+
 
 class PagePermission(authority.permissions.BasePermission):
     """Handle the :class:`Page <pages.models.Page>` permissions."""
@@ -20,10 +21,10 @@ class PagePermission(authority.permissions.BasePermission):
         """Return ``True`` if the current user has permission on the page."""
         if self.user.is_superuser:
             return True
-        
+
         if action == 'change':
             return self.has_change_permission(page, lang, method)
-            
+
         if action == 'delete':
             if not self.delete_page():
                 return False
@@ -42,18 +43,18 @@ class PagePermission(authority.permissions.BasePermission):
             if perm:
                 return True
             return False
-        
+
         return False
 
     def has_change_permission(self, page, lang, method=None):
         """Return ``True`` if the current user has permission to
         change the page."""
-        
+
         # the user has always the right to look at a page content
         # if he doesn't try to modify it.
         if method != 'POST':
             return True
-            
+
         # right to change all the pages
         if self.change_page():
             return True
@@ -79,6 +80,5 @@ class PagePermission(authority.permissions.BasePermission):
 
         # everything else failed, no permissions
         return False
-
 
 authority.register(Page, PagePermission)

@@ -7,11 +7,12 @@ from pages import settings
 
 from datetime import datetime
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
@@ -464,11 +465,20 @@ class Page(MPTTModel):
         def isoformat(d):
             return None if d is None else d.strftime(ISODATE_FORMAT)
 
+        def custom_email(user):
+            """Allow a user's profile to return an email for the user."""
+            try:
+                profile = user.get_profile()
+            except (SiteProfileNotAvailable, ObjectDoesNotExist):
+                return user.email
+            get_email = getattr(profile, 'get_email', None)
+            return get_email() if get_email else user.email
+
         return {
             'complete_slug': langs(
                 lambda lang: self.get_complete_slug(lang, hideroot=False)),
             'title': langs(lambda lang: self.title(lang, fallback=False)),
-            'author_email': self.author.email,
+            'author_email': custom_email(self.author),
             'creation_date': isoformat(self.creation_date),
             'publication_date': isoformat(self.publication_date),
             'publication_end_date': isoformat(self.publication_end_date),

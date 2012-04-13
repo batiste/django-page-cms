@@ -7,7 +7,8 @@ from pages.http import get_slug
 from django.db import models, connection
 from django.db.models import Q
 from django.core.cache import cache
-from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db.models import Avg, Max, Min, Count
 from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
@@ -178,8 +179,25 @@ class PageManager(models.Manager):
             page = self.model(parent=parent)
             created = True
 
+        def custom_get_user_by_email(email):
+            """
+            Allow the user profile class to look up a user by email
+            address
+            """
+            # bit of an unpleasant hack that requres the logged-in
+            # user has a profile, but I don't want to reproduce the
+            # code in get_profile() here
+            try:
+                profile = user.get_profile()
+            except (SiteProfileNotAvailable, ObjectDoesNotExist):
+                return User.objects.get(email=email)
+            get_user_by_email = getattr(profile, 'get_user_by_email', None)
+            if get_user_by_email:
+                return get_user_by_email(email)
+            return User.objects.get(email=email)
+
         try:
-            page.author = User.objects.get(email=d['author_email'])
+            page.author = custom_get_user_by_email(d['author_email'])
         except User.DoesNotExist:
             page.author = user
             messages.append(_("Original author '%s' not found")

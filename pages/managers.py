@@ -24,6 +24,12 @@ class PageManager(models.Manager):
     that respect the page attributes and project settings.
     """
 
+    if settings.PAGE_HIDE_SITES:
+        def get_query_set(self):
+            """Restrict operations to pages on the current site."""
+            return super(PageManager, self).get_query_set().filter(
+                sites=global_settings.SITE_ID)
+
     def populate_pages(self, parent=None, child=5, depth=5):
         """Create a population of :class:`Page <pages.models.Page>`
         for testing purpose."""

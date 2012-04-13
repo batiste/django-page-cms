@@ -456,6 +456,8 @@ class Page(MPTTModel):
             """Return content of each placeholder in each language."""
             out = []
             for p in get_placeholders(self.get_template()):
+                if p.name in ('title', 'slug'):
+                    continue # these were already included
                 out.append((p.name, langs(
                     lambda lang: self.get_content(lang, p.name,
                         language_fallback=False))))

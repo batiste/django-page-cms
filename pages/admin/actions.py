@@ -22,6 +22,8 @@ def export_pages_as_json(modeladmin, request, queryset):
     response = HttpResponse(mimetype="application/json")
     response['Content-Disposition'] = 'attachment; filename=%s' % (
         JSON_PAGE_EXPORT_FILENAME,)
+    # selection may be in the wrong order
+    queryset = queryset.order_by('tree_id', 'lft')
     response.write(simplejson.dumps(
         {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
             'pages': [page.dump_json_data() for page in queryset]},

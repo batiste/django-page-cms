@@ -209,8 +209,6 @@ class PageManager(models.Manager):
             'draft': self.model.DRAFT,
             }[d['status']]
         page.template = d['template']
-        page.freeze_date = datetime.strptime(d['freeze_date'],
-            ISODATE_FORMAT) if d['freeze_date'] else None
         page.redirect_to_url = d['redirect_to_url']
 
         page.save()

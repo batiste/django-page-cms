@@ -12,7 +12,7 @@ from pages.utils import get_placeholders
 from pages.models import Page
 
 JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
-JSON_PAGE_EXPORT_VERSION = 2
+JSON_PAGE_EXPORT_VERSION = 3
 JSON_PAGE_EXPORT_FILENAME = 'cms_pages.json'
 
 # make it readable -- there are better ways to save space

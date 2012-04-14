@@ -495,7 +495,6 @@ class Page(MPTTModel):
                 Page.HIDDEN: 'hidden',
                 Page.DRAFT: 'draft'}[self.status],
             'template': self.template,
-            'freeze_date': isoformat(self.freeze_date),
             'sites': (
                 [site.domain for site in self.sites.all()]
                 if settings.PAGE_USE_SITE_ID else []),

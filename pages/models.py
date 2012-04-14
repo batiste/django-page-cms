@@ -8,6 +8,7 @@ from pages import settings
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User, SiteProfileNotAvailable
+from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
@@ -448,21 +449,34 @@ class Page(MPTTModel):
         Return a python dict representation of this page for use as part of
         a JSON export.
         """
-        def langs(fn):
-            """Return a dict for each fn(lang) that returns something."""
-            out = [(lang, fn(lang)) for lang in self.get_languages()]
-            return dict((lang, val) for lang, val in out if val)
+        def content_langs_ordered():
+            """
+            Return a list of languages ordered by the page content
+            with the latest creation date in each.  This will be used
+            to maintain the state of the language_up_to_date template
+            tag when a page is restored or imported into another site.
+            """
+            params = {'page': self}
+            if self.freeze_date:
+                params['creation_date__lte'] = self.freeze_date
+            cqs = Content.objects.filter(**params)
+            cqs = cqs.values('language').annotate(latest=Max('creation_date'))
+            return [c['language'] for c in cqs.order_by('latest')]
+        languages = content_langs_ordered()
 
-        def content_dicts():
+        def language_content(ctype):
+            return dict(
+                (lang, self.get_content(lang, ctype, language_fallback=False))
+                for lang in languages)
+
+        def placeholder_content():
             """Return content of each placeholder in each language."""
-            out = []
+            out = {}
             for p in get_placeholders(self.get_template()):
                 if p.name in ('title', 'slug'):
                     continue # these were already included
-                out.append((p.name, langs(
-                    lambda lang: self.get_content(lang, p.name,
-                        language_fallback=False))))
-            return dict(out)
+                out[p.name] = language_content(p.name)
+            return out
 
         def isoformat(d):
             return None if d is None else d.strftime(ISODATE_FORMAT)
@@ -477,9 +491,10 @@ class Page(MPTTModel):
             return get_email() if get_email else user.email
 
         return {
-            'complete_slug': langs(
-                lambda lang: self.get_complete_slug(lang, hideroot=False)),
-            'title': langs(lambda lang: self.title(lang, fallback=False)),
+            'complete_slug': dict(
+                (lang, self.get_complete_slug(lang, hideroot=False))
+                for lang in languages),
+            'title': language_content('title'),
             'author_email': custom_email(self.author),
             'creation_date': isoformat(self.creation_date),
             'publication_date': isoformat(self.publication_date),
@@ -490,18 +505,39 @@ class Page(MPTTModel):
                 Page.HIDDEN: 'hidden',
                 Page.DRAFT: 'draft'}[self.status],
             'template': self.template,
-            #'delegate_to': self.delegate_to  # XXX: is this a good idea?
-            'freeze_date': isoformat(self.freeze_date),
             'sites': (
                 [site.domain for site in self.sites.all()]
                 if settings.PAGE_USE_SITE_ID else []),
             'redirect_to_url': self.redirect_to_url,
-            'redirect_to_complete_slug': langs(
-                lambda lang: self.redirect_to.get_complete_slug(
-                    lang, hideroot=False)
+            'redirect_to_complete_slug': dict(
+                (lang, self.redirect_to.get_complete_slug(
+                    lang, hideroot=False))
+                for lang in self.redirect_to.get_languages()
                 ) if self.redirect_to is not None else None,
-            'content': content_dicts(),
+            'content': placeholder_content(),
+            'content_language_updated_order': languages,
         }
+
+    def update_redirect_to_from_json(self, redirect_to_complete_slugs):
+        """
+        The second pass of PageManager.create_and_update_from_json_data
+        used to update the redirect_to field.
+
+        Returns a messages list to be appended to the messages from the
+        first pass.
+        """
+        messages = []
+        s = ''
+        for lang, s in redirect_to_complete_slugs.items():
+            r = Page.objects.from_path(s, lang, exclude_drafts=False)
+            if r:
+                self.redirect_to = r
+                self.save()
+                break
+        else:
+            messages.append(_("Could not find page for redirect-to field"
+                " '%s'") % (s,))
+        return messages
 
     def __unicode__(self):
         """Representation of the page, saved or not."""

@@ -502,7 +502,7 @@ class Page(MPTTModel):
             'redirect_to_complete_slug': [
                 [lang, self.redirect_to.get_complete_slug(
                     lang, hideroot=False)]
-                for lang in self.get_languages()
+                for lang in self.redirect_to.get_languages()
                 ] if self.redirect_to is not None else None,
             'content': placeholder_content(),
         }

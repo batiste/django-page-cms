@@ -146,6 +146,8 @@ class PageManager(models.Manager):
     def create_and_update_from_json_data(self, d, user):
         """
         Create or update page based on python dict d loaded from JSON data.
+        This applies all data except for redirect_to, which is done in a
+        second pass after all pages have been imported,
 
         user is the User instance that will be used if the author can't
         be found in the DB.
@@ -163,10 +165,12 @@ class PageManager(models.Manager):
         created = False
         messages = []
 
-        languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
+        page_languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
+        languages = [ # maintain the order from the slugs
+            lang for lang, s in d['complete_slug'] if lang in page_languages]
 
         for lang, s in d['complete_slug']:
-            if lang not in languages:
+            if lang not in page_languages:
                 messages.append(_("Language '%s' not imported") % (lang,))
                 continue
 
@@ -180,7 +184,7 @@ class PageManager(models.Manager):
                 else:
                     parent_required = False
         else:
-            # can't find it, need to create one
+            # can't find an existing match, need to create a new Page
             page = self.model(parent=parent)
             created = True
 
@@ -190,21 +194,6 @@ class PageManager(models.Manager):
             page.author = user
             messages.append(_("Original author '%s' not found")
                 % (d['author_email'],))
-
-        rtcs = d['redirect_to_complete_slug']
-        if rtcs:
-            s = ''
-            for lang, s in rtcs:
-                if lang not in languages:
-                    continue
-                r = self.from_path(s, lang, exclude_drafts=False)
-                if r:
-                    page.redirect_to = r
-                    break
-            else:
-                messages.append(_("Could not find page for redirect-to field"
-                    " '%s' (import again if page was created below)")
-                    % (s,))
 
         page.creation_date = datetime.strptime(d['creation_date'],
             ISODATE_FORMAT)
@@ -237,24 +226,21 @@ class PageManager(models.Manager):
             if not page.sites.count(): # need at least one site
                 page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
-        from pages.models import Content
-        languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
-        def create_content(ctype, langs_bodies):
-            """
-            Create content for this page in each language provided.
-            """
-            for lang, body in langs_bodies:
-                if lang not in languages:
-                    continue
-                Content.objects.create_content_if_changed(page, lang, ctype,
-                    body)
-
-        create_content('title', d['title'])
-        create_content('slug',
-            ((lang, s.rsplit('/', 1)[-1]) for lang, s
-                in d['complete_slug']))
+        lang_ctype_content = {}
         for ctype, langs_bodies in d['content'].items():
-            create_content(ctype, langs_bodies)
+            for lang, body in langs_bodies:
+                lang_ctype_content[(lang, ctype)] = body
+        for lang, body in d['title']:
+            lang_ctype_content[(lang, 'title')] = body
+        for lang, body in d['complete_slug']:
+            lang_ctype_content[(lang, 'slug')] = s.rsplit('/', 1)[-1]
+
+        from pages.models import Content
+
+        for lang in languages: # order important here
+            for ctype in ['title', 'slug'] + d['content'].keys():
+                Content.objects.create_content_if_changed(page, lang, ctype,
+                    lang_ctype_content[(lang, ctype)])
 
         return page, created, messages
 

@@ -46,9 +46,16 @@ def import_pages_from_json(request,
 
     pages_created = []
     if not errors:
+        # pass one
         for p in d['pages']:
             pages_created.append(
                 Page.objects.create_and_update_from_json_data(p, request.user))
+        # pass two
+        for p, results in zip(d['pages'], pages_created):
+            page, created, messages = results
+            rtcs = p['redirect_to_complete_slug']
+            if rtcs:
+                messages.extend(page.update_redirect_to_from_json(rtcs))
 
     return render_to_response(template_name, {
         'errors': errors,
@@ -112,10 +119,13 @@ def validate_pages_json_data(d, preferred_lang):
                 % (slug, p['template']))
             continue
 
-        if set(p.name for p in get_placeholders(p['template'])) != set(
-                p['content'].keys()):
+        if set(p.name for p in get_placeholders(p['template']) if
+                p.name not in ('title', 'slug')) != set(p['content'].keys()):
             errors.append(_("%s template contents are different than our "
                 "template: %s") % (slug, p['template']))
+            assert 0, (set(p.name for p in get_placeholders(p['template'])),
+                set(
+                                p['content'].keys()))
             continue
 
     return errors

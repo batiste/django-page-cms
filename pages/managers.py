@@ -231,7 +231,7 @@ class PageManager(models.Manager):
         for lang, body in d['title']:
             lang_ctype_content[(lang, 'title')] = body
         for lang, body in d['complete_slug']:
-            lang_ctype_content[(lang, 'slug')] = s.rsplit('/', 1)[-1]
+            lang_ctype_content[(lang, 'slug')] = body.rsplit('/', 1)[-1]
 
         from pages.models import Content
 

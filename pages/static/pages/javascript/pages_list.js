@@ -12,6 +12,11 @@ $(function () {
         }
     }
 
+    function update_actions() {
+        // let django admin js know about the new/removed checkboxes
+        django.jQuery("tr input.action-select").actions();
+    }
+
     function reset_states() {
         action = selected_page = '';
         changelist.removeClass('insert-add insert-move');
@@ -46,6 +51,7 @@ $(function () {
                 }
             });
             callback && callback(children);
+            update_actions();
         });
     }
 
@@ -55,6 +61,7 @@ $(function () {
             rem_children(this.id.substring(9));
             $(this).remove();
         });
+        update_actions();
     }
 
     // Add a page id to the list of expanded pages
@@ -111,6 +118,7 @@ $(function () {
                 pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                 action = selected_page = '';
                 //bind_sortable()
+                update_actions();
             }
         );
     };

@@ -166,10 +166,8 @@ class PageManager(models.Manager):
         messages = []
 
         page_languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
-        languages = [ # maintain the order from the slugs
-            lang for lang, s in d['complete_slug'] if lang in page_languages]
 
-        for lang, s in d['complete_slug']:
+        for lang, s in d['complete_slug'].items():
             if lang not in page_languages:
                 messages.append(_("Language '%s' not imported") % (lang,))
                 continue
@@ -224,21 +222,18 @@ class PageManager(models.Manager):
             if not page.sites.count(): # need at least one site
                 page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
-        lang_ctype_content = {}
-        for ctype, langs_bodies in d['content'].items():
-            for lang, body in langs_bodies:
-                lang_ctype_content[(lang, ctype)] = body
-        for lang, body in d['title']:
-            lang_ctype_content[(lang, 'title')] = body
-        for lang, body in d['complete_slug']:
-            lang_ctype_content[(lang, 'slug')] = body.rsplit('/', 1)[-1]
-
         from pages.models import Content
+        def create_content(lang, ctype, body):
+            Content.objects.create_content_if_changed(page, lang, ctype, body)
 
-        for lang in languages: # order important here
-            for ctype in ['title', 'slug'] + d['content'].keys():
-                Content.objects.create_content_if_changed(page, lang, ctype,
-                    lang_ctype_content[(lang, ctype)])
+        for lang in d['content_language_updated_order']:
+            if lang not in page_languages:
+                continue
+            create_content(lang, 'slug',
+                d['complete_slug'][lang].rsplit('/', 1)[-1])
+            create_content(lang, 'title', d['title'][lang])
+            for ctype, langs_bodies in d['content'].items():
+                create_content(lang, ctype, langs_bodies[lang])
 
         return page, created, messages
 

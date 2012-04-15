@@ -35,10 +35,6 @@
 <div class="module" id="changelist">
 
 {% block result_list %}
-<form method="post" action="">
-{% csrf_token %}
-{% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
-
 <div id="toolbar">
 <form id="changelist-search" action="" method="post">
     <div>
@@ -48,6 +44,10 @@
     </div>
 </form>
 </div>
+
+<form method="post" action="">
+{% csrf_token %}
+{% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
 
 <div id="page-list">
 {% include "admin/pages/page/change_list_table.html" %}

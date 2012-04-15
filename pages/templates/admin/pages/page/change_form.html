@@ -6,6 +6,7 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/urlify.js"></script>
 <script type="text/javascript">var media_url = "{{MEDIA_URL}}"; var page_media_url = "{{PAGES_MEDIA_URL}}"</script>
+<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages_form.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +19,7 @@
             </ul>
         {% endif %}
     {% endblock %}
-    
+
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
         {% csrf_token %}
         <div class="sidebar">
@@ -42,12 +43,12 @@
                     </div>
                 </fieldset>
                 {% endif %}
-                
+
                 {% comment %}Close sidebar, open content{% endcomment %}
                 </div>
                 <div class="content">
             {% endif %}
-            
+
         {% endfor %}
         </div>{% comment %}Close content{% endcomment %}
 
@@ -56,7 +57,7 @@
             {% include inline_admin_formset.opts.template %}
         {% endfor %}
         </div>
-        
+
         {% submit_row %}
     </form>
 </div>

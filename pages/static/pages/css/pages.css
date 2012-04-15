@@ -127,7 +127,7 @@ a.popup:hover .help,
 
 .change-list .selection-cell {
     /* improve behavior with drag-drop */
-    width:22px;
+    /*width:22px;*/
 }
 
 /* Title cell tbody */
@@ -265,7 +265,7 @@ html[dir=rtl] .change-list .actions-pages a {
 }
 
 /* Page Status links */
-.change-list .publish-cell {
+.change-list td.publish-cell {
     vertical-align: center;
     width: 200px;
 }
@@ -301,7 +301,7 @@ html[dir=rtl] .change-list .actions-pages a {
     right: 0; top: -4px;
     height: 21px; /* IE6 fix */
 }
-html[dir=rtl] .change-list .insert { 
+html[dir=rtl] .change-list .insert {
     right:auto;
     left:0;
 }
@@ -430,7 +430,7 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-    
+
     width: 305px;
     float: left;
     display: inline; /* IE6 fix */

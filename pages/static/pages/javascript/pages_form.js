@@ -7,10 +7,10 @@ $(function() {
             $(this).hide();
         }
     });
-    
+
     // Focus the title
     $('#id_title').focus();
-    
+
     // Automatically update the slug when typing the title
     var slug_auto = true;
     var slug = $("#id_slug").change(function() {
@@ -19,7 +19,7 @@ $(function() {
     $("#id_title").keyup(function() {
         slug_auto && slug.val(URLify(this.value, 64));
     });
-    
+
     // Set the publication status
     var select = $('#id_status');
     var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[select.val()];
@@ -30,7 +30,7 @@ $(function() {
     select.change(function(e) {
         pages.update_published_icon('', select, img, change_status);
     });
-    
+
     // Translation helper
     $('#translation-helper-select').change(function() {
         var index = this.selectedIndex;
@@ -42,7 +42,7 @@ $(function() {
             $('#translation-helper-content').hide();
         }
     });
-    
+
     // Confirm language and template change if page is not saved
     // this code doesn't work with languages
     $.each(['language', 'template'], function(i, label) {
@@ -55,11 +55,11 @@ $(function() {
             });
         };
     });
-    
+
     // Disable the page content if the page is a redirection
     /*
     // To fix if we use placeholder in templates for META or extra content
-    
+
     var redirect = $('#id_redirect_to').change(update_redirect);
     var affected = $('.form-row:has(#id_language), .form-row:has(#id_template), .module-content .form-row')
         .css('position', 'relative');
@@ -79,7 +79,7 @@ $(function() {
     }
     update_redirect();
     */
-    
+
     // Content revision selector
     $('.revisions').change(function () {
         var select = $(this);
@@ -114,7 +114,7 @@ $(function() {
         }
         return false;
     });
-    
+
     $('.js-confirm-delete').click(function() {
         return confirm(gettext('Are you sure you want to delete this content?'));
     });

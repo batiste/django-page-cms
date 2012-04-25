@@ -9,8 +9,13 @@ from django.db.models import Q
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.db.models import Avg, Max, Min, Count
+from django.contrib.sites.models import Site
+from django.conf import settings as global_settings
+from django.utils.translation import ugettext_lazy as _
 
 from datetime import datetime
+
+ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
 
 
 class PageManager(models.Manager):
@@ -18,6 +23,12 @@ class PageManager(models.Manager):
     Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page attributes and project settings.
     """
+
+    if settings.PAGE_HIDE_SITES:
+        def get_query_set(self):
+            """Restrict operations to pages on the current site."""
+            return super(PageManager, self).get_query_set().filter(
+                sites=global_settings.SITE_ID)
 
     def populate_pages(self, parent=None, child=5, depth=5):
         """Create a population of :class:`Page <pages.models.Page>`
@@ -131,6 +142,101 @@ class PageManager(models.Manager):
                 if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
+
+    def create_and_update_from_json_data(self, d, user):
+        """
+        Create or update page based on python dict d loaded from JSON data.
+        This applies all data except for redirect_to, which is done in a
+        second pass after all pages have been imported,
+
+        user is the User instance that will be used if the author can't
+        be found in the DB.
+
+        returns (page object, created, messages).
+
+        created is True if this was a new page or False if an existing page
+        was updated.
+
+        messages is a list of strings warnings/messages about this import
+        """
+        page = None
+        parent = None
+        parent_required = True
+        created = False
+        messages = []
+
+        page_languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
+
+        for lang, s in d['complete_slug'].items():
+            if lang not in page_languages:
+                messages.append(_("Language '%s' not imported") % (lang,))
+                continue
+
+            page = self.from_path(s, lang, exclude_drafts=False)
+            if page:
+                break
+            if parent_required and parent is None:
+                if '/' in s:
+                    parent = self.from_path(s.rsplit('/', 1)[0], lang,
+                        exclude_drafts=False)
+                else:
+                    parent_required = False
+        else:
+            # can't find an existing match, need to create a new Page
+            page = self.model(parent=parent)
+            created = True
+
+        try:
+            page.author = User.objects.get(email=d['author_email'])
+        except (User.DoesNotExist, User.MultipleObjectsReturned):
+            page.author = user
+            messages.append(_("Original author '%s' not found")
+                % (d['author_email'],))
+
+        page.creation_date = datetime.strptime(d['creation_date'],
+            ISODATE_FORMAT)
+        page.publication_date = datetime.strptime(d['publication_date'],
+            ISODATE_FORMAT) if d['publication_date'] else None
+        page.publication_end_date = datetime.strptime(d['publication_end_date'],
+            ISODATE_FORMAT) if d['publication_end_date'] else None
+        page.last_modification_date = datetime.strptime(
+            d['last_modification_date'], ISODATE_FORMAT)
+        page.status = {
+            'published': self.model.PUBLISHED,
+            'hidden': self.model.HIDDEN,
+            'draft': self.model.DRAFT,
+            }[d['status']]
+        page.template = d['template']
+        page.redirect_to_url = d['redirect_to_url']
+
+        page.save()
+
+        if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
+            if d['sites']:
+                for site in d['sites']:
+                    try:
+                        page.sites.add(Site.objects.get(domain=site))
+                    except Site.DoesNotExist:
+                        messages.append(_("Could not add site '%s' to page")
+                            % (site,))
+            if not page.sites.count(): # need at least one site
+                page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
+
+        from pages.models import Content
+        def create_content(lang, ctype, body):
+            Content.objects.create_content_if_changed(page, lang, ctype, body)
+
+        for lang in d['content_language_updated_order']:
+            if lang not in page_languages:
+                continue
+            create_content(lang, 'slug',
+                d['complete_slug'][lang].rsplit('/', 1)[-1])
+            create_content(lang, 'title', d['title'][lang])
+            for ctype, langs_bodies in d['content'].items():
+                create_content(lang, ctype, langs_bodies[lang])
+
+        return page, created, messages
+
 
 
 class ContentManager(models.Manager):

@@ -38,7 +38,7 @@ download_url = url_schema % (package_name, package_name, pages.__version__)
 
 setup(
     name=package_name,
-    test_suite='pages.test_runner.run_tests',
+    test_suite='pages.test_runner.build_suite',
     version=pages.__version__,
     description=pages.__doc__,
     author=pages.__author__,

@@ -11,6 +11,7 @@ from pages.views import details
 from pages.templatetags.pages_tags import get_page_from_string_or_id
 
 import django
+import unittest
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -598,7 +599,7 @@ class UnitTestCase(TestCase):
         self.set_setting("PAGE_HIDE_ROOT_SLUG", False)
         page1.invalidate()
         page2.invalidate()
-        
+
         def _get_context_page(path):
             return details(req, path, 'en-us')
         self.assertEqual(_get_context_page('/').status_code, 200)
@@ -615,6 +616,11 @@ class UnitTestCase(TestCase):
 
     def test_po_file_imoprt_export(self):
         """Test the po files export and import."""
+        try:
+            import polib
+        except ImportError:
+            raise unittest.SkipTest("Polib is not installed")
+
         page1 = self.new_page(content={'slug':'page1', 'title':'english title'})
         page1.save()
         #Content(page=page1, language='en-us', type='title', body='toto').save()
@@ -733,7 +739,7 @@ class UnitTestCase(TestCase):
             'get-page-slug' })
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
-        
+
     def test_variable_disapear_in_block(self):
         """Try to test the disapearance of a context variable in a block."""
         tpl = ("{% load pages_tags %}"
@@ -742,7 +748,7 @@ class UnitTestCase(TestCase):
           "{% get_page test_value as toto %}"
           "{{ toto.slug }}"
           "{% endblock %}")
-          
+
         template = get_template_from_string(tpl)
         page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})

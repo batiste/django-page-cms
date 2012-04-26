@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Django settings for cms project.
+# Django test settings for cms project.
 import os
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -59,9 +59,7 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    # fails on Django 1.1.4
-    #"django.contrib.auth.context_processors.auth",
-    'django.core.context_processors.auth',
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
@@ -78,6 +76,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware'
 )
 
 ROOT_URLCONF = TEST_PROJ + '.urls'
@@ -102,7 +101,7 @@ INSTALLED_APPS = (
     #'tagging',
     'pages',
     'mptt',
-    'staticfiles',
+    #'staticfiles',
     #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',

@@ -6,8 +6,15 @@ from pages.http import get_request_mock
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
 from django.core.cache import cache
+from django.utils import timezone
 
 import re
+from datetime import datetime
+
+
+def now_utc():
+    return datetime.utcnow().replace(tzinfo=timezone.utc)
+
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.

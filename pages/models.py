@@ -1,6 +1,6 @@
 """Django page CMS ``models``."""
 
-from pages.utils import get_placeholders, normalize_url
+from pages.utils import get_placeholders, normalize_url, now_utc
 from pages.managers import PageManager, ContentManager
 from pages.managers import PageAliasManager, ISODATE_FORMAT
 from pages import settings
@@ -15,6 +15,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
+
 
 from mptt.models import MPTTModel
 if settings.PAGE_TAGGING:
@@ -70,7 +71,7 @@ class Page(MPTTModel):
     parent = models.ForeignKey('self', null=True, blank=True,
             related_name='children', verbose_name=_('parent'))
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-            default=datetime.now)
+            default=now_utc)
     publication_date = models.DateTimeField(_('publication date'),
             null=True, blank=True, help_text=_('''When the page should go
             live. Status must be "Published" for page to go live.'''))
@@ -130,16 +131,16 @@ class Page(MPTTModel):
             self.status = self.DRAFT
         # Published pages should always have a publication date
         if self.publication_date is None and self.status == self.PUBLISHED:
-            self.publication_date = datetime.now()
+            self.publication_date = now_utc()
         # Drafts should not, unless they have been set to the future
         if self.status == self.DRAFT:
             if settings.PAGE_SHOW_START_DATE:
                 if (self.publication_date and
-                        self.publication_date <= datetime.now()):
+                        self.publication_date <= now_utc()):
                     self.publication_date = None
             else:
                 self.publication_date = None
-        self.last_modification_date = datetime.now()
+        self.last_modification_date = now_utc()
         # let's assume there is no more broken links after a save
         cache.delete(self.PAGE_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
@@ -153,11 +154,11 @@ class Page(MPTTModel):
         :attr:`Page.publication_end_date`,
         and :attr:`Page.status`."""
         if settings.PAGE_SHOW_START_DATE and self.publication_date:
-            if self.publication_date > datetime.now():
+            if self.publication_date > now_utc():
                 return self.DRAFT
 
         if settings.PAGE_SHOW_END_DATE and self.publication_end_date:
-            if self.publication_end_date < datetime.now():
+            if self.publication_end_date < now_utc():
                 return self.EXPIRED
 
         return self.status
@@ -562,7 +563,7 @@ class Content(models.Model):
     page = models.ForeignKey(Page, verbose_name=_('page'))
 
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-        default=datetime.now)
+        default=now_utc)
     objects = ContentManager()
 
     class Meta:

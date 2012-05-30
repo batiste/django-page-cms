@@ -34,7 +34,7 @@
 <div id="toolbar">
 <form id="changelist-search" action="" method="post">
     <div>
-        <label for="searchbar"><img src="{% load adminmedia %}{% admin_media_prefix %}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
+        <label for="searchbar"><img src="{{ STATIC_URL }}admin/img/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
         <input type="text" size="40" name="q" value="{{q}}" id="searchbar" />
         <input type="submit" name="g" value="{% trans "Search" %}" />
     </div>
@@ -50,38 +50,16 @@
 </div>
 {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
 </form>
-{% endblock %}
 
-{% if debug %}
-<div id="debug">
-  <h2>Queries</h2>
-  <p>
-    {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-    {% ifnotequal sql_queries|length 0 %}
-    (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
-    {% endifnotequal %}
-  </p>
-  <table id="debugQueryTable" style="display: none;">
-    <col width="1"></col>
-    <col></col>
-    <col width="1"></col>
-    <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">SQL</th>
-      <th scope="col">Time</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for query in sql_queries %}<tr class="{% cycle odd,even %}">
-      <td>{{ forloop.counter }}</td>
-      <td>{{ query.sql|escape }}</td>
-      <td>{{ query.time }}</td>
-    </tr>{% endfor %}
-    </tbody>
-  </table>
+<form action="import-json/" method="post" enctype="multipart/form-data">
+<div class="actions">
+{% csrf_token %}
+<label>Import pages: <input type="file" name="json" size="40" /></label>
+<input type="submit" name="j" value="{% trans "Import" %}" />
 </div>
-{% endif %}
+</form>
+
+{% endblock %}
 
 </div>
 </div>

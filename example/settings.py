@@ -5,6 +5,7 @@ PROJECT_DIR = os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+USE_TZ = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -104,13 +105,8 @@ INSTALLED_APPS = (
     'haystack',
 )
 
-<<<<<<< HEAD
 GERBI_TINYMCE = False
 GERBI_TAGGING = False
-=======
-PAGE_TINYMCE = False
-PAGE_TAGGING = False
->>>>>>> master
 
 GERBI_USE_STRICT_URL = True
 

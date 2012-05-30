@@ -97,7 +97,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sites',
     'gerbi.testproj.documents',
-    'taggit',
     'gerbi',
     'mptt',
     'django.contrib.staticfiles',
@@ -113,7 +112,7 @@ INSTALLED_APPS = (
 )
 
 GERBI_TINYMCE = False
-GERBI_TAGGING = True
+GERBI_TAGGING = False
 
 GERBI_USE_STRICT_URL = True
 

@@ -76,6 +76,8 @@ class RegressionTestCase(TestCase):
         request = get_request_mock()
         temp = loader.get_template('gerbi/tests/test2.html')
         page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+        self.assertTrue(page is not None)
+        self.assertEqual(page.slug(), 'test-162-slug')
         render = temp.render(RequestContext(request, {'gerbi_current_page': page}))
         self.assertTrue('test-162-slug' in render)
 

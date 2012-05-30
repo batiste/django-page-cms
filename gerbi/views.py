@@ -98,13 +98,14 @@ class Details(object):
         if page:
             return page
         # if the complete path didn't worked out properly
-        # and if didn't used GERBI_USE_STRICT_URL setting we gonna
+        # and if didn't used GERBI_USE_STRICT_URL setting we will
         # try to see if it might be a delegation page.
         # To do that we remove the right part of the url and try again
         # to find a page that match
         if not settings.GERBI_USE_STRICT_URL:
             path = remove_slug(path)
             while path is not None:
+                print path
                 page = Page.objects.from_path(path, lang,
                     exclude_drafts=(not is_staff))
                 # find a match. Is the page delegating?

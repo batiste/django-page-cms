@@ -381,9 +381,9 @@ class LoadPagesNode(template.Node):
             model = Page
         else:
             model = context['gerbi_current_page'].__class__
-        if 'pages_navigation' not in context:
+        if 'gerbi_navigation' not in context:
             page_set = model.objects.navigation().order_by("tree_id")
-            context.update({'pages_navigation': page_set})
+            context.update({'gerbi_navigation': page_set})
         return ''
 
 

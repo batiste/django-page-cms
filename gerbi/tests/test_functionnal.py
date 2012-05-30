@@ -737,6 +737,8 @@ class FunctionnalTestCase(TestCase):
 
     def test_delegate_to(self):
         """Test the view delegate feature."""
+        self.set_setting("GERBI_USE_STRICT_URL", False)
+
         c = self.get_admin_client()
         page_data = self.get_new_page_data()
         page_data['title'] = 'delegate'

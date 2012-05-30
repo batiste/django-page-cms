@@ -537,7 +537,7 @@ class Page(MPTTModel):
             'template': self.template,
             'sites': (
                 [site.domain for site in self.sites.all()]
-                if settings.PAGE_USE_SITE_ID else []),
+                if settings.GERBI_USE_SITE_ID else []),
             'redirect_to_url': self.redirect_to_url,
             'redirect_to_complete_slug': dict(
                 (lang, self.redirect_to.get_complete_slug(

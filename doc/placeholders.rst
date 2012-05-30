@@ -33,7 +33,7 @@ Template syntax example::
 the **widget** option
 ----------------------
 
-If the **widget** option is used to change the way the CMS administration interface.
+The **widget** option is used to change the placeholders widgets in the administration interface.
 
 By default the CMS will use a simple `TextInput` widget. Otherwise the CMS will use the
 widget of your choice. Widgets need to be registered before you can use them in the CMS::

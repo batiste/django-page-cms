@@ -13,9 +13,12 @@ recursive-include gerbi *
 recursive-include requirements *
 recursive-include gerbi/templates *
 recursive-include gerbi/static *
-recursive-include gerbi/ *.css
-recursive-include gerbi/ *.js
-recursive-include gerbi/ *.html
+recursive-include gerbi/locale *
+recursive-include gerbi *.css
+recursive-include gerbi *.js
+recursive-include gerbi *.html
+recursive-include gerbi *.mo
+recursive-include gerbi *.po
 global-exclude *.pyc
 global-exclude coverage/*
 # this important to prune at the end

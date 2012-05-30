@@ -378,7 +378,9 @@ class FunctionnalTestCase(TestCase):
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
 
-        url = '/admin/gerbi/page/%d/get-content/1/' % page.id
+        url = '/admin/gerbi/page/%d/get-content/%d/' % (page.id,
+            Content.objects.get_content_slug_by_slug('page-1').id)
+
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
 

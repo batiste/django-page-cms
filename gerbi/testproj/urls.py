@@ -31,9 +31,9 @@ urlpatterns = patterns('',
 
 )
 
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        # Trick for Django to support static files
-        # (security hole: only for Dev environement! remove this on Prod!!!)
-        (r'', include('staticfiles.urls')),
-    )
+#if settings.DEBUG:
+#    urlpatterns += patterns('',
+#        # Trick for Django to support static files
+#        # (security hole: only for Dev environement! remove this on Prod!!!)
+#        (r'', include('staticfiles.urls')),
+#    )

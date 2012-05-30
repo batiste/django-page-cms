@@ -6,6 +6,7 @@ $(function() {
         if (!$('p, label, select, input:not([type=hidden])', this).length) {
             $(this).hide();
         }
+        HEAD:gerbi/static/gerbi/javascript/pages_form.js
     });*/
 
     // Focus the title
@@ -34,6 +35,7 @@ $(function() {
         });
     }
 
+
     // Confirm language and template change if page is not saved
     var template_select = $('#id_template');
     if (template_select.length) {
@@ -43,6 +45,35 @@ $(function() {
                 $('input[name=_continue]').click();
         });
     };
+
+    select.change(function(e) {
+        pages.update_published_icon('', select, img, change_status);
+    });
+
+    // Translation helper
+    $('#translation-helper-select').change(function() {
+        var index = this.selectedIndex;
+        if (index) {
+            $.get(window.location.href.split('?')[0]+'traduction/'+this.options[index].value+'/', function(html) {
+                $('#translation-helper-content').html(html).show();
+            });
+        } else {
+            $('#translation-helper-content').hide();
+        }
+    });
+
+    // Confirm language and template change if page is not saved
+    // this code doesn't work with languages
+    $.each(['language', 'template'], function(i, label) {
+        var select = $('#id_'+label);
+        if (select.length) {
+            var orig_ = select.val();
+            select.change(function() {
+                if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
+                    $('input[name=_continue]').click();
+            });
+        };
+    });
 
     // Disable the page content if the page is a redirection
     /*

@@ -6,19 +6,17 @@ try:
 except ImportError:
     coverage = None
 
-
 os.environ['DJANGO_SETTINGS_MODULE'] = 'gerbi.testproj.test_settings'
+
 current_dirname = os.path.dirname(__file__)
 sys.path.insert(0, current_dirname)
 sys.path.insert(0, os.path.join(current_dirname, '..'))
 
-from django.test.simple import run_tests as django_test_runner
+from django.test.simple import DjangoTestSuiteRunner
 from django.db.models import get_app, get_apps
-
 import fnmatch
 
 # necessary for "python setup.py test"
-
 patterns = (
     "gerbi.migrations.*",
     "gerbi.tests.*",
@@ -66,29 +64,38 @@ def get_all_coverage_modules(app_module, exclude_patterns=[]):
     return mod_list
 
 
-def run_tests(test_labels=('gerbi', ), verbosity=1, interactive=True,
-        extra_tests=[]):
 
-    if coverage:
-        cov = coverage()
-        cov.erase()
-        cov.use_cache(0)
-        cov.start()
+class PageTestSuiteRunner(DjangoTestSuiteRunner):
 
-    results = django_test_runner(test_labels, verbosity, interactive,
-        extra_tests)
+    def run_tests(self, test_labels=('gerbi',), extra_tests=None):
 
-    if coverage:
-        cov.stop()
-        app = get_app('gerbi')
-        modules = get_all_coverage_modules(app)
-        cov.html_report(modules, directory='coverage')
+        if coverage:
+            cov = coverage()
+            cov.erase()
+            cov.use_cache(0)
+            cov.start()
 
-    sys.exit(results)
+        results = DjangoTestSuiteRunner.run_tests(self, test_labels, extra_tests)
+
+        if coverage:
+            cov.stop()
+            app = get_app('gerbi')
+            modules = get_all_coverage_modules(app)
+            cov.html_report(modules, directory='coverage')
+
+        sys.exit(results)
+
+
+def build_suite():
+    runner = PageTestSuiteRunner()
+    runner.setup_test_environment()
+    runner.setup_databases()
+    return runner.build_suite(test_labels=('gerbi',), extra_tests=None)
 
 
 if __name__ == '__main__':
+    runner = PageTestSuiteRunner()
     if len(sys.argv) > 1:
-        run_tests(test_labels=(sys.argv[1], ))
+        runner.run_tests(test_labels=(sys.argv[1], ))
     else:
-        run_tests()
+        runner.run_tests()

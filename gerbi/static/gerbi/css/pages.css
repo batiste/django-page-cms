@@ -127,7 +127,7 @@ a.popup:hover .help,
 
 .change-list .selection-cell {
     /* improve behavior with drag-drop */
-    width:22px;
+    /*width:22px;*/
 }
 
 /* Title cell tbody */
@@ -265,7 +265,7 @@ html[dir=rtl] .change-list .actions-pages a {
 }
 
 /* Page Status links */
-.change-list .publish-cell {
+.change-list td.publish-cell {
     vertical-align: center;
     width: 200px;
 }

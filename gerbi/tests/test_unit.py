@@ -6,11 +6,12 @@ from gerbi.tests.testcase import TestCase, MockRequest
 from gerbi import urlconf_registry as reg
 from gerbi.http import get_language_from_request, get_slug
 from gerbi.http import get_request_mock, remove_slug
-from gerbi.utils import export_po_files, import_po_files
+from gerbi.utils import export_po_files, import_po_files, now_utc
 from gerbi.views import details
 from gerbi.templatetags.gerbi_tags import get_page_from_string_or_id
 
 import django
+import unittest
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -28,8 +29,8 @@ class UnitTestCase(TestCase):
         """Test page date ordering feature."""
         self.set_setting("GERBI_USE_SITE_ID", False)
         author = User.objects.all()[0]
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        now = datetime.datetime.now()
+        yesterday = now_utc() - datetime.timedelta(days=1)
+        now = now_utc()
         p1 = Page(author=author, status=Page.PUBLISHED, publication_date=now)
         p1.save()
         p2 = Page(
@@ -83,8 +84,8 @@ class UnitTestCase(TestCase):
     def test_page_caculated_status(self):
         """Test calculated status property."""
         self.set_setting("GERBI_SHOW_START_DATE", True)
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        yesterday = now_utc() - datetime.timedelta(days=1)
+        tomorrow = now_utc() + datetime.timedelta(days=1)
 
         page = self.new_page()
         self.assertEqual(page.calculated_status, Page.PUBLISHED)
@@ -617,6 +618,11 @@ class UnitTestCase(TestCase):
 
     def test_po_file_imoprt_export(self):
         """Test the po files export and import."""
+        try:
+            import polib
+        except ImportError:
+            raise unittest.SkipTest("Polib is not installed")
+
         page1 = self.new_page(content={'slug':'page1', 'title':'english title'})
         page1.save()
         #Content(page=page1, language='en-us', type='title', body='toto').save()

@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``models``."""
 
-from gerbi.utils import get_placeholders, normalize_url
+from gerbi.utils import get_placeholders, normalize_url, now_utc
 from gerbi.managers import PageManager, ContentManager
-from gerbi.managers import PageAliasManager
+from gerbi.managers import PageAliasManager, ISODATE_FORMAT
 from gerbi import settings
 
 from datetime import datetime
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, SiteProfileNotAvailable
+from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
+
 
 from mptt.models import MPTTModel
 
@@ -66,7 +69,7 @@ class Page(MPTTModel):
     parent = models.ForeignKey('self', null=True, blank=True,
             related_name='children', verbose_name=_('parent'))
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-            default=datetime.now)
+            default=now_utc)
     publication_date = models.DateTimeField(_('publication date'),
             null=True, blank=True, help_text=_('''When the page should go
             live. Status must be "Published" for page to go live.'''))
@@ -100,6 +103,10 @@ class Page(MPTTModel):
     # Managers
     objects = PageManager()
 
+    if settings.GERBI_TAGGING:
+        tags = TaggableManager(blank=True)
+
+
     class Meta:
         """Make sure the default page ordering is correct."""
         ordering = ['tree_id', 'lft']
@@ -124,16 +131,16 @@ class Page(MPTTModel):
             self.status = self.DRAFT
         # Published gerbi should always have a publication date
         if self.publication_date is None and self.status == self.PUBLISHED:
-            self.publication_date = datetime.now()
+            self.publication_date = now_utc()
         # Drafts should not, unless they have been set to the future
         if self.status == self.DRAFT:
             if settings.GERBI_SHOW_START_DATE:
                 if (self.publication_date and
-                        self.publication_date <= datetime.now()):
+                        self.publication_date <= now_utc()):
                     self.publication_date = None
             else:
                 self.publication_date = None
-        self.last_modification_date = datetime.now()
+        self.last_modification_date = now_utc()
         # let's assume there is no more broken links after a save
         cache.delete(self.GERBI_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
@@ -148,11 +155,11 @@ class Page(MPTTModel):
         :attr:`Page.publication_end_date`,
         and :attr:`Page.status`."""
         if settings.GERBI_SHOW_START_DATE and self.publication_date:
-            if self.publication_date > datetime.now():
+            if self.publication_date > now_utc():
                 return self.DRAFT
 
         if settings.GERBI_SHOW_END_DATE and self.publication_end_date:
-            if self.publication_end_date < datetime.now():
+            if self.publication_end_date < now_utc():
                 return self.EXPIRED
 
         return self.status
@@ -467,6 +474,101 @@ class Page(MPTTModel):
         """Used in the admin menu to create the left margin."""
         return self.level * 2
 
+    def dump_json_data(self):
+        """
+        Return a python dict representation of this page for use as part of
+        a JSON export.
+        """
+        def content_langs_ordered():
+            """
+            Return a list of languages ordered by the page content
+            with the latest creation date in each.  This will be used
+            to maintain the state of the language_up_to_date template
+            tag when a page is restored or imported into another site.
+            """
+            params = {'page': self}
+            if self.freeze_date:
+                params['creation_date__lte'] = self.freeze_date
+            cqs = Content.objects.filter(**params)
+            cqs = cqs.values('language').annotate(latest=Max('creation_date'))
+            return [c['language'] for c in cqs.order_by('latest')]
+        languages = content_langs_ordered()
+
+        def language_content(ctype):
+            return dict(
+                (lang, self.get_content(lang, ctype, language_fallback=False))
+                for lang in languages)
+
+        def placeholder_content():
+            """Return content of each placeholder in each language."""
+            out = {}
+            for p in get_placeholders(self.get_template()):
+                if p.name in ('title', 'slug'):
+                    continue # these were already included
+                out[p.name] = language_content(p.name)
+            return out
+
+        def isoformat(d):
+            return None if d is None else d.strftime(ISODATE_FORMAT)
+
+        def custom_email(user):
+            """Allow a user's profile to return an email for the user."""
+            try:
+                profile = user.get_profile()
+            except (SiteProfileNotAvailable, ObjectDoesNotExist):
+                return user.email
+            get_email = getattr(profile, 'get_email', None)
+            return get_email() if get_email else user.email
+
+        return {
+            'complete_slug': dict(
+                (lang, self.get_complete_slug(lang, hideroot=False))
+                for lang in languages),
+            'title': language_content('title'),
+            'author_email': custom_email(self.author),
+            'creation_date': isoformat(self.creation_date),
+            'publication_date': isoformat(self.publication_date),
+            'publication_end_date': isoformat(self.publication_end_date),
+            'last_modification_date': isoformat(self.last_modification_date),
+            'status': {
+                Page.PUBLISHED: 'published',
+                Page.HIDDEN: 'hidden',
+                Page.DRAFT: 'draft'}[self.status],
+            'template': self.template,
+            'sites': (
+                [site.domain for site in self.sites.all()]
+                if settings.PAGE_USE_SITE_ID else []),
+            'redirect_to_url': self.redirect_to_url,
+            'redirect_to_complete_slug': dict(
+                (lang, self.redirect_to.get_complete_slug(
+                    lang, hideroot=False))
+                for lang in self.redirect_to.get_languages()
+                ) if self.redirect_to is not None else None,
+            'content': placeholder_content(),
+            'content_language_updated_order': languages,
+        }
+
+    def update_redirect_to_from_json(self, redirect_to_complete_slugs):
+        """
+        The second pass of PageManager.create_and_update_from_json_data
+        used to update the redirect_to field.
+
+        Returns a messages list to be appended to the messages from the
+        first pass.
+        """
+        messages = []
+        s = ''
+        for lang, s in redirect_to_complete_slugs.items():
+            r = Page.objects.from_path(s, lang, exclude_drafts=False)
+            if r:
+                self.redirect_to = r
+                self.save()
+                break
+        else:
+            messages.append(_("Could not find page for redirect-to field"
+                " '%s'") % (s,))
+        return messages
+
     def __unicode__(self):
         """Representation of the page, saved or not."""
         if self.id:
@@ -525,7 +627,7 @@ class Page(MPTTModel):
                 ## been added and then deleted. I guess this is an
                 ## MPTT bug (not a PageCMS bug) that needs to be
                 ## investigated.
-                
+
                 # cnt = sib.get_descendant_count()
                 # if 0 == cnt:
                 #     return sib
@@ -557,7 +659,7 @@ class Content(models.Model):
     page = models.ForeignKey(Page, verbose_name=_('page'))
 
     creation_date = models.DateTimeField(_('creation date'), editable=False,
-        default=datetime.now)
+        default=now_utc)
     objects = ContentManager()
 
     def save(self, *args, **kwargs):
@@ -573,10 +675,14 @@ class Content(models.Model):
         return u"%s :: %s" % (self.page.slug(), self.body[0:15])
 
 
+page_alias_keywords = {}
+if settings.GERBI_HIDE_SITES:
+    page_alias_keywords = {'limit_choices_to':{'sites':settings.SITE_ID}}
+
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <gerbi.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
-        verbose_name=_('page'))
+        verbose_name=_('page'), **page_alias_keywords)
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
 

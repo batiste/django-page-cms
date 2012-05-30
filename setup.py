@@ -33,12 +33,16 @@ for directory in os.walk( module_name + os.sep + 'static'):
     # data_dirs.append(directory[0][6:] + '/*.*')
     data_dirs.append( os.path.sep.join( directory[0].split(os.sep)[1:] ) + os.sep + '*.*')
 
+for directory in os.walk('gerbi/locale'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, gerbi.__version__)
 
 setup(
     name=package_name,
-    test_suite= module_name + '.test_runner.run_tests',
+
+    test_suite= module_name + '.test_runner.build_suite',
     version=gerbi.__version__,
     description=gerbi.__doc__,
     author=gerbi.__author__,

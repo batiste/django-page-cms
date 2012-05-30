@@ -3,9 +3,9 @@ import authority
 from django.conf.urls.defaults import url, include, patterns
 from django.conf.urls.defaults import handler404, handler500
 from django.contrib import admin
+
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from gerbi.views import details
-
 from gerbi.urlconf_registry import register_urlconf
 register_urlconf('test', 'gerbi.testsproject.documents.urls')
 
@@ -21,8 +21,6 @@ urlpatterns = patterns('',
     (r'^search/', include('haystack.urls')),
 
 )
-
-urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns += patterns('',
     # this gonna match /admin if someone forget the traling slash

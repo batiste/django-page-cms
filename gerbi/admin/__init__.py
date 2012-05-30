@@ -11,6 +11,7 @@ from gerbi.admin.views import traduction, get_content, sub_menu
 from gerbi.admin.views import list_pages_ajax
 from gerbi.admin.views import change_status, modify_content, delete_content
 from gerbi.admin.views import move_page
+from gerbi.admin.actions import export_pages_as_json, import_pages_from_json
 from gerbi.permissions import PagePermission
 import gerbi.widgets
 import copy
@@ -19,7 +20,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.encoding import force_unicode
 from django.conf import settings as global_settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.admin.util import unquote
 from django.contrib.admin.sites import AlreadyRegistered
 if global_settings.USE_I18N:
@@ -79,6 +80,8 @@ class PageAdmin(admin.ModelAdmin):
         }),
     )
 
+    actions = [export_pages_as_json]
+
     class Media:
         css = {
             'all': [join(settings.GERBI_MEDIA_URL, path) for path in (
@@ -101,7 +104,7 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^$', self.list_pages, name='page-index'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
-            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[-\w]+)/$',
+            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',
                 get_content, name='page-get-content'),
             url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_type>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 modify_content, name='page-modify-content'),
@@ -113,6 +116,8 @@ class PageAdmin(admin.ModelAdmin):
                 move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
+            url(r'^import-json/$',
+                self.import_pages, name='import-pages-from-json'),
         )
         urlpatterns += super(PageAdmin, self).urls
 
@@ -344,8 +349,8 @@ class PageAdmin(admin.ModelAdmin):
 
     def list_pages(self, request, template_name=None, extra_context=None):
         """List root pages"""
-        if not admin.site.has_permission(request):
-            return admin.site.login(request)
+        if not self.admin_site.has_permission(request):
+            return self.admin_site.login(request)
         language = get_language_from_request(request)
 
         query = request.POST.get('q', '').strip()
@@ -373,6 +378,12 @@ class PageAdmin(admin.ModelAdmin):
         change_list = self.changelist_view(request, context)
 
         return change_list
+
+    def import_pages(self, request):
+        if not self.has_add_permission(request):
+            return admin.site.login(request)
+
+        return import_pages_from_json(request)
 
 
 class PageAdminWithDefaultContent(PageAdmin):

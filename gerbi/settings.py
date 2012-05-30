@@ -219,6 +219,9 @@ GERBI_EXTRA_CONTEXT = getattr(settings, 'GERBI_EXTRA_CONTEXT', None)
 # placeholder images, is placed.
 GERBI_UPLOAD_ROOT = getattr(settings, 'GERBI_UPLOAD_ROOT', 'upload')
 
+# Enable real time search indexation for the pages
+PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
+
 # Disable the tests by default so they don't execute when the user
 # execute manage.py test
 GERBI_ENABLE_TESTS = getattr(settings, 'GERBI_ENABLE_TESTS', False)

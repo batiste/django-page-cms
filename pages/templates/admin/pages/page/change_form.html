@@ -13,11 +13,14 @@
 <!-- Content -->
 <div id="content-main">
     {% block object-tools %}
-        {% if change and not is_popup %}
-            <ul class="object-tools">
-                {% if has_absolute_url %}<li><a href="{% show_absolute_url page %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
-            </ul>
-        {% endif %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+    {% block object-tools-items %}
+    <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+    {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+    {% endblock %}
+  </ul>
+{% endif %}{% endif %}
     {% endblock %}
 
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">

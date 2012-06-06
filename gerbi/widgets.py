@@ -378,6 +378,7 @@ class LanguageChoiceWidget(TextInput):
             'value': value,
             'page': self.page,
             'language': value,
+            'default_language':settings.LANGUAGE_CODE,
             'page_languages': GERBI_LANGUAGES
         }
         return mark_safe(render_to_string(

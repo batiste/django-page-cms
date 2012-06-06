@@ -6,9 +6,8 @@
 {% for lang in page_languages %}
     {% ifequal value lang.0 %}
         <li><span class="current">{{ lang.1 }}
-        <br>
-            {% if page|gerbi_has_content_in:language %}
-            <a class="deletelink js-confirm-delete" href="/admin/pages/page/{{ page.id }}/delete-content/{{ language }}/">
+            {% if page|gerbi_has_content_in:language and language != default_language %}
+            <a class="deletelink js-confirm-delete" href="./delete-content/{{ language }}/">
             {% trans "Delete this translation" %}</a>
             {% endif %}
         </span>

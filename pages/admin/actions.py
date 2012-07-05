@@ -98,10 +98,12 @@ def validate_pages_json_data(d, preferred_lang):
                 parent_slug, ignore = s.rsplit('/', 1)
                 if parent_slug in seen_complete_slugs[lang]:
                     seen_parent = True
-                elif Page.objects.from_path(parent_slug, lang,
-                        exclude_drafts=False):
-                    # parent not included, but exists on site
-                    seen_parent = True
+                else:
+                    parent = Page.objects.from_path(parent_slug, lang,
+                        exclude_drafts=False)
+                    if parent and parent.get_complete_slug(lang) == parent_slug:
+                        # parent not included, but exists on site
+                        seen_parent = True
             if not slug:
                 slug = s
 

@@ -174,7 +174,7 @@ class PageManager(models.Manager):
                 continue
 
             page = self.from_path(s, lang, exclude_drafts=False)
-            if page:
+            if page and page.get_complete_slug(lang) == s:
                 break
             if parent_required and parent is None:
                 if '/' in s:

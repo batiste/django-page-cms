@@ -14,12 +14,14 @@ from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.managers import TreeManager
+
 from datetime import datetime
 
 ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
 
 
-class PageManager(models.Manager):
+class PageManager(TreeManager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page attributes and project settings.

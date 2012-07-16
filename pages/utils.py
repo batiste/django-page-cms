@@ -363,9 +363,6 @@ def validate_pages_json_data(d, preferred_lang):
                 p.name not in ('title', 'slug')) != set(p['content'].keys()):
             errors.append(_("%s template contents are different than our "
                 "template: %s") % (slug, p['template']))
-            assert 0, (set(p.name for p in get_placeholders(p['template'])),
-                set(
-                                p['content'].keys()))
             continue
 
     return errors

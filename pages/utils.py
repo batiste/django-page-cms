@@ -6,7 +6,8 @@ from pages.http import get_request_mock
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
 from django.core.cache import cache
-from django.conf import settings
+from django.core.management.base import CommandError
+from django.utils import simplejson
 
 import re
 
@@ -250,27 +251,26 @@ def filter_link(content, page, language, content_type):
                     tag['class'] = 'pagelink_broken'
     return unicode(tree)
 
+
+
 def pages_to_json(queryset):
     """
     Return a JSON string export of the pages in queryset.
     """
     # selection may be in the wrong order, and order matters
     queryset = queryset.order_by('tree_id', 'lft')
-    simplejson.dumps(
+    return simplejson.dumps(
         {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
             'pages': [page.dump_json_data() for page in queryset]},
         indent=JSON_PAGE_EXPORT_INDENT, sort_keys=True)
-
-def command_export_json(
-    """
-    """
 
 def json_to_pages(json, user, preferred_lang=None):
     """
     Attept to create/update pages from JSON string json.  user is the
     user that will be used when creating a page if a page's original
     author can't be found.  preferred_lang is the language code of the
-    slugs to include in error messages (defaults to settings.LANGUAGE).
+    slugs to include in error messages (defaults to
+    settings.PAGE_DEFAULT_LANGUAGE).
 
     Returns (errors, pages_created) where errors is a list of strings
     and pages_created is a list of: (page object, created bool,
@@ -279,10 +279,11 @@ def json_to_pages(json, user, preferred_lang=None):
     If any errors are detected there the error list will contain
     information for the user and no pages will be created/updated.
     """
+    from pages.models import Page
     if not preferred_lang:
-        preferred_lang = settings.LANGUAGE
+        preferred_lang = settings.PAGE_DEFAULT_LANGUAGE
 
-    d = simplejson.load(json)
+    d = simplejson.loads(json)
     try:
         errors = validate_pages_json_data(d, preferred_lang)
     except KeyError, e:
@@ -301,6 +302,8 @@ def json_to_pages(json, user, preferred_lang=None):
             if rtcs:
                 messages.extend(page.update_redirect_to_from_json(rtcs))
 
+    return errors, pages_created
+
 
 def validate_pages_json_data(d, preferred_lang):
     """
@@ -309,13 +312,14 @@ def validate_pages_json_data(d, preferred_lang):
     errors is a list of strings.  The import should proceed only if errors
     is empty.
     """
+    from pages.models import Page
     errors = []
 
     seen_complete_slugs = dict(
         (lang[0], set()) for lang in settings.PAGE_LANGUAGES)
 
     valid_templates = set(t[0] for t in settings.get_page_templates())
-    valid_templates.add(global_settings.PAGE_DEFAULT_TEMPLATE)
+    valid_templates.add(settings.PAGE_DEFAULT_TEMPLATE)
 
     if d[JSON_PAGE_EXPORT_NAME] != JSON_PAGE_EXPORT_VERSION:
         return [_('Unsupported file version: %s') % repr(
@@ -366,3 +370,16 @@ def validate_pages_json_data(d, preferred_lang):
             continue
 
     return errors
+
+
+def monkeypatch_remove_pages_site_restrictions():
+    """
+    monkeypatch PageManager to expose pages for all sites by
+    removing customized get_query_set. Only actually matters
+    if PAGE_HIDE_SITES is set
+    """
+    from pages.managers import PageManager
+    try:
+        del PageManager.get_query_set
+    except AttributeError:
+        pass

@@ -1,6 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse
-from django.utils import simplejson
 from django.conf import settings as global_settings
 from django.db import transaction
 from django.shortcuts import redirect, render_to_response

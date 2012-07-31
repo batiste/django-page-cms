@@ -576,14 +576,10 @@ class Content(models.Model):
         return u"%s :: %s" % (self.page.slug(), self.body[0:15])
 
 
-page_alias_keywords = {}
-if settings.PAGE_HIDE_SITES:
-    page_alias_keywords = {'limit_choices_to':{'sites':settings.SITE_ID}}
-
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
-        verbose_name=_('page'), **page_alias_keywords)
+        verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
 

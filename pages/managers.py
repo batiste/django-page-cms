@@ -231,7 +231,7 @@ class PageManager(TreeManager):
 
         page.save()
 
-        if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
+        if settings.PAGE_USE_SITE_ID:
             if d['sites']:
                 for site in d['sites']:
                     try:
@@ -239,7 +239,8 @@ class PageManager(TreeManager):
                     except Site.DoesNotExist:
                         messages.append(_("Could not add site '%s' to page")
                             % (site,))
-            if not page.sites.count(): # need at least one site
+            if not settings.PAGE_HIDE_SITES and not page.sites.count():
+                # need at least one site
                 page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
         from pages.models import Content

@@ -328,7 +328,7 @@ class PageAdmin(admin.ModelAdmin):
         else:
             pages = Page.objects.root()
         if settings.PAGE_HIDE_SITES:
-            pages = pages.filter(sites=settings.SITE_ID)
+            pages = pages.filter(sites=global_settings.SITE_ID)
 
         perms = PagePermission(request.user)
         context = {

@@ -3,6 +3,7 @@
 from django import forms
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings as global_settings
 
 from pages import settings
 from pages.models import Page, Content
@@ -79,7 +80,7 @@ it must be unique among the other pages of the same level.')
 
         if settings.PAGE_USE_SITE_ID:
             if settings.PAGE_HIDE_SITES:
-                site_ids = [settings.SITE_ID]
+                site_ids = [global_settings.SITE_ID]
             else:
                 site_ids = [int(x) for x in self.data.getlist('sites')]
             def intersects_sites(sibling):

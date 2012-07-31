@@ -59,7 +59,7 @@ class PageManager(TreeManager):
         """
         if settings.PAGE_USE_SITE_ID:
             if not site_id:
-                site_id = settings.SITE_ID
+                site_id = global_settings.SITE_ID
             return self.filter(sites=site_id)
         return self.all()
 
@@ -80,7 +80,7 @@ class PageManager(TreeManager):
         """Filter the given pages :class:`QuerySet` to obtain only published
         page."""
         if settings.PAGE_USE_SITE_ID:
-            queryset = queryset.filter(sites=settings.SITE_ID)
+            queryset = queryset.filter(sites=global_settings.SITE_ID)
 
         queryset = queryset.filter(status=self.model.PUBLISHED)
 
@@ -393,7 +393,7 @@ class ContentManager(models.Manager):
         """
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
-            content = content.filter(page__sites__id=settings.SITE_ID)
+            content = content.filter(page__sites__id=global_settings.SITE_ID)
         try:
             content = content.latest('creation_date')
         except self.model.DoesNotExist:

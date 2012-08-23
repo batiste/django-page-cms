@@ -7,7 +7,7 @@ from django.template import RequestContext
 
 from pages import settings
 from pages.http import get_language_from_request
-from pages.utils import get_placeholders
+from pages.utils import get_placeholders, pages_to_json, json_to_pages
 from pages.models import Page
 
 JSON_PAGE_EXPORT_FILENAME = 'cms_pages.json'

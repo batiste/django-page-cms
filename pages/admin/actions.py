@@ -29,7 +29,7 @@ def import_pages_from_json(request,
     except KeyError:
         return redirect('admin:page-index')
 
-    errors, pages_created = json_to_pages(j, request.user,
+    errors, pages_created = json_to_pages(j.read(), request.user,
         get_language_from_request(request))
 
     return render_to_response(template_name, {

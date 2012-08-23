@@ -281,7 +281,7 @@ class PageAdmin(admin.ModelAdmin):
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
         return super(PageAdmin, self).change_view(request, object_id,
-                                                        extra_context)
+            extra_context=extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):
         """The ``add`` admin view for the :class:`Page <pages.models.Page>`."""

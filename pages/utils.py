@@ -8,6 +8,7 @@ from django.template import loader, Context
 from django.core.cache import cache
 from django.core.management.base import CommandError
 from django.utils import simplejson
+from django.utils.translation import ugettext_lazy as _
 
 import re
 

@@ -7,6 +7,7 @@ TEST_PROJ = 'pages.testproj'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+USE_TZ = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

@@ -9,8 +9,15 @@ from django.core.cache import cache
 from django.core.management.base import CommandError
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 import re
+from datetime import datetime
+
+
+def now_utc():
+    return datetime.utcnow().replace(tzinfo=timezone.utc)
+
 
 JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
 JSON_PAGE_EXPORT_VERSION = 4

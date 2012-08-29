@@ -6,7 +6,7 @@ from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 from pages.http import get_language_from_request, get_slug
 from pages.http import get_request_mock, remove_slug
-from pages.utils import export_po_files, import_po_files
+from pages.utils import export_po_files, import_po_files, now_utc
 from pages.views import details
 from pages.templatetags.pages_tags import get_page_from_string_or_id
 
@@ -29,8 +29,8 @@ class UnitTestCase(TestCase):
         """Test page date ordering feature."""
         self.set_setting("PAGE_USE_SITE_ID", False)
         author = User.objects.all()[0]
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        now = datetime.datetime.now()
+        yesterday = now_utc() - datetime.timedelta(days=1)
+        now = now_utc()
         p1 = Page(author=author, status=Page.PUBLISHED, publication_date=now)
         p1.save()
         p2 = Page(
@@ -84,8 +84,8 @@ class UnitTestCase(TestCase):
     def test_page_caculated_status(self):
         """Test calculated status property."""
         self.set_setting("PAGE_SHOW_START_DATE", True)
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        yesterday = now_utc() - datetime.timedelta(days=1)
+        tomorrow = now_utc() + datetime.timedelta(days=1)
 
         page = self.new_page()
         self.assertEqual(page.calculated_status, Page.PUBLISHED)

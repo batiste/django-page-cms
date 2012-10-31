@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS module."""
-VERSION = (1, 4, 5)
+VERSION = (1, 4, 5, 'custom', 1)
 __version__ = '.'.join(map(str, VERSION))
 __author__ = "Batiste Bieler"
 __contact__ = "batiste.bieler@gmail.com"

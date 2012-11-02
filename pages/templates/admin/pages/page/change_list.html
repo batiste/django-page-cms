@@ -55,6 +55,7 @@
 {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
 </form>
 
+{% comment %}
 <form action="import-json/" method="post" enctype="multipart/form-data">
 <div class="actions">
 {% csrf_token %}
@@ -63,6 +64,7 @@
 </div>
 </form>
 
+{% endcomment %}
 {% endblock %}
 
 </div>

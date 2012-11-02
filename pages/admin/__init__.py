@@ -80,7 +80,8 @@ class PageAdmin(admin.ModelAdmin):
         }),
     )
 
-    actions = [export_pages_as_json]
+    if settings.PAGE_EXPORT_ENABLED:
+        actions = [export_pages_as_json]
 
     class Media:
         css = {
@@ -116,9 +117,13 @@ class PageAdmin(admin.ModelAdmin):
                 move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
-            url(r'^import-json/$',
-                self.import_pages, name='import-pages-from-json'),
         )
+        if settings.PAGE_IMPORT_ENABLED:
+            urlpatterns += patterns('',
+                url(r'^import-json/$',
+                    self.import_pages, name='import-pages-from-json'),
+            )
+
         urlpatterns += super(PageAdmin, self).urls
 
         return urlpatterns
@@ -333,6 +338,7 @@ class PageAdmin(admin.ModelAdmin):
         perms = PagePermission(request.user)
         context = {
             'can_publish': perms.check('publish'),
+            'can_import': settings.PAGE_IMPORT_ENABLED,
             'language': language,
             'name': _("page"),
             'pages': pages,

@@ -224,3 +224,6 @@ PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
 # Disable the tests by default so they don't execute when the user
 # execute manage.py test
 PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)
+
+PAGE_IMPORT_ENABLED = getattr(settings, 'PAGE_IMPORT_ENABLED', True)
+PAGE_EXPORT_ENABLED = getattr(settings, 'PAGE_EXPORT_ENABLED', True)

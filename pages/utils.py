@@ -3,6 +3,7 @@
 from pages import settings
 from pages.http import get_request_mock
 
+from django.conf import settings as dj_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
 from django.core.cache import cache
@@ -14,6 +15,13 @@ from datetime import datetime
 
 def now_utc():
     return datetime.utcnow().replace(tzinfo=timezone.utc)
+
+
+def get_now():
+    if dj_settings.USE_TZ:
+        return datetime.utcnow().replace(tzinfo=timezone.utc)
+    else:
+        return datetime.now()
 
 
 def get_placeholders(template_name):

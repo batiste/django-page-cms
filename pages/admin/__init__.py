@@ -251,7 +251,7 @@ class PageAdmin(admin.ModelAdmin):
 
         return form
 
-    def change_view(self, request, object_id, extra_context=None):
+    def change_view(self, request, object_id, form_url='', extra_context=None):
         """The ``change`` admin view for the
         :class:`Page <pages.models.Page>`."""
         language = get_language_from_request(request)
@@ -280,8 +280,7 @@ class PageAdmin(admin.ModelAdmin):
                 settings.PAGE_LANGUAGES if Content.objects.get_content(obj,
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
-        return super(PageAdmin, self).change_view(request, object_id,
-                                                        extra_context)
+        return super(PageAdmin, self).change_view(request, object_id, form_url=form_url, extra_context=extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):
         """The ``add`` admin view for the :class:`Page <pages.models.Page>`."""

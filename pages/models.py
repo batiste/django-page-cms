@@ -7,6 +7,7 @@ from pages import settings
 
 from datetime import datetime
 from django.db import models
+from django.conf import settings as django_settings
 from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
@@ -66,7 +67,7 @@ class Page(MPTTModel):
     PAGE_URL_KEY = "page_%d_url"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
 
-    author = models.ForeignKey(User, verbose_name=_('author'))
+    author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 
     parent = models.ForeignKey('self', null=True, blank=True,
             related_name='children', verbose_name=_('parent'))

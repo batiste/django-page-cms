@@ -64,7 +64,6 @@ msgid "publication date"
 msgstr "Date de publication"
 
 #: models.py:76
-#, fuzzy
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
@@ -77,7 +76,6 @@ msgid "publication end date"
 msgstr "Fin de publication"
 
 #: models.py:79
-#, fuzzy
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
@@ -98,7 +96,6 @@ msgid "template"
 msgstr "Template"
 
 #: models.py:88
-#, fuzzy
 msgid "delegate to"
 msgstr "deleger à"
 
@@ -241,7 +238,7 @@ msgstr "Contenu"
 
 #: admin/__init__.py:232 admin/forms.py:30
 msgid "Slug"
-msgstr "Slug"
+msgstr "Lien"
 
 #: admin/__init__.py:239
 msgid "Default template"
@@ -249,12 +246,12 @@ msgstr "Template par défaut"
 
 #: admin/actions.py:32
 msgid "Export pages as JSON"
-msgstr ""
+msgstr "Exporter ces page en format JSON"
 
 #: admin/actions.py:45
 #, python-format
 msgid "JSON file is invalid: %s"
-msgstr ""
+msgstr "Le fichier JSON est invalide: %s"
 
 #: admin/actions.py:83
 #, python-format
@@ -288,22 +285,18 @@ msgid "Another page with this slug already exists"
 msgstr "Une autre page avec ce slug existe déjà."
 
 #: admin/forms.py:14
-#, fuzzy
 msgid "A sibling with this slug already exists at the targeted position"
 msgstr "Un enfant avec ce slug existe déjà à la position désirée."
 
 #: admin/forms.py:16
-#, fuzzy
 msgid "A child with this slug already exists at the targeted position"
 msgstr "Un enfant avec ce slug existe déjà à la position désirée."
 
 #: admin/forms.py:18
-#, fuzzy
 msgid "A sibling with this slug already exists"
 msgstr "Un frère avec ce slug existe déjà."
 
 #: admin/forms.py:19
-#, fuzzy
 msgid "A sibling with this slug already exists at the root level"
 msgstr "Un enfant avec ce slug existe déjà au premier niveau."
 
@@ -331,15 +324,15 @@ msgstr ""
 
 #: admin/forms.py:52
 msgid "Freeze"
-msgstr ""
+msgstr "Figer"
 
 #: admin/forms.py:53
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
-msgstr ""
+msgstr "Ne pas publier du contenu après cette date. Le format est 'A-m-j h:m:s'"
 
 #: templates/admin/pages/page/change_form.html:4
 msgid "Edit"
-msgstr ""
+msgstr "Changer"
 
 #: templates/admin/pages/page/change_form.html:18
 msgid "View on site"
@@ -386,9 +379,8 @@ msgid "title"
 msgstr "Titre"
 
 #: templates/admin/pages/page/change_list_table.html:10
-#, fuzzy
 msgid "languages"
-msgstr "langue"
+msgstr "langues"
 
 #: templates/admin/pages/page/change_list_table.html:11
 msgid "last modification"
@@ -411,9 +403,8 @@ msgid "Import completed."
 msgstr "Importation complète."
 
 #: templates/admin/pages/page/import_pages.html:28
-#, fuzzy
 msgid "created"
-msgstr "Créateur"
+msgstr "Crée"
 
 #: templates/admin/pages/page/import_pages.html:30
 msgid "modified"
@@ -429,15 +420,15 @@ msgstr ""
 
 #: templates/admin/pages/page/menu.html:26
 msgid "view this page"
-msgstr ""
+msgstr "voir cette page"
 
 #: templates/admin/pages/page/menu.html:27
 msgid "move this page"
-msgstr ""
+msgstr "Déplacer cette page"
 
 #: templates/admin/pages/page/menu.html:28
 msgid "insert a new page here"
-msgstr ""
+msgstr "insérer une nouvelle page ici"
 
 #: templates/admin/pages/page/menu.html:30
 msgid "delete this page"
@@ -454,20 +445,19 @@ msgstr "annuler"
 
 #: templates/admin/pages/page/menu.html:38
 msgid "don&#x27;t insert a new page here"
-msgstr ""
+msgstr "ne pas insérer une nouvelle page ici"
 
 #: templates/admin/pages/page/menu.html:39
 msgid "insert above"
-msgstr ""
+msgstr "insérer en dessus"
 
 #: templates/admin/pages/page/menu.html:40
 msgid "insert below"
-msgstr ""
+msgstr "insérer en dessous"
 
 #: templates/admin/pages/page/menu.html:41
-#, fuzzy
 msgid "insert as child"
-msgstr "comme enfant."
+msgstr "insérer comme enfant"
 
 #: templates/admin/pages/page/menu.html:54
 #, python-format
@@ -501,7 +491,6 @@ msgid "Wanted language has not been translated yet."
 msgstr "Le langage désiré n'a pas encore été traduit."
 
 #: templates/pages/widgets/languages.html:20
-#, fuzzy
 msgid "Delete this translation"
 msgstr "Supprimer cet traduction"
 

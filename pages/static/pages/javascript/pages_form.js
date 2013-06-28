@@ -87,9 +87,18 @@ $(function() {
         if (val) {
             $.get(val, function (html) {
                 var formrow = select.closest('.form-row');
+
                 if ($('a.disable', formrow).length) {
                     $('iframe', formrow)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
                 } else {
+                    // support for multiple input widget
+                    if($('input, textarea', formrow).length > 1) {
+                      var values = html.split("\\");
+                      $('input, textarea', formrow).each(function(i, e) {
+                         $(e).val(values[i]);
+                      });
+                      return false;
+                    }
                     // support for TextInput
                     $('input', formrow).val(html);
                     // support for TextArea

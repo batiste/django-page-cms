@@ -3,306 +3,566 @@
 # This file is distributed under the same license as the django-page-cms package.
 # Fantomas42 <fantomas42@gmail.com>, 2009.
 # , fuzzy
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: django-page-cms 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-07 17:34+0200\n"
+"POT-Creation-Date: 2013-06-26 19:08+0200\n"
 "PO-Revision-Date: 2009-04-07 17:55+0200\n"
 "Last-Translator: Fantomas42 <fantomas42@gmail.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:29
-msgid "Draft"
-msgstr "Brouillon"
+#: managers.py:173
+#, python-format
+msgid "Language '%s' not imported"
+msgstr "Langage '%s' non importé"
 
-#: models.py:30
+#: managers.py:211
+#, python-format
+msgid "Original author '%s' not found"
+msgstr "Auteur originel '%s' non trouvé"
+
+#: managers.py:238
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr ""
+
+#: models.py:60
 msgid "Published"
 msgstr "Publié"
 
-#: models.py:31
+#: models.py:61 templates/admin/pages/page/menu.html:79
+#: templates/admin/pages/page/menu.html:86
 msgid "Hidden"
 msgstr "Masqué"
 
-#: models.py:40
+#: models.py:62 templates/admin/pages/page/menu.html:77
+#: templates/admin/pages/page/menu.html:84
+msgid "Draft"
+msgstr "Brouillon"
+
+#: models.py:69 templates/admin/pages/page/change_list_table.html:14
 msgid "author"
 msgstr "Auteur"
 
-#: models.py:42
+#: models.py:72
 msgid "parent"
 msgstr "Parent"
 
-#: models.py:43 models.py:279
+#: models.py:73 models.py:565
 msgid "creation date"
 msgstr "Date de création"
 
-#: models.py:45
+#: models.py:75
 msgid "publication date"
 msgstr "Date de publication"
 
-#: models.py:46
+#: models.py:76
+#, fuzzy
 msgid ""
-"When the page should go live. \n"
-"                    Status must be \"Published\" for page to go live."
+"When the page should go\n"
+"            live. Status must be \"Published\" for page to go live."
 msgstr ""
 "Quand la page doit aller en front. \n"
 "Le status de la page doit être \"Publié\"."
 
-#: models.py:48
+#: models.py:78
 msgid "publication end date"
 msgstr "Fin de publication"
 
-#: models.py:49
+#: models.py:79
+#, fuzzy
 msgid ""
-"When to expire the page. Leave\n"
-"                    empty to never expire."
-msgstr " Quand la page doit expirer. Laissez\n"
+"When to expire the page.\n"
+"            Leave empty to never expire."
+msgstr ""
+" Quand la page doit expirer. Laissez\n"
 "vide pour ne jamais expirer."
 
-#: models.py:52
+#: models.py:82
+msgid "last modification date"
+msgstr "Dernière date de modification"
+
+#: models.py:84
 msgid "status"
 msgstr "Statut"
 
-#: models.py:53 templates/admin/pages/page/change_list_table.html:9
+#: models.py:85 templates/admin/pages/page/change_list_table.html:13
 msgid "template"
 msgstr "Template"
 
-#: models.py:57
+#: models.py:88
+#, fuzzy
+msgid "delegate to"
+msgstr "deleger à"
+
+#: models.py:91
+msgid "freeze date"
+msgstr "date de fixation"
+
+#: models.py:92
+msgid ""
+"Don't publish any content\n"
+"            after this date."
+msgstr ""
+
+#: models.py:97
 msgid "The site(s) the page is accessible at."
 msgstr "La page du site(s) est accessible à :"
 
-#: models.py:57
+#: models.py:98
 msgid "sites"
 msgstr "Sites"
 
-#: models.py:69 models.py:257 models.py:277 admin/__init__.py:336
+#: models.py:115 models.py:563 models.py:585 admin/__init__.py:336
 msgid "page"
 msgstr "Page"
 
-#: models.py:70
+#: models.py:116
 msgid "pages"
 msgstr "Pages"
 
-#: models.py:253
-msgid "All"
-msgstr "Tous"
+#: models.py:539
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr ""
 
-#: models.py:254
-msgid "This page only"
-msgstr "Cette page seulement"
-
-#: models.py:255
-msgid "This page and all childrens"
-msgstr "Cette page et tout ses enfants."
-
-#: models.py:258
-msgid "user"
-msgstr "Utilisateur"
-
-#: models.py:259 models.py:276
-msgid "type"
-msgstr "Type"
-
-#: models.py:264
-msgid "page permission"
-msgstr "Permission de page"
-
-#: models.py:265
-msgid "page permissions"
-msgstr "Permissions de page"
-
-#: models.py:274
+#: models.py:559
 msgid "language"
 msgstr "langue"
 
-#: models.py:275
+#: models.py:560
 msgid "body"
 msgstr "Corps"
 
-#: models.py:284
+#: models.py:561
+msgid "type"
+msgstr "Type"
+
+#: models.py:571
 msgid "content"
 msgstr "Contenu"
 
-#: models.py:285
+#: models.py:572
 msgid "contents"
 msgstr "Contenus"
 
-#: admin/__init__.py:53
-msgid "General"
-msgstr "Général"
+#: models.py:590
+msgid "Aliases"
+msgstr "Alias"
 
-#: admin/__init__.py:57
-msgid "Options"
-msgstr "Options"
+#: placeholders.py:24
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Placeholder %(name)s erreur de synthax: %(error)s]"
 
-#: admin/__init__.py:60
-msgid "Note: This page reloads if you change the selection"
-msgstr "Note: Cette page se recharge si vous changez la sélection"
-
-#: admin/__init__.py:170
-msgid "Content"
-msgstr "Contenu"
-
-#: admin/__init__.py:179
-msgid "Create a new linked "
-msgstr "Crée un nouveau lié"
-
-#: admin/__init__.py:226 admin/forms.py:16
-msgid "Slug"
-msgstr "Slug"
-
-#: admin/__init__.py:231
-msgid "Default template"
-msgstr "Template par défaut"
-
-#: admin/__init__.py:263
+#: placeholders.py:138
 msgid "Note: This field is evaluated as template code."
 msgstr "Note: Ce champs est évalué comme du code de template."
 
-#: admin/forms.py:11
-msgid "Title"
-msgstr "Titre"
+#: placeholders.py:332
+msgid "Your email"
+msgstr "Votre email"
+
+#: placeholders.py:333
+msgid "Subject"
+msgstr "Sujet"
+
+#: placeholders.py:336
+msgid "Your message"
+msgstr "Votre message"
+
+#: placeholders.py:355
+msgid "Your email has been sent. Thank you."
+msgstr "Votre message a été envoyé"
+
+#: placeholders.py:357
+msgid "An error as occured: your email has not been sent."
+msgstr "Une erreur est apparue et votre message n'a pas été envoyé."
+
+#: urlconf_registry.py:35
+#, python-format
+msgid "The urlconf %s has already been registered."
+msgstr ""
+
+#: urlconf_registry.py:45
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr ""
+
+#: widgets.py:280
+msgid "Please save the page to show the image field"
+msgstr ""
+
+#: widgets.py:284 widgets.py:307
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Fichier courant %s<br/>"
+
+#: widgets.py:290
+msgid "Delete image"
+msgstr "Supprimer image"
+
+#: widgets.py:303
+msgid "Please save the page to show the file field"
+msgstr "Merci de sauver la page pour affichier le champs de fichier"
+
+#: widgets.py:313
+msgid "Delete file"
+msgstr "Supprimer le fichier"
+
+#: widgets_registry.py:29
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr ""
+
+#: widgets_registry.py:41
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr ""
+
+#: admin/__init__.py:73
+msgid "General"
+msgstr "Général"
+
+#: admin/__init__.py:77
+msgid "Options"
+msgstr "Options"
+
+#: admin/__init__.py:203
+msgid "Content"
+msgstr "Contenu"
+
+#: admin/__init__.py:232 admin/forms.py:30
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/__init__.py:239
+msgid "Default template"
+msgstr "Template par défaut"
+
+#: admin/actions.py:32
+msgid "Export pages as JSON"
+msgstr ""
+
+#: admin/actions.py:45
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr ""
+
+#: admin/actions.py:83
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr ""
+
+#: admin/actions.py:109
+#, python-format
+msgid "%s has no common language with this site"
+msgstr ""
+
+#: admin/actions.py:114
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr ""
+
+#: admin/actions.py:118
+#, python-format
+msgid "%s uses a template not found on this site: %s"
+msgstr ""
+
+#: admin/actions.py:124
+#, python-format
+msgid "%s template contents are different than our template: %s"
+msgstr ""
 
 #: admin/forms.py:13
-msgid "The default title"
-msgstr "Titre par défaut"
-
-#: admin/forms.py:18
-msgid "The part of the title that is used in permalinks"
-msgstr "La partie du titre qui sera utilisé dans les permalinks."
-
-#: admin/forms.py:21
-msgid "Language"
-msgstr "Langue"
-
-#: admin/forms.py:23
-msgid "The current language of the content fields."
-msgstr "Le langage courant du champ contenu."
-
-#: admin/forms.py:27
-msgid "Template"
-msgstr "Template"
-
-#: admin/forms.py:29
-msgid "The template used to render the content."
-msgstr "Le template utilisé pour rendre le contenu."
-
-#: admin/forms.py:52 admin/forms.py:54
 msgid "Another page with this slug already exists"
 msgstr "Une autre page avec ce slug existe déjà."
 
-#: admin/forms.py:62 admin/forms.py:76
-msgid "A sibiling with this slug already exists at the root level"
-msgstr "Un enfant avec ce slug existe déjà au premier niveau."
-
-#: admin/forms.py:66
-msgid "A sibiling with this slug already exists at the targeted position"
+#: admin/forms.py:14
+#, fuzzy
+msgid "A sibling with this slug already exists at the targeted position"
 msgstr "Un enfant avec ce slug existe déjà à la position désirée."
 
-#: admin/forms.py:69
-msgid "A children with this slug already exists at the targeted position"
+#: admin/forms.py:16
+#, fuzzy
+msgid "A child with this slug already exists at the targeted position"
 msgstr "Un enfant avec ce slug existe déjà à la position désirée."
 
-#: admin/forms.py:73
-msgid "A sibiling with this slug already exists"
+#: admin/forms.py:18
+#, fuzzy
+msgid "A sibling with this slug already exists"
 msgstr "Un frère avec ce slug existe déjà."
 
-#: templates/admin/pages/page/change_form.html:3
-msgid "Change a page"
-msgstr "Changer une page"
+#: admin/forms.py:19
+#, fuzzy
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Un enfant avec ce slug existe déjà au premier niveau."
 
-#: templates/admin/pages/page/change_form.html:17
+#: admin/forms.py:26
+msgid "Title"
+msgstr "Titre"
+
+#: admin/forms.py:32
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr ""
+
+#: admin/forms.py:36
+msgid "Language"
+msgstr "Langue"
+
+#: admin/forms.py:42
+msgid "Template"
+msgstr "Template"
+
+#: admin/forms.py:47
+msgid "Delegate to application"
+msgstr ""
+
+#: admin/forms.py:52
+msgid "Freeze"
+msgstr ""
+
+#: admin/forms.py:53
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr ""
+
+#: templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr ""
+
+#: templates/admin/pages/page/change_form.html:18
 msgid "View on site"
 msgstr "Voir sur le site"
 
-#: templates/admin/pages/page/change_form.html:29
+#: templates/admin/pages/page/change_form.html:32
 msgid "Translation helper"
 msgstr "Aide de traduction"
 
-#: templates/admin/pages/page/change_form.html:31
+#: templates/admin/pages/page/change_form.html:34
 msgid "Language:"
 msgstr "Langue:"
 
-#: templates/admin/pages/page/change_list.html:3
+#: templates/admin/pages/page/change_list.html:4
 msgid "List of pages"
 msgstr "Liste des pages"
 
-#: templates/admin/pages/page/change_list.html:8
+#: templates/admin/pages/page/change_list.html:10
+#: templates/admin/pages/page/import_pages.html:6
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/admin/pages/page/change_list.html:27
+#: templates/admin/pages/page/change_list.html:32
 #, python-format
 msgid "Add %(name)s"
 msgstr "Ajouter %(name)s"
 
-#: templates/admin/pages/page/change_list_table.html:5
+#: templates/admin/pages/page/change_list.html:41
+#: templates/pages/examples/index.html:74
+msgid "Search"
+msgstr "Chercher"
+
+#: templates/admin/pages/page/change_list.html:43
+msgid "Go"
+msgstr ""
+
+#: templates/admin/pages/page/change_list.html:62
+msgid "Import"
+msgstr "Importer"
+
+#: templates/admin/pages/page/change_list_table.html:9
+#: testproj/documents/models.py:9
 msgid "title"
 msgstr "Titre"
 
-#: templates/admin/pages/page/change_list_table.html:6
-msgid "quick actions"
-msgstr "Actions rapides"
+#: templates/admin/pages/page/change_list_table.html:10
+#, fuzzy
+msgid "languages"
+msgstr "langue"
 
-#: templates/admin/pages/page/change_list_table.html:7
-msgid "translations"
-msgstr "Traductions"
+#: templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "dernière modification"
 
-#: templates/admin/pages/page/change_list_table.html:8
+#: templates/admin/pages/page/change_list_table.html:12
 msgid "published"
 msgstr "Publié"
 
-#: templates/admin/pages/page/change_list_table.html:10
-msgid "creator"
+#: templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr "Importer les pages"
+
+#: templates/admin/pages/page/import_pages.html:15
+msgid "Importing pages failed:"
+msgstr "L'importation des pages a échoué"
+
+#: templates/admin/pages/page/import_pages.html:22
+msgid "Import completed."
+msgstr "Importation complète."
+
+#: templates/admin/pages/page/import_pages.html:28
+#, fuzzy
+msgid "created"
 msgstr "Créateur"
 
-#: templates/admin/pages/page/menu.html:7
-msgid "as left sibling"
-msgstr "comme frère à gauche."
+#: templates/admin/pages/page/import_pages.html:30
+msgid "modified"
+msgstr "modifié"
 
-#: templates/admin/pages/page/menu.html:8
-msgid "as right sibling"
-msgstr "comme frère à droite."
-
-#: templates/admin/pages/page/menu.html:9
-msgid "as child"
-msgstr "comme enfant."
-
-#: templates/admin/pages/page/menu.html:20
-msgid "move"
-msgstr "Déplacer"
-
-#: templates/admin/pages/page/menu.html:21
-msgid "add"
-msgstr "Ajouter"
+#: templates/admin/pages/page/import_pages.html:41
+msgid "Return to page list"
+msgstr "Retour à la liste des pages"
 
 #: templates/admin/pages/page/menu.html:22
-msgid "view"
-msgstr "Voir"
+msgid "This page contain broken links"
+msgstr ""
 
-#: templates/admin/pages/page/menu.html:23
-msgid "delete"
-msgstr "Supprimer"
+#: templates/admin/pages/page/menu.html:26
+msgid "view this page"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:27
+msgid "move this page"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:28
+msgid "insert a new page here"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:30
+msgid "delete this page"
+msgstr "supprimer cette page"
+
+#: templates/admin/pages/page/menu.html:34
+msgid "don&#x27;t move this page"
+msgstr "ne pas déplacer cette page"
+
+#: templates/admin/pages/page/menu.html:34
+#: templates/admin/pages/page/menu.html:38
+msgid "cancel"
+msgstr "annuler"
+
+#: templates/admin/pages/page/menu.html:38
+msgid "don&#x27;t insert a new page here"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:39
+msgid "insert above"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:40
+msgid "insert below"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:41
+#, fuzzy
+msgid "insert as child"
+msgstr "comme enfant."
+
+#: templates/admin/pages/page/menu.html:54
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "changer la traduction %(lang)s"
+
+#: templates/admin/pages/page/menu.html:57
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "créer la traduction %(lang)s"
+
+#: templates/admin/pages/page/menu.html:64 templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "d.m.Y"
+
+#: templates/admin/pages/page/menu.html:78
+#: templates/admin/pages/page/menu.html:85
+msgid "In navigation"
+msgstr "Dans la navigation"
+
+#: templates/pages/contact.html:4
+msgid "Send"
+msgstr "Envoyer"
 
 #: templates/pages/revisions.html:4
 msgid "Revisions"
 msgstr "Révisions"
 
-#: templates/pages/revisions.html:8
-msgid "DATETIME_FORMAT"
-msgstr "d.m.Y"
-
 #: templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Le langage désiré n'a pas encore été traduit."
 
-#: templatetags/pages_tags.py:15
-#, python-format
-msgid "[Placeholder %(name)s had syntax error: %(error)s]"
-msgstr "[Placeholder %(name)s erreur de synthax: %(error)s]"
+#: templates/pages/widgets/languages.html:20
+#, fuzzy
+msgid "Delete this translation"
+msgstr "Supprimer cet traduction"
 
+
+#: testproj/documents/models.py:10
+msgid "text"
+msgstr ""
+
+#~ msgid "All"
+#~ msgstr "Tous"
+
+#~ msgid "This page only"
+#~ msgstr "Cette page seulement"
+
+#~ msgid "This page and all childrens"
+#~ msgstr "Cette page et tout ses enfants."
+
+#~ msgid "user"
+#~ msgstr "Utilisateur"
+
+#~ msgid "page permission"
+#~ msgstr "Permission de page"
+
+#~ msgid "page permissions"
+#~ msgstr "Permissions de page"
+
+#~ msgid "Note: This page reloads if you change the selection"
+#~ msgstr "Note: Cette page se recharge si vous changez la sélection"
+
+#~ msgid "Create a new linked "
+#~ msgstr "Crée un nouveau lié"
+
+#~ msgid "The default title"
+#~ msgstr "Titre par défaut"
+
+#~ msgid "The part of the title that is used in permalinks"
+#~ msgstr "La partie du titre qui sera utilisé dans les permalinks."
+
+#~ msgid "The current language of the content fields."
+#~ msgstr "Le langage courant du champ contenu."
+
+#~ msgid "The template used to render the content."
+#~ msgstr "Le template utilisé pour rendre le contenu."
+
+#~ msgid "Change a page"
+#~ msgstr "Changer une page"
+
+#~ msgid "quick actions"
+#~ msgstr "Actions rapides"
+
+#~ msgid "as left sibling"
+#~ msgstr "comme frère à gauche."
+
+#~ msgid "as right sibling"
+#~ msgstr "comme frère à droite."
+
+#~ msgid "move"
+#~ msgstr "Déplacer"
+
+#~ msgid "add"
+#~ msgstr "Ajouter"
+
+#~ msgid "view"
+#~ msgstr "Voir"

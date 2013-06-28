@@ -17,11 +17,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 
+import logging
 import os
 import time
 import re
 
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
+logger = logging.getLogger(__name__)
 
 
 def parse_placeholder(parser, token):
@@ -91,7 +93,7 @@ class PlaceholderNode(template.Node):
     widget = TextInput
 
     def __init__(self, name, page=None, widget=None, parsed=False,
-            as_varname=None, inherited=False, untranslated=False):
+            as_varname=None, inherited=False, untranslated=False, has_revision=True):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -103,6 +105,7 @@ class PlaceholderNode(template.Node):
         self.inherited = inherited
         self.untranslated = untranslated
         self.as_varname = as_varname
+
         self.found_in_block = None
 
     def get_widget(self, page, language, fallback=Textarea):
@@ -205,10 +208,12 @@ class PlaceholderNode(template.Node):
             lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
         return self.get_content(context[self.page], lang, lang_fallback)
 
+    def get_render_content(self, context):
+        return mark_safe(self.get_content_from_context(context))
+
     def render(self, context):
         """Output the content of the `PlaceholdeNode` in the template."""
-
-        content = mark_safe(self.get_content_from_context(context))
+        content = self.get_render_content(context)
         if not content:
             return ''
         if self.parsed:
@@ -383,3 +388,15 @@ class VideoPlaceholderNode(PlaceholderNode):
             renderer = render_to_string('pages/embed.html', context)
             return mark_safe(renderer)
         return ''
+
+
+class JsonPlaceholderNode(PlaceholderNode):
+
+    def get_render_content(self, context):
+        import json
+        content = self.get_content_from_context(context)
+        try:
+            return json.loads(str(content))
+        except:
+            logger.error("Problem decoding json")
+        return content

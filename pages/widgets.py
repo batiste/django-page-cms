@@ -8,6 +8,7 @@ from pages.models import Page
 from pages.widgets_registry import register_widget
 
 from django.conf import settings
+from django import forms
 from django.forms import TextInput, Textarea, HiddenInput
 from django.forms import MultiWidget, FileInput
 from django.contrib.admin.widgets import AdminTextInputWidget
@@ -382,3 +383,62 @@ class LanguageChoiceWidget(TextInput):
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))
+
+
+
+"""class PageChoice(forms.ChoiceField):
+
+    def __init__(self):
+        self.super(PageChoice).__init__(choices=Page.objects.all())"""
+
+class PageLinkWidget(MultiWidget):
+    '''A page link `Widget` for the admin.'''
+    def __init__(self, attrs=None, page=None, language=None,
+        video_url=None, linkedpage=None, text=None):
+            l = [('', '----')]
+            for p in Page.objects.all():
+                l.append((p.id, str(p)))
+            widgets = [
+                forms.Select(choices=l),
+                TextInput(attrs=attrs)
+            ]
+            super(PageLinkWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        import json
+        try:
+            return json.loads(value)
+        except:
+            pass
+        return []
+
+    def value_from_datadict(self, data, files, name):
+        import json
+        value = [u'', u'']
+        for da in filter(lambda x: x.startswith(name), data):
+            index = int(da[len(name) + 1:])
+            value[index] = data[da]
+        if value[0] == value[1] == u'':
+            return None
+        return json.dumps(value)
+
+    def _has_changed(self, initial, data):
+        """Need to be reimplemented to be correct."""
+        if data == initial:
+            return False
+        return bool(initial) != bool(data)
+
+    def format_output(self, rendered_widgets):
+        """
+        Given a list of rendered widgets (as strings), it inserts an HTML
+        linebreak between them.
+
+        Returns a Unicode string representing the HTML for the whole lot.
+        """
+        return u"""<table>
+            <tr><td>page</td><td>%s</td></tr>
+            <tr><td>text</td><td>%s</td></tr>
+        </table>""" % tuple(rendered_widgets)
+
+register_widget(PageLinkWidget)
+

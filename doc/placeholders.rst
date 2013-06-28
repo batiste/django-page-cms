@@ -16,6 +16,15 @@ The syntax for a placeholder tag is the following::
 
     {% placeholder <name> [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
+
+Enable the placeholder tags
+=============================
+
+The required syntax to load placeholder tags is the following::
+
+    {% load pages_tags %}
+
+
 Detailed explanations on placeholder options
 ============================================
 

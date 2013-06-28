@@ -577,11 +577,17 @@ html[dir=rtl] .change-form .module-options .form-row {
     padding: 8px 12px;
 }
 .change-form .module-content .revisions {
-    position: absolute;
-    top: 8px;
-    right: 12px;
+    float:right;
     width: 150px;
 }
+.change-form .module-content input[type=text] {
+  width:25em;
+}
+
+.change-form .module-content textarea {
+  width:35em;
+}
+
 html[dir=rtl] .change-form .module-content .revisions {
     left: 12px;
     right: auto;

@@ -10,7 +10,7 @@ from pages import settings as pages_settings
 from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
-from pages.placeholders import parse_placeholder
+from pages.placeholders import JsonPlaceholderNode, parse_placeholder
 
 register = template.Library()
 
@@ -211,7 +211,8 @@ show_absolute_url = register.inclusion_tag('pages/content.html',
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``pages/revisions.html`` template"""
-    if not pages_settings.PAGE_CONTENT_REVISION:
+    if (not pages_settings.PAGE_CONTENT_REVISION or 
+            content_type in pages_settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
         return {'revisions': None}
     revisions = Content.objects.filter(page=page, language=lang,
                                 type=content_type).order_by('-creation_date')
@@ -467,6 +468,15 @@ def do_contactplaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return ContactPlaceholderNode(name, **params)
 register.tag('contactplaceholder', do_contactplaceholder)
+
+
+def do_jsonplaceholder(parser, token):
+    """
+    Method that parse the contactplaceholder template tag.
+    """
+    name, params = parse_placeholder(parser, token)
+    return JsonPlaceholderNode(name, **params)
+register.tag('jsonplaceholder', do_jsonplaceholder)
 
 
 def language_content_up_to_date(page, language):

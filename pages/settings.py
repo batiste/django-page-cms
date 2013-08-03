@@ -76,6 +76,11 @@ if PAGE_TINYMCE and "tinymce" not in getattr(settings, 'INSTALLED_APPS', []):
 PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
                                     False)
 
+# Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to rename automaticaly a duplicate slug
+PAGE_AUTOMATIC_SLUG_RENAMING = getattr(settings, 'PAGE_AUTOMATIC_SLUG_RENAMING',
+                                    False)
+
+
 # Set ``PAGE_CONTENT_REVISION`` to ``False`` to disable the recording of
 # pages revision information in the database
 PAGE_CONTENT_REVISION = getattr(settings, 'PAGE_CONTENT_REVISION', True)

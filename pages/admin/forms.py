@@ -69,6 +69,28 @@ it must be unique among the other pages of the same level.')
         target = self.data.get('target', None)
         position = self.data.get('position', None)
 
+        # this enforce a unique slug for every page
+        if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
+
+            def is_slug_safe(slug):
+                if self.instance.id:
+                    return Content.objects.exclude(page=self.instance).filter(
+                                  body=slug, type="slug").count() == 0
+                else:
+                    return Content.objects.filter(
+                                  body=slug, type="slug").count() == 0
+            
+
+            if is_slug_safe(slug):
+               return slug
+
+            count = 2
+            new_slug = slug + "-" + str(count)
+            while not is_slug_safe(new_slug):
+                count = count + 1
+                new_slug = slug + "-" + str(count)
+            return new_slug
+
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(

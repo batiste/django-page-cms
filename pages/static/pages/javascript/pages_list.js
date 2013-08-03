@@ -1,5 +1,5 @@
 /* Initialization of the change_list page - this script is run once everything is ready. */
-
+"use strict";
 
 $(function () {
     var action = false;
@@ -207,56 +207,115 @@ $(function () {
     // will be better of not rewritting the table everytime
     function bind_sortable() {
         // Initialise the table for drag and drop
-        $("#page-list").sortable({
-            scroll:true,
-            axis:'y',
-            items:'.draggable',
-            handle: '.movelink',
-            revert: true,
-            update:function(event, ui) {
-                $("#page-table-dnd tbody").addClass('ui-sortable');
-            },
-            start:function(event, ui) {
-                drag_clientx = event.clientX;
-                $(ui.item).find('.message').text(gettext('Insert as sibling'));
-                insert_position = 'right';
-            },
-            stop:function(event, ui) {
-                selected_page = $(ui.item[0]).closest('.draggable').attr('id').split('page-row-')[1];
-                var prev = $(ui.item[0]).prev();
-                var next = $(ui.item[0]).next();
-                var id = false;
-                if(prev.length) {
-                    var id = prev.closest('tr').attr('id').split('page-row-')[1];
-                } else if(next.length) {
-                    var id = next.closest('tr').attr('id').split('page-row-')[1];
-                    if(insert_position == 'right')
-                        insert_position = 'left';
-                } else {
-                    alert(gettext("Invalid move"));
-                    return;
-                }
-                move_page(selected_page, insert_position, id);
-            },
-            change:function(event, ui) {
-                var prev = $(ui.placeholder).prev();
-                var line = $(ui.item);
-                var cell = line.find('.title-cell-container');
-                var mal = prev.find('.title-cell-container').css('margin-left');
-                cell.css('margin-left', mal);
-            },
-            sort:function(event, ui) {
-                var line = $(ui.item);
-                var cell = line.find('.title-cell-container');
-                if(drag_clientx < event.clientX) {
-                    cell.find('.message').text(gettext('Insert as child'));
-                    insert_position = 'first-child';
-                } else {
-                    cell.find('.message').text(gettext('Insert as sibling'));
-                    insert_position = 'right';
-                }
-            }
+
+        var down = false;
+        var move_y = 0;
+        var start_y = 0;
+        var line = false;
+        var line_id = false;
+        var indicator = false;
+        //indicator.css("position", "absolute");
+        //indicator.hide();
+        var drag_initiated = false;
+        var lines_position = [];
+        var choosen_line = false;
+        var trs;
+
+        $("#page-list").on("mousedown", ".movelink", function(e) {
+            down = this;
+            line = $($(this).parents("tr").get(0));
+            line_id = line.attr('id').split('page-row-')[1];
+            move_y = 0;
+            start_y = e.pageY;
+            return false;
         });
+
+        $("#page-list").on("mousemove", function(e) {
+            if(down) {
+              move_y = start_y - e.pageY;
+              // we have a drag an drop
+              if(Math.abs(move_y) > 8 && !drag_initiated) { 
+                indicator = $(".drag-indicator");
+                indicator.text(line.find(".title").text());
+                indicator.show();
+                drag_initiated = true;
+                $(line).css("opacity", "0.5");
+                trs = $("#page-list tbody tr").not(line).not($(".child-of-"+line_id));
+                trs.each(function(i, el) {
+                  lines_position.push(
+                    {line:el, pos:$(el).position().top + $(el).height() / 2}
+                  );
+                }); 
+              }
+              if(drag_initiated) {
+                indicator.show();
+                indicator.css("top", e.pageY-22 + "px");
+                indicator.css("left", e.pageX-8 + "px");
+                var i;
+                choosen_line = lines_position[0].line;
+                var distance = 10000;
+                for(i = 0; i<lines_position.length; i++) {
+                  if(Math.abs(lines_position[i].pos - e.pageY) < distance) {
+                      distance = Math.abs(lines_position[i].pos - e.pageY);
+                      choosen_line = lines_position[i].line;
+                  }
+                }
+                $("#page-list tbody tr").removeClass("highlighted");
+                $(choosen_line).addClass("highlighted");
+              }
+            }
+            return false;
+        });
+
+        $(document).on("mouseup", function(e) {
+            // release
+            if(drag_initiated) {
+              drag_initiated = false;
+              var dialog = $(".drag-dialog");
+              dialog.css("top", $(choosen_line).position().top+"px");
+              dialog.css("left", (e.pageX - 20) +"px");
+              dialog.show();
+              /*var target = choosen_line.id.split('page-row-')[1];
+              move_page(line_id, "first-child", target);*/
+              // choosen_line = false;
+            }
+
+            $(line).css("opacity", "1");
+            indicator.hide();
+            down = false;
+            drag_initiated = false;
+            lines_position = [];
+        });
+
+        $(document).on("click", ".move-top", function(e) {
+            var target = choosen_line.id.split('page-row-')[1];
+            move_page(line_id, "left", target);
+            return false;
+        });
+
+        $(document).on("click", ".move-first-child", function(e) {
+            var target = choosen_line.id.split('page-row-')[1];
+            move_page(line_id, "first-child", target);
+            return false;
+        }); 
+
+        $(document).on("click", ".move-bottom", function(e) {
+            var target = choosen_line.id.split('page-row-')[1];
+            move_page(line_id, "right", target);
+            return false;
+        });
+
+        $(document).on("click", ".move-undo", function(e) {
+            $(".drag-dialog").hide();
+            $("#page-list tbody tr").removeClass("highlighted");
+            return false;
+        });
+
+        $(document).on("click", function(e) {
+            $("#page-list tbody tr").removeClass("highlighted");
+            $(".drag-dialog").hide();
+        }); 
+
     }
     bind_sortable();
 });

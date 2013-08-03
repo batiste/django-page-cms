@@ -115,6 +115,18 @@ a.popup:hover .help,
     background: #ffb;
 }
 
+#changelist {
+    position: static;
+}
+
+.drag-indicator, .drag-dialog {
+  position:absolute;
+  display:none;
+  background:#ffb;
+  border:1px #000 solid;
+  padding:6px 10px;
+}
+
 /* Title cell theader */
 .change-list thead .title-cell {
     padding: 5px 10px;

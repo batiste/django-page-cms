@@ -169,6 +169,10 @@ class Page(MPTTModel):
         return self.calculated_status in (self.PUBLISHED, self.HIDDEN)
     visible = property(_visible)
 
+    def published_children(self):
+        """Return a :class:`QuerySet` of published children page"""
+        return Page.objects.filter_published(self.get_children())
+
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())

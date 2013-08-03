@@ -104,7 +104,7 @@
 {% endif %}
 <ul>
 {% for doc in documents %}
-<li><a href="{% url document_details path=current_page.get_complete_slug document_id=doc.id %}">{{ doc.title }}</a></li>
+<li><a href="{% url "document_details" path=current_page.get_complete_slug document_id=doc.id %}">{{ doc.title }}</a></li>
 {% endfor %}
 </ul>
 {% endif %}

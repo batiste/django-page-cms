@@ -35,6 +35,7 @@
 {% block result_list %}
 <div id="toolbar">
 <form id="changelist-search" action="" method="post">
+    {% csrf_token %}
     <div>
         <label for="searchbar"><img src="{{ STATIC_URL }}admin/img/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
         <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />

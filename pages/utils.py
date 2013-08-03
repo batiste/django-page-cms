@@ -310,6 +310,8 @@ def json_to_pages(json, user, preferred_lang=None):
             rtcs = p['redirect_to_complete_slug']
             if rtcs:
                 messages.extend(page.update_redirect_to_from_json(rtcs))
+        # clean up MPTT links
+        Page.objects.rebuild()
 
     return errors, pages_created
 

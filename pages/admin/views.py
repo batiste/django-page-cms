@@ -29,7 +29,9 @@ def list_pages_ajax(request, invalid_move=False):
     """Render pages table for ajax function."""
     language = get_language_from_request(request)
     pages = Page.objects.root()
+    perms = PagePermission(request.user)
     context = {
+        'can_publish': perms.check('publish'),
         'invalid_move':invalid_move,
         'language': language,
         'pages': pages,
@@ -139,7 +141,6 @@ def sub_menu(request, page_id):
     pages = page.children.all()
     page_languages = settings.PAGE_LANGUAGES
     perms = PagePermission(request.user)
-
     return "admin/pages/page/sub_menu.html", {
         'can_publish': perms.check('publish'),
         'page':page,

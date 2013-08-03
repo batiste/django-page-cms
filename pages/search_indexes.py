@@ -20,6 +20,9 @@ if settings.PAGE_REAL_TIME_SEARCH:
         def get_model(self):
             return Page
 
+        def should_update(self, instance, **kwargs):
+            return instance.status == Page.PUBLISHED
+
 else:
     class PageIndex(SearchIndex, Indexable):
         """Search index for pages content."""
@@ -34,3 +37,7 @@ else:
 
         def get_model(self):
             return Page
+
+        def should_update(self, instance, **kwargs):
+            return instance.status == Page.PUBLISHED
+

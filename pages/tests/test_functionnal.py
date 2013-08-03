@@ -7,8 +7,8 @@ import django
 from django.conf import settings
 from django.template import Template, RequestContext
 from django.template import TemplateDoesNotExist
+from pages.utils import get_now
 
-import datetime
 
 class FunctionnalTestCase(TestCase):
     """Django page CMS functionnal tests suite class."""
@@ -137,7 +137,7 @@ class FunctionnalTestCase(TestCase):
             return
 
         # this is necessary to make the test pass
-        setattr(pages_settings, "SITE_ID", 2)
+        setattr(settings, "SITE_ID", 2)
 
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
@@ -163,7 +163,7 @@ class FunctionnalTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_data['slug'])
         self.assertEqual(content, None)
 
-        setattr(pages_settings, "SITE_ID", 3)
+        setattr(settings, "SITE_ID", 3)
         page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertEqual(page.sites.count(), 1)
         self.assertEqual(page.sites.all()[0].id, 3)
@@ -174,7 +174,7 @@ class FunctionnalTestCase(TestCase):
 
         # without param
         self.assertEqual(Page.objects.on_site().count(), 1)
-        setattr(pages_settings, "SITE_ID", 2)
+        setattr(settings, "SITE_ID", 2)
         self.assertEqual(Page.objects.on_site().count(), 1)
 
         page_data = self.get_new_page_data()
@@ -191,7 +191,7 @@ class FunctionnalTestCase(TestCase):
         # we should get everything
         self.assertEqual(Page.objects.on_site().count(), 3)
 
-        setattr(pages_settings, "SITE_ID", 1)
+        setattr(settings, "SITE_ID", 1)
 
 
     def test_languages(self):
@@ -708,7 +708,7 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
         page = Page.objects.from_path('before', None)
         self.assertEqual(page.freeze_date, None)
-        limit = datetime.datetime.now()
+        limit = get_now()
         page.freeze_date = limit
         page.save()
 

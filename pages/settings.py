@@ -143,11 +143,6 @@ PAGE_EXTRA_PERMISSIONS = getattr(settings, 'PAGE_EXTRA_PERMISSIONS', extra)
 #     PAGE_LANGUAGE_MAPPING = language_mapping
 PAGE_LANGUAGE_MAPPING = getattr(settings, 'PAGE_LANGUAGE_MAPPING', lambda l: l)
 
-# Set SITE_ID to the id of the default ``Site`` instance to be used on
-# installations where content from a single installation is served on
-# multiple domains via the ``django.contrib.sites`` framework.
-SITE_ID = getattr(settings, 'SITE_ID', 1)
-
 # Set PAGE_USE_SITE_ID to ``True`` to make use of the ``django.contrib.sites``
 # framework
 PAGE_USE_SITE_ID = getattr(settings, 'PAGE_USE_SITE_ID', False)

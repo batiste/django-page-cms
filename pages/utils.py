@@ -15,10 +15,6 @@ from django.utils import timezone
 import re
 from datetime import datetime
 
-# TODO: remove this properly
-def now_utc():
-    return datetime.utcnow().replace(tzinfo=timezone.utc)
-
 def get_now():
     if dj_settings.USE_TZ:
         return datetime.utcnow().replace(tzinfo=timezone.utc)
@@ -29,7 +25,6 @@ JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
 JSON_PAGE_EXPORT_VERSION = 4
 # make it readable -- there are better ways to save space
 JSON_PAGE_EXPORT_INDENT = 2
-
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.

@@ -14,12 +14,14 @@ from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.managers import TreeManager
+
 from datetime import datetime
 
 ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
 
 
-class PageManager(models.Manager):
+class PageManager(TreeManager):
     """
     Page manager provide several filters to obtain pages :class:`QuerySet`
     that respect the page attributes and project settings.
@@ -57,7 +59,7 @@ class PageManager(models.Manager):
         """
         if settings.PAGE_USE_SITE_ID:
             if not site_id:
-                site_id = settings.SITE_ID
+                site_id = global_settings.SITE_ID
             return self.filter(sites=site_id)
         return self.all()
 
@@ -78,7 +80,7 @@ class PageManager(models.Manager):
         """Filter the given pages :class:`QuerySet` to obtain only published
         page."""
         if settings.PAGE_USE_SITE_ID:
-            queryset = queryset.filter(sites=settings.SITE_ID)
+            queryset = queryset.filter(sites=global_settings.SITE_ID)
 
         queryset = queryset.filter(status=self.model.PUBLISHED)
 
@@ -174,7 +176,7 @@ class PageManager(models.Manager):
                 continue
 
             page = self.from_path(s, lang, exclude_drafts=False)
-            if page:
+            if page and page.get_complete_slug(lang) == s:
                 break
             if parent_required and parent is None:
                 if '/' in s:
@@ -229,7 +231,7 @@ class PageManager(models.Manager):
 
         page.save()
 
-        if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
+        if settings.PAGE_USE_SITE_ID:
             if d['sites']:
                 for site in d['sites']:
                     try:
@@ -237,7 +239,8 @@ class PageManager(models.Manager):
                     except Site.DoesNotExist:
                         messages.append(_("Could not add site '%s' to page")
                             % (site,))
-            if not page.sites.count(): # need at least one site
+            if not settings.PAGE_HIDE_SITES and not page.sites.count():
+                # need at least one site
                 page.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
         from pages.models import Content
@@ -391,7 +394,7 @@ class ContentManager(models.Manager):
         """
         content = self.filter(type='slug', body=slug)
         if settings.PAGE_USE_SITE_ID:
-            content = content.filter(page__sites__id=settings.SITE_ID)
+            content = content.filter(page__sites__id=global_settings.SITE_ID)
         try:
             content = content.latest('creation_date')
         except self.model.DoesNotExist:

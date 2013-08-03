@@ -15,6 +15,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
+from django.conf import settings as global_settings
 
 
 from mptt.models import MPTTModel
@@ -93,7 +94,8 @@ class Page(MPTTModel):
             after this date.'''))
 
     if settings.PAGE_USE_SITE_ID:
-        sites = models.ManyToManyField(Site, default=[settings.SITE_ID],
+        sites = models.ManyToManyField(Site,
+                default=lambda: [global_settings.SITE_ID],
                 help_text=_('The site(s) the page is accessible at.'),
                 verbose_name=_('sites'))
 
@@ -146,7 +148,7 @@ class Page(MPTTModel):
         super(Page, self).save(*args, **kwargs)
         # fix sites many-to-many link when the're hidden from the form
         if settings.PAGE_HIDE_SITES and self.sites.count() == 0:
-            self.sites.add(Site.objects.get(pk=settings.SITE_ID))
+            self.sites.add(Site.objects.get(pk=global_settings.SITE_ID))
 
     def _get_calculated_status(self):
         """Get the calculated status of the page based on
@@ -579,14 +581,10 @@ class Content(models.Model):
         return u"%s :: %s" % (self.page.slug(), self.body[0:15])
 
 
-page_alias_keywords = {}
-if settings.PAGE_HIDE_SITES:
-    page_alias_keywords = {'limit_choices_to':{'sites':settings.SITE_ID}}
-
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
-        verbose_name=_('page'), **page_alias_keywords)
+        verbose_name=_('page'))
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
 

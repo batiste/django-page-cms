@@ -281,7 +281,7 @@ $(function () {
             }
 
             $(line).css("opacity", "1");
-            indicator.hide();
+            $(".drag-indicator").hide();
             down = false;
             drag_initiated = false;
             lines_position = [];

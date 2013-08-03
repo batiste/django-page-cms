@@ -164,7 +164,7 @@ $(function () {
                 changelist.removeClass('insert-add insert-move');
                 $('tr', changelist).removeClass('selected insertable');
                 $('.expand-collapse', row).remove();
-                $('.insert', row).after('<img class="insert-loading" src="'+page_media_url+'images/loading.gif" alt="Loading" />');
+                $('.insert', row).after('<img class="insert-loading" src="'+static_url+'pages/images/loading.gif" alt="Loading" />');
 
                 if (action == 'move') {
                     move_page(selected_page, position, id);

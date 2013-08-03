@@ -5,7 +5,7 @@
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/urlify.js"></script>
-<script type="text/javascript">var media_url = "{{ MEDIA_URL }}"; var page_media_url = "{{ PAGES_MEDIA_URL }}"</script>
+<script type="text/javascript">var static_url = "{{ STATIC_URL }}";</script>
 <script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages_form.js"></script>
 {% endblock %}
 

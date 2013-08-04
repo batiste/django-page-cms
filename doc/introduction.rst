@@ -64,11 +64,11 @@ Here is the list of features you can enable/disable:
 Dependencies & Compatibility
 ============================
 
-  * Django 1.1.1, Django 1.0 with older release (1.0.5)
-  * Python 2.3.
+  * Django 1.5
+  * Python 2.6
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
-  * `django-mptt-2 <http://github.com/batiste/django-mptt/>`_
+  * `django-mptt <http://github.com/batiste/django-mptt/>`_
   * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
@@ -87,12 +87,12 @@ I recommend to `create a clone on github  <http://github.com/batiste/django-page
 make your modifications in your branch. There is a things that is nice to do:
 
   * Add your name to the AUTHORS file.
-  * Follow the pep08, and the 79 characters rules.
+  * Follow the pep08, and the ~79 characters rules.
   * Add new features in the `doc/changelog.rst` file.
   * Document how the user might use a new feature.
   * It's better if a new feature is not activated by default but with a new setting.
   * Be careful of performance regresssion.
-  * Write tests so the test coverage stay over 90%.
+  * Write tests for any new code.
   * Every new CMS setting should start with PAGE_<something>
   * Every new template_tag should start with pages_<something>
 
@@ -100,7 +100,7 @@ make your modifications in your branch. There is a things that is nice to do:
 Ask for help
 ============
 
-`Gerbi CMS Google Group <http://groups.google.com/group/django-page-cms>`_
+`Github issues https://github.com/batiste/django-page-cms/issues`_
 
 Test it
 -------

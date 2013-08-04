@@ -13,6 +13,7 @@ Release 1.5.0
     * Haystack 2.0 compatibility (not tested)
     * Cleanup the admin JavaScript files
     * Possibility to Substituting a custom User model (new in Django 1.5)
+    * Remove the dependency on BeautifulSoup
 
 Release 1.4.3
 ==============

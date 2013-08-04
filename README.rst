@@ -19,5 +19,5 @@ Documentation
 
 For more information about the product:
 
-http://packages.python.org/django-page-cms/
+http://pythonhosted.org/django-page-cms/
 

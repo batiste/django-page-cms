@@ -7,11 +7,12 @@ This file describe new features and incompatibilites between released version of
 Release 1.5.0
 
     * Full compatibility with Django 1.5
-    * New Drag and Drop interaction in the admin
+    * New Drag and Drop interaction in the admin (jquery.ui not needed anymore)
     * New placeholder JsonPlaceholderNode
     * New settings PAGE_IMPORT_ENABLED, PAGE_EXPORT_ENABLED and PAGE_AUTOMATIC_SLUG_RENAMING
     * Haystack 2.0 compatibility (not tested)
-    * 
+    * Cleanup the admin JavaScript files
+    * Possibility to Substituting a custom User model (new in Django 1.5)
 
 Release 1.4.3
 ==============

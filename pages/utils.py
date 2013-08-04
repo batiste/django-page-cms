@@ -225,43 +225,6 @@ def normalize_url(url):
         url = url[0:len(url) - 1]
     return url
 
-PAGE_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
-
-
-def filter_link(content, page, language, content_type):
-    """Transform the HTML link href to point to the targeted page
-    absolute URL.
-
-     >>> filter_link('<a class="page_1">hello</a>', page, 'en-us', body)
-     '<a href="/pages/page-1" class="page_1">hello</a>'
-    """
-    if not settings.PAGE_LINK_FILTER:
-        return content
-    if content_type in ('title', 'slug'):
-        return content
-    from BeautifulSoup import BeautifulSoup
-    tree = BeautifulSoup(content)
-    tags = tree.findAll('a')
-    if len(tags) == 0:
-        return content
-    for tag in tags:
-        tag_class = tag.get('class', False)
-        if tag_class:
-            # find page link with class 'page_ID'
-            result = PAGE_CLASS_ID_REGEX.search(content)
-            if result and result.group:
-                try:
-                    # TODO: try the cache before fetching the Page object
-                    from pages.models import Page
-                    target_page = Page.objects.get(pk=int(result.group(1)))
-                    tag['href'] = target_page.get_url_path(language)
-                except Page.DoesNotExist:
-                    cache.set(Page.PAGE_BROKEN_LINK_KEY % page.id, True)
-                    tag['class'] = 'pagelink_broken'
-    return unicode(tree)
-
-
-
 def pages_to_json(queryset):
     """
     Return a JSON string export of the pages in queryset.

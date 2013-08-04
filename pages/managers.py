@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
 from pages import settings
-from pages.utils import normalize_url, filter_link
+from pages.utils import normalize_url
 from pages.http import get_slug
 
 from django.db import models, connection
@@ -377,13 +377,12 @@ class ContentManager(models.Manager):
             cache.set(key, content_dict)
 
         if language in content_dict and content_dict[language]:
-            return filter_link(content_dict[language], page, language, ctype)
+            return content_dict[language]
 
         if language_fallback:
             for lang in settings.PAGE_LANGUAGES:
                 if lang[0] in content_dict and content_dict[lang[0]]:
-                    return filter_link(content_dict[lang[0]], page, lang[0],
-                        ctype)
+                    return content_dict[lang[0]]
         return ''
 
     def get_content_slug_by_slug(self, slug):

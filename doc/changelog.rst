@@ -5,6 +5,7 @@
 This file describe new features and incompatibilites between released version of the CMS.
 
 Release 1.5.0
+==============
 
     * Full compatibility with Django 1.5
     * New Drag and Drop interaction in the admin (jquery.ui not needed anymore)

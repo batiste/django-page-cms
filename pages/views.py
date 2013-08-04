@@ -194,9 +194,9 @@ class Details(object):
             return view(request, *args, **kwargs)
 
 
-# The view view instance. It's the same object for
+# The Details view instance. It's the same object for
 # everybody so be careful to maintain it thread safe.
-# ie: NO self.attrbitute = something
+# ie: NO self.attribute = something
 details = Details()
 
 

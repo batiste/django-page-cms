@@ -69,7 +69,7 @@ def auto_render(func):
     form : (template name, context) instead of a ``HttpRequest`` object.
     """
     import warnings
-    warnings.warn(DeprecationWarning("auto_render decorator is a deprecated."))
+    warnings.warn(DeprecationWarning("auto_render decorator is deprecated."))
     def auto_render_decorator(request, *args, **kwargs):
         template_override = kwargs.pop('template_name', None)
         only_context = kwargs.pop('only_context', False)

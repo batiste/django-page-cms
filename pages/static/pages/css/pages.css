@@ -184,6 +184,11 @@ html[dir=rtl] .change-list tbody .title-cell .title:hover {
 html[dir=rtl] .change-list .expand-collapse  {
     left: auto; right:4px;
 }
+
+#change-page-content {
+  margin-left:320px;
+}
+
 .change-list .expand,
 .change-list .expanded .collapse,
 .change-list .loading .expand-loading {

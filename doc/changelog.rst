@@ -4,6 +4,15 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.5.0
+
+    * Full compatibility with Django 1.5
+    * New Drag and Drop interaction in the admin
+    * New placeholder JsonPlaceholderNode
+    * New settings PAGE_IMPORT_ENABLED, PAGE_EXPORT_ENABLED and PAGE_AUTOMATIC_SLUG_RENAMING
+    * Haystack 2.0 compatibility (not tested)
+    * 
+
 Release 1.4.3
 ==============
 

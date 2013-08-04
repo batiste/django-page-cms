@@ -1,6 +1,12 @@
 /* Initialization of the change_form page - this script is run once everything is ready. */
+"use strict";
 
 $(function() {
+
+    if(!$("body").hasClass("change-form")) {
+      return;
+    }
+
     // Hide form rows containing only hidden inputs
     $('.form-row').each(function() {
         if (!$('p, label, select, input:not([type=hidden])', this).length) {

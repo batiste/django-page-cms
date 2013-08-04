@@ -39,7 +39,8 @@ class PageAdmin(admin.ModelAdmin):
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target',
-        'position', 'freeze_date']
+        'position', 'freeze_date', 'template', 'language',
+        'redirect_to', 'redirect_to_url']
 
     if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
         general_fields.append('sites')
@@ -63,21 +64,13 @@ class PageAdmin(admin.ModelAdmin):
         general_fields.append('delegate_to')
         insert_point = general_fields.index('status') + 1
 
-    normal_fields = ['language']
     page_templates = settings.get_page_templates()
-    if len(page_templates) > 0:
-        normal_fields.append('template')
-    normal_fields.append('redirect_to')
-    normal_fields.append('redirect_to_url')
+
     fieldsets = (
         [_('General'), {
             'fields': general_fields,
             'classes': ('module-general',),
         }],
-        (_('Options'), {
-            'fields': normal_fields,
-            'classes': ('module-options',),
-        }),
     )
 
     if settings.PAGE_EXPORT_ENABLED:
@@ -93,8 +86,9 @@ class PageAdmin(admin.ModelAdmin):
         js = [join(settings.PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
             'javascript/jquery.rte.js',
-            'javascript/jquery.query.js',
             'javascript/pages.js',
+            'javascript/pages_list.js',
+            'javascript/pages_form.js',
         )]
 
     def urls(self):

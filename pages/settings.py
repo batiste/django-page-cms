@@ -77,6 +77,7 @@ PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
                                     False)
 
 # Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to rename automaticaly a duplicate slug
+# another page as an identic slug
 PAGE_AUTOMATIC_SLUG_RENAMING = getattr(settings, 'PAGE_AUTOMATIC_SLUG_RENAMING',
                                     False)
 
@@ -225,5 +226,7 @@ PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
 # execute manage.py test
 PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)
 
-PAGE_IMPORT_ENABLED = getattr(settings, 'PAGE_IMPORT_ENABLED', True)
-PAGE_EXPORT_ENABLED = getattr(settings, 'PAGE_EXPORT_ENABLED', True)
+# Import / Export in admin interface
+PAGE_IMPORT_ENABLED = getattr(settings, 'PAGE_IMPORT_ENABLED', False)
+PAGE_EXPORT_ENABLED = getattr(settings, 'PAGE_EXPORT_ENABLED', False)
+

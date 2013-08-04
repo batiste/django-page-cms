@@ -6,7 +6,6 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/urlify.js"></script>
 <script type="text/javascript">var static_url = "{{ STATIC_URL }}";</script>
-<script type="text/javascript" src="{{ PAGES_MEDIA_URL }}javascript/pages_form.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -33,40 +32,25 @@
     <form id="page_form" {% if has_file_field %}enctype="multipart/form-data" {% endif %} action="?language={{ request.GET.language }}{%if request.GET.target %}&amp;target={{ request.GET.target }}{% endif %}&amp;{%if request.GET.target %}position={{ request.GET.position }}{% endif %}" method="post">
         {% csrf_token %}
         <div class="sidebar">
+
         {% for fieldset in adminform %}
             {% include "admin/pages/page/includes/fieldset.html" %}
 
             {% if forloop.first %}
-                {% if not add and traduction_languages %}
-                <fieldset class="module module-translation-helper aligned">
-                    <h2>{% trans "Translation helper" %}</h2>
-                    <div class="form-row">
-                        <label for="translation-helper-select" class="required">{% trans "Language:" %}</label>
-                        <select id="translation-helper-select">
-                            <option value="" selected="selected">---------</option>
-                            {% for lang in traduction_languages %}
-                                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-                            {% endfor %}
-                        </select>
-                        {% comment %}A little "smart" trick here to have this right column{% endcomment %}
-                        <div id="translation-helper-content"></div>
-                    </div>
-                </fieldset>
-                {% endif %}
-
                 {% comment %}Close sidebar, open content{% endcomment %}
                 </div>
-                <div class="content">
+                <div id="change-page-content">
             {% endif %}
-
         {% endfor %}
-        </div>{% comment %}Close content{% endcomment %}
 
-        <div style="clear:both">
+
+        <div>
         {% for inline_admin_formset in inline_admin_formsets %}
             {% include inline_admin_formset.opts.template %}
         {% endfor %}
         </div>
+
+        </div>{% comment %}Close content{% endcomment %}
 
         {% submit_row %}
     </form>

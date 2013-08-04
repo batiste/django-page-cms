@@ -5,6 +5,8 @@ from django.forms import ModelForm
 from django.core.urlresolvers import get_mod_func
 import django
 
+# TODO: get rid of this
+# What is wrong with https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
 def get_connected():
     if not settings.PAGE_CONNECTED_MODELS:
         return []

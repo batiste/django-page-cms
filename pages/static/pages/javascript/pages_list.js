@@ -2,6 +2,11 @@
 "use strict";
 
 $(function () {
+
+    if(!$("body").hasClass("change-list")) {
+      return;
+    }
+
     var action = false;
     var selected_page = false;
     var changelist = $('#changelist');

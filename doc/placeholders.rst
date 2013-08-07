@@ -166,7 +166,7 @@ If you want to create your own new type of placeholder,
 you can simply subclass the :class:`PlaceholderNode <pages.placeholders.PlaceholderNode>`::
 
     from pages.placeholders import PlaceholderNode
-    from pages.templatetags.page_tags import parse_placeholder
+    from pages.placeholders import parse_placeholder
     register = template.Library()
 
     class ContactFormPlaceholderNode(PlaceholderNode):

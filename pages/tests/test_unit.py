@@ -167,6 +167,26 @@ class UnitTestCase(TestCase):
         except TemplateSyntaxError:
             pass
 
+
+    def test_placeholder_quoted_name(self):
+        """Test placeholder name with quotes."""
+        page = self.new_page()
+        context = Context({'current_page': page, 'lang': 'en-us'})
+        placeholder = PlaceholderNode("test name")
+        placeholder.save(page, 'en-us', 'some random value', False)
+
+        pl1 = """{% load pages_tags %}{% placeholder "test name" as hello %}{{ hello }}"""
+        template = get_template_from_string(pl1)
+        self.assertEqual(template.render(context), 'some random value')
+
+        placeholder = PlaceholderNode("with accent éàè")
+        placeholder.save(page, 'en-us', 'some random value', False)
+
+        pl1 = """{% load pages_tags %}{% placeholder "with accent éàè" as hello %}{{ hello }}"""
+        template = get_template_from_string(pl1)
+        self.assertEqual(template.render(context), 'some random value')
+
+
     def test_parsed_template(self):
         """Test the parsed template syntax."""
         setattr(settings, "DEBUG", True)

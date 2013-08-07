@@ -15,6 +15,7 @@ from django.forms import TextInput
 from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
+from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string
 
 import logging
@@ -35,7 +36,10 @@ def parse_placeholder(parser, token):
     error_string = '%r tag requires at least one argument' % bits[0]
     if count <= 1:
         raise TemplateSyntaxError(error_string)
-    name = bits[1]
+    try:
+        name = unescape_string_literal(bits[1])
+    except ValueError:
+        name = bits[1]
     remaining = bits[2:]
     params = {}
     simple_options = ['parsed', 'inherited', 'untranslated']

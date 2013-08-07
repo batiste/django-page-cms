@@ -4,8 +4,8 @@ Introduction
 
 Gerbi CMS enable you to create and administrate hierarchical pages in a simple and powerful way.
 
-Gerbi CMS is based around a placeholders concept. A placeholder is special template tag that
-you use in your page templates. Every time you add a placeholder in your template  a field
+Gerbi CMS is based around a placeholders concept. A placeholder is a template tag that
+you can use in your page's templates. Every time you add a placeholder in your template  a field
 dynamically appears in the page admin.
 
 The project code repository is found at this address: http://github.com/batiste/django-page-cms
@@ -18,15 +18,6 @@ Screenshot
 ============
 
 .. image:: admin-screenshot1.png
-
-Demo
-====
-
-This admin interface is no up to date, but could give you an idea of what the software is doing:
-
- * admin : http://pagesdemo.piquadrat.ch/admin/
- * frontend : http://pagesdemo.piquadrat.ch/pages/
-
 
 Key features
 ============
@@ -73,7 +64,6 @@ Dependencies & Compatibility
   * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Gerbi CMS is shipped with jQuery.
-  * Gerbi CMS works well with `django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
 
 .. note::
@@ -84,13 +74,13 @@ How to contribute
 ==================
 
 I recommend to `create a clone on github  <http://github.com/batiste/django-page-cms>`_ and
-make your modifications in your branch. There is a things that is nice to do:
+make modifications in your branch. Please follow those instructions:
 
   * Add your name to the AUTHORS file.
   * Follow the pep08, and the ~79 characters rules.
   * Add new features in the `doc/changelog.rst` file.
   * Document how the user might use a new feature.
-  * It's better if a new feature is not activated by default but with a new setting.
+  * If a new feature is introduced, it should have a setting disabled by default.
   * Be careful of performance regresssion.
   * Write tests for any new code.
   * Every new CMS setting should start with PAGE_<something>
@@ -117,12 +107,10 @@ Install the dependencies::
 
 And then, run the development server::
 
-
     $ cd example/
     $ python manage.py syncdb
     $ python manage.py build_static
     $ python manage.py manage.py runserver
-
 
 Gerbi CMS try to keep the code base stable. The test coverage is higher
 than 80% and we try to keep it this way. To run the test suite::
@@ -137,10 +125,10 @@ than 80% and we try to keep it this way. To run the test suite::
 Handling images and files
 ---------------------------
 
-Gerbi include a image placeholder for basic needs. For a more advanced
+Gerbi include a image and a file placeholder for basic needs. For a more advanced
 files browser you could use django-filebrowser:
 
-  * http://code.google.com/p/django-filebrowser/
+  * https://github.com/sehmaschine/django-filebrowser
 
 Once the application installed try to register the `FileBrowseInput` widget to make it
 available to your placeholders.

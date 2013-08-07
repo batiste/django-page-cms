@@ -14,7 +14,7 @@ use the template inheritance: this CMS administration will still behave as inten
 
 The syntax for a placeholder tag is the following::
 
-    {% placeholder <name> [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
+    {% placeholder "<name>" [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
 
 Enable the placeholder tags
@@ -37,7 +37,7 @@ to get the content of the placeholder.
 
 Template syntax example::
 
-    {% placeholder main_menu on root_page %}
+    {% placeholder "main menu" on root_page %}
 
 the **widget** option
 ----------------------
@@ -57,7 +57,7 @@ widget of your choice. Widgets need to be registered before you can use them in 
 
 Template syntax example::
 
-    {% placeholder body with NewWidget %}
+    {% placeholder "body" with NewWidget %}
 
 
 .. note::
@@ -72,7 +72,7 @@ a variable of your choice will be defined within the template's context.
 
 Template syntax example::
 
-    {% placeholder image as image_src %}
+    {% placeholder "image" as image_src %}
     <img src="{{ img_src }}" alt=""/>
 
 The **parsed** keyword
@@ -85,7 +85,7 @@ a note in the admin interface noting its ability to be evaluated as template.
 
 Template syntax example::
 
-    {% placeholder special-content parsed %}
+    {% placeholder "special content" parsed %}
 
 The **inherited** keyword
 -------------------------
@@ -96,7 +96,7 @@ content for the current page.
 
 Template syntax example::
 
-    {% placeholder right-column inherited %}
+    {% placeholder "right column" inherited %}
 
 The **untranslated** keyword
 -----------------------------
@@ -107,16 +107,16 @@ placeholder that should remain the same in every language.
 
 Template syntax example::
 
-    {% placeholder logo untranslated %}
+    {% placeholder "logo" untranslated %}
 
 Examples of other valid syntaxes
 ------------------------------------
 
 This is a list of different possible syntaxes for this template tag::
 
-    {% placeholder title with TextIntput %}
-    {% placeholder logo untranslated on root_page %}
-    {% placeholder right-column inherited as right_column parsed %}
+    {% placeholder "title" with TextIntput %}
+    {% placeholder "logo" untranslated on root_page %}
+    {% placeholder "right column" inherited as right_column parsed %}
 
     ...
     <div class="my_funky_column">{{ right_column|safe }}</div>
@@ -127,7 +127,7 @@ Image placeholder
 
 There is a special placeholder for images::
 
-    {% imageplaceholder body-image as imgsrc %}
+    {% imageplaceholder "body image" as imgsrc %}
     {% if imgsrc %}
         <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
     {% endif %}
@@ -153,7 +153,7 @@ Contact placeholder
 
 If you want to include a simple contact form in your page, there is a contact placeholder::
 
-    {% contactplaceholder contact %}
+    {% contactplaceholder "contact" %}
 
 This placeholder use ´settings.ADMINS´ for recipients email. The template used to render
 the contact form is ´pages/contact.html´.
@@ -248,35 +248,35 @@ TextInput
 
 A simple line input::
 
-    {% placeholder [name] with TextInput %}
+    {% placeholder "<name>" with TextInput %}
 
 Textarea
 --------
 
 A multi line input::
 
-    {% placeholder [name] with Textarea %}
+    {% placeholder "<name>" with Textarea %}
 
 AdminTextInput
 --------------
 
 A simple line input with Django admin CSS styling (better for larger input fields)::
 
-    {% placeholder [name] with AdminTextInput %}
+    {% placeholder "<name>" with AdminTextInput %}
 
 AdminTextarea
 -------------
 
 A multi line input with Django admin CSS styling::
 
-    {% placeholder [name] with AdminTextarea %}
+    {% placeholder "<name>" with AdminTextarea %}
 
 FileBrowseInput
 ---------------
 
 A file browsing widget::
 
-    {% placeholder [name] with FileBrowseInput %}
+    {% placeholder "<name>" with FileBrowseInput %}
 
 .. note::
 
@@ -288,7 +288,7 @@ RichTextarea
 
 A simple `Rich Text Area Editor <http://batiste.dosimple.ch/blog/posts/2007-09-11-1/rich-text-editor-jquery.html>`_ based on jQuery::
 
-    {% placeholder [name] with RichTextarea %}
+    {% placeholder "<name>" with RichTextarea %}
 
 .. image:: http://rte-light.googlecode.com/svn/trunk/screenshot.png
 
@@ -297,7 +297,7 @@ WYMEditor
 
 A complete jQuery Rich Text Editor called `wymeditor <http://www.wymeditor.org/>`_::
 
-    {% placeholder [name] with WYMEditor %}
+    {% placeholder "<name>" with WYMEditor %}
 
 .. image:: http://drupal.org/files/images/wymeditor.preview.jpg
 
@@ -306,7 +306,7 @@ CKEditor
 
 A complete JavaScript Rich Text Editor called `CKEditor <http://ckeditor.com/>`_::
 
-    {% placeholder [name] with CKEditor %}
+    {% placeholder "<name>" with CKEditor %}
 
 .. image:: http://drupal.org/files/images/ckeditor_screenshot.png
 
@@ -315,7 +315,7 @@ markItUpMarkdown
 
 markdown editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
 
-    {% placeholder [name] with markItUpMarkdown %}
+    {% placeholder "<name>" with markItUpMarkdown %}
 
 .. image:: http://www.webdesignerdepot.com/wp-content/uploads/2008/11/05_markitup.jpg
 
@@ -324,7 +324,7 @@ markItUpHTML
 
 A HTML editor based on `markitup <http://markitup.jaysalvat.com/home/>`_::
 
-    {% placeholder [name] with markItUpHTML %}
+    {% placeholder "<name>" with markItUpHTML %}
 
 .. image:: http://t37.net/files/markitup-081127.jpg
 
@@ -347,7 +347,7 @@ To do that follow carefully `those install instructions <http://code.google.com/
 
 Usage::
 
-    {% placeholder [name] with TinyMCE %}
+    {% placeholder "<name>" with TinyMCE %}
 
 .. image:: http://mgccl.com/gallery2/g2data/albums/2006/11/tinymce.png
 
@@ -363,7 +363,7 @@ If you want the full version you can get it there::
 
 Usage::
 
-    {% placeholder [name] with EditArea %}
+    {% placeholder "<name>" with EditArea %}
 
 .. image:: http://sourceforge.net/dbimage.php?id=69125&image.png
 

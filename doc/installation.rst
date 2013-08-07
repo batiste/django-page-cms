@@ -59,12 +59,6 @@ If you are not using the source code version of the application then install it 
 
     $ sudo easy_install django-page-cms
 
-.. note::
-
-    Django-Tagging and Django-mptt maybe required to be installed by hand or with subversion
-    because the available packages are not compatible with django 1.0.
-
-
 Urls
 ====
 
@@ -240,7 +234,7 @@ If you want to use it set ``PAGE_TAGGING`` at ``True`` into your setting file an
         'django.contrib.admin',
         'django.contrib.sites',
         'mptt',
-        'tagging',
+        'taggit',
         'pages',
         ...
     )

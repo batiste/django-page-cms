@@ -4,6 +4,15 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.5.1
+==============
+
+Released ont the 7th of august 2013.
+
+    * Documentation fixes.
+    * Dependencies on html5lib was incorrect.
+    * Placeholder names can now be any string if quotes are used. "éà àü" is a valid placeholder name.
+
 Release 1.5.0
 ==============
 

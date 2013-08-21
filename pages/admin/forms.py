@@ -74,12 +74,14 @@ it must be unique among the other pages of the same level.')
         if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
 
             def is_slug_safe(slug):
+                content = Content.objects.get_content_slug_by_slug(slug)
+                if content is None:
+                    return True
                 if self.instance.id:
-                    return Content.objects.exclude(page=self.instance).filter(
-                                  body=slug, type="slug").count() == 0
+                    if content.page.id == self.instance.id:
+                        return True
                 else:
-                    return Content.objects.filter(
-                                  body=slug, type="slug").count() == 0
+                    return False
             
 
             if is_slug_safe(slug):

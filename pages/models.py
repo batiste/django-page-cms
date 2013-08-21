@@ -67,6 +67,7 @@ class Page(MPTTModel):
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_url"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
+    ANCESTORS_KEY = 'ancestors_%d'
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 
@@ -308,7 +309,14 @@ class Page(MPTTModel):
             url = u''
         else:
             url = u'%s' % self.slug(language)
-        for ancestor in self.get_ancestors(ascending=True):
+
+        key = self.ANCESTORS_KEY % self.id
+        ancestors = cache.get(key, None)
+        if ancestors is None:
+            ancestors = self.get_ancestors(ascending=True)
+            cache.set(key, ancestors)
+
+        for ancestor in ancestors:
             url = ancestor.slug(language) + u'/' + url
 
         self._complete_slug[language] = url

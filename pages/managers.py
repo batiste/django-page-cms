@@ -337,7 +337,13 @@ class ContentManager(models.Manager):
         }
         if page.freeze_date:
             params['creation_date__lte'] = page.freeze_date
-        return  self.filter(**params).latest()
+        key = 'cont_obj_%d_%s_%s_%s' % (page.id, language, ctype, page.freeze_date)
+        content_obj = cache.get(key, None)
+        if content_obj is None:
+            content_obj = self.filter(**params).latest()
+            cache.set(key, content_obj)
+
+        return content_obj
 
     def get_content(self, page, language, ctype, language_fallback=False):
         """Gets the latest content string for a particular page, language and

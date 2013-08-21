@@ -93,6 +93,12 @@ class PageManager(TreeManager):
                 Q(publication_end_date__isnull=True)
             )
 
+        # Break the key naming scheme, eg hash(queryset.query) fails
+        key = "QRY: '%s'" % queryset.query
+        qs = cache.get(key, None)
+        if qs is None:
+            cache.set(key, queryset)
+            return qs
         return queryset
 
     def published(self):

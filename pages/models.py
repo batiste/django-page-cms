@@ -232,7 +232,13 @@ class Page(MPTTModel):
 
     def is_first_root(self):
         """Return ``True`` if this page is the first root pages."""
-        if self.parent:
+        parent_cache_key = 'PARENT_FOR_%d' % self.id
+        has_parent = cache.get(parent_cache_key, None)
+        if has_parent is None:
+            has_parent = not not self.parent
+            cache.set(parent_cache_key, has_parent)
+
+        if has_parent:
             return False
         if self._is_first_root is not None:
             return self._is_first_root

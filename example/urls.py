@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     # make tests fail if a backend is not present on the system
-    (r'^search/', include('haystack.urls')),
+    url(r'^search/', include('haystack.urls'), name='haystack_search'),
 
 )
 

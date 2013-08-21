@@ -101,8 +101,8 @@ class PageManager(TreeManager):
         qs = cache.get(key, None)
         if qs is None:
             cache.set(key, queryset)
-            return qs
-        return queryset
+            return queryset
+        return qs
 
     def published(self):
         """Creates a :class:`QuerySet` of published

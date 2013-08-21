@@ -367,8 +367,13 @@ class Page(MPTTModel):
         :param fallback: if ``True``, the content will also be searched in \
         other languages.
         """
-        return Content.objects.get_content(self, language, ctype,
-            language_fallback)
+        key = 'content_%d_%s_%s_%s' % (self.id, language, ctype, language_fallback)
+        content = cache.get(key, None)
+        if content is None:
+            content = Content.objects.get_content(self, language, ctype,
+                language_fallback)
+            cache.set(key, content)
+        return content
 
     def expose_content(self):
         """Return all the current content of this page into a `string`.

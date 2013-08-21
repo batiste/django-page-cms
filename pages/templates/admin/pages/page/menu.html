@@ -1,4 +1,5 @@
 {% load pages_tags i18n cache %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.query-2.1.7.js"></script>
 
 <tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }} draggable">
     <td class="selection-cell action-checkbox-column"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>

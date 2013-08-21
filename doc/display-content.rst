@@ -136,7 +136,7 @@ help if you want to override some default behavior::
 
         def extra_context(self, request, context):
             lastest_news = News.object.all()
-            return {'news': lastest_news}
+            context.update({'news': lastest_news})
 
     details = NewsView()
 

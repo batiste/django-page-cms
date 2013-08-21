@@ -173,6 +173,15 @@ class Page(MPTTModel):
         return self.calculated_status in (self.PUBLISHED, self.HIDDEN)
     visible = property(_visible)
 
+    def get_children(self):
+        """Cache superclass result"""
+        key = 'children_%d' % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = super(Page, self).get_children()
+            cache.set(key, children)
+        return children
+
     def published_children(self):
         """Return a :class:`QuerySet` of published children page"""
         return Page.objects.filter_published(self.get_children())

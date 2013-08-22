@@ -20,6 +20,7 @@ def change_status(request, page_id):
     if perm and request.method == 'POST':
         page = Page.objects.get(pk=page_id)
         page.status = int(request.POST['status'])
+        page.invalidate()
         page.save()
         return HttpResponse(unicode(page.status))
     raise Http404

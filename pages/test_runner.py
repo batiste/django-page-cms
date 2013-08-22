@@ -92,7 +92,7 @@ def build_suite():
 
 
 if __name__ == '__main__':
-    runner = PageTestSuiteRunner()
+    runner = PageTestSuiteRunner(failfast=False)
     if len(sys.argv) > 1:
         runner.run_tests(test_labels=(sys.argv[1], ))
     else:

@@ -68,6 +68,7 @@ class Page(MPTTModel):
     PAGE_URL_KEY = "page_%d_url"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
     ANCESTORS_KEY = 'ancestors_%d'
+    CHILDREN_KEY = 'children_%d'
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 
@@ -175,7 +176,7 @@ class Page(MPTTModel):
 
     def get_children(self):
         """Cache superclass result"""
-        key = 'children_%d' % self.id
+        key = self.CHILDREN_KEY % self.id
         children = cache.get(key, None)
         if children is None:
             children = super(Page, self).get_children()
@@ -200,6 +201,7 @@ class Page(MPTTModel):
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         cache.delete('PAGE_FIRST_ROOT_ID')
+        cache.delete(self.CHILDREN_KEY % self.id)
         self._languages = None
         self._complete_slug = None
         self._content_dict = dict()

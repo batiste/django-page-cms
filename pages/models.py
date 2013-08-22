@@ -69,6 +69,7 @@ class Page(MPTTModel):
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
     ANCESTORS_KEY = 'ancestors_%d'
     CHILDREN_KEY = 'children_%d'
+    PUB_CHILDREN_KEY = 'pub_children_%d'
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 
@@ -185,11 +186,21 @@ class Page(MPTTModel):
 
     def published_children(self):
         """Return a :class:`QuerySet` of published children page"""
-        return Page.objects.filter_published(self.get_children())
+        key = self.PUB_CHILDREN_KEY % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = Page.objects.filter_published(self.get_children())
+            cache.set(key, children)
+        return children
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
-        return Page.objects.filter_published(self.get_children())
+        key = self.PUB_CHILDREN_KEY % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = Page.objects.filter_published(self.get_children())
+            cache.set(key, children)
+        return children
 
     def get_date_ordered_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page ordered
@@ -202,6 +213,7 @@ class Page(MPTTModel):
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         cache.delete('PAGE_FIRST_ROOT_ID')
         cache.delete(self.CHILDREN_KEY % self.id)
+        cache.delete(self.PUB_CHILDREN_KEY % self.id)
         # XXX: Should this have a depth limit?
         if self.parent_id:
             self.parent.invalidate()

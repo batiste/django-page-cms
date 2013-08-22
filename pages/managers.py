@@ -93,16 +93,7 @@ class PageManager(TreeManager):
                 Q(publication_end_date__isnull=True)
             )
 
-        # Try working around the length limitation
-        q = unicode(queryset.query)
-        q = hash(q)
-
-        key = "QRY_%d" % q
-        qs = cache.get(key, None)
-        if qs is None:
-            cache.set(key, queryset)
-            return queryset
-        return qs
+        return queryset
 
     def published(self):
         """Creates a :class:`QuerySet` of published

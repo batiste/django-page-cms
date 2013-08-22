@@ -202,6 +202,9 @@ class Page(MPTTModel):
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         cache.delete('PAGE_FIRST_ROOT_ID')
         cache.delete(self.CHILDREN_KEY % self.id)
+        # XXX: Should this have a depth limit?
+        if self.parent_id:
+            self.parent.invalidate()
         self._languages = None
         self._complete_slug = None
         self._content_dict = dict()

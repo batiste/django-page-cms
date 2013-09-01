@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
 from pages.models import Page, Content
-from pages.placeholders import PlaceholderNode
+from pages.placeholders import PlaceholderNode, get_filename
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
 from pages.http import get_language_from_request, get_slug
@@ -773,3 +773,11 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
+    
+    def test_get_filename(self):        
+        placeholder = PlaceholderNode("placeholdername")
+        page = self.new_page({'slug': 'page1'})
+        data = "myfile.pdf"
+        self.assertTrue(data in get_filename(page, placeholder, data))
+        self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, data))
+        self.assertTrue(placeholder.name in get_filename(page, placeholder, data))

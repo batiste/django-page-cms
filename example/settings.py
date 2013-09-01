@@ -105,6 +105,7 @@ INSTALLED_APPS = (
     'authority',
     # haystack change coverage score report by importing modules
     'haystack',
+    'south',
 )
 
 PAGE_TINYMCE = False
@@ -169,9 +170,11 @@ PAGE_USE_SITE_ID = False
 # haystack dev version
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-        'INCLUDE_SPELLING': True,
+        # I just want to silence haystack
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        #'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        #'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        #'INCLUDE_SPELLING': True,
     },
 }
 

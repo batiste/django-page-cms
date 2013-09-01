@@ -115,7 +115,11 @@ And then, run the development server::
 Gerbi CMS try to keep the code base stable. The test coverage is higher
 than 80% and we try to keep it this way. To run the test suite::
 
-    python setup.py test
+    $ python setup.py test
+
+Or even better run the custom built test runner::
+
+    $ python pages/test_runner.py
 
 .. note::
 

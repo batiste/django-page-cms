@@ -232,7 +232,7 @@ without subclassing it, you can just you create a valid Django Widget that take 
 Create a file named widgets (or whathever you want) somewhere in one of your project's application
 and then you can simply use the placeholder syntax::
 
-    {% placeholder custom_widget_example CustomTextarea parsed  %}
+    {% placeholder custom_widget_example CustomTextarea %}
 
 More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
 

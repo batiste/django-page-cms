@@ -207,6 +207,14 @@ class Page(MPTTModel):
         by publication date."""
         return self.get_children_for_frontend().order_by('-publication_date')
 
+    def move_to(self, target, position='first-child'):
+        """Invalidate cache when moving"""
+
+        # Invalidate both in case position matters, otherwise only target is needed
+        self.invalidate()
+        target.invalidate()
+        super(Page, self).move_to(target, position=position)
+
     def invalidate(self):
         """Invalidate cached data for this page."""
 

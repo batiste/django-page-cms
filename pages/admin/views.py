@@ -124,8 +124,7 @@ def move_page(request, page_id, extra_context=None):
             # to display this message
             # _('Page could not been moved.')
         else:
-            page.invalidate()
-            target.invalidate()
+            # move_to invalidates cache on a model level
             from mptt.exceptions import InvalidMove
             invalid_move = False
             try:

@@ -20,6 +20,7 @@ def change_status(request, page_id):
     if perm and request.method == 'POST':
         page = Page.objects.get(pk=page_id)
         page.status = int(request.POST['status'])
+        page.invalidate()
         page.save()
         return HttpResponse(unicode(page.status))
     raise Http404
@@ -123,8 +124,7 @@ def move_page(request, page_id, extra_context=None):
             # to display this message
             # _('Page could not been moved.')
         else:
-            page.invalidate()
-            target.invalidate()
+            # move_to invalidates cache on a model level
             from mptt.exceptions import InvalidMove
             invalid_move = False
             try:

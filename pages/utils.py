@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
 from pages import settings
+from pages.cache import cache
 from pages.http import get_request_mock
 
 from django.conf import settings as dj_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
-from django.core.cache import cache
 from django.core.management.base import CommandError
 from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _

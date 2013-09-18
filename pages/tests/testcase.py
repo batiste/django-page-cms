@@ -1,10 +1,10 @@
 from django.test import TestCase
+from pages.cache import cache
 from pages.models import Page, Content
 from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 from django.contrib.sites.models import Site

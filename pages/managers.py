@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Django page CMS ``managers``."""
 from pages import settings
+from pages.cache import cache
 from pages.utils import normalize_url
 from pages.http import get_slug
 
 from django.db import models, connection
 from django.db.models import Q
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db.models import Avg, Max, Min, Count

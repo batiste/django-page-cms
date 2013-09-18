@@ -1,5 +1,6 @@
 """Django page CMS ``models``."""
 
+from pages.cache import cache
 from pages.utils import get_placeholders, normalize_url, get_now
 from pages.managers import PageManager, ContentManager
 from pages.managers import PageAliasManager, ISODATE_FORMAT
@@ -12,7 +13,6 @@ from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site

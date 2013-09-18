@@ -354,6 +354,9 @@ class ContentManager(models.Manager):
         frozen = int(bool(page.freeze_date))
         key = self.PAGE_CONTENT_DICT_KEY % (page.id, ctype, frozen)
 
+        # Spaces do not work with memcache
+        key = key.replace(' ', '-')
+
         if page._content_dict is None:
             page._content_dict = dict()
         if page._content_dict.get(key, None):

@@ -67,6 +67,9 @@ class Page(MPTTModel):
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_url"
     PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
+    ANCESTORS_KEY = 'ancestors_%d'
+    CHILDREN_KEY = 'children_%d'
+    PUB_CHILDREN_KEY = 'pub_children_%d'
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 
@@ -172,24 +175,56 @@ class Page(MPTTModel):
         return self.calculated_status in (self.PUBLISHED, self.HIDDEN)
     visible = property(_visible)
 
+    def get_children(self):
+        """Cache superclass result"""
+        key = self.CHILDREN_KEY % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = super(Page, self).get_children()
+            cache.set(key, children)
+        return children
+
     def published_children(self):
         """Return a :class:`QuerySet` of published children page"""
-        return Page.objects.filter_published(self.get_children())
+        key = self.PUB_CHILDREN_KEY % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = Page.objects.filter_published(self.get_children())
+            cache.set(key, children)
+        return children
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
-        return Page.objects.filter_published(self.get_children())
+        key = self.PUB_CHILDREN_KEY % self.id
+        children = cache.get(key, None)
+        if children is None:
+            children = Page.objects.filter_published(self.get_children())
+            cache.set(key, children)
+        return children
 
     def get_date_ordered_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page ordered
         by publication date."""
         return self.get_children_for_frontend().order_by('-publication_date')
 
+    def move_to(self, target, position='first-child'):
+        """Invalidate cache when moving"""
+
+        # Invalidate both in case position matters, otherwise only target is needed
+        self.invalidate()
+        target.invalidate()
+        super(Page, self).move_to(target, position=position)
+
     def invalidate(self):
         """Invalidate cached data for this page."""
 
         cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
         cache.delete('PAGE_FIRST_ROOT_ID')
+        cache.delete(self.CHILDREN_KEY % self.id)
+        cache.delete(self.PUB_CHILDREN_KEY % self.id)
+        # XXX: Should this have a depth limit?
+        if self.parent_id:
+            self.parent.invalidate()
         self._languages = None
         self._complete_slug = None
         self._content_dict = dict()
@@ -232,7 +267,13 @@ class Page(MPTTModel):
 
     def is_first_root(self):
         """Return ``True`` if this page is the first root pages."""
-        if self.parent:
+        parent_cache_key = 'PARENT_FOR_%d' % self.id
+        has_parent = cache.get(parent_cache_key, None)
+        if has_parent is None:
+            has_parent = not not self.parent
+            cache.set(parent_cache_key, has_parent)
+
+        if has_parent:
             return False
         if self._is_first_root is not None:
             return self._is_first_root
@@ -302,7 +343,14 @@ class Page(MPTTModel):
             url = u''
         else:
             url = u'%s' % self.slug(language)
-        for ancestor in self.get_ancestors(ascending=True):
+
+        key = self.ANCESTORS_KEY % self.id
+        ancestors = cache.get(key, None)
+        if ancestors is None:
+            ancestors = self.get_ancestors(ascending=True)
+            cache.set(key, ancestors)
+
+        for ancestor in ancestors:
             url = ancestor.slug(language) + u'/' + url
 
         self._complete_slug[language] = url

@@ -4,6 +4,7 @@ from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 from django.contrib.sites.models import Site
@@ -42,6 +43,7 @@ class TestCase(TestCase):
         self.old_url_conf = getattr(settings, 'ROOT_URLCONF')
         setattr(settings, 'ROOT_URLCONF', 'pages.testproj.urls')
         clear_url_caches()
+        cache.clear()
 
     def tearDown(self):
         setattr(settings, 'ROOT_URLCONF', self.old_url_conf)

@@ -230,3 +230,7 @@ PAGE_ENABLE_TESTS = getattr(settings, 'PAGE_ENABLE_TESTS', False)
 PAGE_IMPORT_ENABLED = getattr(settings, 'PAGE_IMPORT_ENABLED', False)
 PAGE_EXPORT_ENABLED = getattr(settings, 'PAGE_EXPORT_ENABLED', False)
 
+# If you want to have a separate cache for cms, override this
+PAGE_CACHE_LOCATION = get_setting('PAGE_CACHE_LOCATION',
+    default_value='default')
+

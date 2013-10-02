@@ -3,10 +3,13 @@
 from pages.models import Page
 from pages import settings
 
-from haystack.indexes import (SearchIndex, CharField, DateTimeField,
-    RealTimeSearchIndex, Indexable)
+from haystack.indexes import SearchIndex, CharField, DateTimeField, Indexable
 
+# This is obsolete if you use haystack 2.0, use the HAYSTACK_SIGNAL_PROCESSOR
+# setting instead
 if settings.PAGE_REAL_TIME_SEARCH:
+    
+    from haystack.indexes import RealTimeSearchIndex
 
     class RealTimePageIndex(RealTimeSearchIndex, Indexable):
         """Search index for pages content."""
@@ -30,6 +33,7 @@ if settings.PAGE_REAL_TIME_SEARCH:
             return instance.status == Page.PUBLISHED
 
 else:
+    
     class PageIndex(SearchIndex, Indexable):
         """Search index for pages content."""
         text = CharField(document=True, use_template=True)

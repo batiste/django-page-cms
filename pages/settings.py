@@ -219,7 +219,9 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
 
-# Enable real time search indexation for the pages
+# Enable real time search indexation for the pages, to use only 
+# with haystack < 2.0. With the version 2.0 use the HAYSTACK_SIGNAL_PROCESSOR 
+# setting
 PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
 
 # Disable the tests by default so they don't execute when the user

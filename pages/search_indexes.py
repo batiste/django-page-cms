@@ -41,7 +41,7 @@ else:
         url = CharField(model_attr='get_absolute_url')
         publication_date = DateTimeField(model_attr='publication_date')
 
-        def index_queryset(self):
+        def index_queryset(self, using=None):
             """Used when the entire index for model is updated."""
             return Page.objects.published()
 

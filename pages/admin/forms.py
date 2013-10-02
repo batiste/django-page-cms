@@ -12,13 +12,10 @@ from pages.widgets import LanguageChoiceWidget
 
 # error messages
 another_page_error = _('Another page with this slug already exists')
-sibling_position_error = _('A sibling with this slug already exists at the \
-targeted position')
-child_error = _('A child with this slug already exists at the targeted \
-position')
+sibling_position_error = _('A sibling with this slug already exists at the targeted position')
+child_error = _('A child with this slug already exists at the targeted position')
 sibling_error = _('A sibling with this slug already exists')
-sibling_root_error = _('A sibling with this slug already exists at the root \
-level')
+sibling_root_error = _('A sibling with this slug already exists at the root level')
 
 class PageForm(forms.ModelForm):
     """Form for page creation"""
@@ -30,8 +27,7 @@ class PageForm(forms.ModelForm):
     slug = forms.CharField(
         label=_('Slug'),
         widget=forms.TextInput(),
-        help_text=_('The slug will be used to create the page URL, \
-it must be unique among the other pages of the same level.')
+        help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
     )
     language = forms.ChoiceField(
         label=_('Language'),

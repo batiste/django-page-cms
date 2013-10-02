@@ -6,7 +6,8 @@ from pages.utils import get_placeholders
 from pages.http import auto_render, get_language_from_request
 from pages.permissions import PagePermission
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
@@ -37,9 +38,10 @@ def list_pages_ajax(request, invalid_move=False):
         'language': language,
         'pages': pages,
     }
-    return "admin/pages/page/change_list_table.html", context
+    return render_to_response("admin/pages/page/change_list_table.html", 
+        context,
+        context_instance=RequestContext(request))
 list_pages_ajax = staff_member_required(list_pages_ajax)
-list_pages_ajax = auto_render(list_pages_ajax)
 
 @csrf_exempt
 def modify_content(request, page_id, content_type, language_id):
@@ -91,21 +93,19 @@ def traduction(request, page_id, language_id):
         Content.objects.get_content(page, language_id, "title")
         is None
     )
-    return 'pages/traduction_helper.html', {
+    return render_to_response('pages/traduction_helper.html', {
         'page':page,
         'lang':lang,
         'language_error':language_error,
         'placeholders':placeholders,
-    }
+    }, context_instance=RequestContext(request))
 traduction = staff_member_required(traduction)
-traduction = auto_render(traduction)
 
 def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
     content = Content.objects.get(pk=content_id)
     return HttpResponse(content.body)
 get_content = staff_member_required(get_content)
-get_content = auto_render(get_content)
 
 @csrf_exempt
 def move_page(request, page_id, extra_context=None):
@@ -141,11 +141,10 @@ def sub_menu(request, page_id):
     pages = page.children.all()
     page_languages = settings.PAGE_LANGUAGES
     perms = PagePermission(request.user)
-    return "admin/pages/page/sub_menu.html", {
+    return render_to_response("admin/pages/page/sub_menu.html", {
         'can_publish': perms.check('publish'),
         'page':page,
         'pages':pages,
         'page_languages':page_languages,
-    }
+    },        context_instance=RequestContext(request))
 sub_menu = staff_member_required(sub_menu)
-sub_menu = auto_render(sub_menu)

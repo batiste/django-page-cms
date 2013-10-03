@@ -819,5 +819,5 @@ class UnitTestCase(TestCase):
         template = get_template_from_string(tpl)
         category = self.new_category()
         context = Context({})
-        self.assertEqual(template.render(context), '')
+        self.assertEqual(template.render(context), 'Enoent')
 

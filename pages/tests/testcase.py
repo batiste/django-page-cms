@@ -1,6 +1,6 @@
 from django.test import TestCase
 from pages.cache import cache
-from pages.models import Page, Content
+from pages.models import Page, Content, Category
 from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
@@ -132,4 +132,9 @@ class TestCase(TestCase):
             }
         self.counter = self.counter + 1
         return category_data
+
+    def new_category(self, data=None, language='en-us'):
+        if data is None:
+            data = {'title': 'Test category', 'slug': 'test-category'}
+        return Category.objects.create(**data)
 

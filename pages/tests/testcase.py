@@ -136,5 +136,6 @@ class TestCase(TestCase):
     def new_category(self, data=None, language='en-us'):
         if data is None:
             data = {'title': 'Test category', 'slug': 'test-category'}
+        data['language'] = language
         return Category.objects.create(**data)
 

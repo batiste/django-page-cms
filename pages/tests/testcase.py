@@ -124,3 +124,12 @@ class TestCase(TestCase):
         slug_content = Content.objects.get_content_slug_by_slug(
             page_data['slug'])
         return slug_content.page
+
+    def get_new_category_data(self):
+        """Helper method for creating category datas"""
+        category_data = {'title': 'test category %d' % self.counter,
+            'slug': 'test-category-%d' % self.counter, 'language':'en-us',
+            }
+        self.counter = self.counter + 1
+        return category_data
+

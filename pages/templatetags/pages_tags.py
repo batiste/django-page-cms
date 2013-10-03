@@ -7,7 +7,7 @@ import urllib
 from django.conf import settings
 
 from pages import settings as pages_settings
-from pages.models import Content, Page
+from pages.models import Content, Page, Category
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
@@ -211,7 +211,7 @@ show_absolute_url = register.inclusion_tag('pages/content.html',
 def show_revisions(context, page, content_type, lang=None):
     """Render the last 10 revisions of a page content with a list using
         the ``pages/revisions.html`` template"""
-    if (not pages_settings.PAGE_CONTENT_REVISION or 
+    if (not pages_settings.PAGE_CONTENT_REVISION or
             content_type in pages_settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
         return {'revisions': None}
     revisions = Content.objects.filter(page=page, language=lang,
@@ -478,6 +478,16 @@ def do_jsonplaceholder(parser, token):
     return JsonPlaceholderNode(name, **params)
 register.tag('jsonplaceholder', do_jsonplaceholder)
 
+
+def category_name(category_slug):
+    """
+    Gets the name of a category
+    """
+    try:
+        return Category.objects.filter(slug=category_slug).values('title')[0]['title']
+    except IndexError:
+        return ''
+register.simple_tag(category_name)
 
 def language_content_up_to_date(page, language):
     """Tell if all the page content has been updated since the last

@@ -105,8 +105,6 @@ class PageForm(SlugFormMixin):
     target = forms.IntegerField(required=False, widget=forms.HiddenInput)
     position = forms.CharField(required=False, widget=forms.HiddenInput)
 
-    category = forms.ModelMultipleChoiceField(Category.objects.all())
-
     class Meta:
         model = Page
 

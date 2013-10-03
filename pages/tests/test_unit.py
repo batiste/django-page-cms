@@ -121,8 +121,11 @@ class UnitTestCase(TestCase):
 
     def test_get_pages_for_category_template_tag(self):
         category = self.new_category()
-        pages = [self.new_page() for i in xrange(3)]
-        category.page_set.add(*pages)
+        content = {
+            'title': 'test-page',
+            'category': category.slug,
+        }
+        pages = [self.new_page(content=content) for i in xrange(3)]
         tpl = """{% load pages_tags %}{% pages_for_category 'test-category' %}{% for page in pages %}{{ page.title }}
         {% endfor %}"""
         template = get_template_from_string(tpl)

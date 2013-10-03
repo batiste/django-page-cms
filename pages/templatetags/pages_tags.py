@@ -501,6 +501,20 @@ def category_name(category_slug):
         return ''
 register.simple_tag(category_name)
 
+def pages_for_category(context, category):
+    """Render a nested list of all the pages in category
+
+    :param category: category object or slug or id for pages
+    """
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
+    if not isinstance(category, Category):
+        category = get_category_from_string_or_id(category, lang)
+    if category:
+        pages = category.page_set.all()
+        context.update({'pages': pages})
+    return ''
+pages_for_category = register.simple_tag(takes_context=True)(pages_for_category)
+
 def get_category(context, category_slug):
     """
     Retrieve category.

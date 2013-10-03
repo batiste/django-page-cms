@@ -24,18 +24,11 @@ class SlugFormMixin(forms.ModelForm):
         help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
     )
 
-    def _clean_page_automatic_slug_renaming(self, slug):
+    def _clean_page_automatic_slug_renaming(self, slug, is_slug_safe):
         """Helper to add numbers to slugs"""
 
-        def is_slug_safe(slug):
-            content = Content.objects.get_content_slug_by_slug(slug)
-            if content is None:
-                return True
-            if self.instance.id:
-                if content.page.id == self.instance.id:
-                    return True
-            else:
-                return False
+        if not callable(is_slug_safe):
+            raise TypeError('is_slug_safe must be callable')
 
 
         if is_slug_safe(slug):
@@ -76,7 +69,20 @@ class CategoryForm(SlugFormMixin):
         slug = slugify(self.cleaned_data['slug'])
 
         if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
-            return self._clean_page_automatic_slug_renaming(slug)
+            def is_slug_safe(slug):
+                try:
+                    category = Category.objects.get(slug=slug)
+                except Category.DoesNotExist:
+                    category = None
+                if category is None:
+                    return True
+                if self.instance.id:
+                    if category.id == self.instance.id:
+                        return True
+                else:
+                    return False
+
+            return self._clean_page_automatic_slug_renaming(slug, is_slug_safe)
 
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             if Category.objects.filter(slug=slug).exists():
@@ -135,7 +141,17 @@ class PageForm(SlugFormMixin):
 
         # this enforce a unique slug for every page
         if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
-            return self._clean_page_automatic_slug_renaming(slug)
+            def is_slug_safe(slug):
+                content = Content.objects.get_content_slug_by_slug(slug)
+                if content is None:
+                    return True
+                if self.instance.id:
+                    if content.page.id == self.instance.id:
+                        return True
+                else:
+                    return False
+
+            return self._clean_page_automatic_slug_renaming(slug, is_slug_safe)
 
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
             return self._clean_page_unique_slug_required(slug)

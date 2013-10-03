@@ -510,7 +510,7 @@ def pages_for_category(context, category):
     if not isinstance(category, Category):
         category = get_category_from_string_or_id(category, lang)
     if category:
-        pages = category.page_set.all()
+        pages = category.get_pages()
         context.update({'pages': pages})
     return ''
 pages_for_category = register.simple_tag(takes_context=True)(pages_for_category)

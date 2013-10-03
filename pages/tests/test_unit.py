@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
-from pages.models import Page, Content
+from pages.models import Page, Content, Category
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
@@ -773,11 +773,26 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
-    
-    def test_get_filename(self):        
+
+    def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         data = "myfile.pdf"
         self.assertTrue(data in get_filename(page, placeholder, data))
         self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, data))
         self.assertTrue(placeholder.name in get_filename(page, placeholder, data))
+
+    def test_get_category_name(self):
+        tpl = """{% load pages_tags %}{% category_name 'test-category' %}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), 'Test category')
+
+    def test_get_invalid_category_name(self):
+        tpl = """{% load pages_tags %}{% category_name 'enoent' %}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), '')
+

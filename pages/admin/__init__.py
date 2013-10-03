@@ -409,9 +409,20 @@ class CategoryAdmin(admin.ModelAdmin):
             'javascript/jquery.query-2.1.7.js',
         )]
 
+    def get_form(self, request, obj=None, **kwargs):
+        """Get a :class:`Category <pages.admin.forms.CategoryForm>` for the
+        :class:`Category <pages.models.Category>` and modify its fields depending on
+        the request."""
+        form = super(CategoryAdmin, self).get_form(request, obj, **kwargs)
+
+        language = get_language_from_request(request)
+        form.base_fields['language'].initial = language
+
+        return form
+
     form = CategoryForm
     mandatory_placeholders = ('title', 'slug')
-    list_display = ('title', 'slug')
+    list_display = ('title', 'slug', 'language')
 
 try:
     admin.site.register(Category, CategoryAdmin)

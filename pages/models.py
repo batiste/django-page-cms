@@ -634,6 +634,9 @@ class Category(models.Model):
     There is no direct foreign key, this is handled by placeholders
     """
 
+    # languages could have five characters : Brazilian Portuguese is pt-br
+    language = models.CharField(_('language'), max_length=5, blank=False)
+
     title = models.CharField(_('Title'), max_length=255)
     slug = models.CharField(_('Slug'), max_length=255)
 

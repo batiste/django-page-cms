@@ -40,7 +40,7 @@ class PageAdmin(admin.ModelAdmin):
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target',
         'position', 'freeze_date', 'template', 'language',
-        'redirect_to', 'redirect_to_url', 'category']
+        'redirect_to', 'redirect_to_url']
 
     if settings.PAGE_USE_SITE_ID and not settings.PAGE_HIDE_SITES:
         general_fields.append('sites')

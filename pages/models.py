@@ -285,8 +285,6 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
     redirect_to = models.ForeignKey('self', null=True, blank=True,
             related_name='redirected_pages')
 
-    category = models.ManyToManyField('Category', null=True, blank=True, default=None)
-
     # Managers
     objects = PageManager()
 

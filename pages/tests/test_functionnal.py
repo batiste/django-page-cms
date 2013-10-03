@@ -98,6 +98,22 @@ class FunctionnalTestCase(TestCase):
         page2 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertNotEqual(page1.id, page2.id)
 
+    def test_category_slug_collision(self):
+        """Category slugs collide"""
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", False)
+
+        c = self.get_admin_client()
+
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", True)
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Category.objects.all().count(), 1)
+
     def test_automatic_slug_renaming(self):
         """Test a slug renaming."""
         self.set_setting("PAGE_AUTOMATIC_SLUG_RENAMING", True)
@@ -158,6 +174,23 @@ class FunctionnalTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_3_slug+'-2')
         self.assertEqual(page3.id, content.page.id)
 
+    def test_category_slug_renaming(self):
+        """Test renaming a category slug"""
+        self.set_setting("PAGE_AUTOMATIC_SLUG_RENAMING", True)
+
+        c = self.get_admin_client()
+        category_data = self.get_new_category_data()
+
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 1)
+
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 2)
+
+        cat1, cat2 = Category.objects.all()
+        self.assertNotEqual(cat1.slug, cat2.slug)
 
     def test_details_view(self):
         """Test the details view basics."""

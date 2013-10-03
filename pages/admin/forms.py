@@ -63,8 +63,26 @@ class SlugFormMixin(forms.ModelForm):
 class CategoryForm(SlugFormMixin):
     """Form for category creation"""
 
+    err_dict = {
+        'another_category_error': _('Another category with this slug already exists'),
+    }
+
     class Meta:
         model = Category
+
+    def clean_slug(self):
+        """Slug cleanup"""
+
+        slug = slugify(self.cleaned_data['slug'])
+
+        if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
+            return self._clean_page_automatic_slug_renaming(slug)
+
+        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
+            if Category.objects.filter(slug=slug).exists():
+                raise forms.ValidationError(self.err_dict['another_category_error'])
+
+        return slug
 
 
 class PageForm(SlugFormMixin):

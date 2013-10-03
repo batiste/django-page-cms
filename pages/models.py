@@ -627,6 +627,18 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
         return u"Page without id"
 
 
+class Category(TitleSlugMixin, HasContentMixin):
+    """To categorize :class:`Page <pages.models.Page>` objects
+    There is no direct foreign key, this is handled by placeholders
+    """
+
+    class Meta:
+        verbose_name_plural = _('categories')
+
+    def __unicode__(self):
+        return self.slug()
+
+
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,
     for a particular language"""

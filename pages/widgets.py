@@ -443,7 +443,7 @@ class PageLinkWidget(MultiWidget):
 register_widget(PageLinkWidget)
 
 
-class CategoryWidget(forms.SelectMultiple):
+class CategoryWidget(forms.Select):
     """Can use Categories through placeholders"""
     def __init__(self, attrs=None, language=None, **kwargs):
         choices = kwargs.pop('choices', ())

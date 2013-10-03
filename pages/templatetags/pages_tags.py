@@ -32,15 +32,16 @@ def get_page_from_string_or_id(page_string, lang=None):
 
 def get_category_from_string_or_id(category_string, lang=None):
     """Return a Category object from a slug or an id"""
+    # Please forgive me :/
     try:
-        category_string = int(category_string)
-        return Category.objects.get(pk=category_string)
-    except ValueError:
-        return Category.objects.get(slug=category_string)
-
-    # This is different from get_page_from_string_or_id because that one
-    # contains an undocumented feature for passing in a Page object
-    raise TypeError('Invalid category string')
+        try:
+            category_string = int(category_string)
+            return Category.objects.get(pk=category_string)
+        except ValueError:
+            return Category.objects.get(slug=category_string)
+    except Category.DoesNotExist:
+        pass
+    return category_string
 
 def _get_content(context, page, content_type, lang, fallback=True):
     """Helper function used by ``PlaceholderNode``."""

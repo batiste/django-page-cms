@@ -796,3 +796,10 @@ class UnitTestCase(TestCase):
         context = Context({})
         self.assertEqual(template.render(context), '')
 
+    def test_get_category(self):
+        tpl = """{% load pages_tags %}{% get_category 'test-category' %}{{ category.title }}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), 'Test category')
+

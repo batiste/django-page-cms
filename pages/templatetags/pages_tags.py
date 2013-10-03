@@ -489,6 +489,21 @@ def category_name(category_slug):
         return ''
 register.simple_tag(category_name)
 
+def get_category(context, category_slug):
+    """
+    Retrieve category.
+    Be careful with multiple calls, because it uses only one context key
+    """
+
+    try:
+        category = Category.objects.get(slug=category_slug)
+    except Category.DoesNotExist:
+        category = None
+
+    context.update({'category': category})
+    return ''
+get_category = register.simple_tag(takes_context=True)(get_category)
+
 def language_content_up_to_date(page, language):
     """Tell if all the page content has been updated since the last
     change of the official version (settings.LANGUAGE_CODE)

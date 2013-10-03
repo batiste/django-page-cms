@@ -627,16 +627,19 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
         return u"Page without id"
 
 
-class Category(TitleSlugMixin, HasContentMixin):
+class Category(models.Model):
     """To categorize :class:`Page <pages.models.Page>` objects
     There is no direct foreign key, this is handled by placeholders
     """
+
+    title = models.CharField(_('Title'), max_length=255)
+    slug = models.CharField(_('Slug'), max_length=255)
 
     class Meta:
         verbose_name_plural = _('categories')
 
     def __unicode__(self):
-        return self.slug()
+        return '%s :: %s' % (self.title, self.slug)
 
 
 class Content(models.Model):

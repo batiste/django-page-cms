@@ -411,7 +411,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
     form = CategoryForm
     mandatory_placeholders = ('title', 'slug')
-    list_display = ('__unicode__',)
+    list_display = ('title', 'slug')
 
 try:
     admin.site.register(Category, CategoryAdmin)

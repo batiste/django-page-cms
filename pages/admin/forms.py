@@ -10,15 +10,17 @@ from pages.models import Page, Content
 from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
 
-# error messages
-another_page_error = _('Another page with this slug already exists')
-sibling_position_error = _('A sibling with this slug already exists at the targeted position')
-child_error = _('A child with this slug already exists at the targeted position')
-sibling_error = _('A sibling with this slug already exists')
-sibling_root_error = _('A sibling with this slug already exists at the root level')
 
 class PageForm(forms.ModelForm):
     """Form for page creation"""
+
+    err_dict = {
+        'another_page_error': _('Another page with this slug already exists'),
+        'sibling_position_error': _('A sibling with this slug already exists at the targeted position'),
+        'child_error': _('A child with this slug already exists at the targeted position'),
+        'sibling_error': _('A sibling with this slug already exists'),
+        'sibling_root_error': _('A sibling with this slug already exists at the root level'),
+    }
 
     title = forms.CharField(
         label=_('Title'),
@@ -78,7 +80,7 @@ class PageForm(forms.ModelForm):
                         return True
                 else:
                     return False
-            
+
 
             if is_slug_safe(slug):
                return slug
@@ -94,9 +96,9 @@ class PageForm(forms.ModelForm):
             if self.instance.id:
                 if Content.objects.exclude(page=self.instance).filter(
                     body=slug, type="slug").count():
-                    raise forms.ValidationError(another_page_error)
+                    raise forms.ValidationError(self.err_dict['another_page_error'])
             elif Content.objects.filter(body=slug, type="slug").count():
-                raise forms.ValidationError(another_page_error)
+                raise forms.ValidationError(self.err_dict['another_page_error'])
 
         if settings.PAGE_USE_SITE_ID:
             if settings.PAGE_HIDE_SITES:
@@ -118,22 +120,22 @@ class PageForm(forms.ModelForm):
                              if intersects_sites(sibling)]
                     slugs.append(target.slug())
                     if slug in slugs:
-                        raise forms.ValidationError(sibling_position_error)
+                        raise forms.ValidationError(self.err_dict['sibling_position_error'])
                 if position == 'first-child':
                     if slug in [sibling.slug() for sibling in
                                 target.get_children()
                                 if intersects_sites(sibling)]:
-                        raise forms.ValidationError(child_error)
+                        raise forms.ValidationError(self.err_dict['child_error'])
             else:
                 if self.instance.id:
                     if (slug in [sibling.slug() for sibling in
                         self.instance.get_siblings().exclude(
                             id=self.instance.id
                         ) if intersects_sites(sibling)]):
-                        raise forms.ValidationError(sibling_error)
+                        raise forms.ValidationError(self.err_dict['sibling_error'])
                 else:
                     if slug in [sibling.slug() for sibling in
                                 Page.objects.root()
                                 if intersects_sites(sibling)]:
-                        raise forms.ValidationError(sibling_root_error)
+                        raise forms.ValidationError(self.err_dict['sibling_root_error'])
         return slug

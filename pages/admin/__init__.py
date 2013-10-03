@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Page Admin module."""
 from pages import settings
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Category, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
@@ -281,7 +281,7 @@ class PageAdmin(admin.ModelAdmin):
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
 
-        return super(PageAdmin, self).change_view(request, object_id, 
+        return super(PageAdmin, self).change_view(request, object_id,
             form_url=form_url, extra_context=extra_context)
 
 
@@ -390,6 +390,16 @@ try:
     admin.site.register(Page, PageAdmin)
 except AlreadyRegistered:
     pass
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__',)
+
+try:
+    admin.site.register(Category, CategoryAdmin)
+except AlreadyRegistered:
+    pass
+
 
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')

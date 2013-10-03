@@ -4,7 +4,7 @@ in the admin via a placeholder tag in your template."""
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
 from pages.settings import PAGE_TINYMCE, PAGE_LANGUAGES
-from pages.models import Page
+from pages.models import Page, Category
 from pages.widgets_registry import register_widget
 
 from django.conf import settings
@@ -441,4 +441,18 @@ class PageLinkWidget(MultiWidget):
         </table>""" % tuple(rendered_widgets)
 
 register_widget(PageLinkWidget)
+
+
+class CategoryWidget(forms.SelectMultiple):
+    """Can use Categories through placeholders"""
+    def __init__(self, attrs=None, language=None, **kwargs):
+        choices = kwargs.pop('choices', ())
+        choices = list(choices)
+        cats = Category.objects.all()
+        if language:
+            cats = cats.filter(language=language)
+        choices.extend((cat.slug, cat.title) for cat in cats)
+        super(CategoryWidget, self).__init__(attrs=attrs, choices=choices)
+
+register_widget(CategoryWidget)
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Django page CMS functionnal tests suite module."""
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content, PageAlias, Category
 from pages.tests.testcase import TestCase
 
 import django
@@ -58,6 +58,25 @@ class FunctionnalTestCase(TestCase):
         assert(slug_content is None)
         self.assertEqual(Page.objects.count(), pageCount - 1)
 
+    def test_add_category(self):
+        """Add category page properly shown"""
+        c = self.get_admin_client()
+
+        response = c.get('/admin/pages/category/add/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_category(self):
+        """Test category gets created"""
+        c = self.get_admin_client()
+
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        category = Category.objects.latest('id')
+        self.assertEqual(category.title, category_data['title'])
+        self.assertEqual(category.slug, category_data['slug'])
+        self.assertEqual(category.page_set.all().count(), 0)
+
     def test_slug_collision(self):
         """Test a slug collision."""
         self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", True)
@@ -93,9 +112,9 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        
+
         slug = page_data['slug']
-        
+
         page1 = Content.objects.get_content_slug_by_slug(slug).page
         page2 = Content.objects.get_content_slug_by_slug(slug+'-2').page
         page3 = Content.objects.get_content_slug_by_slug(slug+'-3').page
@@ -114,7 +133,7 @@ class FunctionnalTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_3_slug)
         self.assertEqual(page3.id, content.page.id)
 
-        # change an old slug of another page and see that it doesn't 
+        # change an old slug of another page and see that it doesn't
         # influence the current slug of this page
         old_slug = Content.objects.filter(page=page1).latest("creation_date")
         new_slug = Content(page=page1, body=page_3_slug, type="slug")

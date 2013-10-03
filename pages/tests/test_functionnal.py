@@ -75,7 +75,7 @@ class FunctionnalTestCase(TestCase):
         category = Category.objects.latest('id')
         self.assertEqual(category.title, category_data['title'])
         self.assertEqual(category.slug, category_data['slug'])
-        self.assertEqual(category.page_set.all().count(), 0)
+        self.assertEqual(category.get_pages().count(), 0)
 
     def test_slug_collision(self):
         """Test a slug collision."""

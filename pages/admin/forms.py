@@ -60,6 +60,12 @@ class CategoryForm(SlugFormMixin):
         'another_category_error': _('Another category with this slug already exists'),
     }
 
+    language = forms.ChoiceField(
+        label=_('Language'),
+        choices=settings.PAGE_LANGUAGES,
+        widget=LanguageChoiceWidget()
+    )
+
     class Meta:
         model = Category
 

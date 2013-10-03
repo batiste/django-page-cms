@@ -6,7 +6,7 @@ from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
-from pages.admin.forms import PageForm
+from pages.admin.forms import PageForm, CategoryForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
@@ -393,6 +393,24 @@ except AlreadyRegistered:
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
+                'css/rte.css',
+                'css/pages.css'
+            )]
+        }
+        js = [join(settings.PAGES_MEDIA_URL, path) for path in (
+            'javascript/jquery.js',
+            'javascript/jquery.rte.js',
+            'javascript/pages.js',
+            'javascript/pages_list.js',
+            'javascript/pages_form.js',
+            'javascript/jquery.query-2.1.7.js',
+        )]
+
+    form = CategoryForm
+    mandatory_placeholders = ('title', 'slug')
     list_display = ('__unicode__',)
 
 try:

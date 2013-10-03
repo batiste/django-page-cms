@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as global_settings
 
 from pages import settings
-from pages.models import Page, Content
+from pages.models import Page, Content, Category
 from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
 
@@ -58,6 +58,13 @@ class SlugFormMixin(forms.ModelForm):
         elif Content.objects.filter(body=slug, type="slug").count():
             raise forms.ValidationError(self.err_dict['another_page_error'])
         return slug
+
+
+class CategoryForm(SlugFormMixin):
+    """Form for category creation"""
+
+    class Meta:
+        model = Category
 
 
 class PageForm(SlugFormMixin):

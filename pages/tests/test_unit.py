@@ -119,6 +119,17 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'get-page-slug'})
         self.assertEqual(template.render(context), u'get-page-slug')
 
+    def test_get_pages_for_category_template_tag(self):
+        category = self.new_category()
+        pages = [self.new_page() for i in xrange(3)]
+        category.page_set.add(*pages)
+        tpl = """{% load pages_tags %}{% pages_for_category 'test-category' %}{% for page in pages %}{{ page.title }}
+        {% endfor %}"""
+        template = get_template_from_string(tpl)
+        out = template.render(Context({}))
+        easy_out = out.strip().replace('\n', '').replace(8 * ' ', ' ')
+        self.assertEqual(easy_out, 'test-page test-page test-page')
+
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()

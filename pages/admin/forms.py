@@ -11,16 +11,8 @@ from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
 
 
-class PageForm(forms.ModelForm):
-    """Form for page creation"""
-
-    err_dict = {
-        'another_page_error': _('Another page with this slug already exists'),
-        'sibling_position_error': _('A sibling with this slug already exists at the targeted position'),
-        'child_error': _('A child with this slug already exists at the targeted position'),
-        'sibling_error': _('A sibling with this slug already exists'),
-        'sibling_root_error': _('A sibling with this slug already exists at the root level'),
-    }
+class SlugFormMixin(forms.ModelForm):
+    """To edit models with slugs"""
 
     title = forms.CharField(
         label=_('Title'),
@@ -31,6 +23,54 @@ class PageForm(forms.ModelForm):
         widget=forms.TextInput(),
         help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
     )
+
+    def _clean_page_automatic_slug_renaming(self, slug):
+        """Helper to add numbers to slugs"""
+
+        def is_slug_safe(slug):
+            content = Content.objects.get_content_slug_by_slug(slug)
+            if content is None:
+                return True
+            if self.instance.id:
+                if content.page.id == self.instance.id:
+                    return True
+            else:
+                return False
+
+
+        if is_slug_safe(slug):
+           return slug
+
+        count = 2
+        new_slug = slug + "-" + str(count)
+        while not is_slug_safe(new_slug):
+            count = count + 1
+            new_slug = slug + "-" + str(count)
+        return new_slug
+
+    def _clean_page_unique_slug_required(self, slug):
+        """See if this slug exists already"""
+
+        if hasattr(self, 'instance') and self.instance.id:
+            if Content.objects.exclude(page=self.instance).filter(
+                body=slug, type="slug").count():
+                raise forms.ValidationError(self.err_dict['another_page_error'])
+        elif Content.objects.filter(body=slug, type="slug").count():
+            raise forms.ValidationError(self.err_dict['another_page_error'])
+        return slug
+
+
+class PageForm(SlugFormMixin):
+    """Form for page creation"""
+
+    err_dict = {
+        'another_page_error': _('Another page with this slug already exists'),
+        'sibling_position_error': _('A sibling with this slug already exists at the targeted position'),
+        'child_error': _('A child with this slug already exists at the targeted position'),
+        'sibling_error': _('A sibling with this slug already exists'),
+        'sibling_root_error': _('A sibling with this slug already exists at the root level'),
+    }
+
     language = forms.ChoiceField(
         label=_('Language'),
         choices=settings.PAGE_LANGUAGES,
@@ -70,35 +110,10 @@ class PageForm(forms.ModelForm):
 
         # this enforce a unique slug for every page
         if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
-
-            def is_slug_safe(slug):
-                content = Content.objects.get_content_slug_by_slug(slug)
-                if content is None:
-                    return True
-                if self.instance.id:
-                    if content.page.id == self.instance.id:
-                        return True
-                else:
-                    return False
-
-
-            if is_slug_safe(slug):
-               return slug
-
-            count = 2
-            new_slug = slug + "-" + str(count)
-            while not is_slug_safe(new_slug):
-                count = count + 1
-                new_slug = slug + "-" + str(count)
-            return new_slug
+            return self._clean_page_automatic_slug_renaming(slug)
 
         if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            if self.instance.id:
-                if Content.objects.exclude(page=self.instance).filter(
-                    body=slug, type="slug").count():
-                    raise forms.ValidationError(self.err_dict['another_page_error'])
-            elif Content.objects.filter(body=slug, type="slug").count():
-                raise forms.ValidationError(self.err_dict['another_page_error'])
+            return self._clean_page_unique_slug_required(slug)
 
         if settings.PAGE_USE_SITE_ID:
             if settings.PAGE_HIDE_SITES:

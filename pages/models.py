@@ -651,7 +651,8 @@ class Category(models.Model):
         key = self.PAGES_KEY % self.id
         pages = cache.get(key, None)
         if pages is None:
-            pages = self.page_set.all()
+            pages = Page.objects.filter(content__language=self.language,
+                    content__type='category', content__body=self.slug)
             cache.set(key, pages)
         return pages
 

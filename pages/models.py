@@ -641,7 +641,7 @@ class Category(models.Model):
         verbose_name_plural = _('categories')
 
     def __unicode__(self):
-        return '%s :: %s' % (self.title, self.slug)
+        return self.title
 
 
 class Content(models.Model):

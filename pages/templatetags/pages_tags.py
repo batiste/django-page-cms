@@ -515,16 +515,17 @@ def pages_for_category(context, category):
     return ''
 pages_for_category = register.simple_tag(takes_context=True)(pages_for_category)
 
-def get_category(context, category_slug):
+def get_category(context, category):
     """
     Retrieve category.
     Be careful with multiple calls, because it uses only one context key
+
+    :param category: category object or slug or id for pages
     """
 
-    try:
-        category = Category.objects.get(slug=category_slug)
-    except Category.DoesNotExist:
-        category = None
+    lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
+    if not isinstance(category, Category):
+        category = get_category_from_string_or_id(category, lang)
 
     context.update({'category': category})
     return ''

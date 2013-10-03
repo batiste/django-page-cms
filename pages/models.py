@@ -634,6 +634,8 @@ class Category(models.Model):
     There is no direct foreign key, this is handled by placeholders
     """
 
+    PAGES_KEY = 'pages_%d'
+
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
 
@@ -645,6 +647,15 @@ class Category(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def get_pages(self):
+        """Cache the pages we have"""
+        key = self.PAGES_KEY % self.id
+        pages = cache.get(key, None)
+        if pages is None:
+            pages = self.page_set.all()
+            cache.set(key, pages)
+        return pages
 
 
 class Content(models.Model):

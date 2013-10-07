@@ -4,7 +4,7 @@ in the admin via a placeholder tag in your template."""
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
 from pages.settings import PAGE_TINYMCE, PAGE_LANGUAGES
-from pages.models import Page, Category
+from pages.models import Page
 from pages.widgets_registry import register_widget
 
 from django.conf import settings
@@ -19,6 +19,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 
 from os.path import join
+
+CATEGORY_INSTALLED = 'pages.plugins.category' in settings.INSTALLED_APPS
+if CATEGORY_INSTALLED:
+    from pages.plugins.category.models import Category
 
 register_widget(TextInput)
 register_widget(Textarea)
@@ -454,5 +458,6 @@ class CategoryWidget(forms.Select):
         choices.extend((cat.slug, cat.title) for cat in cats)
         super(CategoryWidget, self).__init__(attrs=attrs, choices=choices)
 
-register_widget(CategoryWidget)
+if CATEGORY_INSTALLED:
+    register_widget(CategoryWidget)
 

@@ -6,7 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as global_settings
 
 from pages import settings
-from pages.models import Page, Content, Category
+from pages.models import Page, Content
+
 from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
 
@@ -50,50 +51,6 @@ class SlugFormMixin(forms.ModelForm):
                 raise forms.ValidationError(self.err_dict['another_page_error'])
         elif Content.objects.filter(body=slug, type="slug").count():
             raise forms.ValidationError(self.err_dict['another_page_error'])
-        return slug
-
-
-class CategoryForm(SlugFormMixin):
-    """Form for category creation"""
-
-    err_dict = {
-        'another_category_error': _('Another category with this slug already exists'),
-    }
-
-    language = forms.ChoiceField(
-        label=_('Language'),
-        choices=settings.PAGE_LANGUAGES,
-        widget=LanguageChoiceWidget()
-    )
-
-    class Meta:
-        model = Category
-
-    def clean_slug(self):
-        """Slug cleanup"""
-
-        slug = slugify(self.cleaned_data['slug'])
-
-        if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
-            def is_slug_safe(slug):
-                try:
-                    category = Category.objects.get(slug=slug)
-                except Category.DoesNotExist:
-                    category = None
-                if category is None:
-                    return True
-                if self.instance.id:
-                    if category.id == self.instance.id:
-                        return True
-                else:
-                    return False
-
-            return self._clean_page_automatic_slug_renaming(slug, is_slug_safe)
-
-        if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-            if Category.objects.filter(slug=slug).exists():
-                raise forms.ValidationError(self.err_dict['another_category_error'])
-
         return slug
 
 

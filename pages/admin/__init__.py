@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Page Admin module."""
 from pages import settings
-from pages.models import Page, Category, Content, PageAlias
+from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.utils import get_connected, make_inline_admin
-from pages.admin.forms import PageForm, CategoryForm
+from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
@@ -388,44 +388,6 @@ for admin_class, model, options in get_connected():
 
 try:
     admin.site.register(Page, PageAdmin)
-except AlreadyRegistered:
-    pass
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    class Media:
-        css = {
-            'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
-                'css/rte.css',
-                'css/pages.css'
-            )]
-        }
-        js = [join(settings.PAGES_MEDIA_URL, path) for path in (
-            'javascript/jquery.js',
-            'javascript/jquery.rte.js',
-            'javascript/pages.js',
-            'javascript/pages_list.js',
-            'javascript/pages_form.js',
-            'javascript/jquery.query-2.1.7.js',
-        )]
-
-    def get_form(self, request, obj=None, **kwargs):
-        """Get a :class:`Category <pages.admin.forms.CategoryForm>` for the
-        :class:`Category <pages.models.Category>` and modify its fields depending on
-        the request."""
-        form = super(CategoryAdmin, self).get_form(request, obj, **kwargs)
-
-        language = get_language_from_request(request)
-        form.base_fields['language'].initial = language
-
-        return form
-
-    form = CategoryForm
-    mandatory_placeholders = ('title', 'slug')
-    list_display = ('title', 'slug', 'language')
-
-try:
-    admin.site.register(Category, CategoryAdmin)
 except AlreadyRegistered:
     pass
 

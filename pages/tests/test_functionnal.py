@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS functionnal tests suite module."""
-from pages.models import Page, Content, PageAlias, Category
+from pages.models import Page, Content, PageAlias
+from pages.plugins.category.models import Category
 from pages.tests.testcase import TestCase
 
 import django

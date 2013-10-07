@@ -1,6 +1,7 @@
 from django.test import TestCase
 from pages.cache import cache
-from pages.models import Page, Content, Category
+from pages.models import Page, Content
+from pages.plugins.category.models import Category
 from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings

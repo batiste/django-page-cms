@@ -1,8 +1,9 @@
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from pages.admin.forms import SlugFormMixin
-from django.conf import settings
 from pages.widgets import LanguageChoiceWidget
 from django import forms
+from pages import settings
 from ..models import Category
 
 class CategoryForm(SlugFormMixin):

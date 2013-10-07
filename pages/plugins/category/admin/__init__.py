@@ -1,6 +1,7 @@
 from ..models import Category
 from .forms import CategoryForm
 from django.contrib import admin
+from pages.http import get_language_from_request, get_template_from_request
 from os.path import join
 from pages import settings
 

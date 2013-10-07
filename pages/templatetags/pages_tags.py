@@ -7,10 +7,14 @@ import urllib
 from django.conf import settings
 
 from pages import settings as pages_settings
-from pages.models import Content, Page, Category
+from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
+
+CATEGORY_INSTALLED = 'pages.plugins.category' in settings.INSTALLED_APPS
+if CATEGORY_INSTALLED:
+    from pages.plugins.category.models import Category
 
 register = template.Library()
 

@@ -17,6 +17,7 @@ class Category(models.Model):
     slug = models.CharField(_('Slug'), max_length=255)
 
     class Meta:
+        app_label = 'pages'
         verbose_name_plural = _('categories')
 
     def __unicode__(self):

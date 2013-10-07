@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from pages.cache import cache
+from pages.models import Page
 
 class Category(models.Model):
     """To categorize :class:`Page <pages.models.Page>` objects

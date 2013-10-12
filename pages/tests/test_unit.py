@@ -825,12 +825,3 @@ class UnitTestCase(TestCase):
         context = Context({})
         self.assertEqual(template.render(context), 'Enoent')
 
-    @unittest.skip('FIXME: This does not render, though it does in admin')
-    def test_category_widget(self):
-        category = self.new_category()
-
-        tpl = """{% load pages_tags %}{% placeholder "category" with CategoryWidget %}"""
-        template = get_template_from_string(tpl)
-        context = Context({})
-        self.assertEqual(template.render(context), 'Test category')
-

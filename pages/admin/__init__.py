@@ -281,7 +281,7 @@ class PageAdmin(admin.ModelAdmin):
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
 
-        return super(PageAdmin, self).change_view(request, object_id, 
+        return super(PageAdmin, self).change_view(request, object_id,
             form_url=form_url, extra_context=extra_context)
 
 
@@ -390,6 +390,7 @@ try:
     admin.site.register(Page, PageAdmin)
 except AlreadyRegistered:
     pass
+
 
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')

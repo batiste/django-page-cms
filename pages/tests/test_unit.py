@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
 from pages.models import Page, Content
+from pages.plugins.category.models import Category
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
@@ -118,6 +119,20 @@ class UnitTestCase(TestCase):
         self.assertEqual(template.render(context), u'None')
         page = self.new_page({'slug': 'get-page-slug'})
         self.assertEqual(template.render(context), u'get-page-slug')
+
+    def test_get_pages_for_category_template_tag(self):
+        category = self.new_category()
+        content = {
+            'title': 'test-page',
+            'category': category.slug,
+        }
+        pages = [self.new_page(content=content) for i in xrange(3)]
+        tpl = """{% load pages_tags %}{% pages_for_category 'test-category' %}{% for page in pages %}{{ page.title }}
+        {% endfor %}"""
+        template = get_template_from_string(tpl)
+        out = template.render(Context({}))
+        easy_out = out.strip().replace('\n', '').replace(8 * ' ', ' ')
+        self.assertEqual(easy_out, 'test-page test-page test-page')
 
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
@@ -773,11 +788,40 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'get-page-slug'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), u'get-page-slug')
-    
-    def test_get_filename(self):        
+
+    def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         data = "myfile.pdf"
         self.assertTrue(data in get_filename(page, placeholder, data))
         self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, data))
         self.assertTrue(placeholder.name in get_filename(page, placeholder, data))
+
+    def test_get_category_name(self):
+        tpl = """{% load pages_tags %}{% category_name 'test-category' %}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), 'Test category')
+
+    def test_get_invalid_category_name(self):
+        tpl = """{% load pages_tags %}{% category_name 'enoent' %}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), '')
+
+    def test_get_category(self):
+        tpl = """{% load pages_tags %}{% get_category 'test-category' %}{{ category.title }}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), 'Test category')
+
+    def test_get_invalidcategory(self):
+        tpl = """{% load pages_tags %}{% get_category 'enoent' %}{{ category.title }}"""
+        template = get_template_from_string(tpl)
+        category = self.new_category()
+        context = Context({})
+        self.assertEqual(template.render(context), 'Enoent')
+

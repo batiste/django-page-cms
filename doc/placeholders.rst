@@ -243,6 +243,13 @@ List of placeholder widgets shipped with the CMS
 
 Placeholder could be rendered with different widgets
 
+CategoryWidget
+--------------
+
+Select a ``Category`` object the page belongs to::
+
+    {% placeholder "<name>" with CategoryWidget %}
+
 TextInput
 ---------
 

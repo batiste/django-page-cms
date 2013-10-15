@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS functionnal tests suite module."""
 from pages.models import Page, Content, PageAlias
+from pages.plugins.category.models import Category
 from pages.tests.testcase import TestCase
 
 import django
@@ -58,6 +59,25 @@ class FunctionnalTestCase(TestCase):
         assert(slug_content is None)
         self.assertEqual(Page.objects.count(), pageCount - 1)
 
+    def test_add_category(self):
+        """Add category page properly shown"""
+        c = self.get_admin_client()
+
+        response = c.get('/admin/pages/category/add/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_category(self):
+        """Test category gets created"""
+        c = self.get_admin_client()
+
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        category = Category.objects.latest('id')
+        self.assertEqual(category.title, category_data['title'])
+        self.assertEqual(category.slug, category_data['slug'])
+        self.assertEqual(category.get_pages().count(), 0)
+
     def test_slug_collision(self):
         """Test a slug collision."""
         self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", True)
@@ -79,6 +99,22 @@ class FunctionnalTestCase(TestCase):
         page2 = Content.objects.get_content_slug_by_slug(page_data['slug']).page
         self.assertNotEqual(page1.id, page2.id)
 
+    def test_category_slug_collision(self):
+        """Category slugs collide"""
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", False)
+
+        c = self.get_admin_client()
+
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+
+        self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", True)
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Category.objects.all().count(), 1)
+
     def test_automatic_slug_renaming(self):
         """Test a slug renaming."""
         self.set_setting("PAGE_AUTOMATIC_SLUG_RENAMING", True)
@@ -93,9 +129,9 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, '/admin/pages/page/')
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        
+
         slug = page_data['slug']
-        
+
         page1 = Content.objects.get_content_slug_by_slug(slug).page
         page2 = Content.objects.get_content_slug_by_slug(slug+'-2').page
         page3 = Content.objects.get_content_slug_by_slug(slug+'-3').page
@@ -114,7 +150,7 @@ class FunctionnalTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_3_slug)
         self.assertEqual(page3.id, content.page.id)
 
-        # change an old slug of another page and see that it doesn't 
+        # change an old slug of another page and see that it doesn't
         # influence the current slug of this page
         old_slug = Content.objects.filter(page=page1).latest("creation_date")
         new_slug = Content(page=page1, body=page_3_slug, type="slug")
@@ -139,6 +175,65 @@ class FunctionnalTestCase(TestCase):
         content = Content.objects.get_content_slug_by_slug(page_3_slug+'-2')
         self.assertEqual(page3.id, content.page.id)
 
+    def test_category_slug_renaming(self):
+        """Test renaming a category slug"""
+        self.set_setting("PAGE_AUTOMATIC_SLUG_RENAMING", True)
+
+        c = self.get_admin_client()
+        category_data = self.get_new_category_data()
+
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 1)
+
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 2)
+
+        cat1, cat2 = Category.objects.all()
+        self.assertNotEqual(cat1.slug, cat2.slug)
+
+    def test_category_change_on_page(self):
+        """Test changing a page's category"""
+        c = self.get_admin_client()
+
+        # Set it up
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 1)
+
+        category_data = self.get_new_category_data()
+        response = c.post('/admin/pages/category/add/', category_data)
+        self.assertRedirects(response, '/admin/pages/category/')
+        self.assertEqual(Category.objects.all().count(), 2)
+
+        cat1, cat2 = Category.objects.all()
+        self.assertNotEqual(cat1.slug, cat2.slug)
+
+        # Create page
+        page_data = self.get_new_page_data()
+        page_data['category'] = 'test-category-1'
+        response = c.post('/admin/pages/page/add/', page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        slug_content = Content.objects.get_content_slug_by_slug(
+            page_data['slug']
+        )
+        assert(slug_content is not None)
+        page = slug_content.page
+        language = 'en-us'
+        content = page.get_content(language, 'category')
+        assert(not not content)
+        cats = page.content_set.filter(language=language, type='category')
+        self.assertEqual(cats.count(), 1)
+
+        # Edit it
+        page_data['category'] = 'test-category-2'
+        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.get(id=page.id)
+        cats = page.content_set.filter(language=language, type='category')
+        self.assertEqual(cats.count(), 1)
 
     def test_details_view(self):
         """Test the details view basics."""

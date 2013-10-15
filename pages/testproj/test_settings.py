@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     TEST_PROJ + '.documents',
     #'tagging',
     'pages',
+    'pages.plugins.category',
     'mptt',
     #'staticfiles',
     #'tinymce',

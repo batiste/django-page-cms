@@ -243,7 +243,6 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
 
     PAGE_LANGUAGES_KEY = "page_%d_languages"
     PAGE_URL_KEY = "page_%d_url"
-    PAGE_BROKEN_LINK_KEY = "page_broken_link_%s"
     ANCESTORS_KEY = 'ancestors_%d'
     CHILDREN_KEY = 'children_%d'
     PUB_CHILDREN_KEY = 'pub_children_%d'
@@ -323,8 +322,6 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
             else:
                 self.publication_date = None
         self.last_modification_date = get_now()
-        # let's assume there is no more broken links after a save
-        cache.delete(self.PAGE_BROKEN_LINK_KEY % self.id)
         super(Page, self).save(*args, **kwargs)
         # fix sites many-to-many link when the're hidden from the form
         if settings.PAGE_HIDE_SITES and self.sites.count() == 0:
@@ -498,13 +495,6 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
             if t[0] == template:
                 return t[1]
         return template
-
-    def has_broken_link(self):
-        """
-        Return ``True`` if the page have broken links to other pages
-        into the content.
-        """
-        return cache.get(self.PAGE_BROKEN_LINK_KEY % self.id)
 
     def valid_targets(self):
         """Return a :class:`QuerySet` of valid targets for moving a page

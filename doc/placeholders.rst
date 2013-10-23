@@ -219,7 +219,7 @@ without subclassing it, you can just you create a valid Django Widget that take 
         class Media:
             js = ['path to the widget extra javascript']
             css = {
-                'all': ['path to the widget extra javascript']
+                'all': ['path to the widget extra css']
             }
 
         def __init__(self, language=None, attrs=None, **kwargs):

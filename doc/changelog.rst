@@ -10,6 +10,8 @@ Release 1.5.3
     Not released yet
 
     * Tiny MCE javascript is not included with this CMS anymore. Please use https://github.com/aljosa/django-tinymce
+    * A more agressive cache should reduce page related SQL queries to 3 once the cache is warm.
+    * A plugin app example as been created in pages.plugins.category.
 
 
 Release 1.5.2

@@ -1,7 +1,12 @@
+# -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django import forms
+
 from pages.cache import cache
 from pages.models import Page
+from pages.widgets_registry import register_widget
+
 
 class Category(models.Model):
     """To categorize :class:`Page <pages.models.Page>` objects
@@ -17,7 +22,9 @@ class Category(models.Model):
     slug = models.CharField(_('Slug'), max_length=255)
 
     class Meta:
-        app_label = 'pages'
+        # it's not possible to have south migrations
+        # in the plugin if the app_label is the same
+        # app_label = 'pages'
         verbose_name_plural = _('categories')
 
     def __unicode__(self):
@@ -33,3 +40,17 @@ class Category(models.Model):
             cache.set(key, pages)
         return pages
 
+
+class CategoryWidget(forms.Select):
+    """Can use Categories through placeholders"""
+    def __init__(self, attrs=None, language=None, **kwargs):
+        choices = kwargs.pop('choices', ())
+        choices = list(choices)
+        cats = Category.objects.all()
+        if language:
+            cats = cats.filter(language=language)
+        choices.extend((cat.slug, cat.title) for cat in cats)
+        super(CategoryWidget, self).__init__(attrs=attrs, choices=choices)
+
+
+register_widget(CategoryWidget)

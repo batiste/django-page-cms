@@ -20,10 +20,6 @@ from django.utils.translation import ugettext as _
 
 from os.path import join
 
-CATEGORY_INSTALLED = 'pages.plugins.category' in settings.INSTALLED_APPS
-if CATEGORY_INSTALLED:
-    from pages.plugins.category.models import Category
-
 register_widget(TextInput)
 register_widget(Textarea)
 register_widget(AdminTextInputWidget)
@@ -446,18 +442,4 @@ class PageLinkWidget(MultiWidget):
 
 register_widget(PageLinkWidget)
 
-
-class CategoryWidget(forms.Select):
-    """Can use Categories through placeholders"""
-    def __init__(self, attrs=None, language=None, **kwargs):
-        choices = kwargs.pop('choices', ())
-        choices = list(choices)
-        cats = Category.objects.all()
-        if language:
-            cats = cats.filter(language=language)
-        choices.extend((cat.slug, cat.title) for cat in cats)
-        super(CategoryWidget, self).__init__(attrs=attrs, choices=choices)
-
-if CATEGORY_INSTALLED:
-    register_widget(CategoryWidget)
 

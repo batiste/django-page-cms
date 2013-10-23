@@ -15,8 +15,7 @@ class CategoryForm(SlugFormMixin):
 
     language = forms.ChoiceField(
         label=_('Language'),
-        choices=settings.PAGE_LANGUAGES,
-        widget=LanguageChoiceWidget()
+        choices=settings.PAGE_LANGUAGES
     )
 
     class Meta:

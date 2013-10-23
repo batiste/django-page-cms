@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'pages.testproj.documents',
     #'taggit',
     'pages',
+    'pages.plugins.category',
     'mptt',
     #'tinymce',
     # disabled to make "setup.py test" to work properly

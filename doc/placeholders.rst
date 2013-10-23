@@ -243,13 +243,6 @@ List of placeholder widgets shipped with the CMS
 
 Placeholder could be rendered with different widgets
 
-CategoryWidget
---------------
-
-Select a ``Category`` object the page belongs to::
-
-    {% placeholder "<name>" with CategoryWidget %}
-
 TextInput
 ---------
 
@@ -289,6 +282,18 @@ A file browsing widget::
 
     The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
 
+CategoryWidget
+--------------
+
+Select a ``Category`` object the page belongs to::
+
+    {% placeholder "<name>" with CategoryWidget %}
+    
+.. note::
+
+    You need to install the `pages.plugins.category` application into your Django settings to
+    have access to this Widget.
+    
 
 RichTextarea
 ------------

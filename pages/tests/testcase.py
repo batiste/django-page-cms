@@ -1,7 +1,6 @@
 from django.test import TestCase
 from pages.cache import cache
 from pages.models import Page, Content
-from pages.plugins.category.models import Category
 from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
@@ -85,7 +84,10 @@ class TestCase(TestCase):
     def reset_urlconf(self):
         url_conf = getattr(settings, 'ROOT_URLCONF', False)
         if url_conf:
-            reload(import_module(url_conf))
+            try:
+                reload(import_module(url_conf))
+            except:
+                pass
         reload(import_module('pages.urls'))
         reload(import_module('pages.testproj.urls'))
         clear_url_caches()
@@ -125,18 +127,4 @@ class TestCase(TestCase):
         slug_content = Content.objects.get_content_slug_by_slug(
             page_data['slug'])
         return slug_content.page
-
-    def get_new_category_data(self):
-        """Helper method for creating category datas"""
-        category_data = {'title': 'test category %d' % self.counter,
-            'slug': 'test-category-%d' % self.counter, 'language':'en-us',
-            }
-        self.counter = self.counter + 1
-        return category_data
-
-    def new_category(self, data=None, language='en-us'):
-        if data is None:
-            data = {'title': 'Test category', 'slug': 'test-category'}
-        data['language'] = language
-        return Category.objects.create(**data)
 

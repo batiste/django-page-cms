@@ -39,13 +39,13 @@ Template syntax example::
 
     {% placeholder "main menu" on root_page %}
 
-the **widget** option
+the **with** option
 ----------------------
 
-The **widget** option is used to change the placeholders widgets in the administration interface.
+The **with** option is used to change a placeholder widget within the administration interface.
 
-By default the CMS will use a simple `TextInput` widget. Otherwise the CMS will use the
-widget of your choice. Widgets need to be registered before you can use them in the CMS::
+By default the CMS will use a simple `TextInput` widget. But with the **with** option
+the CMS will use the the widget of your choice. Widgets need to be registered before you can use them in the CMS::
 
     from pages.widgets_registry import register_widget
     from django.forms import TextInput
@@ -107,12 +107,13 @@ placeholder that should remain the same in every language.
 
 Template syntax example::
 
-    {% placeholder "logo" untranslated %}
+    {% imageplaceholder "logo" untranslated %}
 
 Examples of other valid syntaxes
 ------------------------------------
 
-This is a list of different possible syntaxes for this template tag::
+You can off course combine any of those syntaxes to your convenience.
+This is an example list of different possible syntaxes for this template tag::
 
     {% placeholder "title" with TextIntput %}
     {% placeholder "logo" untranslated on root_page %}
@@ -155,8 +156,8 @@ If you want to include a simple contact form in your page, there is a contact pl
 
     {% contactplaceholder "contact" %}
 
-This placeholder use ´settings.ADMINS´ for recipients email. The template used to render
-the contact form is ´pages/contact.html´.
+This placeholder use `settings.ADMINS` for recipients email. The template used to render
+the contact form is `pages/contact.html`.
 
 
 Create your own placeholder

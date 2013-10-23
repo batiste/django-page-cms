@@ -90,7 +90,7 @@ make modifications in your branch. Please follow those instructions:
 Ask for help
 ============
 
-`Github issues https://github.com/batiste/django-page-cms/issues`_
+`Github issues <https://github.com/batiste/django-page-cms/issues>`_
 
 Test it
 -------

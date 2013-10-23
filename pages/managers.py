@@ -20,10 +20,6 @@ from datetime import datetime
 
 ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
 
-# This affects how content is saved
-CATEGORY_INSTALLED = 'pages.plugins.category' in global_settings.INSTALLED_APPS
-CATEGORY_TYPE = 'category'
-
 
 class PageManager(TreeManager):
     """
@@ -328,12 +324,6 @@ class ContentManager(models.Manager):
                 )[settings.PAGE_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
-
-        # Delete also old category if relevant
-        if CATEGORY_INSTALLED and ctype == CATEGORY_TYPE:
-            cat = self.filter(page=page, language=language, type=ctype)
-            cat = cat.exclude(pk=content.pk)
-            cat.delete()
 
         return content
 

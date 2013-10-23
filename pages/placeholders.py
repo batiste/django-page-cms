@@ -241,6 +241,9 @@ class PlaceholderNode(template.Node):
         return "<Placeholder Node: %s>" % self.name
 
 def get_filename(page, placeholder, data):
+    """
+    Generate a stable filename using the orinal filename.
+    """
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
@@ -329,7 +332,9 @@ class FilePlaceholderNode(PlaceholderNode):
 
 
 class ContactForm(forms.Form):
-  
+    """
+    Simple contact form
+    """
     email = forms.EmailField(label=_('Your email'))
     subject = forms.CharField(label=_('Subject'), 
       max_length=150)

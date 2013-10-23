@@ -4,8 +4,10 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release 1.5.4
+Release 1.5.3
 ==============
+
+    Not released yet
 
     * Tiny MCE javascript is not included with this CMS anymore. Please use https://github.com/aljosa/django-tinymce
 
@@ -13,12 +15,12 @@ Release 1.5.4
 Release 1.5.2
 ==============
 
-Released on the first of spetember 2013.
+Released on the first of september 2013.
 
     * Fix bad migrations.
     * Test and fix a bug with the PAGE_AUTOMATIC_SLUG_RENAMING option.
     * Re-introduce a previously delete javascript file (jquery.query-2.1.7.js) necessary in the admin interface.
-    * File and Image placeholer now users the same filename scheme that preserve the original filename.
+    * File and Image placeholer now use the same filename scheme that preserve the original filename.
 
 Release 1.5.1
 ==============

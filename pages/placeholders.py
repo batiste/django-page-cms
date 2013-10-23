@@ -387,6 +387,10 @@ class VideoPlaceholderNode(PlaceholderNode):
 
 
 class JsonPlaceholderNode(PlaceholderNode):
+    """
+    A `PlaceholderNode` that try to return a deserialized JSON object
+    in the template.
+    """
 
     def get_render_content(self, context):
         import json

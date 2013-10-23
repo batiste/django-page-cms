@@ -7,17 +7,17 @@ This file describe new features and incompatibilites between released version of
 Release 1.5.3
 ==============
 
-    Not released yet
+Released the 23 of October 2013.
 
     * Tiny MCE javascript is not included with this CMS anymore. Please use https://github.com/aljosa/django-tinymce
     * A more agressive cache should reduce page related SQL queries to 3 once the cache is warm.
     * A plugin app example as been created in pages.plugins.category.
-
+    * jquery.query-2.1.7.js is properly restaured this time.
 
 Release 1.5.2
 ==============
 
-Released on the first of september 2013.
+Released on the first of September 2013.
 
     * Fix bad migrations.
     * Test and fix a bug with the PAGE_AUTOMATIC_SLUG_RENAMING option.
@@ -27,7 +27,7 @@ Released on the first of september 2013.
 Release 1.5.1
 ==============
 
-Released on the 7th of august 2013.
+Released on the 7th of August 2013.
 
     * Documentation fixes.
     * Dependencies on html5lib was incorrect.

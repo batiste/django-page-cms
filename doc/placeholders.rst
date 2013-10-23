@@ -61,6 +61,9 @@ Template syntax example::
 
 
 .. note::
+    :ref:`Details about how to create a new Widget for a placeholder <changing-widget>` .
+    
+.. note::
 
     This CMS is shipped with :ref:`a list of useful widgets <placeholder-widgets-list>` .
 
@@ -200,7 +203,8 @@ And use it in your templates as a normal placeholder::
 
     {% contactplaceholder contact %}
 
-
+.. _changing-widget:
+    
 Changing the widget of the common placeholder
 =============================================
 
@@ -230,12 +234,20 @@ without subclassing it, you can just you create a valid Django Widget that take 
 
     register_widget(CustomTextarea)
 
-Create a file named widgets (or whathever you want) somewhere in one of your project's application
+Create a file named `widgets.py` (or whathever you want) somewhere in one of your project's application.
 and then you can simply use the placeholder syntax::
 
-    {% placeholder custom_widget_example CustomTextarea %}
+    {% placeholder custom_widget_example with CustomTextarea %}
 
-More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
+.. note::
+    
+    You have to make sure your `widgets.py` file is executed before using the widget. To be sure of this, you might
+    import your file into the models.py of your application.
+    
+.. note::
+
+    More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
+    
 
 .. _placeholder-widgets-list:
 

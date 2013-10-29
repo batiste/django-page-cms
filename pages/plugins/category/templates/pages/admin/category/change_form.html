@@ -1,0 +1,6 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/urlify.js"></script>
+<script type="text/javascript">var static_url = "{{ STATIC_URL }}";</script>
+{% endblock %}

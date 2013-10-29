@@ -8,7 +8,6 @@ from django.conf import settings as dj_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
 from django.core.management.base import CommandError
-from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
@@ -20,11 +19,7 @@ def get_now():
         return datetime.utcnow().replace(tzinfo=timezone.utc)
     else:
         return datetime.now()
-
-JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
-JSON_PAGE_EXPORT_VERSION = 4
-# make it readable -- there are better ways to save space
-JSON_PAGE_EXPORT_INDENT = 2
+        
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.
@@ -225,127 +220,7 @@ def normalize_url(url):
         url = url[0:len(url) - 1]
     return url
 
-def pages_to_json(queryset):
-    """
-    Return a JSON string export of the pages in queryset.
-    """
-    # selection may be in the wrong order, and order matters
-    queryset = queryset.order_by('tree_id', 'lft')
-    return simplejson.dumps(
-        {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
-            'pages': [page.dump_json_data() for page in queryset]},
-        indent=JSON_PAGE_EXPORT_INDENT, sort_keys=True)
-
-def json_to_pages(json, user, preferred_lang=None):
-    """
-    Attept to create/update pages from JSON string json.  user is the
-    user that will be used when creating a page if a page's original
-    author can't be found.  preferred_lang is the language code of the
-    slugs to include in error messages (defaults to
-    settings.PAGE_DEFAULT_LANGUAGE).
-
-    Returns (errors, pages_created) where errors is a list of strings
-    and pages_created is a list of: (page object, created bool,
-    messages list of strings) tuples.
-
-    If any errors are detected there the error list will contain
-    information for the user and no pages will be created/updated.
-    """
-    from pages.models import Page
-    if not preferred_lang:
-        preferred_lang = settings.PAGE_DEFAULT_LANGUAGE
-
-    d = simplejson.loads(json)
-    try:
-        errors = validate_pages_json_data(d, preferred_lang)
-    except KeyError, e:
-        errors = [_('JSON file is invalid: %s') % (e.args[0],)]
-
-    pages_created = []
-    if not errors:
-        # pass one
-        for p in d['pages']:
-            pages_created.append(
-                Page.objects.create_and_update_from_json_data(p, user))
-        # pass two
-        for p, results in zip(d['pages'], pages_created):
-            page, created, messages = results
-            rtcs = p['redirect_to_complete_slug']
-            if rtcs:
-                messages.extend(page.update_redirect_to_from_json(rtcs))
-        # clean up MPTT links
-        Page.objects.rebuild()
-
-    return errors, pages_created
-
-
-def validate_pages_json_data(d, preferred_lang):
-    """
-    Check if an import of d will succeed, and return errors.
-
-    errors is a list of strings.  The import should proceed only if errors
-    is empty.
-    """
-    from pages.models import Page
-    errors = []
-
-    seen_complete_slugs = dict(
-        (lang[0], set()) for lang in settings.PAGE_LANGUAGES)
-
-    valid_templates = set(t[0] for t in settings.get_page_templates())
-    valid_templates.add(settings.PAGE_DEFAULT_TEMPLATE)
-
-    if d[JSON_PAGE_EXPORT_NAME] != JSON_PAGE_EXPORT_VERSION:
-        return [_('Unsupported file version: %s') % repr(
-            d[JSON_PAGE_EXPORT_NAME])], []
-    pages = d['pages']
-    for p in pages:
-        # use the complete slug as a way to identify pages in errors
-        slug = p['complete_slug'].get(preferred_lang, None)
-        seen_parent = False
-        for lang, s in p['complete_slug'].items():
-            if lang not in seen_complete_slugs:
-                continue
-            seen_complete_slugs[lang].add(s)
-
-            if '/' not in s: # root level, no parent req'd
-                seen_parent = True
-            if not seen_parent:
-                parent_slug, ignore = s.rsplit('/', 1)
-                if parent_slug in seen_complete_slugs[lang]:
-                    seen_parent = True
-                else:
-                    parent = Page.objects.from_path(parent_slug, lang,
-                        exclude_drafts=False)
-                    if parent and parent.get_complete_slug(lang) == parent_slug:
-                        # parent not included, but exists on site
-                        seen_parent = True
-            if not slug:
-                slug = s
-
-        if not slug:
-            errors.append(_("%s has no common language with this site")
-                % (p['complete_slug'].values()[0],))
-            continue
-
-        if not seen_parent:
-            errors.append(_("%s did not include its parent page and a matching"
-                " one was not found on this site") % (slug,))
-
-        if p['template'] not in valid_templates:
-            errors.append(_("%s uses a template not found on this site: %s")
-                % (slug, p['template']))
-            continue
-
-        if set(p.name for p in get_placeholders(p['template']) if
-                p.name not in ('title', 'slug')) != set(p['content'].keys()):
-            errors.append(_("%s template contents are different than our "
-                "template: %s") % (slug, p['template']))
-            continue
-
-    return errors
-
-
+# TODO: remove?
 def monkeypatch_remove_pages_site_restrictions():
     """
     monkeypatch PageManager to expose pages for all sites by

@@ -252,6 +252,10 @@ html[dir=rtl] .change-list .actions-pages a {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -12px;
 }
+.change-list .actions-pages a.addlink {
+    background-image: url(../images/icons/icons.gif);
+    background-position: -2px 0px;
+}
 .change-list .pagelink-broken {
     float: left;
     height: 12px;
@@ -283,7 +287,7 @@ html[dir=rtl] .change-list .actions-pages a {
 
 /* Page Status links */
 .change-list td.publish-cell {
-    vertical-align: center;
+    vertical-align: middle;
     width: 200px;
 }
 .change-list .publish-cell span,
@@ -308,7 +312,6 @@ html[dir=rtl] .change-list .actions-pages a {
 .status span.hidden {
     background-position: -2px -36px;
 }
-
 
 
 /* Move links */
@@ -447,7 +450,6 @@ html[dir=rtl] .change-list .insert {
 
 /* Global */
 .change-form .sidebar {
-
     width: 305px;
     float: left;
     display: inline; /* IE6 fix */
@@ -677,3 +679,9 @@ html[dir=rtl] .change-form .module-content .revisions {
 .change-form .module-translation-helper .translation-helper-placeholder .externallink_broken,
 .change-form .module-translation-helper .translation-helper-placeholder .pagelink_broken { text-decoration: line-through; }
 
+
+/* grapelli specific */
+
+.grp-changelist-actions {
+    overflow: hidden;
+}

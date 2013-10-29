@@ -7,11 +7,11 @@ from django.template import RequestContext
 
 from pages import settings
 from pages.http import get_language_from_request
-from pages.utils import get_placeholders, pages_to_json, json_to_pages
+from pages.plugins.jsonexport.utils import pages_to_json, json_to_pages
 from pages.models import Page
+from pages.permissions import PagePermission
 
 JSON_PAGE_EXPORT_FILENAME = 'cms_pages.json'
-
 
 def export_pages_as_json(modeladmin, request, queryset):
     response = HttpResponse(mimetype="application/json")
@@ -22,12 +22,17 @@ def export_pages_as_json(modeladmin, request, queryset):
 export_pages_as_json.short_description = _("Export pages as JSON")
 
 @transaction.commit_on_success
-def import_pages_from_json(request,
+def import_pages_from_json(modeladmin, request, queryset,
         template_name='admin/pages/page/import_pages.html'):
+            
     try:
         j = request.FILES['json']
     except KeyError:
-        return redirect('admin:page-index')
+        return render_to_response(template_name, {
+            'nofile': True,
+            'app_label': 'pages',
+            'opts': Page._meta,
+        }, RequestContext(request))
 
     errors, pages_created = json_to_pages(j.read(), request.user,
         get_language_from_request(request))
@@ -39,3 +44,5 @@ def import_pages_from_json(request,
         'opts': Page._meta,
     }, RequestContext(request))
 
+import_pages_from_json.short_description = _("Import some pages from a JSON file")
+    

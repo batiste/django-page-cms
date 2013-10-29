@@ -90,6 +90,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    #'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.staticfiles',
@@ -97,6 +98,7 @@ INSTALLED_APPS = (
     #'taggit',
     'pages',
     'pages.plugins.category',
+    'pages.plugins.jsonexport',
     'mptt',
     #'tinymce',
     # disabled to make "setup.py test" to work properly

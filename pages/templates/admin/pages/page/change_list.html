@@ -19,14 +19,7 @@
 <script type="text/javascript">var static_url = "{{ STATIC_URL }}";</script>
 {% endblock %}
 
-{% block content %}
-<div id="content-main">
 
-{% if has_add_permission %}
-<ul class="object-tools"><li><a href="add/" class="addlink">{% blocktrans with name as name %}Add {{ name }}{% endblocktrans %}</a></li></ul>
-{% endif %}
-
-<div class="module" id="changelist">
 
 {% block result_list %}
 <div id="toolbar">
@@ -49,17 +42,7 @@
 </div>
 {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
 </form>
-{% if can_import %}
-	<form action="import-json/" method="post" enctype="multipart/form-data">
-	<div class="actions">
-	{% csrf_token %}
-	<label>Import pages: <input type="file" name="json" size="40" /></label>
-	<input type="submit" name="j" value="{% trans "Import" %}" />
-	</div>
-	</form>
-{% endif %}
+
 {% endblock %}
 
-</div>
-</div>
-{% endblock %}
+{% block pagination %}{% endblock %}

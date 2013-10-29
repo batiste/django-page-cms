@@ -11,7 +11,6 @@ from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
-from pages.admin.actions import export_pages_as_json, import_pages_from_json
 from pages.permissions import PagePermission
 from pages.http import auto_render
 import pages.widgets
@@ -73,8 +72,19 @@ class PageAdmin(admin.ModelAdmin):
         }],
     )
 
-    if settings.PAGE_EXPORT_ENABLED:
-        actions = [export_pages_as_json]
+    actions = []
+
+    for app_name in global_settings.INSTALLED_APPS:
+        try:
+            module_ = __import__(app_name, globals(), locals(), ['object'], -1)
+        except ImportError:
+            continue
+        if hasattr(module_, "PAGE_ADMIN_ACTIONS"):
+            actions_path = getattr(module_, "PAGE_ADMIN_ACTIONS")
+            for action in actions_path:
+                module_name, m = action.rsplit('.', 1)
+                method = getattr(__import__(module_name, globals(), locals(), ['object'], -1), m)
+                actions.append(method)
 
     class Media:
         css = {
@@ -113,12 +123,16 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
         )
-        if settings.PAGE_IMPORT_ENABLED:
-            urlpatterns += patterns('',
-                url(r'^import-json/$',
-                    self.import_pages, name='import-pages-from-json'),
-            )
-
+        
+        for app_name in global_settings.INSTALLED_APPS:
+            try:
+                module_ = __import__(app_name, globals(), locals(), ['object'], -1)
+            except ImportError:
+                continue
+            if hasattr(module_, "PAGE_ADMIN_URLS"):
+                urls = __import__(getattr(module_, "PAGE_ADMIN_URLS"), globals(), locals(), ['object'], -1)
+                urlpatterns += urls.urlpatterns
+                
         urlpatterns += super(PageAdmin, self).urls
 
         return urlpatterns
@@ -347,12 +361,6 @@ class PageAdmin(admin.ModelAdmin):
         change_list = self.changelist_view(request, context)
 
         return change_list
-
-    def import_pages(self, request):
-        if not self.has_add_permission(request):
-            return admin.site.login(request)
-
-        return import_pages_from_json(request)
 
 
 class PageAdminWithDefaultContent(PageAdmin):

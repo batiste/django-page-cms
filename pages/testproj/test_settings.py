@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     #'tagging',
     'pages',
     'pages.plugins.category',
+    'pages.plugins.jsonexport',
     'mptt',
     #'staticfiles',
     #'tinymce',

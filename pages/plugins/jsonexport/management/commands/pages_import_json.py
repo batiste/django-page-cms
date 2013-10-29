@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
-from pages.utils import (json_to_pages,
+from pages.plugins.jsonexport.utils import (pages_to_json,
     monkeypatch_remove_pages_site_restrictions)
 from pages.models import Page
 

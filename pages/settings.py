@@ -148,7 +148,7 @@ PAGE_LANGUAGE_MAPPING = getattr(settings, 'PAGE_LANGUAGE_MAPPING', lambda l: l)
 # framework
 PAGE_USE_SITE_ID = getattr(settings, 'PAGE_USE_SITE_ID', False)
 
-# Set PAGE_HIDE_SITES to make the sites that appear uneditable and only allow
+# Set PAGE_HIDE_SITES to make the sites appear uneditable and only allow
 # editing and creating of pages on the current site
 PAGE_HIDE_SITES = getattr(settings, 'PAGE_HIDE_SITES', False)
 

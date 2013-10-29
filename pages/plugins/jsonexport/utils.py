@@ -16,6 +16,19 @@ JSON_PAGE_EXPORT_VERSION = 4
 # make it readable -- there are better ways to save space
 JSON_PAGE_EXPORT_INDENT = 2
 
+
+def monkeypatch_remove_pages_site_restrictions():
+    """
+    monkeypatch PageManager to expose pages for all sites by
+    removing customized get_query_set. Only actually matters
+    if PAGE_HIDE_SITES is set
+    """
+    from pages.managers import PageManager
+    try:
+        del PageManager.get_query_set
+    except AttributeError:
+        pass
+
 def dump_json_data(page):
     """
     Return a python dict representation of this page for use as part of

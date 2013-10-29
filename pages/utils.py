@@ -220,15 +220,3 @@ def normalize_url(url):
         url = url[0:len(url) - 1]
     return url
 
-# TODO: remove?
-def monkeypatch_remove_pages_site_restrictions():
-    """
-    monkeypatch PageManager to expose pages for all sites by
-    removing customized get_query_set. Only actually matters
-    if PAGE_HIDE_SITES is set
-    """
-    from pages.managers import PageManager
-    try:
-        del PageManager.get_query_set
-    except AttributeError:
-        pass

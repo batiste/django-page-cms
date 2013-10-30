@@ -187,35 +187,10 @@ Changing ``PAGE_SHOW_END_DATE`` from ``True`` to ``False`` after adding
 data could cause some weirdness.  If you must do this, you should update
 your database and null any pages with ``publication_end_date`` set.
 
-PAGE_CONNECTED_MODELS
-==================================
-
-``PAGE_CONNECTED_MODELS`` allows you to specify a model and form for this
-model into your settings to get an automatic form to create
-and directly link a new instance of this model with your page in the admin::
-
-    PAGE_CONNECTED_MODELS = [
-        {'model':'documents.models.Document',
-            'form':'documents.models.DocumentForm'},
-    ]
-
-.. note::
-
-    :ref:`Complete documentation on how to use this setting <3rd-party-apps>`
-
-PAGE_LINK_FILTER
-==================================
-
-The page link filter enable a output filter on you content links. The goal
-is to transform special page classes into real links at the last moment.
-This ensure that even if you move a page within the CMS, the URLs pointing on it
-will remain correct.
-
-
 PAGE_TAGGING
 ==================================
 
-Set ``PAGE_TAGGING`` to ``False`` if you do not wish to use the
+Set ``PAGE_TAGGING`` to ``True`` if you wish to use the
 ``django-taggit`` application.
 
 PAGE_TINYMCE

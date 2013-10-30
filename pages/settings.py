@@ -192,19 +192,6 @@ PAGE_SHOW_START_DATE = getattr(settings, 'PAGE_SHOW_START_DATE', False)
 # your database and null any pages with ``publication_end_date`` set.
 PAGE_SHOW_END_DATE = getattr(settings, 'PAGE_SHOW_END_DATE', False)
 
-# ``PAGE_CONNECTED_MODELS`` allows you to specify a model and form for this
-# model into your settings to get an automatic form to create
-# and directly link a new instance of this model with your page in the admin.
-#
-# Here is an example:
-#
-# PAGE_CONNECTED_MODELS = [
-#     {'model':'documents.models.Document',
-#        'form':'documents.models.DocumentForm'},
-# ]
-#
-PAGE_CONNECTED_MODELS = getattr(settings, 'PAGE_CONNECTED_MODELS', False)
-
 # The page link filter enable a output filter on you content links. The goal
 # is to transform special page class into real links at the last moment.
 # This ensure that even if you have moved a page, the URL will remain correct.

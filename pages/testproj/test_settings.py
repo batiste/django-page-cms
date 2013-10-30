@@ -115,18 +115,6 @@ INSTALLED_APPS = (
     #'haystack',
 )
 
-PAGE_TINYMCE = False
-#PAGE_TAGGING = True
-
-PAGE_CONNECTED_MODELS = [{
-    'model':TEST_PROJ + '.documents.models.Document',
-    'form':TEST_PROJ + '.documents.models.DocumentForm',
-    'options':{
-            'extra': 3,
-            'max_num': 10,
-        },
-},]
-
 # Default language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -189,18 +177,8 @@ COVERAGE_EXCLUDE_MODULES = (
 
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
-
 PAGE_ENABLE_TESTS = True
 
-#TEST_RUNNER = 'example.test_runner.run_tests'
-
-#here = os.path.abspath(os.path.dirname(__file__))
-#NOSE_ARGS = [os.path.join(here, os.pardir, "pages", "tests"),
-#            "--cover3-package=pages",
-#            "--cover3-branch",
-#            "--with-coverage3",
-#            "--cover3-html",
-#            "--cover3-exclude=%s" % ",".join(COVERAGE_EXCLUDE_MODULES)]
 
 try:
     from local_settings import *

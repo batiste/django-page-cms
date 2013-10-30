@@ -5,7 +5,6 @@ from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
-from pages.admin.utils import get_connected, make_inline_admin
 from pages.admin.forms import PageForm
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
@@ -390,9 +389,6 @@ class PageAdminWithDefaultContent(PageAdmin):
                     global_settings.LANGUAGE_CODE, name))
         return form
 
-
-for admin_class, model, options in get_connected():
-    PageAdmin.inlines.append(make_inline_admin(admin_class, model, options))
 
 try:
     admin.site.register(Page, PageAdmin)

@@ -4,6 +4,10 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.X.X
+
+    * PAGE_CONNECTED_MODELS is gone. Use instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
+
 Release 1.5.3
 ==============
 

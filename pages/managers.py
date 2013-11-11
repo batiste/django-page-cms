@@ -2,7 +2,7 @@
 """Django page CMS ``managers``."""
 from pages import settings
 from pages.cache import cache
-from pages.utils import normalize_url
+from pages.utils import normalize_url, get_now
 from pages.http import get_slug
 
 from django.db import models, connection
@@ -15,8 +15,6 @@ from django.conf import settings as global_settings
 from django.utils.translation import ugettext_lazy as _
 
 from mptt.managers import TreeManager
-
-from datetime import datetime
 
 
 class PageManager(TreeManager):
@@ -83,11 +81,11 @@ class PageManager(TreeManager):
         queryset = queryset.filter(status=self.model.PUBLISHED)
 
         if settings.PAGE_SHOW_START_DATE:
-            queryset = queryset.filter(publication_date__lte=datetime.now())
+            queryset = queryset.filter(publication_date__lte=get_now())
 
         if settings.PAGE_SHOW_END_DATE:
             queryset = queryset.filter(
-                Q(publication_end_date__gt=datetime.now()) |
+                Q(publication_end_date__gt=get_now()) |
                 Q(publication_end_date__isnull=True)
             )
 
@@ -103,14 +101,14 @@ class PageManager(TreeManager):
         :attr:`Page.publication_date`."""
         pub = self.on_site().filter(status=self.model.DRAFT)
         if settings.PAGE_SHOW_START_DATE:
-            pub = pub.filter(publication_date__gte=datetime.now())
+            pub = pub.filter(publication_date__gte=get_now())
         return pub
 
     def expired(self):
         """Creates a :class:`QuerySet` of expired using the page's
         :attr:`Page.publication_end_date`."""
         return self.on_site().filter(
-            publication_end_date__lte=datetime.now())
+            publication_end_date__lte=get_now())
 
     def from_path(self, complete_path, lang, exclude_drafts=True):
         """Return a :class:`Page <pages.models.Page>` according to

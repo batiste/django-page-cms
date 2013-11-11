@@ -4,7 +4,7 @@ from pages import settings
 from pages.cache import cache
 from pages.http import get_request_mock
 
-from django.conf import settings as dj_settings
+from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
 from django.core.management.base import CommandError
@@ -15,7 +15,7 @@ import re
 from datetime import datetime
 
 def get_now():
-    if dj_settings.USE_TZ:
+    if django_settings.USE_TZ:
         return datetime.utcnow().replace(tzinfo=timezone.utc)
     else:
         return datetime.now()

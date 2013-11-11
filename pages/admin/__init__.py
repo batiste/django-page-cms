@@ -101,7 +101,7 @@ class PageAdmin(admin.ModelAdmin):
         )]
 
     def urls(self):
-        from django.conf.urls.defaults import patterns, url, include
+        from django.conf.urls import patterns, url, include
 
         # Admin-site-wide views.
         urlpatterns = patterns('',

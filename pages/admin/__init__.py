@@ -11,7 +11,6 @@ from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
 from pages.permissions import PagePermission
-from pages.http import auto_render
 import pages.widgets
 
 from django.contrib import admin
@@ -405,7 +404,7 @@ class ContentAdmin(admin.ModelAdmin):
 
 class AliasAdmin(admin.ModelAdmin):
     list_display = ('page', 'url',)
-    list_editable = ('url', )
+    list_editable = ('url',)
 
 try:
     admin.site.register(PageAlias, AliasAdmin)

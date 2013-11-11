@@ -23,8 +23,10 @@ import os
 import time
 import re
 
+logging.basicConfig()
+logger = logging.getLogger("pages")
+
 PLACEHOLDER_ERROR = _("[Placeholder %(name)s had syntax error: %(error)s]")
-logger = logging.getLogger(__name__)
 
 
 def parse_placeholder(parser, token):
@@ -403,5 +405,5 @@ class JsonPlaceholderNode(PlaceholderNode):
         try:
             return json.loads(str(content))
         except:
-            logger.error("Problem decoding json")
+            logger.warning("Problem decoding json")
         return content

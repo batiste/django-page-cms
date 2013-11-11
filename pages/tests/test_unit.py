@@ -782,4 +782,52 @@ class UnitTestCase(TestCase):
         self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, data))
         self.assertTrue(placeholder.name in get_filename(page, placeholder, data))
 
-
+    def test_json_placeholder(self):
+        tpl = ("{% load pages_tags %}{% jsonplaceholder p1 as v %}{{ v.a }}")
+        
+        template = get_template_from_string(tpl)
+        page = self.new_page({'p1': '{"a":1}'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'1')
+        
+        tpl = ("{% load pages_tags %}{% jsonplaceholder p1 %}")
+        template = get_template_from_string(tpl)
+        page = self.new_page({'p1': 'wrong'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'wrong')
+        
+    def test_file_placeholder(self):
+        tpl = ("{% load pages_tags %}{% fileplaceholder f1 %}")
+        
+        template = get_template_from_string(tpl)
+        page = self.new_page({'f1': 'filename'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'filename')
+        
+    def test_image_placeholder(self):
+        tpl = ("{% load pages_tags %}{% imageplaceholder f1 %}")
+        
+        template = get_template_from_string(tpl)
+        page = self.new_page({'f1': 'filename'})
+        context = Context({'current_page': page})
+        self.assertEqual(template.render(context), u'filename')
+        
+    def test_contact_placeholder(self):
+        tpl = ("{% load pages_tags %}{% contactplaceholder contact %}")
+        
+        template = get_template_from_string(tpl)
+        page = self.new_page({'contact': 'hello'})
+        context = Context({'current_page': page})
+        
+        import logging
+        logger = logging.getLogger("pages")
+        lvl = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+        
+        with self.assertRaises(ValueError): 
+            self.assertEqual(template.render(context), u'hello')
+            
+        logger.setLevel(lvl)
+            
+        context = Context({'current_page': page, 'request':get_request_mock()})
+        self.assertTrue("<form" in template.render(context))

@@ -13,11 +13,13 @@ sys.path.insert(0, os.path.join(current_dirname, '..'))
 
 from django.test.simple import DjangoTestSuiteRunner
 from django.db.models import get_app, get_apps
+from django.contrib.admin.sites import AlreadyRegistered
 import fnmatch
 
 # necessary for "python setup.py test"
 patterns = (
     "pages.migrations.*",
+    "pages.plugins.*",
     "pages.tests.*",
     "pages.testproj.*",
     "pages.urls",
@@ -55,7 +57,7 @@ def get_all_coverage_modules(app_module, exclude_patterns=[]):
                 if not match_pattern(path):
                     try:
                         mod = __import__(path, {}, {}, mod_name)
-                    except ImportError:
+                    except ImportError, AlreadyRegistered:
                         pass
                     else:
                         mod_list.append(mod)

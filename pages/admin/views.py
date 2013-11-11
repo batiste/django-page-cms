@@ -3,7 +3,7 @@
 from pages import settings
 from pages.models import Page, Content
 from pages.utils import get_placeholders
-from pages.http import auto_render, get_language_from_request
+from pages.http import get_language_from_request
 from pages.permissions import PagePermission
 
 from django.shortcuts import get_object_or_404, render_to_response

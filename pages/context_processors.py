@@ -11,12 +11,3 @@ def media(request):
         'PAGE_HIDE_SITES': settings.PAGE_HIDE_SITES,
         'PAGE_LANGUAGES': settings.PAGE_LANGUAGES,
     }
-
-
-def pages_navigation(request):
-    """Adds essential pages variables to the `context`."""
-    pages = Page.objects.navigation().order_by("tree_id")
-    return {
-        'pages_navigation': pages,
-        'current_page': None
-    }

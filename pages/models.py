@@ -64,10 +64,7 @@ class TitleSlugMixin(models.Model):
 
     def get_absolute_url(self, language=None):
         """Alias for `get_url_path`.
-
-        This method is only there for backward compatibility and will be
-        removed in a near futur.
-
+        
         :param language: the wanted url language.
         """
         return self.get_url_path(language=language)
@@ -107,16 +104,6 @@ class TitleSlugMixin(models.Model):
         cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
         return url
 
-    def get_url(self, language=None):
-        """Alias for `get_complete_slug`.
-
-        This method is only there for backward compatibility and will be
-        removed in a near futur.
-
-        :param language: the wanted url language.
-        """
-        return self.get_complete_slug(language=language)
-
     def slug_with_level(self, language=None):
         """Display the slug of the page prepended with insecable
         spaces equal to simluate the level of page in the hierarchy."""
@@ -153,58 +140,7 @@ class TitleSlugMixin(models.Model):
         return self.get_content(language, 'title', language_fallback=fallback)
 
 
-class HasContentMixin(models.Model):
-    """Anything with content in a :class:`<pages.models.Content>`
-    """
-
-    class Meta:
-        abstract = True
-
-    def get_content(self, language, ctype, language_fallback=False):
-        """Shortcut method for retrieving a piece of page content
-
-        :param language: wanted language, if not defined default is used.
-        :param ctype: the type of content.
-        :param fallback: if ``True``, the content will also be searched in \
-        other languages.
-        """
-        return Content.objects.get_content(self, language, ctype,
-            language_fallback)
-
-    def expose_content(self):
-        """Return all the current content of this page into a `string`.
-
-        This is used by the haystack framework to build the search index."""
-        placeholders = get_placeholders(self.get_template())
-        exposed_content = []
-        for lang in self.get_languages():
-            for ctype in [p.name for p in placeholders]:
-                content = self.get_content(lang, ctype, False)
-                if content:
-                    exposed_content.append(content)
-        return u"\r\n".join(exposed_content)
-
-    def content_by_language(self, language):
-        """
-        Return a list of latest published
-        :class:`Content <pages.models.Content>`
-        for a particluar language.
-
-        :param language: wanted language,
-        """
-        placeholders = get_placeholders(self.get_template())
-        content_list = []
-        for ctype in [p.name for p in placeholders]:
-            try:
-                content = Content.objects.get_content_object(self,
-                    language, ctype)
-                content_list.append(content)
-            except Content.DoesNotExist:
-                pass
-        return content_list
-
-
-class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
+class Page(MPTTModel, TitleSlugMixin):
     """
     This model contain the status, dates, author, template.
     The real content of the page can be found in the
@@ -369,22 +305,18 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
 
     def get_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page"""
-        key = self.PUB_CHILDREN_KEY % self.id
-        children = cache.get(key, None)
-        if children is None:
-            children = Page.objects.filter_published(self.get_children())
-            cache.set(key, children)
-        return children
+        return self.published_children()
 
     def get_date_ordered_children_for_frontend(self):
         """Return a :class:`QuerySet` of published children page ordered
         by publication date."""
-        return self.get_children_for_frontend().order_by('-publication_date')
+        return self.published_children().order_by('-publication_date')
 
     def move_to(self, target, position='first-child'):
         """Invalidate cache when moving"""
 
-        # Invalidate both in case position matters, otherwise only target is needed
+        # Invalidate both in case position matters, 
+        # otherwise only target is needed.
         self.invalidate()
         target.invalidate()
         super(Page, self).move_to(target, position=position)
@@ -507,6 +439,53 @@ class Page(MPTTModel, TitleSlugMixin, HasContentMixin):
         for p in self.get_descendants():
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
+    
+    ### Content methods
+    
+    def get_content(self, language, ctype, language_fallback=False):
+        """Shortcut method for retrieving a piece of page content
+
+        :param language: wanted language, if not defined default is used.
+        :param ctype: the type of content.
+        :param fallback: if ``True``, the content will also be searched in \
+        other languages.
+        """
+        return Content.objects.get_content(self, language, ctype,
+            language_fallback)
+
+    def expose_content(self):
+        """Return all the current content of this page into a `string`.
+
+        This is used by the haystack framework to build the search index."""
+        placeholders = get_placeholders(self.get_template())
+        exposed_content = []
+        for lang in self.get_languages():
+            for ctype in [p.name for p in placeholders]:
+                content = self.get_content(lang, ctype, False)
+                if content:
+                    exposed_content.append(content)
+        return u"\r\n".join(exposed_content)
+
+    def content_by_language(self, language):
+        """
+        Return a list of latest published
+        :class:`Content <pages.models.Content>`
+        for a particluar language.
+
+        :param language: wanted language,
+        """
+        placeholders = get_placeholders(self.get_template())
+        content_list = []
+        for ctype in [p.name for p in placeholders]:
+            try:
+                content = Content.objects.get_content_object(self,
+                    language, ctype)
+                content_list.append(content)
+            except Content.DoesNotExist:
+                pass
+        return content_list
+        
+    ### Formating methods
 
     def margin_level(self):
         """Used in the admin menu to create the left margin."""

@@ -9,7 +9,7 @@ from django.conf import settings
 from pages import settings as pages_settings
 from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
-from pages.placeholders import VideoPlaceholderNode, ContactPlaceholderNode
+from pages.placeholders import ContactPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
 
 
@@ -163,20 +163,6 @@ def show_content(context, page, content_type, lang=None, fallback=True):
                                                                 fallback)}
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
-
-
-def show_slug_with_level(context, page, lang=None, fallback=True):
-    """Display slug with level by language."""
-    if not lang:
-        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
-
-    page = get_page_from_string_or_id(page, lang)
-    if not page:
-        return ''
-
-    return {'content': page.slug_with_level(lang)}
-show_slug_with_level = register.inclusion_tag('pages/content.html',
-                                      takes_context=True)(show_slug_with_level)
 
 
 def show_absolute_url(context, page, lang=None):
@@ -452,14 +438,6 @@ def do_fileplaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return FilePlaceholderNode(name, **params)
 register.tag('fileplaceholder', do_fileplaceholder)
-
-def do_videoplaceholder(parser, token):
-    """
-    Method that parse the imageplaceholder template tag.
-    """
-    name, params = parse_placeholder(parser, token)
-    return VideoPlaceholderNode(name, **params)
-register.tag('videoplaceholder', do_videoplaceholder)
 
 def do_contactplaceholder(parser, token):
     """

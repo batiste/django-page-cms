@@ -98,54 +98,6 @@ class FileInput(FileInput):
         return mark_safe(field_content)
 register_widget(FileInput)
 
-class VideoWidget(MultiWidget):
-    '''A youtube `Widget` for the admin.'''
-    def __init__(self, attrs=None, page=None, language=None,
-        video_url=None, weight=None, height=None):
-            widgets = [
-                TextInput(attrs=attrs),
-                TextInput(attrs=attrs),
-                TextInput(attrs=attrs)
-            ]
-            super(VideoWidget, self).__init__(widgets, attrs)
-
-    def decompress(self, value):
-        # backslashes are forbidden in URLs
-        if value:
-            return value.split('\\')
-        return (None, None, None)
-
-    def value_from_datadict(self, data, files, name):
-        value = [u'', u'', u'']
-        for da in filter(lambda x: x.startswith(name), data):
-            index = int(da[len(name) + 1:])
-            value[index] = data[da]
-        if value[0] == value[1] == value[2] == u'':
-            return None
-        return u'%s\\%s\\%s' % tuple(value)
-
-    def _has_changed(self, initial, data):
-        """Need to be reimplemented to be correct."""
-        if data == initial:
-            return False
-        return bool(initial) != bool(data)
-
-    def format_output(self, rendered_widgets):
-        """
-        Given a list of rendered widgets (as strings), it inserts an HTML
-        linebreak between them.
-
-        Returns a Unicode string representing the HTML for the whole lot.
-        """
-        return u"""<table>
-            <tr><td>url</td><td>%s</td></tr>
-            <tr><td>width</td><td>%s</td></tr>
-            <tr><td>weight</td><td>%s</td></tr>
-        </table>""" % tuple(rendered_widgets)
-
-
-register_widget(VideoWidget)
-
 class LanguageChoiceWidget(TextInput):
 
     def __init__(self, language=None, attrs=None, **kwargs):

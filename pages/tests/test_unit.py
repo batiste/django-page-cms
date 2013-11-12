@@ -186,7 +186,6 @@ class UnitTestCase(TestCase):
         template = get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'some random value')
 
-
     def test_parsed_template(self):
         """Test the parsed template syntax."""
         setattr(settings, "DEBUG", True)
@@ -200,20 +199,6 @@ class UnitTestCase(TestCase):
         page = self.new_page({'title':'<b>{{ "hello"|wrong_filter }}</b>'})
         context = Context({'current_page': page, 'lang':'en-us'})
         self.assertEqual(template.render(context), u'')
-
-
-    def test_video(self):
-        """Test video placeholder."""
-        page = self.new_page(content={
-            'title':'video-page',
-            'video':'http://www.youtube.com/watch?v=oHg5SJYRHA0\\\\'
-        })
-        context = Context({'current_page': page, 'lang':'en-us'})
-        pl1 = """{% load pages_tags %}{% videoplaceholder video %}"""
-        template = get_template_from_string(pl1)
-        self.assertNotEqual(template.render(context), '')
-        self.assertTrue(len(template.render(context)) > 10)
-
 
     def test_placeholder_untranslated_content(self):
         """Test placeholder untranslated content."""

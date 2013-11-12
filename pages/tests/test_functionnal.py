@@ -887,3 +887,18 @@ class FunctionnalTestCase(TestCase):
 
         self.assertContains(response, 'english-slug')
         self.assertContains(response, 'french-slug')
+        
+    
+    def test_fileinput_in_admin(self):
+        """Test that a page can edited via the admin."""
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
+        
+        page = self.new_page(content={'slug': 'just-a-test', 'file':'some file'})
+        page.template = 'pages/tests/fileinput.html'
+        page.save()
+
+        response = c.get('/admin/pages/page/%d/' % page.id)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'some file')
+

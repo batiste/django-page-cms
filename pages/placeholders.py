@@ -3,7 +3,7 @@
 from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content
-from pages.widgets import ImageInput, VideoWidget, FileInput
+from pages.widgets import ImageInput, FileInput
 
 from django import forms
 from django.core.mail import send_mail
@@ -367,30 +367,6 @@ class ContactPlaceholderNode(PlaceholderNode):
             form = ContactForm()
         renderer = render_to_string('pages/contact.html', {'form':form})
         return mark_safe(renderer)
-
-
-class VideoPlaceholderNode(PlaceholderNode):
-    """A youtube `PlaceholderNode`, just here as an example."""
-
-    widget = VideoWidget
-
-    def render(self, context):
-        content = self.get_content_from_context(context)
-        if not content:
-            return ''
-        if content:
-            video_url, w, h = content.split('\\')
-            m = re.search('youtube\.com\/watch\?v=([^&]+)', content)
-            if m:
-                video_url = 'http://www.youtube.com/v/' + m.group(1)
-            if not w:
-                w = 425
-            if not h:
-                h = 344
-            context = {'video_url': video_url, 'w': w, 'h': h}
-            renderer = render_to_string('pages/embed.html', context)
-            return mark_safe(renderer)
-        return ''
 
 
 class JsonPlaceholderNode(PlaceholderNode):

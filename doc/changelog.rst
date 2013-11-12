@@ -7,7 +7,14 @@ This file describe new features and incompatibilites between released version of
 Release 1.X.X
 
     * Make django-page-cms compatible with Django 1.6.0
-    * Removal of the pages_navigation context processor
+    * Django-page-cms has a test 90% coverage. Commits that brings this number down will be rejected.
+    * The pages_navigation context processor has been removed
+      * This is not useful as {% load_pages %} already load the pages_navigation variable in the context
+    * Removal of the video placeholder
+      * Used as an example but add no real value to the CMS
+    * Removal of PageAdminWithDefaultContent.
+      * PageAdminWithDefaultContent is completly untested and can be easily reproduced in any project if necessary.
+    * Move po import/export in it's own plugin application.
     * PAGE_CONNECTED_MODELS is gone. Use instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
 
 Release 1.5.3

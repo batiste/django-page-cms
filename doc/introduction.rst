@@ -32,7 +32,6 @@ Key features
   * Page can be moved in the tree in a visual way.
   * The tree can be expanded/collapsed. A cookie remember your preferences.
   * Possibility to specify a different page URL for each language.
-  * The frontend example provide a basic "edit in place" feature.
   * Directory-like page hierarchy (page can have the same name if they are not in the same directory).
   * Every page can have multiple alias URLs. It's especially useful to migrate websites.
   * :doc:`Possibility to integrate 3th party apps </3rd-party-apps>`.
@@ -55,7 +54,7 @@ Here is the list of features you can enable/disable:
 Dependencies & Compatibility
 ============================
 
-  * Django 1.5
+  * Django 1.5, 1.6
   * Python 2.6
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
@@ -92,7 +91,7 @@ Ask for help
 
 `Github issues <https://github.com/batiste/django-page-cms/issues>`_
 
-Test it
+Try it
 -------
 
 To test this CMS checkout the code with git::
@@ -111,21 +110,21 @@ And then, run the development server::
     $ python manage.py syncdb
     $ python manage.py build_static
     $ python manage.py manage.py runserver
-
-Gerbi CMS try to keep the code base stable. The test coverage is higher
-than 80% and we try to keep it this way. To run the test suite::
-
-    $ python setup.py test
-
-Or even better run the custom built test runner::
-
-    $ python pages/test_runner.py
-
+    
 .. note::
 
     If you are not admin you have to create the appropriate permissions to modify pages.
     After that you will be able to create pages.
 
+Test it
+-------------------------
+
+Gerbi CMS try to keep the code base stable. The test coverage is higher
+than 90% and we try to keep it that way. To run the test suite::
+
+    $ python pages/test_runner.py
+
+    
 Handling images and files
 ---------------------------
 
@@ -133,9 +132,6 @@ Gerbi include a image and a file placeholder for basic needs. For a more advance
 files browser you could use django-filebrowser:
 
   * https://github.com/sehmaschine/django-filebrowser
-
-Once the application installed try to register the `FileBrowseInput` widget to make it
-available to your placeholders.
 
 Translations
 ------------

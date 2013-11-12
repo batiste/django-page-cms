@@ -43,21 +43,19 @@ Every package listed in the ``external_app.txt`` should be downloaded and instal
 If you are not using the source code version of the application then install it using::
 
     $ sudo pip install django-page-cms
+    
+Add django-page-cms into your INSTALLED_APPS   
+==================================================
 
-Install dependencies by using easy_install
-==========================================
+To activate django-page-cms you will need to add those application::
 
-On debian linux you can do::
-
-    $ sudo easy_install html5lib django django-staticfiles django-authority
-
-Optionnaly::
-
-    $ sudo easy_install django-haystack
-
-If you are not using the source code version of the application then install it using::
-
-    $ sudo easy_install django-page-cms
+    INSTALLED_APPS = (
+        ...
+        'mptt',
+        'pages',
+        'south',
+        ...
+    )
 
 Urls
 ====
@@ -173,26 +171,11 @@ A possible solution is to redefine ``settings.LANGUAGES``. For example you can d
 Template context processors and Middlewares
 -------------------------------------------
 
-You *must* have these context processors into your ``TEMPLATE_CONTEXT_PROCESSORS`` setting::
+You *must* have this context processors into your ``TEMPLATE_CONTEXT_PROCESSORS`` setting::
 
     TEMPLATE_CONTEXT_PROCESSORS = (
-        'django.core.context_processors.auth',
-        'django.core.context_processors.i18n',
-        'django.core.context_processors.debug',
-        'django.core.context_processors.media',
-        'django.core.context_processors.request',
-        'pages.context_processors.media',
         ...
-    )
-
-You *must* have these middleware into your ``MIDDLEWARE_CLASSES`` setting::
-
-    MIDDLEWARE_CLASSES = (
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.middleware.doc.XViewMiddleware',
-        'django.middleware.locale.LocaleMiddleware',
+        'pages.context_processors.media',
         ...
     )
 
@@ -228,13 +211,7 @@ Tagging is optional and disabled by default.
 If you want to use it set ``PAGE_TAGGING`` at ``True`` into your setting file and add it to your installed apps::
 
     INSTALLED_APPS = (
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.admin',
-        'django.contrib.sites',
-        'mptt',
+        ...
         'taggit',
-        'pages',
         ...
     )

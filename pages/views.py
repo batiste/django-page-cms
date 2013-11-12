@@ -10,7 +10,6 @@ from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.core.xheaders import populate_xheaders
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
@@ -86,7 +85,6 @@ class Details(object):
         response = render_to_response(template_name,
             RequestContext(request, context))
         current_page = context['current_page']
-        populate_xheaders(request, response, Page, current_page.id)
         return response
 
     def resolve_page(self, request, context, is_staff):

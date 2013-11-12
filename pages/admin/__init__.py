@@ -5,7 +5,7 @@ from pages.models import Page, Content, PageAlias
 from pages.http import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
-from pages.admin.forms import PageForm
+from pages.admin.forms import make_form
 from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
@@ -28,10 +28,40 @@ else:
 from os.path import join
 
 
+from django.db import models
+def create_page_model(placeholders=[]):
+    """
+    Create Page model
+    """
+    app_label='pages'
+    module = 'pages.models.test'
+    class Meta:
+        # Using type('Meta', ...) gives a dictproxy error during model creation
+        pass
+
+    # app_label must be set using the Meta inner class
+    setattr(Meta, 'app_label', app_label)
+
+    # Set up a dictionary to simulate declarations within a class
+    attrs = {'__module__': module, 'Meta': Meta}
+
+    # Add in any fields that were provided
+    for p in placeholders:
+        attrs[p.name] = models.TextField(blank=True)
+    
+    attrs["slug"] = models.TextField()
+    attrs["title"] = models.TextField()
+
+    # Create the class, which automatically triggers ModelBase processing
+    model = type("Page", (Page,), attrs)
+
+    return model
+
+
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
 
-    form = PageForm
+    #form = PageForm
     exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
@@ -232,8 +262,14 @@ class PageAdmin(admin.ModelAdmin):
         """Get a :class:`Page <pages.admin.forms.PageForm>` for the
         :class:`Page <pages.models.Page>` and modify its fields depending on
         the request."""
-        form = super(PageAdmin, self).get_form(request, obj, **kwargs)
+        
+        template = get_template_from_request(request, obj)
+        
+        model = create_page_model(get_placeholders(template))
 
+        form = make_form(model)
+
+        # bound the form
         language = get_language_from_request(request)
         form.base_fields['language'].initial = language
         if obj:
@@ -269,8 +305,6 @@ class PageAdmin(admin.ModelAdmin):
         language = get_language_from_request(request)
         extra_context = {
             'language': language,
-            # don't see where it's used
-            #'lang': current_lang,
             'page_languages': settings.PAGE_LANGUAGES,
         }
         try:
@@ -303,8 +337,6 @@ class PageAdmin(admin.ModelAdmin):
             'language': get_language_from_request(request),
             'page_languages': settings.PAGE_LANGUAGES,
         }
-        template = get_template_from_request(request)
-        #extra_context['placeholders'] = get_placeholders(template)
         return super(PageAdmin, self).add_view(request, form_url,
                                                             extra_context)
 
@@ -367,6 +399,7 @@ class PageAdminWithDefaultContent(PageAdmin):
     if creating a new translation
     """
     def get_form(self, request, obj=None, **kwargs):
+        return None
         form = super(PageAdminWithDefaultContent, self
             ).get_form(request, obj, **kwargs)
 

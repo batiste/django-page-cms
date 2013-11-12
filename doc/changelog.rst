@@ -6,6 +6,8 @@ This file describe new features and incompatibilites between released version of
 
 Release 1.X.X
 
+    * Make django-page-cms compatible with Django 1.6.0
+    * Removal of the pages_navigation context processor
     * PAGE_CONNECTED_MODELS is gone. Use instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
 
 Release 1.5.3

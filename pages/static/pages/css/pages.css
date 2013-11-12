@@ -596,7 +596,6 @@ html[dir=rtl] .change-form .module-options .form-row {
     padding: 8px 12px;
 }
 .change-form .module-content .revisions {
-    float:right;
     width: 150px;
 }
 .change-form .module-content input[type=text] {

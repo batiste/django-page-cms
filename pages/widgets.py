@@ -25,17 +25,6 @@ register_widget(Textarea)
 register_widget(AdminTextInputWidget)
 register_widget(AdminTextareaWidget)
 
-if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
-    from filebrowser.fields import FileBrowseWidget
-
-    class FileBrowseInput(FileBrowseWidget):
-        """FileBrowseInput widget."""
-
-        def __init__(self, attrs={}):
-            super(FileBrowseInput, self).__init__(attrs)
-    register_widget(FileBrowseInput)
-
-
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
     class Media:
@@ -62,212 +51,6 @@ class RichTextarea(Textarea):
         return rendered + mark_safe(render_to_string(
             'pages/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
-
-if PAGE_TINYMCE:
-    from tinymce import widgets as tinymce_widgets
-
-    class TinyMCE(tinymce_widgets.TinyMCE):
-        """TinyMCE widget."""
-        def __init__(self, language=None, attrs=None, mce_attrs=None,
-                                                                **kwargs):
-            self.language = language
-
-            if mce_attrs is None:
-                mce_attrs = {}
-
-            self.mce_attrs = mce_attrs
-            self.mce_attrs.update({
-                'mode': "exact",
-                'theme': "advanced",
-                'width': 640,
-                'height': 400,
-                'theme_advanced_toolbar_location': "top",
-                'theme_advanced_toolbar_align': "left"
-            })
-            # take into account the default settings, don't allow
-            # the above hard coded ones overriding them
-            self.mce_attrs.update(
-                getattr(settings, 'TINYMCE_DEFAULT_CONFIG', {}))
-            super(TinyMCE, self).__init__(language, attrs, mce_attrs)
-    register_widget(TinyMCE)
-
-
-class CKEditor(Textarea):
-    """CKEditor widget."""
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, 'ckeditor/ckeditor.js'),
-            join(settings.MEDIA_URL, 'filebrowser/js/FB_CKEditor.js'),
-        ]
-
-    def __init__(self, language=None, attrs=None, **kwargs):
-        self.language = language
-        self.filebrowser = "filebrowser" in getattr(settings,
-            'INSTALLED_APPS', [])
-        self.attrs = {'class': 'ckeditor'}
-        if attrs:
-            self.attrs.update(attrs)
-        super(CKEditor, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(CKEditor, self).render(name, value, attrs)
-        context = {
-            'name': name,
-            'filebrowser': self.filebrowser,
-        }
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/ckeditor.html', context))
-
-register_widget(CKEditor)
-
-
-class WYMEditor(Textarea):
-    """WYMEditor widget."""
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'javascript/jquery.js',
-            'javascript/jquery.ui.js',
-            'javascript/jquery.ui.resizable.js',
-            'wymeditor/jquery.wymeditor.js',
-            'wymeditor/plugins/resizable/jquery.wymeditor.resizable.js',
-        )]
-
-        if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
-            js.append(join(PAGES_MEDIA_URL,
-            'wymeditor/plugins/filebrowser/jquery.wymeditor.filebrowser.js'))
-
-    def __init__(self, language=None, attrs=None, **kwargs):
-        self.language = language or getattr(settings, 'LANGUAGE_CODE')
-        self.attrs = {'class': 'wymeditor'}
-        if attrs:
-            self.attrs.update(attrs)
-        super(WYMEditor, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(WYMEditor, self).render(name, value, attrs)
-        context = {
-            'name': name,
-            'lang': self.language[:2],
-            'language': self.language,
-            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
-        }
-        context['page_link_wymeditor'] = 1
-        context['page_list'] = Page.objects.all().order_by('tree_id', 'lft')
-
-        context['filebrowser'] = 0
-        if "filebrowser" in getattr(settings, 'INSTALLED_APPS', []):
-            context['filebrowser'] = 1
-
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/wymeditor.html', context))
-
-register_widget(WYMEditor)
-
-
-class markItUpMarkdown(Textarea):
-    """markItUpMarkdown widget."""
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'javascript/jquery.js',
-            'markitup/jquery.markitup.js',
-            'markitup/sets/markdown/set.js',
-        )]
-        css = {
-            'all': [join(PAGES_MEDIA_URL, path) for path in (
-                'markitup/skins/simple/style.css',
-                'markitup/sets/markdown/style.css',
-            )]
-        }
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(markItUpMarkdown, self).render(name, value, attrs)
-        context = {
-            'name': name,
-        }
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/markitupmarkdown.html', context))
-register_widget(markItUpMarkdown)
-
-
-class markItUpRest(Textarea):
-    """markItUpRest widget."""
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'javascript/jquery.js',
-            'markitup/jquery.markitup.js',
-            'markitup/sets/rst/set.js',
-        )]
-        css = {
-            'all': [join(PAGES_MEDIA_URL, path) for path in (
-                'markitup/skins/simple/style.css',
-                'markitup/sets/rst/style.css',
-            )]
-        }
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(markItUpRest, self).render(name, value, attrs)
-        context = {
-            'name': name,
-        }
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/markituprest.html', context))
-register_widget(markItUpRest)
-
-
-class markItUpHTML(Textarea):
-    """markItUpHTML widget."""
-
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'javascript/jquery.js',
-            'markitup/jquery.markitup.js',
-            'markitup/sets/default/set.js',
-        )]
-        css = {
-            'all': [join(PAGES_MEDIA_URL, path) for path in (
-                'markitup/skins/simple/style.css',
-                'markitup/sets/default/style.css',
-            )]
-        }
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(markItUpHTML, self).render(name, value, attrs)
-        context = {
-            'name': name,
-        }
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/markituphtml.html', context))
-register_widget(markItUpHTML)
-
-
-class EditArea(Textarea):
-    """EditArea is a html syntax coloured widget."""
-    class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
-            'edit_area/edit_area_full.js',
-        )]
-
-    def __init__(self, language=None, attrs=None, **kwargs):
-        self.language = language
-        self.attrs = {'class': 'editarea'}
-        if attrs:
-            self.attrs.update(attrs)
-        super(EditArea, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None, **kwargs):
-        rendered = super(EditArea, self).render(name, value, attrs)
-        context = {
-            'name': name,
-            'language': self.language,
-            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
-        }
-        return rendered + mark_safe(render_to_string(
-            'pages/widgets/editarea.html', context))
-register_widget(EditArea)
-
 
 class ImageInput(FileInput):
 
@@ -314,7 +97,6 @@ class FileInput(FileInput):
                     ''' % (name, _('Delete file'), name, name)
         return mark_safe(field_content)
 register_widget(FileInput)
-
 
 class VideoWidget(MultiWidget):
     '''A youtube `Widget` for the admin.'''
@@ -364,7 +146,6 @@ class VideoWidget(MultiWidget):
 
 register_widget(VideoWidget)
 
-
 class LanguageChoiceWidget(TextInput):
 
     def __init__(self, language=None, attrs=None, **kwargs):
@@ -383,13 +164,6 @@ class LanguageChoiceWidget(TextInput):
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))
-
-
-
-"""class PageChoice(forms.ChoiceField):
-
-    def __init__(self):
-        self.super(PageChoice).__init__(choices=Page.objects.all())"""
 
 class PageLinkWidget(MultiWidget):
     '''A page link `Widget` for the admin.'''

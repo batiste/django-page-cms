@@ -5,7 +5,7 @@
 
     {% for line in fieldset %}
         <div class="form-row{% if line.errors %} errors{% endif %} {% for field in line %}{{ field.field.name }} {% endfor %} ">
-            {{ line.errors }}
+            <!--{{ line.errors }}-->
             {% for field in line %}
                 {{ field.errors }}
                 {% if field.field.is_hidden %}

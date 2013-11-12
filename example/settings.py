@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'pages',
     'pages.plugins.category',
     'pages.plugins.jsonexport',
+    'pages.plugins.pofiles',
     'mptt',
     #'tinymce',
     # disabled to make "setup.py test" to work properly

@@ -26,121 +26,7 @@ if settings.PAGE_TAGGING:
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
 
-class TitleSlugMixin(models.Model):
-    """
-    Anything with a slug based on a title
-    """
-
-    class Meta:
-        abstract = True
-
-    def __init__(self, *args, **kwargs):
-        """Constructions specific to this mixin"""
-        self._complete_slug = None
-
-        return super(TitleSlugMixin, self).__init__(*args, **kwargs)
-
-    def get_url_path(self, language=None):
-        """Return the URL's path component. Add the language prefix if
-        ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
-
-        :param language: the wanted url language.
-        """
-        if self.is_first_root():
-            # this is used to allow users to change URL of the root
-            # page. The language prefix is not usable here.
-            try:
-                return reverse('pages-root')
-            except Exception:
-                pass
-        url = self.get_complete_slug(language)
-        if not language:
-            language = settings.PAGE_DEFAULT_LANGUAGE
-        if settings.PAGE_USE_LANGUAGE_PREFIX:
-            return reverse('pages-details-by-path',
-                args=[language, url])
-        else:
-            return reverse('pages-details-by-path', args=[url])
-
-    def get_absolute_url(self, language=None):
-        """Alias for `get_url_path`.
-        
-        :param language: the wanted url language.
-        """
-        return self.get_url_path(language=language)
-
-    def get_complete_slug(self, language=None, hideroot=True):
-        """Return the complete slug of this page by concatenating
-        all parent's slugs.
-
-        :param language: the wanted slug language."""
-        if not language:
-            language = settings.PAGE_DEFAULT_LANGUAGE
-
-        if self._complete_slug and language in self._complete_slug:
-            return self._complete_slug[language]
-
-        self._complete_slug = cache.get(self.PAGE_URL_KEY % (self.id))
-        if self._complete_slug is None:
-            self._complete_slug = {}
-        elif language in self._complete_slug:
-            return self._complete_slug[language]
-
-        if hideroot and settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
-            url = u''
-        else:
-            url = u'%s' % self.slug(language)
-
-        key = self.ANCESTORS_KEY % self.id
-        ancestors = cache.get(key, None)
-        if ancestors is None:
-            ancestors = self.get_ancestors(ascending=True)
-            cache.set(key, ancestors)
-
-        for ancestor in ancestors:
-            url = ancestor.slug(language) + u'/' + url
-
-        self._complete_slug[language] = url
-        cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
-        return url
-
-    def slug_with_level(self, language=None):
-        """Display the slug of the page prepended with insecable
-        spaces equal to simluate the level of page in the hierarchy."""
-        level = ''
-        if self.level:
-            for n in range(0, self.level):
-                level += '&nbsp;&nbsp;&nbsp;'
-        return mark_safe(level + self.slug(language))
-
-    def slug(self, language=None, fallback=True):
-        """
-        Return the slug of the page depending on the given language.
-
-        :param language: wanted language, if not defined default is used.
-        :param fallback: if ``True``, the slug will also be searched in other \
-        languages.
-        """
-
-        slug = self.get_content(language, 'slug', language_fallback=fallback)
-
-        return slug
-
-    def title(self, language=None, fallback=True):
-        """
-        Return the title of the page depending on the given language.
-
-        :param language: wanted language, if not defined default is used.
-        :param fallback: if ``True``, the slug will also be searched in \
-        other languages.
-        """
-        if not language:
-            language = settings.PAGE_DEFAULT_LANGUAGE
-
-        return self.get_content(language, 'title', language_fallback=fallback)
-
-
-class Page(MPTTModel, TitleSlugMixin):
+class Page(MPTTModel):
     """
     This model contain the status, dates, author, template.
     The real content of the page can be found in the
@@ -241,6 +127,7 @@ class Page(MPTTModel, TitleSlugMixin):
         self._languages = None
         self._content_dict = None
         self._is_first_root = None
+        self._complete_slug = None
         super(Page, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
@@ -484,6 +371,107 @@ class Page(MPTTModel, TitleSlugMixin):
             except Content.DoesNotExist:
                 pass
         return content_list
+        
+    ### Title and slug
+    
+    def get_url_path(self, language=None):
+        """Return the URL's path component. Add the language prefix if
+        ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
+
+        :param language: the wanted url language.
+        """
+        if self.is_first_root():
+            # this is used to allow users to change URL of the root
+            # page. The language prefix is not usable here.
+            try:
+                return reverse('pages-root')
+            except Exception:
+                pass
+        url = self.get_complete_slug(language)
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+        if settings.PAGE_USE_LANGUAGE_PREFIX:
+            return reverse('pages-details-by-path',
+                args=[language, url])
+        else:
+            return reverse('pages-details-by-path', args=[url])
+
+    def get_absolute_url(self, language=None):
+        """Alias for `get_url_path`.
+        
+        :param language: the wanted url language.
+        """
+        return self.get_url_path(language=language)
+
+    def get_complete_slug(self, language=None, hideroot=True):
+        """Return the complete slug of this page by concatenating
+        all parent's slugs.
+
+        :param language: the wanted slug language."""
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+
+        if self._complete_slug and language in self._complete_slug:
+            return self._complete_slug[language]
+
+        self._complete_slug = cache.get(self.PAGE_URL_KEY % (self.id))
+        if self._complete_slug is None:
+            self._complete_slug = {}
+        elif language in self._complete_slug:
+            return self._complete_slug[language]
+
+        if hideroot and settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
+            url = u''
+        else:
+            url = u'%s' % self.slug(language)
+
+        key = self.ANCESTORS_KEY % self.id
+        ancestors = cache.get(key, None)
+        if ancestors is None:
+            ancestors = self.get_ancestors(ascending=True)
+            cache.set(key, ancestors)
+
+        for ancestor in ancestors:
+            url = ancestor.slug(language) + u'/' + url
+
+        self._complete_slug[language] = url
+        cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
+        return url
+
+    def slug_with_level(self, language=None):
+        """Display the slug of the page prepended with insecable
+        spaces to simluate the level of page in the hierarchy."""
+        level = ''
+        if self.level:
+            for n in range(0, self.level):
+                level += '&nbsp;&nbsp;&nbsp;'
+        return mark_safe(level + self.slug(language))
+
+    def slug(self, language=None, fallback=True):
+        """
+        Return the slug of the page depending on the given language.
+
+        :param language: wanted language, if not defined default is used.
+        :param fallback: if ``True``, the slug will also be searched in other \
+        languages.
+        """
+
+        slug = self.get_content(language, 'slug', language_fallback=fallback)
+
+        return slug
+
+    def title(self, language=None, fallback=True):
+        """
+        Return the title of the page depending on the given language.
+
+        :param language: wanted language, if not defined default is used.
+        :param fallback: if ``True``, the slug will also be searched in \
+        other languages.
+        """
+        if not language:
+            language = settings.PAGE_DEFAULT_LANGUAGE
+
+        return self.get_content(language, 'title', language_fallback=fallback)
         
     ### Formating methods
 

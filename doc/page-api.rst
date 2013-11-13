@@ -131,9 +131,3 @@ Http
     :members:
     :undoc-members:
 
-Admin views
-===========
-
-.. automodule:: pages.admin.views
-    :members:
-    :undoc-members:

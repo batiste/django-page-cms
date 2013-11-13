@@ -166,7 +166,8 @@ show_content = register.inclusion_tag('pages/content.html',
 
 
 def show_absolute_url(context, page, lang=None):
-    """Show the url of a page in the right language
+    """
+    Show the url of a page in the right language
 
     Example ::
 
@@ -178,7 +179,7 @@ def show_absolute_url(context, page, lang=None):
 
     Keyword arguments:
     :param page: the page object, slug or id
-    :param lang: the wanted language
+    :param lang: the wanted language \
         (defaults to `settings.PAGE_DEFAULT_LANGUAGE`)
     """
     if not lang:

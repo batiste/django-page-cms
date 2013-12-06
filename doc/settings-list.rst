@@ -193,11 +193,6 @@ PAGE_TAGGING
 Set ``PAGE_TAGGING`` to ``True`` if you wish to use the
 ``django-taggit`` application.
 
-PAGE_TINYMCE
-==================================
-
-Set this to ``True`` if you wish to use the ``django-tinymce`` application.
-
 PAGE_EXTRA_CONTEXT
 ==================================
 

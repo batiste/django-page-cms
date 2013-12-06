@@ -10,6 +10,7 @@ from pages.models import Page, Content
 
 from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
+import collections
 
 
 class SlugFormMixin(forms.ModelForm):
@@ -28,7 +29,7 @@ class SlugFormMixin(forms.ModelForm):
     def _clean_page_automatic_slug_renaming(self, slug, is_slug_safe):
         """Helper to add numbers to slugs"""
 
-        if not callable(is_slug_safe):
+        if not isinstance(is_slug_safe, collections.Callable):
             raise TypeError('is_slug_safe must be callable')
 
 

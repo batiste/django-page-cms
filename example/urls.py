@@ -6,18 +6,18 @@ from django.contrib import admin
 from pages.views import details
 
 from pages.urlconf_registry import register_urlconf
-register_urlconf('test', 'pages.testsproject.documents.urls')
+#register_urlconf('test', 'pages.testsproject.documents.urls')
 
 admin.autodiscover()
 authority.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^authority/', include('authority.urls')),
+    #(r'^authority/', include('authority.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^grappelli/', include('grappelli.urls')),
+    #(r'^grappelli/', include('grappelli.urls')),
     # make tests fail if a backend is not present on the system
-    url(r'^search/', include('haystack.urls'), name='haystack_search'),
+    #url(r'^search/', include('haystack.urls'), name='haystack_search'),
 
 )
 

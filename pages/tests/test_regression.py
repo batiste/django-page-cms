@@ -47,7 +47,7 @@ class RegressionTestCase(TestCase):
 
         try:
             response = c.get(self.get_page_url('toto/page1/'))
-        except TemplateDoesNotExist, e:
+        except TemplateDoesNotExist as e:
             if e.args != ('404.html',):
                 raise
 
@@ -213,7 +213,7 @@ class RegressionTestCase(TestCase):
 
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
         template = loader.get_template_from_string(pl1)
-        self.assertEqual(template.render(context), u'\n')
+        self.assertEqual(template.render(context), '\n')
 
     def test_placeholder_bug(self):
         """Test placeholder with django template inheritance works prepoerly.

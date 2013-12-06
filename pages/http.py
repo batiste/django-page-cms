@@ -8,9 +8,9 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 FACTORY = RequestFactory()
@@ -32,7 +32,7 @@ def get_request_mock():
     for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because
         # it would broke the current real request language
-        if 'LocaleMiddleware' not in str(middleware_method.im_class):
+        if 'LocaleMiddleware' not in str(middleware_method.__self__.__class__):
             response = middleware_method(request)
     
     return request
@@ -104,7 +104,7 @@ def get_template_from_request(request, page=None):
         return settings.PAGE_DEFAULT_TEMPLATE
     template = request.REQUEST.get('template', None)
     if template is not None and \
-            (template in dict(page_templates).keys() or
+            (template in list(dict(page_templates).keys()) or
             template == settings.PAGE_DEFAULT_TEMPLATE):
         return template
     if page is not None:

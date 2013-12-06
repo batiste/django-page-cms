@@ -153,9 +153,14 @@ class ContentManager(models.Manager):
         ``html5lib``."""
         import html5lib
         from html5lib import sanitizer
+        from html5lib import treebuilders, treewalkers, serializer
         p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
         dom_tree = p.parseFragment(content)
-        return dom_tree.toxml()
+        walker = treewalkers.getTreeWalker("dom")
+        stream = walker(dom_tree)
+        s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False)
+        output_generator = s.serialize(stream)
+        return output_generator
 
     def set_or_create_content(self, page, language, ctype, body):
         """Set or create a :class:`Content <pages.models.Content>` for a

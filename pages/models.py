@@ -351,7 +351,7 @@ class Page(MPTTModel):
                 content = self.get_content(lang, ctype, False)
                 if content:
                     exposed_content.append(content)
-        return u"\r\n".join(exposed_content)
+        return "\r\n".join(exposed_content)
 
     def content_by_language(self, language):
         """
@@ -421,9 +421,9 @@ class Page(MPTTModel):
             return self._complete_slug[language]
 
         if hideroot and settings.PAGE_HIDE_ROOT_SLUG and self.is_first_root():
-            url = u''
+            url = ''
         else:
-            url = u'%s' % self.slug(language)
+            url = '%s' % self.slug(language)
 
         key = self.ANCESTORS_KEY % self.id
         ancestors = cache.get(key, None)
@@ -432,7 +432,7 @@ class Page(MPTTModel):
             cache.set(key, ancestors)
 
         for ancestor in ancestors:
-            url = ancestor.slug(language) + u'/' + url
+            url = ancestor.slug(language) + '/' + url
 
         self._complete_slug[language] = url
         cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
@@ -486,8 +486,8 @@ class Page(MPTTModel):
             slug = self.slug()
             if slug:
                 return slug
-            return u"Page %d" % self.id
-        return u"Page without id"
+            return "Page %d" % self.id
+        return "Page without id"
 
 
 class Content(models.Model):
@@ -511,7 +511,7 @@ class Content(models.Model):
         verbose_name_plural = _('contents')
 
     def __unicode__(self):
-        return u"%s :: %s" % (self.page.slug(), self.body[0:15])
+        return "%s :: %s" % (self.page.slug(), self.body[0:15])
 
 
 class PageAlias(models.Model):
@@ -530,5 +530,5 @@ class PageAlias(models.Model):
         super(PageAlias, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u"%s :: %s" % (self.url, self.page.get_complete_slug())
+        return "%s :: %s" % (self.url, self.page.get_complete_slug())
 

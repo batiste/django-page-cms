@@ -16,8 +16,8 @@ class PoTests(TestCase):
         Content(page=page1, language='fr-ch', type='title', body='french title').save()
         page1.invalidate()
 
-        import StringIO
-        stdout = StringIO.StringIO()
+        import io
+        stdout = io.StringIO()
 
         # TODO: might be nice to use a temp dir for this test
         export_po_files(path='potests', stdout=stdout)
@@ -29,7 +29,7 @@ class PoTests(TestCase):
         f.write(old)
         f.close()
 
-        stdout = StringIO.StringIO()
+        stdout = io.StringIO()
         import_po_files(path='potests', stdout=stdout)
 
         self.assertTrue("Update language fr-ch" in stdout.getvalue())

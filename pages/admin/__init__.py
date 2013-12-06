@@ -15,7 +15,7 @@ import pages.widgets
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _, ugettext_lazy
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.conf import settings as global_settings
 from django.http import HttpResponseRedirect, Http404
 from django.contrib.admin.util import unquote
@@ -286,7 +286,7 @@ class PageAdmin(admin.ModelAdmin):
             template_choices.insert(0, (settings.PAGE_DEFAULT_TEMPLATE,
                     _('Default template')))
             form.base_fields['template'].choices = template_choices
-            form.base_fields['template'].initial = force_unicode(template)
+            form.base_fields['template'].initial = force_text(template)
 
         for placeholder in get_placeholders(template):
             name = placeholder.name

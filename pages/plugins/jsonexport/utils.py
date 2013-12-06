@@ -113,7 +113,7 @@ def update_redirect_to_from_json(page, redirect_to_complete_slugs):
     """
     messages = []
     s = ''
-    for lang, s in redirect_to_complete_slugs.items():
+    for lang, s in list(redirect_to_complete_slugs.items()):
         r = Page.objects.from_path(s, lang, exclude_drafts=False)
         if r:
             page.redirect_to = r
@@ -149,7 +149,7 @@ def create_and_update_from_json_data(d, user):
 
     page_languages = set(lang[0] for lang in settings.PAGE_LANGUAGES)
 
-    for lang, s in d['complete_slug'].items():
+    for lang, s in list(d['complete_slug'].items()):
         if lang not in page_languages:
             messages.append(_("Language '%s' not imported") % (lang,))
             continue
@@ -231,7 +231,7 @@ def create_and_update_from_json_data(d, user):
         create_content(lang, 'slug',
             d['complete_slug'][lang].rsplit('/', 1)[-1])
         create_content(lang, 'title', d['title'][lang])
-        for ctype, langs_bodies in d['content'].items():
+        for ctype, langs_bodies in list(d['content'].items()):
             create_content(lang, ctype, langs_bodies[lang])
 
     return page, created, messages
@@ -270,7 +270,7 @@ def json_to_pages(json, user, preferred_lang=None):
     d = _json.loads(json)
     try:
         errors = validate_pages_json_data(d, preferred_lang)
-    except KeyError, e:
+    except KeyError as e:
         errors = [_('JSON file is invalid: %s') % (e.args[0],)]
 
     pages_created = []
@@ -315,7 +315,7 @@ def validate_pages_json_data(d, preferred_lang):
         # use the complete slug as a way to identify pages in errors
         slug = p['complete_slug'].get(preferred_lang, None)
         seen_parent = False
-        for lang, s in p['complete_slug'].items():
+        for lang, s in list(p['complete_slug'].items()):
             if lang not in seen_complete_slugs:
                 continue
             seen_complete_slugs[lang].add(s)
@@ -337,7 +337,7 @@ def validate_pages_json_data(d, preferred_lang):
 
         if not slug:
             errors.append(_("%s has no common language with this site")
-                % (p['complete_slug'].values()[0],))
+                % (list(p['complete_slug'].values())[0],))
             continue
 
         if not seen_parent:
@@ -392,7 +392,7 @@ def json_to_pages(json, user, preferred_lang=None):
     d = _json.loads(json)
     try:
         errors = validate_pages_json_data(d, preferred_lang)
-    except KeyError, e:
+    except KeyError as e:
         errors = [_('JSON file is invalid: %s') % (e.args[0],)]
 
     pages_created = []
@@ -437,7 +437,7 @@ def validate_pages_json_data(d, preferred_lang):
         # use the complete slug as a way to identify pages in errors
         slug = p['complete_slug'].get(preferred_lang, None)
         seen_parent = False
-        for lang, s in p['complete_slug'].items():
+        for lang, s in list(p['complete_slug'].items()):
             if lang not in seen_complete_slugs:
                 continue
             seen_complete_slugs[lang].add(s)
@@ -459,7 +459,7 @@ def validate_pages_json_data(d, preferred_lang):
 
         if not slug:
             errors.append(_("%s has no common language with this site")
-                % (p['complete_slug'].values()[0],))
+                % (list(p['complete_slug'].values())[0],))
             continue
 
         if not seen_parent:

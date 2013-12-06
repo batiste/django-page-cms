@@ -3,7 +3,7 @@
 from django.template.loader import get_template_from_string
 from django.template import Template, RequestContext, Context
 
-from models import Category
+from .models import Category
 from pages.tests.testcase import TestCase
 from pages.models import Content, Page
 
@@ -33,7 +33,7 @@ class CategoryTestCase(TestCase):
             'title': 'test-page',
             'category': category.slug,
         }
-        pages = [self.new_page(content=content) for i in xrange(3)]
+        pages = [self.new_page(content=content) for i in range(3)]
         tpl = """{% load pages_tags category_tags %}{% pages_for_category 'test-category' %}{% for page in pages %}{{ page.title }}
         {% endfor %}"""
         template = get_template_from_string(tpl)

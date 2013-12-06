@@ -118,7 +118,7 @@ class PlaceholderNode(template.Node):
         """Given the name of a placeholder return a `Widget` subclass
         like Textarea or TextInput."""
         is_str = type(self.widget) == type(str())
-        is_unicode = type(self.widget) == type(unicode())
+        is_unicode = type(self.widget) == type(str())
         if is_str or is_unicode:
             widget = get_widget(self.widget)
         else:
@@ -135,7 +135,7 @@ class PlaceholderNode(template.Node):
         saved in the admin and passed to the placeholder save
         method."""
         result = {}
-        for key in data.keys():
+        for key in list(data.keys()):
             if key.startswith(self.name + '-'):
                 new_key = key.replace(self.name + '-', '')
                 result[new_key] = data[key]
@@ -226,7 +226,7 @@ class PlaceholderNode(template.Node):
             try:
                 t = template.Template(content, name=self.name)
                 content = mark_safe(t.render(context))
-            except TemplateSyntaxError, error:
+            except TemplateSyntaxError as error:
                 if global_settings.DEBUG:
                     content = PLACEHOLDER_ERROR % {
                         'name': self.name,
@@ -281,7 +281,7 @@ class ImagePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if type(data) is unicode:
+            if type(data) is str:
                 return
 
             filename = get_filename(page, self, data)
@@ -320,7 +320,7 @@ class FilePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if type(data) is unicode:
+            if type(data) is str:
                 return
 
             filename = get_filename(page, self, data)

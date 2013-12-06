@@ -140,11 +140,11 @@ class PageLinkWidget(MultiWidget):
 
     def value_from_datadict(self, data, files, name):
         import json
-        value = [u'', u'']
-        for da in filter(lambda x: x.startswith(name), data):
+        value = ['', '']
+        for da in [x for x in data if x.startswith(name)]:
             index = int(da[len(name) + 1:])
             value[index] = data[da]
-        if value[0] == value[1] == u'':
+        if value[0] == value[1] == '':
             return None
         return json.dumps(value)
 
@@ -161,7 +161,7 @@ class PageLinkWidget(MultiWidget):
 
         Returns a Unicode string representing the HTML for the whole lot.
         """
-        return u"""<table>
+        return """<table>
             <tr><td>page</td><td>%s</td></tr>
             <tr><td>text</td><td>%s</td></tr>
         </table>""" % tuple(rendered_widgets)

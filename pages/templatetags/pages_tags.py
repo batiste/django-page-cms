@@ -1,9 +1,9 @@
 """Page CMS page_tags template tags"""
 from django import template
-from django.utils.safestring import SafeUnicode
+from django.utils.safestring import SafeText
 from django.template import TemplateSyntaxError
 #from django.forms import Widget, Textarea, ImageField, CharField
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from django.conf import settings
 
 from pages import settings as pages_settings
@@ -21,8 +21,8 @@ def get_page_from_string_or_id(page_string, lang=None):
     if type(page_string) == int:
         return Page.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates
-    if (isinstance(page_string, SafeUnicode) or
-        isinstance(page_string, unicode)):
+    if (isinstance(page_string, SafeText) or
+        isinstance(page_string, str)):
         if page_string.isdigit():
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)
@@ -126,10 +126,10 @@ def pages_admin_menu(context, page):
 
     expanded = False
     if request and "tree_expanded" in request.COOKIES:
-        cookie_string = urllib.unquote(request.COOKIES['tree_expanded'])
+        cookie_string = urllib.parse.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
             ids = [int(id) for id in
-                urllib.unquote(request.COOKIES['tree_expanded']).split(',')]
+                urllib.parse.unquote(request.COOKIES['tree_expanded']).split(',')]
             if page.id in ids:
                 expanded = True
     context.update({'expanded': expanded, 'page': page})

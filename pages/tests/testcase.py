@@ -47,7 +47,7 @@ class TestCase(TestCase):
 
     def tearDown(self):
         setattr(settings, 'ROOT_URLCONF', self.old_url_conf)
-        for name, value in self.settings_to_reset.items():
+        for name, value in list(self.settings_to_reset.items()):
             setattr(pages_settings, name, value)
         self.reset_urlconf()
         self.settings_to_reset = {}
@@ -113,7 +113,7 @@ class TestCase(TestCase):
             page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache
         page.invalidate()
-        for key, value in content.items():
+        for key, value in list(content.items()):
             Content(page=page, language='en-us', type=key, body=value).save()
         return page
 

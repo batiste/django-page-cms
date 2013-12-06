@@ -1,10 +1,10 @@
 import os
 import sys
-coverage = None
+have_coverage = None
 try:
     from coverage import coverage
 except ImportError:
-    coverage = None
+    have_coverage = None
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pages.testproj.test_settings'
 current_dirname = os.path.dirname(__file__)
@@ -57,7 +57,7 @@ def get_all_coverage_modules(app_module, exclude_patterns=[]):
                 if not match_pattern(path):
                     try:
                         mod = __import__(path, {}, {}, mod_name)
-                    except ImportError, AlreadyRegistered:
+                    except ImportError as AlreadyRegistered:
                         pass
                     else:
                         mod_list.append(mod)
@@ -69,7 +69,7 @@ class PageTestSuiteRunner(DjangoTestSuiteRunner):
 
     def run_tests(self, test_labels=('pages',), extra_tests=None):
 
-        if coverage:
+        if have_coverage:
             cov = coverage()
             cov.erase()
             cov.use_cache(0)
@@ -77,7 +77,7 @@ class PageTestSuiteRunner(DjangoTestSuiteRunner):
 
         results = DjangoTestSuiteRunner.run_tests(self, test_labels, extra_tests)
 
-        if coverage:
+        if have_coverage:
             cov.stop()
             app = get_app('pages')
             modules = get_all_coverage_modules(app)

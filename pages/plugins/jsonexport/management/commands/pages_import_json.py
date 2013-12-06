@@ -34,8 +34,8 @@ class Command(BaseCommand):
                 sys.stderr.write(e + '\n')
             raise CommandError(_("Errors encountered while importing JSON"))
         for page, created, messages in pages_created:
-            print (_("%s created.") if created else _("%s modified.")) % (
-                page.get_complete_slug())
+            print((_("%s created.") if created else _("%s modified.")) % (
+                page.get_complete_slug()))
             for m in messages:
-                print " - " + m
+                print(" - " + m)
 

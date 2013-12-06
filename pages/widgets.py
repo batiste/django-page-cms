@@ -11,14 +11,19 @@ from django.conf import settings
 from django import forms
 from django.forms import TextInput, Textarea, HiddenInput
 from django.forms import MultiWidget, FileInput
+from django.forms.util import flatatt
 from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.utils.encoding import force_text
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 
 from os.path import join
+
+import html2text
 
 register_widget(TextInput)
 register_widget(Textarea)
@@ -51,6 +56,21 @@ class RichTextarea(Textarea):
         return rendered + mark_safe(render_to_string(
             'pages/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
+
+class MarkdownTextarea(Textarea):
+
+    def __init__(self, language=None, attrs=None, **kwargs):
+        super(MarkdownTextarea, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        if value is None:
+            value = ''
+        data = html2text.html2text(force_text(value))
+        final_attrs = self.build_attrs(attrs, name=name)
+        return format_html('<textarea{0}>\r\n{1}</textarea>',
+                           flatatt(final_attrs),
+                           data)     
+register_widget(MarkdownTextarea)
 
 class ImageInput(FileInput):
 

@@ -325,8 +325,22 @@ class PageAdmin(admin.ModelAdmin):
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
 
-        return super(PageAdmin, self).change_view(request, object_id,
+        response = super(PageAdmin, self).change_view(request, object_id,
             form_url=form_url, extra_context=extra_context)
+        if request.method == 'POST' and isinstance(response, HttpResponseRedirect):
+            if '_continue' in request.POST or '_saveasnew' in request.POST or '_addanother' in request.POST:
+                addlanguage = True
+            else:
+                addlanguage = False
+            if addlanguage:
+                import urllib
+                import urlparse
+                splitted = list(urlparse.urlparse(response.url))
+                query = urlparse.parse_qs(splitted[4])
+                query['language'] = language
+                splitted[4] = urllib.urlencode(query)
+                response = HttpResponseRedirect(urlparse.urlunparse(splitted))
+        return response
 
 
     def add_view(self, request, form_url='', extra_context=None):

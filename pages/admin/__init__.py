@@ -61,8 +61,6 @@ def create_page_model(placeholders=[]):
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
 
-    #form = PageForm
-    exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target',

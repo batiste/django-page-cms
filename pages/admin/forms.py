@@ -96,7 +96,7 @@ def make_form(model_):
 
         class Meta:
             model = model_
-            exclude = ('author', 'last_modification_date', )
+            exclude = ('author', 'last_modification_date', 'parent')
 
         def clean_slug(self):
             """Handle move action on the pages"""

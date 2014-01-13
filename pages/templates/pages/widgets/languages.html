@@ -14,32 +14,6 @@
         {% endifequal %}
     {% endfor %}
     </ul>
-    <script>
-    (function() {
-        // append query arguments to the language selectors;
-        var search = document.location.search;
-        if(!search) {
-            return;
-        }
-        // remove the current language (if any);
-        var lix = search.indexOf('language=');
-        if(lix != -1) {
-            // qs does not contain `language=` start with ? and ends with &
-            var qs = search.substr(0, lix);
-            var end = search.indexOf('&', lix);
-            if(end != -1) {
-                qs += search.substr(end+1);
-            }
-            search = qs.substr(1);
-        }
-        var widget = document.querySelector('.language_choice_widget');
-        var selectors = widget.querySelectorAll('li a');
-        for(var ix=0; ix<selectors.length; ix++) {
-            var s = selectors[ix];
-            s.href = s.href + "&" + search;
-        }
-    })();
-    </script>
     {% if page|has_content_in:value %}
     <p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{
     page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>

@@ -1,21 +1,47 @@
 {% load i18n pages_tags %}
-
-<input id="id_language" name="language" type="hidden" value="{{ value }}" />
-
-<ul class="clearfix">
-{% for lang in page_languages %}
-    {% ifequal value lang.0 %}
-        <li><span class="current">{{ lang.0 }}</span></li>
-    {% else %}
-        {% if page|has_content_in:lang.0 %}
-            <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
+<div class="language_choice_widget">
+    <input id="id_language" name="language" type="hidden" value="{{ value }}" />
+    <ul class="clearfix">
+    {% for lang in page_languages %}
+        {% ifequal value lang.0 %}
+            <li><span class="current">{{ lang.0 }}</span></li>
         {% else %}
-            <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
-        {% endif %}
-    {% endifequal %}
-{% endfor %}
-</ul>
-{% if page|has_content_in:value %}
-<p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{
-page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>
-{% endif %}
+            {% if page|has_content_in:lang.0 %}
+                <li><a class="editlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
+            {% else %}
+                <li><a class="addlink" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
+            {% endif %}
+        {% endifequal %}
+    {% endfor %}
+    </ul>
+    <script>
+    (function() {
+        // append query arguments to the language selectors;
+        var search = document.location.search;
+        if(!search) {
+            return;
+        }
+        // remove the current language (if any);
+        var lix = search.indexOf('language=');
+        if(lix != -1) {
+            // qs does not contain `language=` start with ? and ends with &
+            var qs = search.substr(0, lix);
+            var end = search.indexOf('&', lix);
+            if(end != -1) {
+                qs += search.substr(end+1);
+            }
+            search = qs.substr(1);
+        }
+        var widget = document.querySelector('.language_choice_widget');
+        var selectors = widget.querySelectorAll('li a');
+        for(var ix=0; ix<selectors.length; ix++) {
+            var s = selectors[ix];
+            s.href = s.href + "&" + search;
+        }
+    })();
+    </script>
+    {% if page|has_content_in:value %}
+    <p style="clear:both"><a class="deletelink js-confirm-delete" href="/admin/pages/page/{{
+    page.id }}/delete-content/{{ language }}/">{% trans "Delete this translation" %}</a></p>
+    {% endif %}
+</div>

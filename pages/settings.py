@@ -63,6 +63,11 @@ if PAGE_TAGGING and "taggit" not in getattr(settings, 'INSTALLED_APPS', []):
                                'correctly or disable the tagging feature by '
                                'setting PAGE_TAGGING to False.')
 
+def _default_tagging_field():
+    from taggit.managers import TaggableManager
+    return TaggableManager(blank=True)
+PAGE_TAGGING_FIELD = getattr(settings, 'PAGE_TAGGING_FIELD', _default_tagging_field)
+
 # Set this to ``True`` if you wish to use the ``django-tinymce`` application.
 PAGE_TINYMCE = getattr(settings, 'PAGE_TINYMCE', False)
 if PAGE_TINYMCE and "tinymce" not in getattr(settings, 'INSTALLED_APPS', []):

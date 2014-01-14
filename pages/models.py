@@ -20,8 +20,6 @@ from django.conf import settings as global_settings
 
 
 from mptt.models import MPTTModel
-if settings.PAGE_TAGGING:
-    from taggit.managers import TaggableManager
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
@@ -111,7 +109,7 @@ class Page(MPTTModel):
     objects = PageManager()
 
     if settings.PAGE_TAGGING:
-        tags = TaggableManager(blank=True)
+        tags = settings.PAGE_TAGGING_FIELD()
 
     class Meta:
         """Make sure the default page ordering is correct."""

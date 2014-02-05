@@ -53,20 +53,17 @@ $(function() {
     if(document.location.search) {
         // append query arguments to the language selectors;
         $('.language_choice_widget').each(function(_, widget) {
-            var search = document.location.search;
+            var search = document.location.search.substring(1);
             // remove the current language (if any);
-            var lix = search.indexOf('language=');
-            if(lix != -1) {
-                // qs does not contain `language=` start with ? and ends with &
-                var qs = search.substr(0, lix);
-                var end = search.indexOf('&', lix);
-                if(end != -1) {
-                    qs += search.substr(end+1);
+            var params = search.split('&');
+            var new_params = "";
+            for(var i=0; i<params.length; i++) {
+                if(params[i].split('=')[0] != 'language') {
+                    new_params += params[i];
                 }
-                search = qs.substr(1);
             }
             $(widget).find('li a').each(function(_, s) {
-                s.href = s.href + "&" + search;
+                s.href = s.href + "&" + new_params;
             });
         });
     }

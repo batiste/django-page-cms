@@ -242,9 +242,8 @@ class RegressionTestCase(TestCase):
         """Language choice in the admin is not kept between redirects"""
         c = self.get_admin_client()
         page = self.create_new_page(c)
-        page_url = '/admin/pages/page/%d/?language=en&position=1' % page.id
+        page_url = '/admin/pages/page/%d/?language=en' % page.id
         page_data = self.get_new_page_data()
         page_data['_continue'] = 'true'
         response = c.post(page_url, page_data)
-        print response
         self.assertRedirects(response, page_url)

@@ -18,8 +18,6 @@ from django.utils.safestring import mark_safe
 from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string
 
-from markdown import Markdown
-
 import logging
 import os
 import time
@@ -256,24 +254,6 @@ def get_filename(page, placeholder, data):
     return filename
 
 
-class MarkdownPlaceholderNode(PlaceholderNode):
-    def __init__(self, name, *args, **kwargs):
-        self.mdown = Markdown()
-
-        super(MarkdownPlaceholderNode, self).__init__(name, *args, **kwargs)
-
-    def save(self, page, language, data, change, extra_data=None):
-        """Actually save the placeholder data into the Content object."""
-        d = self.mdown.convert(data)
-
-        return super(MarkdownPlaceholderNode, self).save(
-            page,
-            language,
-            d,
-            change
-        )
-
-
 class ImagePlaceholderNode(PlaceholderNode):
     """A `PlaceholderNode` that saves one image on disk.
 
@@ -403,3 +383,17 @@ class JsonPlaceholderNode(PlaceholderNode):
         except:
             logger.warning("Problem decoding json")
         return content
+
+
+class MarkdownPlaceholderNode(PlaceholderNode):
+    """
+    A `PlaceholderNode` that return HTML from MarkDown format
+    """
+    
+    widget = Textarea
+
+    def render(self, context):
+        """Render markdown."""
+        import markdown
+        content = self.get_content_from_context(context)
+        return markdown.markdown(content)

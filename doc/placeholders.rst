@@ -152,6 +152,20 @@ There is also a more general placeholder for files::
 A file upload field will appears into the page admin interface.
 
 
+Markdown placeholder
+=====================
+
+If you want to write in the MarkDown format there is a MarkDown placeholder
+
+    {% markdownplaceholder mark %}
+
+.. note::
+    
+    You will have to install the Markdown library::
+
+        pip install Markdown
+
+
 Contact placeholder
 ===================
 
@@ -293,20 +307,7 @@ A file browsing widget::
 
 .. note::
 
-    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
-
-CategoryWidget
---------------
-
-Select a ``Category`` object the page belongs to::
-
-    {% placeholder "<name>" with CategoryWidget %}
-    
-.. note::
-
-    You need to install the `pages.plugins.category` application into your Django settings to
-    have access to this Widget.
-    
+    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/    
 
 RichTextarea
 ------------

@@ -23,12 +23,11 @@ from django.utils.translation import ugettext as _
 
 from os.path import join
 
-import html2text
-
 register_widget(TextInput)
 register_widget(Textarea)
 register_widget(AdminTextInputWidget)
 register_widget(AdminTextareaWidget)
+
 
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
@@ -57,20 +56,6 @@ class RichTextarea(Textarea):
             'pages/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
 
-class MarkdownTextarea(Textarea):
-
-    def __init__(self, language=None, attrs=None, **kwargs):
-        super(MarkdownTextarea, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None):
-        if value is None:
-            value = ''
-        data = html2text.html2text(force_text(value))
-        final_attrs = self.build_attrs(attrs, name=name)
-        return format_html('<textarea{0}>\r\n{1}</textarea>',
-                           flatatt(final_attrs),
-                           data)     
-register_widget(MarkdownTextarea)
 
 class ImageInput(FileInput):
 
@@ -95,6 +80,7 @@ class ImageInput(FileInput):
         return mark_safe(field_content)
 register_widget(ImageInput)
 
+
 class FileInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
@@ -118,6 +104,7 @@ class FileInput(FileInput):
         return mark_safe(field_content)
 register_widget(FileInput)
 
+
 class LanguageChoiceWidget(TextInput):
 
     def __init__(self, language=None, attrs=None, **kwargs):
@@ -136,6 +123,7 @@ class LanguageChoiceWidget(TextInput):
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))
+
 
 class PageLinkWidget(MultiWidget):
     '''A page link `Widget` for the admin.'''
@@ -185,7 +173,6 @@ class PageLinkWidget(MultiWidget):
             <tr><td>page</td><td>%s</td></tr>
             <tr><td>text</td><td>%s</td></tr>
         </table>""" % tuple(rendered_widgets)
-
 register_widget(PageLinkWidget)
 
 

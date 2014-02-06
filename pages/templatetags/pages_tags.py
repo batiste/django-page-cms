@@ -428,7 +428,7 @@ def do_markdownlaceholder(parser, token):
     """
     name, params = parse_placeholder(parser, token)
     return MarkdownPlaceholderNode(name, **params)
- register.tag('markdownplaceholder', do_markdownlaceholder)
+register.tag('markdownplaceholder', do_markdownlaceholder)
 
 def do_imageplaceholder(parser, token):
     """

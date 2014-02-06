@@ -18,6 +18,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string
 
+from markdown import Markdown
+
 import logging
 import os
 import time
@@ -252,6 +254,24 @@ def get_filename(page, placeholder, data):
         placeholder.name + '-' + str(time.time()) + '-' + str(data)
     )
     return filename
+
+
+class MarkdownPlaceholderNode(PlaceholderNode):
+    def __init__(self, name, *args, **kwargs):
+        self.mdown = Markdown()
+
+        super(MarkdownPlaceholderNode, self).__init__(name, *args, **kwargs)
+
+    def save(self, page, language, data, change, extra_data=None):
+        """Actually save the placeholder data into the Content object."""
+        d = self.mdown.convert(data)
+
+        return super(MarkdownPlaceholderNode, self).save(
+            page,
+            language,
+            d,
+            change
+        )
 
 
 class ImagePlaceholderNode(PlaceholderNode):

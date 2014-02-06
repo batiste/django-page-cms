@@ -8,9 +8,8 @@ from django.conf import settings
 
 from pages import settings as pages_settings
 from pages.models import Content, Page
-from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
-from pages.placeholders import ContactPlaceholderNode
-from pages.placeholders import JsonPlaceholderNode, parse_placeholder
+from pages.placeholders import (PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode, MarkdownPlaceholderNode,
+                                 ContactPlaceholderNode, JsonPlaceholderNode, parse_placeholder)
 
 
 register = template.Library()
@@ -423,6 +422,13 @@ def do_placeholder(parser, token):
     return PlaceholderNode(name, **params)
 register.tag('placeholder', do_placeholder)
 
+def do_markdownlaceholder(parser, token):
+    """
+    Method that parse the markdownplaceholder template tag.
+    """
+    name, params = parse_placeholder(parser, token)
+    return MarkdownPlaceholderNode(name, **params)
+ register.tag('markdownplaceholder', do_markdownlaceholder)
 
 def do_imageplaceholder(parser, token):
     """

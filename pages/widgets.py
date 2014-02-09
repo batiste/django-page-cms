@@ -3,7 +3,7 @@
 in the admin via a placeholder tag in your template."""
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
-from pages.settings import PAGE_TINYMCE, PAGE_LANGUAGES
+from pages.settings import PAGE_LANGUAGES
 from pages.models import Page
 from pages.widgets_registry import register_widget
 

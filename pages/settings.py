@@ -68,14 +68,6 @@ def _default_tagging_field():
     return TaggableManager(blank=True)
 PAGE_TAGGING_FIELD = getattr(settings, 'PAGE_TAGGING_FIELD', _default_tagging_field)
 
-# Set this to ``True`` if you wish to use the ``django-tinymce`` application.
-PAGE_TINYMCE = getattr(settings, 'PAGE_TINYMCE', False)
-if PAGE_TINYMCE and "tinymce" not in getattr(settings, 'INSTALLED_APPS', []):
-    raise ImproperlyConfigured('django-tinymce could not be found.\n'
-                               'Please make sure you\'ve installed it '
-                               'correctly or disable the tinymce feature by '
-                               'setting PAGE_TINYMCE to False.')
-
 # Set ``PAGE_UNIQUE_SLUG_REQUIRED`` to ``True`` to enforce unique slug names
 # for all pages.
 PAGE_UNIQUE_SLUG_REQUIRED = getattr(settings, 'PAGE_UNIQUE_SLUG_REQUIRED',
@@ -211,8 +203,8 @@ PAGE_EXTRA_CONTEXT = getattr(settings, 'PAGE_EXTRA_CONTEXT', None)
 # placeholder images, is placed.
 PAGE_UPLOAD_ROOT = getattr(settings, 'PAGE_UPLOAD_ROOT', 'upload')
 
-# Enable real time search indexation for the pages, to use only 
-# with haystack < 2.0. With the version 2.0 use the HAYSTACK_SIGNAL_PROCESSOR 
+# Enable real time search indexation for the pages, to use only
+# with haystack < 2.0. With the version 2.0 use the HAYSTACK_SIGNAL_PROCESSOR
 # setting
 PAGE_REAL_TIME_SEARCH = getattr(settings, 'PAGE_REAL_TIME_SEARCH', False)
 

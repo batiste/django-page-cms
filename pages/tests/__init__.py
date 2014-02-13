@@ -3,7 +3,6 @@ import unittest
 from pages.tests.test_functionnal import FunctionnalTestCase
 from pages.tests.test_unit import UnitTestCase
 from pages.tests.test_regression import RegressionTestCase
-from pages.tests.test_selenium import SeleniumTestCase
 #from pages.tests.test_pages_link import LinkTestCase
 #from pages.tests.test_auto_render import AutoRenderTestCase
 
@@ -15,6 +14,7 @@ def suite():
     suite.addTest(unittest.makeSuite(UnitTestCase))
     suite.addTest(unittest.makeSuite(RegressionTestCase))
     try:
+        from pages.tests.test_selenium import SeleniumTestCase
         suite.addTest(unittest.makeSuite(SeleniumTestCase))
     except ImportError:
         print "Install selenium and PhantomJS to run browsers tests"

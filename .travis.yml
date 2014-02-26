@@ -3,7 +3,7 @@ python:
   - "2.7"
 # command to install dependencies
 install: 
-	- "pip install requirements/external_apps.txt"
-	- "pip install requirements/test_apps.txt"
+  - "pip install requirements/external_apps.txt"
+  - "pip install requirements/test_apps.txt"
 # command to run tests
-script:  "python pages/test_runner.py"
+script: "python pages/test_runner.py"

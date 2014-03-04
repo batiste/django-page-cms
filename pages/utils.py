@@ -2,7 +2,7 @@
 """A collection of functions for Page CMS"""
 from pages import settings
 from pages.cache import cache
-from pages.http import get_request_mock
+from pages.phttp import get_request_mock
 
 from django.conf import settings as django_settings
 from django.template import TemplateDoesNotExist

@@ -4,8 +4,8 @@ from pages.models import Page, Content
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.tests.testcase import TestCase, MockRequest
 from pages import urlconf_registry as reg
-from pages.http import get_language_from_request, get_slug
-from pages.http import get_request_mock, remove_slug
+from pages.phttp import get_language_from_request, get_slug
+from pages.phttp import get_request_mock, remove_slug
 from pages.utils import get_now
 from pages.views import details
 from pages.templatetags.pages_tags import get_page_from_string_or_id

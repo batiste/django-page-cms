@@ -1,20 +1,12 @@
 """Page CMS functions related to the ``request`` object."""
 from pages import settings
-from django.core.handlers.base import BaseHandler
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.core.urlresolvers import reverse
-from django.test.client import RequestFactory
 try:
     from io import StringIO
 except ImportError:
     from io import StringIO
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
-FACTORY = RequestFactory()
-
 
 def get_request_mock():
     """Build a ``request`` mock up that is used in to render
@@ -24,10 +16,13 @@ def get_request_mock():
     render the input template and search for the placeholder
     within.
     """
+    from django.test.client import RequestFactory
+    from django.core.handlers.base import BaseHandler
+    factory = RequestFactory()
     basehandler = BaseHandler()
     basehandler.load_middleware()
     
-    request = FACTORY.get('/')
+    request = factory.get('/')
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because

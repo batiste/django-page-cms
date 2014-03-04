@@ -10,7 +10,7 @@ from django.template import TemplateDoesNotExist
 from django.contrib.sites.models import Site
 from django.utils.importlib import import_module
 from django.core.urlresolvers import clear_url_caches
-
+from six.moves import reload_module
 
 class MockRequest:
     REQUEST = {'language': 'en'}
@@ -88,8 +88,8 @@ class TestCase(TestCase):
                 reload(import_module(url_conf))
             except:
                 pass
-        reload(import_module('pages.urls'))
-        reload(import_module('pages.testproj.urls'))
+        reload_module(import_module('pages.urls'))
+        reload_module(import_module('pages.testproj.urls'))
         clear_url_caches()
 
 

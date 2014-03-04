@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render_to_response
 from django.template import RequestContext
 
 from pages import settings
-from pages.http import get_language_from_request
+from pages.phttp import get_language_from_request
 from pages.plugins.jsonexport.utils import pages_to_json, json_to_pages
 from pages.models import Page
 from pages.permissions import PagePermission

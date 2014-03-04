@@ -2,7 +2,7 @@
 """Page Admin module."""
 from pages import settings
 from pages.models import Page, Content, PageAlias
-from pages.http import get_language_from_request, get_template_from_request
+from pages.phttp import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.forms import make_form
@@ -102,7 +102,7 @@ class PageAdmin(admin.ModelAdmin):
 
     actions = []
 
-    for app_name in global_settings.INSTALLED_APPS:
+    """for app_name in global_settings.INSTALLED_APPS:
         try:
             module_ = __import__(app_name, globals(), locals(), ['object'], -1)
         except ImportError:
@@ -112,7 +112,7 @@ class PageAdmin(admin.ModelAdmin):
             for action in actions_path:
                 module_name, m = action.rsplit('.', 1)
                 method = getattr(__import__(module_name, globals(), locals(), ['object'], -1), m)
-                actions.append(method)
+                actions.append(method)"""
 
     class Media:
         css = {
@@ -152,14 +152,14 @@ class PageAdmin(admin.ModelAdmin):
                 change_status, name='page-change-status'),
         )
         
-        for app_name in global_settings.INSTALLED_APPS:
+        """for app_name in global_settings.INSTALLED_APPS:
             try:
                 module_ = __import__(app_name, globals(), locals(), ['object'], -1)
             except ImportError:
                 continue
             if hasattr(module_, "PAGE_ADMIN_URLS"):
                 urls = __import__(getattr(module_, "PAGE_ADMIN_URLS"), globals(), locals(), ['object'], -1)
-                urlpatterns += urls.urlpatterns
+                urlpatterns += urls.urlpatterns"""
                 
         urlpatterns += super(PageAdmin, self).urls
 

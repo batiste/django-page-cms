@@ -1,7 +1,7 @@
 """Default example views"""
 from pages import settings
 from pages.models import Page, PageAlias
-from pages.http import get_language_from_request, remove_slug
+from pages.phttp import get_language_from_request, remove_slug
 from pages.urlconf_registry import get_urlconf
 
 from django.http import Http404, HttpResponsePermanentRedirect

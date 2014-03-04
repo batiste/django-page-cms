@@ -3,7 +3,7 @@
 from pages import settings
 from pages.cache import cache
 from pages.utils import normalize_url, get_now
-from pages.http import get_slug
+from pages.phttp import get_slug
 
 from django.db import models, connection
 from django.db.models import Q
@@ -151,6 +151,7 @@ class ContentManager(models.Manager):
     def sanitize(self, content):
         """Sanitize a string in order to avoid possible XSS using
         ``html5lib``."""
+        return content
         import html5lib
         from html5lib import sanitizer
         from html5lib import treebuilders, treewalkers, serializer
@@ -160,7 +161,7 @@ class ContentManager(models.Manager):
         stream = walker(dom_tree)
         s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False)
         output_generator = s.serialize(stream)
-        return output_generator
+        return "".join(output_generator)
 
     def set_or_create_content(self, page, language, ctype, body):
         """Set or create a :class:`Content <pages.models.Content>` for a
@@ -225,7 +226,7 @@ class ContentManager(models.Manager):
         }
         if page.freeze_date:
             params['creation_date__lte'] = page.freeze_date
-        return  self.filter(**params).latest()
+        return self.filter(**params).latest()
 
     def get_content(self, page, language, ctype, language_fallback=False):
         """Gets the latest content string for a particular page, language and

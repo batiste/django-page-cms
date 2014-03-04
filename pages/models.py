@@ -17,6 +17,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
+from django.utils.encoding import python_2_unicode_compatible
 
 
 from mptt.models import MPTTModel
@@ -26,6 +27,7 @@ if settings.PAGE_TAGGING:
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
 
+@python_2_unicode_compatible
 class Page(MPTTModel):
     """
     This model contain the status, dates, author, template.
@@ -479,17 +481,18 @@ class Page(MPTTModel):
         """Used in the admin menu to create the left margin."""
         return self.level * 2
 
-    def __unicode__(self):
+    def __str__(self):
         """Representation of the page, saved or not."""
         if self.id:
             # without ID a slug cannot be retrieved
             slug = self.slug()
             if slug:
                 return slug
-            return "Page %d" % self.id
+            return "Page {0}".format(self.id)
         return "Page without id"
 
 
+@python_2_unicode_compatible
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,
     for a particular language"""
@@ -510,10 +513,10 @@ class Content(models.Model):
         verbose_name = _('content')
         verbose_name_plural = _('contents')
 
-    def __unicode__(self):
-        return "%s :: %s" % (self.page.slug(), self.body[0:15])
+    def __str__(self):
+        return "{0} :: {1}".format(self.page.slug(), self.body[0:15])
 
-
+@python_2_unicode_compatible
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
@@ -529,6 +532,6 @@ class PageAlias(models.Model):
         self.url = normalize_url(self.url)
         super(PageAlias, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return "%s :: %s" % (self.url, self.page.get_complete_slug())
+    def __str__(self):
+        return "{0} :: {1}".format(self.url, self.page.get_complete_slug())
 

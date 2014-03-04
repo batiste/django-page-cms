@@ -177,7 +177,7 @@ class RegressionTestCase(TestCase):
     def test_urls_in_templates(self):
         """Test different ways of displaying urls in templates."""
         page = self.create_new_page()
-        from pages.http import get_request_mock
+        from pages.phttp import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
@@ -230,3 +230,7 @@ class RegressionTestCase(TestCase):
         self.assertEqual(
             str(get_placeholders('pages/tests/extends.html')),
             '[<Placeholder Node: one>, <Placeholder Node: two>]')
+
+    def test_sanitize(self):
+        """Sanitize is broken"""
+        

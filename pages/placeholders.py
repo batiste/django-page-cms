@@ -22,6 +22,7 @@ import logging
 import os
 import time
 import re
+import six
 
 logging.basicConfig()
 logger = logging.getLogger("pages")
@@ -117,9 +118,8 @@ class PlaceholderNode(template.Node):
     def get_widget(self, page, language, fallback=Textarea):
         """Given the name of a placeholder return a `Widget` subclass
         like Textarea or TextInput."""
-        is_str = type(self.widget) == type(str())
-        is_unicode = type(self.widget) == type(str())
-        if is_str or is_unicode:
+        is_str = isinstance(self.widget, six.string_types)
+        if is_str:
             widget = get_widget(self.widget)
         else:
             widget = self.widget

@@ -3,7 +3,7 @@ from django import template
 from django.utils.safestring import SafeText
 from django.template import TemplateSyntaxError
 #from django.forms import Widget, Textarea, ImageField, CharField
-import urllib.request, urllib.parse, urllib.error
+#import urllib.request, urllib.parse, urllib.error
 from django.conf import settings
 
 from pages import settings as pages_settings
@@ -11,7 +11,7 @@ from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import ContactPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
-
+import six
 
 register = template.Library()
 
@@ -22,7 +22,7 @@ def get_page_from_string_or_id(page_string, lang=None):
         return Page.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates
     if (isinstance(page_string, SafeText) or
-        isinstance(page_string, str)):
+        isinstance(page_string, six.string_types)):
         if page_string.isdigit():
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)

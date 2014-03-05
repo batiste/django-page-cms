@@ -168,10 +168,6 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
     'PAGE_CONTENT_REVISION_EXCLUDE_LIST', ()
 )
 
-# Set ``PAGE_SANITIZE_USER_INPUT`` to ``True`` to sanitize the user input with
-# ``html5lib``
-PAGE_SANITIZE_USER_INPUT = getattr(settings, 'PAGE_SANITIZE_USER_INPUT', False)
-
 # URL that handles pages media and uses <STATIC_URL>/pages by default.
 PAGES_MEDIA_URL = get_setting('PAGES_MEDIA_URL')
 if not PAGES_MEDIA_URL:

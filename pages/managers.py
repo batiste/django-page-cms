@@ -148,21 +148,6 @@ class ContentManager(models.Manager):
 
     PAGE_CONTENT_DICT_KEY = "page_content_dict_%d_%s_%d"
 
-    def sanitize(self, content):
-        """Sanitize a string in order to avoid possible XSS using
-        ``html5lib``."""
-        return content
-        import html5lib
-        from html5lib import sanitizer
-        from html5lib import treebuilders, treewalkers, serializer
-        p = html5lib.HTMLParser(tokenizer=sanitizer.HTMLSanitizer)
-        dom_tree = p.parseFragment(content)
-        walker = treewalkers.getTreeWalker("dom")
-        stream = walker(dom_tree)
-        s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False)
-        output_generator = s.serialize(stream)
-        return "".join(output_generator)
-
     def set_or_create_content(self, page, language, ctype, body):
         """Set or create a :class:`Content <pages.models.Content>` for a
         particular page and language.
@@ -172,8 +157,6 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param body: the content of the Content object.
         """
-        if settings.PAGE_SANITIZE_USER_INPUT:
-            body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
                                   type=ctype).latest('creation_date')
@@ -194,8 +177,6 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param body: the content of the Content object.
         """
-        if settings.PAGE_SANITIZE_USER_INPUT:
-            body = self.sanitize(body)
         try:
             content = self.filter(page=page, language=language,
                                   type=ctype).latest('creation_date')

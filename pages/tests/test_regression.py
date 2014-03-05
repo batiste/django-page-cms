@@ -230,7 +230,3 @@ class RegressionTestCase(TestCase):
         self.assertEqual(
             str(get_placeholders('pages/tests/extends.html')),
             '[<Placeholder Node: one>, <Placeholder Node: two>]')
-
-    def test_sanitize(self):
-        """Check that sanitize method is working"""
-        self.assertTrue('<script>' not in Content.objects.sanitize("<script>"))

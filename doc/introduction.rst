@@ -48,7 +48,6 @@ Here is the list of features you can enable/disable:
   * Support for future publication start/end date,
   * Page redirection to another page,
   * Page tagging,
-  * User input sanitizer (to avoid XSS),
   * `Sites framework <http://docs.djangoproject.com/en/dev/ref/contrib/sites/#ref-contrib-sites>`_
 
 Dependencies & Compatibility
@@ -60,7 +59,6 @@ Dependencies & Compatibility
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt <http://github.com/batiste/django-mptt/>`_
   * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
-  * `html5lib <http://code.google.com/p/html5lib/>`_ (if PAGE_SANITIZE_USER_INPUT = True)
   * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Gerbi CMS is shipped with jQuery.
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.

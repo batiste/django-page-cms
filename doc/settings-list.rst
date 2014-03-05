@@ -159,13 +159,6 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST
 Assign a list of placeholders to PAGE_CONTENT_REVISION_EXCLUDE_LIST
 to exclude them from the revision process.
 
-PAGE_SANITIZE_USER_INPUT
-==================================
-
-Set ``PAGE_SANITIZE_USER_INPUT`` to ``True`` to sanitize the user input with
-``html5lib``.
-
-
 PAGE_HIDE_ROOT_SLUG
 ==================================
 

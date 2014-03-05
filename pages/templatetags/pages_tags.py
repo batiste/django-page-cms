@@ -2,8 +2,6 @@
 from django import template
 from django.utils.safestring import SafeText
 from django.template import TemplateSyntaxError
-#from django.forms import Widget, Textarea, ImageField, CharField
-#import urllib.request, urllib.parse, urllib.error
 from django.conf import settings
 
 from pages import settings as pages_settings

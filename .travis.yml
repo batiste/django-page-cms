@@ -1,0 +1,10 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+# command to install dependencies
+install:
+  - "pip install -r requirements/external_apps.txt"
+  - "pip install -r requirements/test_apps.txt"
+# command to run tests
+script: "python pages/test_runner.py"

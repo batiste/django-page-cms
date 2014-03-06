@@ -44,7 +44,6 @@ Here is the list of features you can enable/disable:
 
   * Revisions,
   * Image placeholder,
-  * File browser with django-filebrowser,
   * Support for future publication start/end date,
   * Page redirection to another page,
   * Page tagging,
@@ -54,12 +53,11 @@ Dependencies & Compatibility
 ============================
 
   * Django 1.5, 1.6
-  * Python 2.6
+  * Python 2.7, 3.3
   * `django-haystack if used <http://haystacksearch.org/>`_
   * `django-authority for per object rights management <http://bitbucket.org/jezdez/django-authority/src/>`_.
   * `django-mptt <http://github.com/batiste/django-mptt/>`_
   * `django-taggit <http://http://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
-  * `django-tinymce <http://code.google.com/p/django-tinymce/>`_ (if PAGE_TINYMCE = True)
   * Gerbi CMS is shipped with jQuery.
   * Compatible with MySQL, PostgreSQL, SQLite3, some issues are known with Oracle.
 
@@ -74,62 +72,27 @@ I recommend to `create a clone on github  <http://github.com/batiste/django-page
 make modifications in your branch. Please follow those instructions:
 
   * Add your name to the AUTHORS file.
-  * Follow the pep08, and the ~79 characters rules.
+  * Write tests for any new code. Keep the test coverage >= 90%.
+  * Follow the pep08 as much as possible.
   * Add new features in the `doc/changelog.rst` file.
   * Document how the user might use a new feature.
-  * If a new feature is introduced, it should have a setting disabled by default.
+  * If a new dependency is introduced, it should have a setting and be disabled by default.
   * Be careful of performance regresssion.
-  * Write tests for any new code.
   * Every new CMS setting should start with PAGE_<something>
   * Every new template_tag should start with pages_<something>
 
-
-Ask for help
+Report a bug
 ============
 
 `Github issues <https://github.com/batiste/django-page-cms/issues>`_
 
-Try it
--------
-
-To test this CMS checkout the code with git::
-
-    $ git clone git://github.com/batiste/django-page-cms.git django-page-cms
-
-Install the dependencies::
-
-    $ sudo easy_install pip
-    $ wget -c http://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
-    $ sudo pip install -r external_apps.txt
-
-And then, run the development server::
-
-    $ cd example/
-    $ python manage.py syncdb
-    $ python manage.py build_static
-    $ python manage.py manage.py runserver
-    
-.. note::
-
-    If you are not admin you have to create the appropriate permissions to modify pages.
-    After that you will be able to create pages.
-
-Test it
+Run the tests
 -------------------------
 
 Gerbi CMS try to keep the code base stable. The test coverage is higher
 than 90% and we try to keep it that way. To run the test suite::
 
     $ python pages/test_runner.py
-
-    
-Handling images and files
----------------------------
-
-Gerbi include a image and a file placeholder for basic needs. For a more advanced
-files browser you could use django-filebrowser:
-
-  * https://github.com/sehmaschine/django-filebrowser
 
 Translations
 ------------

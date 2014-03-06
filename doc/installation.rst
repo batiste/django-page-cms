@@ -35,7 +35,7 @@ Install dependencies by using pip
 The pip install is the easiest and the recommended installation method. Use::
 
     $ sudo easy_install pip
-    $ wget -c http://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
+    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
     $ sudo pip install -r external_apps.txt
 
 Every package listed in the ``external_app.txt`` should be downloaded and installed.
@@ -43,6 +43,15 @@ Every package listed in the ``external_app.txt`` should be downloaded and instal
 If you are not using the source code version of the application then install it using::
 
     $ sudo pip install django-page-cms
+
+Install dependencies extra dependencies
+==========================================
+
+This CMS has extra dependencies that unlock extra features. Use::
+
+    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/extra_apps.txt
+    $ sudo pip install -r extra_apps.txt
+
     
 Add django-page-cms into your INSTALLED_APPS   
 ==================================================

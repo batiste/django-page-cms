@@ -2,6 +2,9 @@
 django-page-cms
 ===============
 
+.. image:: https://pypip.in/d/django-page-cms/badge.png
+.. image:: https://api.travis-ci.org/batiste/django-page-cms.png
+
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
 Django page CMS is based around a placeholders concept. Placeholder is a special template tag that

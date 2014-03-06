@@ -17,6 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string
+from django.template import RequestContext
 
 import logging
 import os
@@ -365,7 +366,8 @@ class ContactPlaceholderNode(PlaceholderNode):
                     return _("An error as occured: your email has not been sent.")
         else:
             form = ContactForm()
-        renderer = render_to_string('pages/contact.html', {'form':form})
+        renderer = render_to_string('pages/contact.html', {'form':form}, 
+            RequestContext(request))
         return mark_safe(renderer)
 
 
@@ -383,3 +385,17 @@ class JsonPlaceholderNode(PlaceholderNode):
         except:
             logger.warning("Problem decoding json")
         return content
+
+
+class MarkdownPlaceholderNode(PlaceholderNode):
+    """
+    A `PlaceholderNode` that return HTML from MarkDown format
+    """
+
+    widget = Textarea
+
+    def render(self, context):
+        """Render markdown."""
+        import markdown
+        content = self.get_content_from_context(context)
+        return markdown.markdown(content)

@@ -2,3 +2,4 @@ django-taggit
 django-haystack
 django-authority
 whoosh
+Markdown

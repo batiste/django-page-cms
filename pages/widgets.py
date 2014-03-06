@@ -3,7 +3,7 @@
 in the admin via a placeholder tag in your template."""
 
 from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
-from pages.settings import PAGE_TINYMCE, PAGE_LANGUAGES
+from pages.settings import PAGE_LANGUAGES
 from pages.models import Page
 from pages.widgets_registry import register_widget
 
@@ -11,9 +11,12 @@ from django.conf import settings
 from django import forms
 from django.forms import TextInput, Textarea, HiddenInput
 from django.forms import MultiWidget, FileInput
+from django.forms.util import flatatt
 from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.utils.encoding import force_text
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
@@ -24,6 +27,7 @@ register_widget(TextInput)
 register_widget(Textarea)
 register_widget(AdminTextInputWidget)
 register_widget(AdminTextareaWidget)
+
 
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
@@ -52,6 +56,7 @@ class RichTextarea(Textarea):
             'pages/widgets/richtextarea.html', context))
 register_widget(RichTextarea)
 
+
 class ImageInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
@@ -74,6 +79,7 @@ class ImageInput(FileInput):
                     ''' % (name, _('Delete image'), name, name)
         return mark_safe(field_content)
 register_widget(ImageInput)
+
 
 class FileInput(FileInput):
 
@@ -98,6 +104,7 @@ class FileInput(FileInput):
         return mark_safe(field_content)
 register_widget(FileInput)
 
+
 class LanguageChoiceWidget(TextInput):
 
     def __init__(self, language=None, attrs=None, **kwargs):
@@ -116,6 +123,7 @@ class LanguageChoiceWidget(TextInput):
         }
         return mark_safe(render_to_string(
             'pages/widgets/languages.html', context))
+
 
 class PageLinkWidget(MultiWidget):
     '''A page link `Widget` for the admin.'''
@@ -165,7 +173,6 @@ class PageLinkWidget(MultiWidget):
             <tr><td>page</td><td>%s</td></tr>
             <tr><td>text</td><td>%s</td></tr>
         </table>""" % tuple(rendered_widgets)
-
 register_widget(PageLinkWidget)
 
 

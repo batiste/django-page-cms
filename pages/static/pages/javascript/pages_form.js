@@ -50,6 +50,24 @@ $(function() {
         };
     });
 
+    if(document.location.search) {
+        // append query arguments to the language selectors;
+        $('.language_choice_widget').each(function(_, widget) {
+            var search = document.location.search.substring(1);
+            // remove the current language (if any);
+            var params = search.split('&');
+            var new_params = "";
+            for(var i=0; i<params.length; i++) {
+                if(params[i].split('=')[0] != 'language') {
+                    new_params += params[i];
+                }
+            }
+            $(widget).find('li a').each(function(_, s) {
+                s.href = s.href + "&" + new_params;
+            });
+        });
+    }
+
     // Disable the page content if the page is a redirection
     /*
     // To fix if we use placeholder in templates for META or extra content

@@ -5,9 +5,6 @@ from django.conf.urls import handler404, handler500
 from django.contrib import admin
 from pages.views import details
 
-from pages.urlconf_registry import register_urlconf
-#register_urlconf('test', 'pages.testsproject.documents.urls')
-
 admin.autodiscover()
 authority.autodiscover()
 

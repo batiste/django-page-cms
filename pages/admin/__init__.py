@@ -61,8 +61,6 @@ def create_page_model(placeholders=[]):
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
 
-    #form = PageForm
-    exclude = ['author', 'parent']
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
     general_fields = ['title', 'slug', 'status', 'target',
@@ -327,8 +325,21 @@ class PageAdmin(admin.ModelAdmin):
                                     l[0], "title") and l[0] != language]
         extra_context['page'] = obj
 
-        return super(PageAdmin, self).change_view(request, object_id,
+        response = super(PageAdmin, self).change_view(request, object_id,
             form_url=form_url, extra_context=extra_context)
+        if request.method == 'POST' and isinstance(response, HttpResponseRedirect):
+            if '_continue' in request.POST or '_saveasnew' in request.POST or '_addanother' in request.POST:
+                addlanguage = True
+            else:
+                addlanguage = False
+            if addlanguage:
+                from six.moves import urllib
+                splitted = list(urllib.parse.urlparse(response.url))
+                query = urllib.parse.parse_qs(splitted[4])
+                query['language'] = language
+                splitted[4] = urllib.parse.urlencode(query)
+                response = HttpResponseRedirect(urllib.parse.urlunparse(splitted))
+        return response
 
 
     def add_view(self, request, form_url='', extra_context=None):

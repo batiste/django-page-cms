@@ -230,3 +230,20 @@ class RegressionTestCase(TestCase):
         self.assertEqual(
             str(get_placeholders('pages/tests/extends.html')),
             '[<Placeholder Node: one>, <Placeholder Node: two>]')
+
+    def test_param_position(self):
+        """There was a typo in the change_form.html"""
+        c = self.get_admin_client()
+        page = self.create_new_page(c)
+        response = c.get('/admin/pages/page/%d/?position=1' % page.id)
+        self.assertContains(response, "position=1", status_code=200)
+
+    def test_language_and_redirect(self):
+        """Language choice in the admin is not kept between redirects"""
+        c = self.get_admin_client()
+        page = self.create_new_page(c)
+        page_url = '/admin/pages/page/%d/?language=en' % page.id
+        page_data = self.get_new_page_data()
+        page_data['_continue'] = 'true'
+        response = c.post(page_url, page_data)
+        self.assertRedirects(response, page_url)

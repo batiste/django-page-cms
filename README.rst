@@ -11,8 +11,6 @@ Django page CMS is based around a placeholders concept. Placeholder is a special
 you use in your page templates. Every time you add a placeholder in your template such field
 dynamically appears in the page admin interface.
 
-This CMS is updated to work with Django 1.5
-
 Each page can have a different template with different placeholders.
 
 .. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png

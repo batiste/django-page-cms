@@ -4,18 +4,30 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release 1.X.X
+Release 1.6.0
+==============
 
-    * Make django-page-cms compatible with Django 1.6.0
+Released the X of March 2013.
+
+Highlights
+--------------
+
+    * Full compatibility with Python 3.3 (https://travis-ci.org/batiste/django-page-cms) as well python 2.7 with the same code base.
+    * Django-page-cms is now compatible with Django 1.6.2
+    * Setup selenium tests infrastructure
+    * :ref:`New Markdown Placeholder  <markdownplaceholder>`
     * Django-page-cms has a test 90% coverage. Commits that brings this number down will be rejected.
-    * The pages_navigation context processor has been removed
-      * This is not useful as {% load_pages %} already load the pages_navigation variable in the context
-    * Removal of the video placeholder
-      * Used as an example but add no real value to the CMS
-    * Removal of PageAdminWithDefaultContent.
-      * PageAdminWithDefaultContent is completly untested and can be easily reproduced in any project if necessary.
+    * Preserve the language choice across saves in the admin interface
+    
+Maintenance
+-----------
+
+    * HTML sanitization and the dependecy to the html5lib have been removed.
+    * The pages_navigation context processor has been removed. This is not useful as {% load_pages %} already load the pages_navigation variable in the context.
+    * Removal of the video placeholder. Rational: Used as an example but add no real value to the CMS.
+    * Removal of PageAdminWithDefaultContent. Rational: PageAdminWithDefaultContent is completly untested and can be easily reproduced in any project if necessary.
     * Move po import/export in it's own plugin application.
-    * PAGE_CONNECTED_MODELS is gone. Use instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
+    * PAGE_CONNECTED_MODELS is gone. Use inline admin objects instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
 
 Release 1.5.3
 ==============
@@ -97,7 +109,7 @@ Release 1.4.0
     * Added a PAGES_STRICT_URLS setting. If set to `True` the CMS will check for the complete URL instead
       of just the slug. If the complete path doesn't match, a 404 error is raised in the view.
     * Added 2 managing commands for exporting and importing PO translation files into the CMS.
-      :doc:`Documentation on the commands</commands>`
+      :doc:`Documentation on the commands <commands>`
     * Add a PAGE_CONTENT_REVISION_DEPTH setting to limit the amount of revision we want to keep.
     * Fix a bug so the CMS can run without django-taggit installed.
     * Fix a bug with placeholder and template inheritance.

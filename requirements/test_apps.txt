@@ -1,2 +1,3 @@
 selenium
 django-authority==0.8
+coverage

@@ -1,10 +1,10 @@
 import os
 import sys
-have_coverage = None
+coverage_module_present = True
 try:
     from coverage import coverage
 except ImportError:
-    have_coverage = None
+    coverage_module_present = False
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pages.testproj.test_settings")
 current_dirname = os.path.dirname(__file__)
@@ -71,19 +71,22 @@ class PageTestSuiteRunner(DjangoTestSuiteRunner):
 
     def run_tests(self, test_labels=('pages',), extra_tests=None):
 
-        if have_coverage:
+        if coverage_module_present:
             cov = coverage()
             cov.erase()
             cov.use_cache(0)
             cov.start()
+        else:
+            print("No coverage support")
 
         results = DjangoTestSuiteRunner.run_tests(self, test_labels, extra_tests)
 
-        if have_coverage:
+        if coverage_module_present:
             cov.stop()
             app = get_app('pages')
             modules = get_all_coverage_modules(app)
             cov.html_report(modules, directory='coverage')
+            print('Coverage report stored in directory "coverage"')
 
         sys.exit(results)
 

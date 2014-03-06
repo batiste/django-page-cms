@@ -151,6 +151,7 @@ There is also a more general placeholder for files::
 
 A file upload field will appears into the page admin interface.
 
+.. _markdownplaceholder:
 
 Markdown placeholder
 =====================

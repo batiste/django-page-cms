@@ -12,43 +12,6 @@ The application model
 Gerbi CMS declare rather simple models: :class:`Page <pages.models.Page>`
 :class:`Content <pages.models.Content>` and :class:`PageAlias <pages.models.PageAlias>`.
 
-Those Django models have the following relations:
-
-.. aafig::
-    :aspect: 60
-    :scale: 150
-    :proportional:
-
-              +------------+
-              |PageAlias   |
-              +-----+------+
-                    |
-                foreign key
-                    |
-                +---v---+
-        +------>+ Page  +
-        |       +---+---+
-        |           |
-        |          use
-        |           |
-        |     +-----v-----+       +-------+---------------+
-        |     | Template 1+------>+ Placeholder Node title|
-        |     +-----+-----+       +-------+---------------+
-        |           |
-     foreign key  contains
-        |           |
-        |   +-------v--------------+
-        |   | Placeholder Node body|
-        |   +-------+--------------+
-        |           |
-        |           |
-        |  +--------+--------+-------------+
-        |  |                 |             |
-      +-+--v------+    +-----v-----+       v
-      | Content   |    | Content   |     SSSSS
-      | english   |    | french    |     SSSSS
-      +-----------+    +-----------+
-
 
 Placeholders
 ============
@@ -127,7 +90,7 @@ Utils
 Http
 ====
 
-.. automodule:: pages.http
+.. automodule:: pages.phttp
     :members:
     :undoc-members:
 

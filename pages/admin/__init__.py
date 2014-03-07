@@ -119,11 +119,6 @@ class PageAdmin(admin.ModelAdmin):
         if method not in cls.actions:
             cls.actions.append(method)
 
-    def get_actions(self, request):
-        act = super(PageAdmin, self).get_actions(request)
-        print("YEP", self.actions, act)
-        return act
-
     def urls(self):
         from django.conf.urls import patterns, url, include
 

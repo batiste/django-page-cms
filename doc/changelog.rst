@@ -24,6 +24,9 @@ Backward Incompatible Changes
 ------------------------------
 
     * HTML sanitization and the dependecy to the html5lib have been removed.
+    * Remove support for WYMEditor, markItUp and CKEditor editors. Rational: 
+      Those Widget are untested, not updated and were created when packages for those widgets didn't exists as python packages (django-ckeditor, django-wymeditor, django-markitup). 
+      If you need those editors please install the package and register the widget to use them directly in your templates.
     * The pages_navigation context processor has been removed. This is not useful as {% load_pages %} already load the pages_navigation variable in the context.
     * Removal of the video placeholder. Rational: Used as an example but add no real value to the CMS.
     * Removal of PageAdminWithDefaultContent. Rational: PageAdminWithDefaultContent is completly untested and can be easily reproduced in any project if necessary.

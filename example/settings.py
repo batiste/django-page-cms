@@ -97,7 +97,6 @@ INSTALLED_APPS = (
     'pages.testproj.documents',
     #'taggit',
     'pages',
-    'pages.plugins.category',
     'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',

@@ -9,6 +9,7 @@ from pages.models import Content, Page
 from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
 from pages.placeholders import ContactPlaceholderNode, MarkdownPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
+from six.moves import urllib
 import six
 
 register = template.Library()

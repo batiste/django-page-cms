@@ -98,20 +98,6 @@ class PageAdmin(admin.ModelAdmin):
         }],
     )
 
-    actions = []
-
-    """for app_name in global_settings.INSTALLED_APPS:
-        try:
-            module_ = __import__(app_name, globals(), locals(), ['object'], -1)
-        except ImportError:
-            continue
-        if hasattr(module_, "PAGE_ADMIN_ACTIONS"):
-            actions_path = getattr(module_, "PAGE_ADMIN_ACTIONS")
-            for action in actions_path:
-                module_name, m = action.rsplit('.', 1)
-                method = getattr(__import__(module_name, globals(), locals(), ['object'], -1), m)
-                actions.append(method)"""
-
     class Media:
         css = {
             'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
@@ -127,6 +113,16 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/pages_form.js',
             'javascript/jquery.query-2.1.7.js',
         )]
+
+    @classmethod
+    def add_action(cls, method):
+        if method not in cls.actions:
+            cls.actions.append(method)
+
+    def get_actions(self, request):
+        act = super(PageAdmin, self).get_actions(request)
+        print("YEP", self.actions, act)
+        return act
 
     def urls(self):
         from django.conf.urls import patterns, url, include

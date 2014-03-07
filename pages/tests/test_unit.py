@@ -293,7 +293,7 @@ class UnitTestCase(TestCase):
         page_data = {'title': 'test', 'slug': 'test'}
         page = self.new_page(page_data)
 
-        context = RequestContext(MockRequest, {'page': page})
+        context = RequestContext(MockRequest(), {'page': page})
         template = Template('{% load pages_tags %}'
                             '{% get_content page "title" "en-us" as content %}'
                             '{{ content }}')
@@ -316,21 +316,21 @@ class UnitTestCase(TestCase):
         self.assertEqual(page.slug(language='en-us'), 'english')
 
         # default
-        context = RequestContext(MockRequest, {'page': page})
+        context = RequestContext(MockRequest(), {'page': page})
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'english')
 
         # french specified
-        context = RequestContext(MockRequest, {'page': page, 'lang': 'fr'})
+        context = RequestContext(MockRequest(), {'page': page, 'lang': 'fr'})
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'french')
 
         # english specified
-        context = RequestContext(MockRequest, {'page': page, 'lang': 'en-us'})
+        context = RequestContext(MockRequest(), {'page': page, 'lang': 'en-us'})
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
@@ -345,7 +345,7 @@ class UnitTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
+        context = RequestContext(MockRequest(), {'page': page, 'lang':'en-us',
             'path':'/page-1/'})
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" "en-us" %}')
@@ -363,11 +363,28 @@ class UnitTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = RequestContext(MockRequest, {'page': page, 'lang':'en-us',
+        context = RequestContext(MockRequest(), {'page': page, 'lang':'en-us',
             'path':'/page-1/'})
         template = Template('{% load pages_tags %}'
                             '{% pages_siblings_menu page %}')
         renderer = template.render(context)
+
+    def test_admin_menu_tag(self):
+        """
+        Test the {% pages_admin_menu %} template tag with cookies.
+        """
+        page_data = {'title':'test', 'slug':'test'}
+        page = self.new_page(page_data)
+        # cleanup the cache from previous tests
+        page.invalidate()
+
+        request = MockRequest()
+        request.COOKIES['tree_expanded'] = "%d,10,20" % page.id
+        context = RequestContext(request, {'page': page, 'lang':'en-us',
+            'path':'/page-1/'})
+        template = Template('{% load pages_tags %}'
+                            '{% pages_admin_menu page %}')
+        renderer = template.render(context) 
 
     def test_show_absolute_url_with_language(self):
         """
@@ -383,7 +400,7 @@ class UnitTestCase(TestCase):
         self.assertEqual(page.get_url_path(language='en-us'),
             self.get_page_url('english'))
 
-        context = RequestContext(MockRequest, {'page': page})
+        context = RequestContext(MockRequest(), {'page': page})
         template = Template('{% load pages_tags %}'
                             '{% show_absolute_url page "en-us" %}')
         self.assertEqual(template.render(context),
@@ -658,7 +675,7 @@ class UnitTestCase(TestCase):
             body=page.id)
         content.save()
         context = Context({'current_page': page})
-        context = RequestContext(MockRequest, context)
+        context = RequestContext(MockRequest(), context)
         template = Template('{% load pages_tags %}'
                             '{% placeholder test_id as str %}'
                             '{% get_page str as p %}'
@@ -670,7 +687,7 @@ class UnitTestCase(TestCase):
         page = self.new_page({'slug': 'test'})
 
         context = Context({'current_page': page})
-        context = RequestContext(MockRequest, context)
+        context = RequestContext(MockRequest(), context)
         template = Template('{% load pages_tags %}'
                             '{% placeholder slug as str %}'
                             '{% get_page str as p %}'

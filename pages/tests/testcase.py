@@ -12,10 +12,14 @@ from django.utils.importlib import import_module
 from django.core.urlresolvers import clear_url_caches
 from six.moves import reload_module
 
+
 class MockRequest:
-    REQUEST = {'language': 'en'}
-    GET = {}
-    META = {}
+
+    def __init__(self):
+        self.REQUEST = {'language': 'en'}
+        self.GET = {}
+        self.META = {}
+        self.COOKIES = {}
 
 
 class Error404Expected(Exception):

@@ -18,9 +18,10 @@ Highlights
     * :ref:`New Markdown Placeholder  <markdownplaceholder>`
     * Django-page-cms has a test 90% coverage. Commits that brings this number down will be rejected.
     * Preserve the language choice across saves in the admin interface
+    * Move the JSON export in it's own plugin application
     
-Maintenance
------------
+Backward Incompatible Changes
+------------------------------
 
     * HTML sanitization and the dependecy to the html5lib have been removed.
     * The pages_navigation context processor has been removed. This is not useful as {% load_pages %} already load the pages_navigation variable in the context.
@@ -117,8 +118,8 @@ Release 1.4.0
       use it if you want to define a special URL for the root page.
 
 
-Incompatible changes
----------------------
+Backward Incompatible Changes
+-------------------------------
 
     * New delegation rules: the CMS delegate not only the exact path leading to the page but also
       the whole sub path. :doc:`Documentation on the delegation as been updated</3rd-party-apps>`.

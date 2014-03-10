@@ -7,7 +7,7 @@ This file describe new features and incompatibilites between released version of
 Release 1.6.0
 ==============
 
-Released the X of March 2013.
+Released the 10 of March 2014.
 
 Highlights
 --------------

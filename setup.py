@@ -63,10 +63,10 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Framework :: Django :: 1.6.2',
+        'Framework :: Django',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',      
         'Programming Language :: JavaScript',
-        'Topic :: Internet :: WWW/HTTP :: Site Management',
+        'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],
 )

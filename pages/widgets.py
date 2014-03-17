@@ -57,6 +57,35 @@ class RichTextarea(Textarea):
 register_widget(RichTextarea)
 
 
+class CKEditor(Textarea):
+     """CKEditor widget."""
+
+     class Media:
+         js = [join(PAGES_MEDIA_URL, 'ckeditor/ckeditor.js'),
+             join(settings.MEDIA_URL, 'filebrowser/js/FB_CKEditor.js'),
+         ]
+
+     def __init__(self, language=None, attrs=None, **kwargs):
+         self.language = language
+         self.filebrowser = "filebrowser" in getattr(settings,
+             'INSTALLED_APPS', [])
+         self.attrs = {'class': 'ckeditor'}
+         if attrs:
+             self.attrs.update(attrs)
+         super(CKEditor, self).__init__(attrs)
+
+     def render(self, name, value, attrs=None, **kwargs):
+         rendered = super(CKEditor, self).render(name, value, attrs)
+         context = {
+             'name': name,
+             'filebrowser': self.filebrowser,
+         }
+         return rendered + mark_safe(render_to_string(
+             'pages/widgets/ckeditor.html', context))
+
+register_widget(CKEditor)
+
+
 class ImageInput(FileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):

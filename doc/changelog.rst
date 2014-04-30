@@ -16,7 +16,7 @@ Highlights
     * Django-page-cms is now compatible with Django 1.6.2
     * Setup selenium tests infrastructure
     * :ref:`New Markdown Placeholder  <markdownplaceholder>`
-    * Django-page-cms has a test 90% coverage. Commits that brings this number down will be rejected.
+    * Django-page-cms has a test coverage of 90%. Commits that bring this number down will be rejected.
     * Preserve the language choice across saves in the admin interface
     * Move the JSON export in it's own plugin application
     
@@ -30,7 +30,7 @@ Backward Incompatible Changes
     * The pages_navigation context processor has been removed. This is not useful as {% load_pages %} already load the pages_navigation variable in the context.
     * Removal of the video placeholder. Rational: Used as an example but add no real value to the CMS.
     * Removal of PageAdminWithDefaultContent. Rational: PageAdminWithDefaultContent is completly untested and can be easily reproduced in any project if necessary.
-    * Move po import/export in it's own plugin application.
+    * Move po import/export to it's own plugin application.
     * PAGE_CONNECTED_MODELS is gone. Use inline admin objects instead https://docs.djangoproject.com/en/dev/ref/contrib/admin/#inlinemodeladmin-objects
 
 Release 1.5.3

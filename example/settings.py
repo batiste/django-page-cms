@@ -153,7 +153,7 @@ PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),
-    ('pages/examples/editor.html', 'raw editor'),
+    ('pages/examples/files.html', 'file upload'),
 )
 
 PAGE_SANITIZE_USER_INPUT = True

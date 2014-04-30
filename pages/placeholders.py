@@ -1,5 +1,4 @@
 """Placeholder module, that's where the smart things happen."""
-
 from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content
@@ -18,7 +17,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string
 from django.template import RequestContext
-
+from django.core.files.uploadedfile import UploadedFile
 import logging
 import os
 import time
@@ -282,7 +281,7 @@ class ImagePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if isinstance(data, six.string_types):
+            if not isinstance(data, UploadedFile):
                 return
 
             filename = get_filename(page, self, data)
@@ -321,7 +320,7 @@ class FilePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if isinstance(data, six.string_types):
+            if not isinstance(data, UploadedFile):
                 return
 
             filename = get_filename(page, self, data)

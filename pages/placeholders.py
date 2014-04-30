@@ -282,7 +282,7 @@ class ImagePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if type(data) is str:
+            if isinstance(data, six.string_types):
                 return
 
             filename = get_filename(page, self, data)
@@ -321,7 +321,7 @@ class FilePlaceholderNode(PlaceholderNode):
         filename = ''
         if change and data:
             # the image URL is posted if not changed
-            if type(data) is str:
+            if isinstance(data, six.string_types):
                 return
 
             filename = get_filename(page, self, data)

@@ -2,8 +2,10 @@
 """Django page CMS test suite module"""
 from django.template import Template, RequestContext, Context
 from django.template import RequestContext, TemplateDoesNotExist
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import loader
 from pages.placeholders import PlaceholderNode, get_filename
+
 import django
 import six
 
@@ -252,7 +254,6 @@ class RegressionTestCase(TestCase):
 
     def test_get_filename_encoding_bug(self):
         """Problem with encoding file names"""
-        from django.core.files.uploadedfile import SimpleUploadedFile
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         fakefile = SimpleUploadedFile(name=six.u("АБВГДЕЖ.pdf"), content="toto")

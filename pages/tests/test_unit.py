@@ -10,8 +10,10 @@ from pages.utils import get_now
 from pages.views import details
 from pages.templatetags.pages_tags import get_page_from_string_or_id
 
+
 import django
 import unittest
+import six
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -19,6 +21,7 @@ from django.core.urlresolvers import reverse
 from django.template import Template, RequestContext, Context
 from django.template.loader import get_template_from_string
 from django.template import Template, TemplateSyntaxError
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 import datetime
 
@@ -746,25 +749,25 @@ class UnitTestCase(TestCase):
     def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        data = "myfile.pdf"
-        self.assertTrue(data in get_filename(page, placeholder, data))
-        self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, data))
-        self.assertTrue(placeholder.name in get_filename(page, placeholder, data))
+        fakefile = SimpleUploadedFile(name=six.u("myfile.pdf"), content="toto")
+        self.assertTrue(fakefile.name in get_filename(page, placeholder, fakefile))
+        self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, fakefile))
+        self.assertTrue(placeholder.name in get_filename(page, placeholder, fakefile))
 
     def test_json_placeholder(self):
         tpl = ("{% load pages_tags %}{% jsonplaceholder p1 as v %}{{ v.a }}")
-        
+
         template = get_template_from_string(tpl)
         page = self.new_page({'p1': '{"a":1}'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), '1')
-        
+
         tpl = ("{% load pages_tags %}{% jsonplaceholder p1 %}")
         template = get_template_from_string(tpl)
         page = self.new_page({'p1': 'wrong'})
         context = Context({'current_page': page})
         self.assertEqual(template.render(context), 'wrong')
-        
+
     def test_file_placeholder(self):
         tpl = ("{% load pages_tags %}{% fileplaceholder f1 %}")
         

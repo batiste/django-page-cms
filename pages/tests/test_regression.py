@@ -3,6 +3,7 @@
 from django.template import Template, RequestContext, Context
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
+from pages.placeholders import PlaceholderNode, get_filename
 import django
 
 from pages.models import Page, Content
@@ -247,3 +248,13 @@ class RegressionTestCase(TestCase):
         page_data['_continue'] = 'true'
         response = c.post(page_url, page_data)
         self.assertRedirects(response, page_url)
+
+    def test_get_filename_encoding_bug(self):
+        """Problem with encoding file names"""
+        placeholder = PlaceholderNode("placeholdername")
+        page = self.new_page({'slug': 'page1'})
+        data = "АБВГДЕЖ.pdf"
+        filename = get_filename(page, placeholder, data)
+        self.assertTrue(data in filename)
+        self.assertTrue("page_%d" % page.id in filename)
+        self.assertTrue(placeholder.name in filename)

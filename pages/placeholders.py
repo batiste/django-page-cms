@@ -249,7 +249,7 @@ def get_filename(page, placeholder, data):
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
-        placeholder.name + '-' + str(time.time()) + '-' + str(data)
+        placeholder.name + '-' + str(time.time()) + '-' + data.name
     )
     return filename
 
@@ -342,7 +342,7 @@ class ContactForm(forms.Form):
       max_length=150)
     message = forms.CharField(widget=forms.Textarea(),
       label=_('Your message'))
-    
+
 
 class ContactPlaceholderNode(PlaceholderNode):
     """A contact `PlaceholderNode` example."""

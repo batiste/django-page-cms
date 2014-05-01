@@ -5,6 +5,7 @@ from django.template import RequestContext, TemplateDoesNotExist
 from django.template import loader
 from pages.placeholders import PlaceholderNode, get_filename
 import django
+import six
 
 from pages.models import Page, Content
 from pages.tests.testcase import TestCase
@@ -251,10 +252,11 @@ class RegressionTestCase(TestCase):
 
     def test_get_filename_encoding_bug(self):
         """Problem with encoding file names"""
+        from django.core.files.uploadedfile import SimpleUploadedFile
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        data = "АБВГДЕЖ.pdf"
-        filename = get_filename(page, placeholder, data)
-        self.assertTrue(data in filename)
+        fakefile = SimpleUploadedFile(name=six.u("АБВГДЕЖ.pdf"), content="toto")
+        filename = get_filename(page, placeholder, fakefile)
+        self.assertTrue(fakefile.name in filename)
         self.assertTrue("page_%d" % page.id in filename)
         self.assertTrue(placeholder.name in filename)

@@ -749,7 +749,7 @@ class UnitTestCase(TestCase):
     def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        fakefile = SimpleUploadedFile(name=six.u("myfile.pdf"), content="toto")
+        fakefile = SimpleUploadedFile(name=six.u("myfile.pdf"), content=six.b('bytes'))
         self.assertTrue(fakefile.name in get_filename(page, placeholder, fakefile))
         self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, fakefile))
         self.assertTrue(placeholder.name in get_filename(page, placeholder, fakefile))

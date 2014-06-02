@@ -4,6 +4,16 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.6.1
+=============
+
+Released the 2 June 2014.
+
+    * Fix a bug with the image upload.
+    * Fix a bug with files using non ascii characters.
+    * Fix a bug with the loading icon.
+
+
 Release 1.6.0
 ==============
 
@@ -19,7 +29,7 @@ Highlights
     * Django-page-cms has a test coverage of 90%. Commits that bring this number down will be rejected.
     * Preserve the language choice across saves in the admin interface
     * Move the JSON export in it's own plugin application
-    
+
 Backward Incompatible Changes
 ------------------------------
 

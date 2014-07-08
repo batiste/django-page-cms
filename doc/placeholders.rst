@@ -319,6 +319,40 @@ A simple `Rich Text Area Editor <http://batiste.dosimple.ch/blog/posts/2007-09-1
 
 .. image:: http://rte-light.googlecode.com/svn/trunk/screenshot.png
 
+List of custom placeholders shipped with the CMS
+================================================
 
+CKEditorPlaceholderNode
+-----------------------
 
+A simple `CKEditor <http://ckeditor.com>`_ custom placeholder::
 
+    {% ckeditor_placeholder "<name>" with ckeditor %}
+
+.. image:: images/ckeditor_placeholder.png
+
+The variable ``CKEDITOR_CONFIGS`` in ``settings.py`` exists to define editor
+configurations. To use a custom configured editor in templates, just specify the
+configuration name as follow::
+
+    {% ckeditor_placeholder "<name>" with ckeditor:minimal %}
+
+If no configuration is specified a default configuration will be used. The
+default configuration has to be defined in ``CKEDITOR_CONFIGS``. For example::
+
+    CKEDITOR_CONFIGS = {
+        'default': {
+            'width': 600,
+            'height': 300,
+            'toolbar': 'Full',
+        }
+    }
+
+.. note::
+    
+    In order to use this placeholder, the application `django-ckeditor updated
+    fork <https://github.com/riklaunim/django-ckeditor>`_ needs to be
+    installed and configured (trivial). `See the docs
+    <https://github.com/riklaunim/django-ckeditor#django-ckeditor>`_ for
+    further details. Also have a look at the example project to see a working
+    implementation.

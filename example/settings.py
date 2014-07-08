@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     #'authority',
     # haystack change coverage score report by importing modules
     #'haystack',
+    #'ckeditor', # if commented will be used the fallback widget
     'south',
 )
 
@@ -154,6 +155,7 @@ PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),
     ('pages/examples/files.html', 'file upload'),
+    ('pages/examples/ckeditor.html', 'ckeditor example'),
 )
 
 PAGE_SANITIZE_USER_INPUT = True
@@ -181,6 +183,38 @@ COVERAGE_EXCLUDE_MODULES = (
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
+if 'ckeditor' in INSTALLED_APPS:
+    CKEDITOR_UPLOAD_PATH = 'uploads'
+
+    # ##################################
+    # Your ckeditor configurations
+
+    # Docs
+    # http://docs.ckeditor.com/#!/api/CKEDITOR.config
+    #
+    # If some button doesn't show up, it could help to explicitly allow some
+    # content related to the buttons with the allowedContent.
+    # ref. http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
+
+    CKEDITOR_CONFIGS = {
+        'default': {
+            'width': 300,
+            'height': 300,
+            #'language': 'en', # it not defined, the widget is localized with
+                               # the browser default value
+            'toolbar': [
+                ['Bold', 'Italic','Underline', 'Strike', 'Subscript'],
+                [ 'Source','-', 'Cut','Copy','Paste','PasteText','PasteFromWord'],
+            ],
+        },
+        'minimal': {
+            'width': 600,
+            'toolbar': [
+                ['Bold', 'Italic','Underline', 'Strike', 'Subscript', '-',
+                'Link','Unlink' ],
+            ],
+        },
+    }
 
 try:
     from local_settings import *

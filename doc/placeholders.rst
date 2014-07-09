@@ -317,7 +317,7 @@ A simple `Rich Text Area Editor <http://batiste.dosimple.ch/blog/posts/2007-09-1
 
     {% placeholder "<name>" with RichTextarea %}
 
-.. image:: http://rte-light.googlecode.com/svn/trunk/screenshot.png
+.. image:: images/rte_light.png
 
 List of custom placeholders shipped with the CMS
 ================================================

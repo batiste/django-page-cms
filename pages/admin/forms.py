@@ -15,7 +15,8 @@ import collections
 
 def make_form(model_):
 
-    # a new form is needed every single time
+    # a new form is needed every single time as some
+    # initial data are bound
     class PageForm(forms.ModelForm):
         """Form for page creation"""
 

@@ -13,52 +13,18 @@ from pages.widgets import LanguageChoiceWidget
 import collections
 
 
-class SlugFormMixin(forms.ModelForm):
-    """To edit models with slugs"""
-
-    title = forms.CharField(
-        label=_('Title'),
-        widget=forms.TextInput(),
-    )
-    slug = forms.CharField(
-        label=_('Slug'),
-        widget=forms.TextInput(),
-        help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
-    )
-
-    def _clean_page_automatic_slug_renaming(self, slug, is_slug_safe):
-        """Helper to add numbers to slugs"""
-
-        if not isinstance(is_slug_safe, collections.Callable):
-            raise TypeError('is_slug_safe must be callable')
-
-
-        if is_slug_safe(slug):
-           return slug
-
-        count = 2
-        new_slug = slug + "-" + str(count)
-        while not is_slug_safe(new_slug):
-            count = count + 1
-            new_slug = slug + "-" + str(count)
-        return new_slug
-
-    def _clean_page_unique_slug_required(self, slug):
-        """See if this slug exists already"""
-
-        if hasattr(self, 'instance') and self.instance.id:
-            if Content.objects.exclude(page=self.instance).filter(
-                body=slug, type="slug").count():
-                raise forms.ValidationError(self.err_dict['another_page_error'])
-        elif Content.objects.filter(body=slug, type="slug").count():
-            raise forms.ValidationError(self.err_dict['another_page_error'])
-        return slug
-
-        
 def make_form(model_):
 
-    class PageForm(SlugFormMixin):
+    # a new form is needed every single time
+    class PageForm(forms.ModelForm):
         """Form for page creation"""
+
+        target = forms.IntegerField(required=False, widget=forms.HiddenInput)
+        position = forms.CharField(required=False, widget=forms.HiddenInput)
+
+        class Meta:
+            model = model_
+            exclude = ('author', 'last_modification_date', 'parent')
 
         err_dict = {
             'another_page_error': _('Another page with this slug already exists'),
@@ -67,6 +33,16 @@ def make_form(model_):
             'sibling_error': _('A sibling with this slug already exists'),
             'sibling_root_error': _('A sibling with this slug already exists at the root level'),
         }
+
+        title = forms.CharField(
+            label=_('Title'),
+            widget=forms.TextInput(),
+        )
+        slug = forms.CharField(
+            label=_('Slug'),
+            widget=forms.TextInput(),
+            help_text=_('The slug will be used to create the page URL, it must be unique among the other pages of the same level.')
+        )
 
         language = forms.ChoiceField(
             label=_('Language'),
@@ -92,12 +68,32 @@ def make_form(model_):
             #widget=widgets.AdminTimeWidget()
         )
 
-        target = forms.IntegerField(required=False, widget=forms.HiddenInput)
-        position = forms.CharField(required=False, widget=forms.HiddenInput)
+        def _clean_page_automatic_slug_renaming(self, slug, is_slug_safe):
+            """Helper to add numbers to slugs"""
 
-        class Meta:
-            model = model_
-            exclude = ('author', 'last_modification_date', 'parent')
+            if not isinstance(is_slug_safe, collections.Callable):
+                raise TypeError('is_slug_safe must be callable')
+
+            if is_slug_safe(slug):
+               return slug
+
+            count = 2
+            new_slug = slug + "-" + str(count)
+            while not is_slug_safe(new_slug):
+                count = count + 1
+                new_slug = slug + "-" + str(count)
+            return new_slug
+
+        def _clean_page_unique_slug_required(self, slug):
+            """See if this slug exists already"""
+
+            if hasattr(self, 'instance') and self.instance.id:
+                if Content.objects.exclude(page=self.instance).filter(
+                    body=slug, type="slug").count():
+                    raise forms.ValidationError(self.err_dict['another_page_error'])
+            elif Content.objects.filter(body=slug, type="slug").count():
+                raise forms.ValidationError(self.err_dict['another_page_error'])
+            return slug
 
         def clean_slug(self):
             """Handle move action on the pages"""

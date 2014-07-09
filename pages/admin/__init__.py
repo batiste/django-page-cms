@@ -48,7 +48,7 @@ def create_page_model(placeholders=[]):
     # Add in any fields that were provided
     for p in placeholders:
         attrs[p.name] = models.TextField(blank=True)
-    
+
     attrs["slug"] = models.TextField()
     attrs["title"] = models.TextField()
 
@@ -140,16 +140,7 @@ class PageAdmin(admin.ModelAdmin):
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
         )
-        
-        """for app_name in global_settings.INSTALLED_APPS:
-            try:
-                module_ = __import__(app_name, globals(), locals(), ['object'], -1)
-            except ImportError:
-                continue
-            if hasattr(module_, "PAGE_ADMIN_URLS"):
-                urls = __import__(getattr(module_, "PAGE_ADMIN_URLS"), globals(), locals(), ['object'], -1)
-                urlpatterns += urls.urlpatterns"""
-                
+
         urlpatterns += super(PageAdmin, self).urls
 
         return urlpatterns
@@ -251,9 +242,9 @@ class PageAdmin(admin.ModelAdmin):
         """Get a :class:`Page <pages.admin.forms.PageForm>` for the
         :class:`Page <pages.models.Page>` and modify its fields depending on
         the request."""
-        
+
         template = get_template_from_request(request, obj)
-        
+
         model = create_page_model(get_placeholders(template))
 
         form = make_form(model)
@@ -266,7 +257,6 @@ class PageAdmin(admin.ModelAdmin):
             initial_title = obj.title(language=language, fallback=False)
             form.base_fields['slug'].initial = initial_slug
             form.base_fields['title'].initial = initial_title
-            form.base_fields['slug'].label = _('Slug')
 
         template = get_template_from_request(request, obj)
         page_templates = settings.get_page_templates()

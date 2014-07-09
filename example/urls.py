@@ -20,6 +20,11 @@ urlpatterns = patterns('',
 
 )
 
+if 'ckeditor' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        (r'^ckeditor/', include('ckeditor.urls')),
+    )
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

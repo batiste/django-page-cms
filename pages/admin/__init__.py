@@ -29,10 +29,12 @@ from os.path import join
 
 
 from django.db import models
-def create_page_model(placeholders=[]):
+def create_page_model(placeholders=None):
     """
     Create Page model
     """
+    if placeholders is None:
+        placeholders = []
     app_label='pages'
     module = 'pages.models.test'
     class Meta:

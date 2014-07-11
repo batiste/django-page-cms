@@ -198,14 +198,14 @@ if 'ckeditor' in INSTALLED_APPS:
 
     CKEDITOR_CONFIGS = {
         'default': {
-            'width': 300,
+            'width': 600,
             'height': 300,
             #'language': 'en', # it not defined, the widget is localized with
                                # the browser default value
             'toolbar': [
                 ['Bold', 'Italic','Underline', 'Strike', 'Subscript'],
                 [ 'Source','-', 'Cut','Copy','Paste','PasteText','PasteFromWord'],
-            ],
+            ]
         },
         'minimal': {
             'width': 600,

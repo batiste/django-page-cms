@@ -39,12 +39,14 @@ def match_pattern(filename):
     return False
 
 
-def get_all_coverage_modules(app_module, exclude_patterns=[]):
+def get_all_coverage_modules(app_module, exclude_patterns=None):
     """Returns all possible modules to report coverage on, even if they
     aren't loaded.
     """
     # We start off with the imported models.py, so we need to import
     # the parent app package to find the path.
+    if exclude_patterns is None:
+        exclude_patterns = []
     app_path = app_module.__name__.split('.')[:-1]
     app_package = __import__('.'.join(app_path), {}, {}, app_path[-1])
     app_dirpath = app_package.__path__[-1]

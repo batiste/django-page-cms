@@ -69,8 +69,7 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_placeholders
         self.assertEqual(
             str(get_placeholders('pages/tests/block2.html')),
-            "[<Placeholder Node: body>]"
-            "[<Placeholder Node: body2>]"
+            "[<Placeholder Node: body>], [<Placeholder Node: body2>]"
         )
 
     def test_bug_162(self):

@@ -10,6 +10,7 @@ from django.template import loader, Context
 from django.core.management.base import CommandError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django import template
 
 import re
 from datetime import datetime
@@ -66,15 +67,25 @@ def _placeholders_recursif(nodelist, plist, blist):
 
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
             if isinstance(node, BlockNode):
-                # delete placeholders found in a block of the same name
-                offset = 0
-                _plist = [(i, v) for i, v in enumerate(plist)]
-                for index, pl in _plist:
-                    if pl.found_in_block and \
-                            pl.found_in_block.name == node.name \
-                            and pl.found_in_block != node:
-                        del plist[index - offset]
-                        offset += 1
+                # delete placeholders found in a block of the same name,
+                # but only if there is no {{ block.super }}
+                remove_same_block = True
+                # TODO: should be a recusrive search
+                for n in node.nodelist:
+                    if isinstance(n, template.VariableNode):
+                        if(n.filter_expression.var.var == u'block.super'):
+                            remove_same_block = False
+
+                if remove_same_block:
+                    offset = 0
+                    _plist = [(i, v) for i, v in enumerate(plist)]
+                    for index, pl in _plist:
+                        if pl.found_in_block and \
+                                pl.found_in_block.name == node.name \
+                                and pl.found_in_block != node:
+                            del plist[index - offset]
+                            offset += 1
+
                 blist.append(node)
 
             if hasattr(node, key):

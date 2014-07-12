@@ -84,7 +84,14 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
 
-CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
+#CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
 
 INSTALLED_APPS = (
     'django.contrib.auth',

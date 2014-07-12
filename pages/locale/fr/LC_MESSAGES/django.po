@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-11 16:40+0200\n"
-"PO-Revision-Date: 2014-07-11 14:58+0000\n"
+"PO-Revision-Date: 2014-07-11 16:00+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/django-page-cms-1/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -89,7 +89,7 @@ msgstr "date de fixation"
 msgid ""
 "Don't publish any content\n"
 "            after this date."
-msgstr ""
+msgstr "Ne publier aucun contenu après cette date."
 
 #: models.py:102
 msgid "The site(s) the page is accessible at."
@@ -172,7 +172,7 @@ msgstr ""
 
 #: widgets.py:69
 msgid "Please save the page to show the image field"
-msgstr ""
+msgstr "Merci de sauvegarder la page pour montrer le champ d'image"
 
 #: widgets.py:73 widgets.py:97
 #, python-format
@@ -225,7 +225,7 @@ msgstr "Titre"
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
-msgstr ""
+msgstr "Ce champ va être utilisé pour créer l'adresse de la page. Il doit être unique parmi les autres page du même niveau."
 
 #: admin/forms.py:64
 msgid "Another page with this slug already exists"
@@ -257,7 +257,7 @@ msgstr "Template"
 
 #: admin/forms.py:83
 msgid "Delegate to application"
-msgstr ""
+msgstr "Déléguer à l'application"
 
 #: admin/forms.py:88
 msgid "Freeze"
@@ -278,7 +278,7 @@ msgstr ""
 #: plugins/jsonexport/utils.py:123
 #, python-format
 msgid "Could not find page for redirect-to field '%s'"
-msgstr ""
+msgstr "Page introuvable pour la le champs de redirection '%s' "
 
 #: plugins/jsonexport/utils.py:154
 #, python-format
@@ -537,4 +537,4 @@ msgstr ""
 
 #: testproj/documents/models.py:10
 msgid "text"
-msgstr ""
+msgstr "texte"

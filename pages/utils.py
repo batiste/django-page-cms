@@ -19,7 +19,6 @@ def get_now():
         return datetime.utcnow().replace(tzinfo=timezone.utc)
     else:
         return datetime.now()
-        
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.

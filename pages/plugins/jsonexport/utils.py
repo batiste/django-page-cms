@@ -58,7 +58,7 @@ def dump_json_data(page):
         """Return content of each placeholder in each language."""
         out = {}
         for p in get_placeholders(page.get_template()):
-            if p.name in ('title', 'slug'):
+            if p.ctype in ('title', 'slug'):
                 continue # these were already included
             out[p.name] = language_content(p.name)
         return out
@@ -349,14 +349,14 @@ def validate_pages_json_data(d, preferred_lang):
                 % (slug, p['template']))
             continue
 
-        if set(p.name for p in get_placeholders(p['template']) if
-                p.name not in ('title', 'slug')) != set(p['content'].keys()):
+        if set(p.ctype for p in get_placeholders(p['template']) if
+                p.ctype not in ('title', 'slug')) != set(p['content'].keys()):
             errors.append(_("%s template contents are different than our "
                 "template: %s") % (slug, p['template']))
             continue
 
     return errors
-    
+
 
 def pages_to_json(queryset):
     """
@@ -369,7 +369,7 @@ def pages_to_json(queryset):
             'pages': [dump_json_data(page) for page in queryset]},
         indent=JSON_PAGE_EXPORT_INDENT, sort_keys=True)
 
-        
+
 def json_to_pages(json, user, preferred_lang=None):
     """
     Attept to create/update pages from JSON string json.  user is the
@@ -471,8 +471,8 @@ def validate_pages_json_data(d, preferred_lang):
                 % (slug, p['template']))
             continue
 
-        if set(p.name for p in get_placeholders(p['template']) if
-                p.name not in ('title', 'slug')) != set(p['content'].keys()):
+        if set(p.ctype for p in get_placeholders(p['template']) if
+                p.ctype not in ('title', 'slug')) != set(p['content'].keys()):
             errors.append(_("%s template contents are different than our "
                 "template: %s") % (slug, p['template']))
             continue

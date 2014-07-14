@@ -222,7 +222,7 @@ class Page(MPTTModel):
         self._complete_slug = None
         self._content_dict = dict()
 
-        p_names = [p.name for p in get_placeholders(self.get_template())]
+        p_names = [p.ctype for p in get_placeholders(self.get_template())]
         if 'slug' not in p_names:
             p_names.append('slug')
         if 'title' not in p_names:
@@ -347,8 +347,8 @@ class Page(MPTTModel):
         placeholders = get_placeholders(self.get_template())
         exposed_content = []
         for lang in self.get_languages():
-            for ctype in [p.name for p in placeholders]:
-                content = self.get_content(lang, ctype, False)
+            for p in placeholders:
+                content = self.get_content(lang, p.ctype, False)
                 if content:
                     exposed_content.append(content)
         return "\r\n".join(exposed_content)
@@ -363,10 +363,10 @@ class Page(MPTTModel):
         """
         placeholders = get_placeholders(self.get_template())
         content_list = []
-        for ctype in [p.name for p in placeholders]:
+        for p in placeholders:
             try:
                 content = Content.objects.get_content_object(self,
-                    language, ctype)
+                    language, p.ctype)
                 content_list.append(content)
             except Content.DoesNotExist:
                 pass

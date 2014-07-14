@@ -185,9 +185,9 @@ class PageAdmin(admin.ModelAdmin):
                 extra_data=extra_data)
 
         for placeholder in get_placeholders(page.get_template()):
-            if(placeholder.name in form.cleaned_data and placeholder.name
+            if(placeholder.ctype in form.cleaned_data and placeholder.ctype
                     not in self.mandatory_placeholders):
-                data = form.cleaned_data[placeholder.name]
+                data = form.cleaned_data[placeholder.ctype]
                 extra_data = placeholder.get_extra_data(form.data)
                 placeholder.save(page, language, data, change,
                     extra_data=extra_data)
@@ -270,12 +270,12 @@ class PageAdmin(admin.ModelAdmin):
             form.base_fields['template'].initial = force_text(template)
 
         for placeholder in get_placeholders(template):
-            name = placeholder.name
+            ctype = placeholder.ctype
             if obj:
-                initial = placeholder.get_content(obj, language, name)
+                initial = placeholder.get_content(obj, language, ctype)
             else:
                 initial = None
-            form.base_fields[name] = placeholder.get_field(obj,
+            form.base_fields[ctype] = placeholder.get_field(obj,
                 language, initial=initial)
 
         return form

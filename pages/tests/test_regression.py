@@ -69,7 +69,7 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_placeholders
         self.assertEqual(
             str(get_placeholders('pages/tests/block2.html')),
-            "[<Placeholder Node: body>], [<Placeholder Node: body2>]"
+            "[<Placeholder Node: body>, <Placeholder Node: body2>]"
         )
 
     def test_bug_162(self):
@@ -212,6 +212,17 @@ class RegressionTestCase(TestCase):
         placeholder.save(page, 'en-us', 'en', True)
         self.assertEqual(
             Content.objects.get_content(page, 'fr-ch', 'test'),
+            'fr'
+        )
+
+    def test_placeholder_name_space_bug(self):
+        """Cache key cannot us space."""
+        from pages.placeholders import PlaceholderNode
+        page = self.new_page()
+        placeholder = PlaceholderNode('test space', page=page)
+        placeholder.save(page, 'fr-ch', 'fr', True)
+        self.assertEqual(
+            Content.objects.get_content(page, 'fr-ch', 'test space'),
             'fr'
         )
 

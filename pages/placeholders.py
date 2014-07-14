@@ -106,6 +106,7 @@ class PlaceholderNode(template.Node):
         These values should be thread safe and don't change between calls."""
         self.page = page or 'current_page'
         self.name = name
+        self.ctype = name.replace(" ", "_")
         if widget:
             self.widget = widget
         self.parsed = parsed

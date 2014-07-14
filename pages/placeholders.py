@@ -250,7 +250,7 @@ def get_filename(page, placeholder, data):
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
-        placeholder.name + '-' + str(time.time()) + '-' + data.name
+        placeholder.ctype + '-' + str(time.time()) + '-' + data.name
     )
     return filename
 

@@ -49,7 +49,7 @@ def create_page_model(placeholders=None):
 
     # Add in any fields that were provided
     for p in placeholders:
-        attrs[p.name] = models.TextField(blank=True)
+        attrs[p.ctype] = models.TextField(blank=True)
 
     attrs["slug"] = models.TextField()
     attrs["title"] = models.TextField()
@@ -220,8 +220,8 @@ class PageAdmin(admin.ModelAdmin):
         placeholder_fieldsets = []
         template = get_template_from_request(request, obj)
         for placeholder in get_placeholders(template):
-            if placeholder.name not in self.mandatory_placeholders:
-                placeholder_fieldsets.append(placeholder.name)
+            if placeholder.ctype not in self.mandatory_placeholders:
+                placeholder_fieldsets.append(placeholder.ctype)
 
         additional_fieldsets = []
         additional_fieldsets.append((_('Content'), {

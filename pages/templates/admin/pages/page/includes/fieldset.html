@@ -21,9 +21,9 @@
                             <p class="help">{{ field.field.field.help_text|safe }}</p>
                         {% endif %}
                         {% for p in placeholders %}
-                            {% ifequal p.name field.field.name %}
+                            {% ifequal p.ctype field.field.name %}
                                 {% if not add %}
-                                    {% show_revisions page p.name language %}
+                                    {% show_revisions page p.ctype language %}
                                 {% endif %}
                             {% endifequal %}
                         {% endfor %}

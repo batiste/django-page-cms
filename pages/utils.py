@@ -33,7 +33,27 @@ def get_placeholders(template_name):
 
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
-    return plist
+
+    previous = None
+    block_to_remove = []
+    for block in blist:
+        if previous and previous.name == block.name:
+            if not hasattr(block, 'has_super_var'):
+                block_to_remove.append(previous)
+        previous = block
+
+    def keep(p):
+        return not p.found_in_block in block_to_remove
+
+    placeholders = [p for p in plist if keep(p)]
+    names = []
+    pfiltered = []
+    for p in placeholders:
+        if p.ctype not in names:
+            pfiltered.append(p)
+            names.append(p.ctype)
+
+    return pfiltered
 
 
 def _placeholders_recursif(nodelist, plist, blist):
@@ -42,7 +62,23 @@ def _placeholders_recursif(nodelist, plist, blist):
     # I needed to do this lazy import to compile the documentation
     from django.template.loader_tags import BlockNode
 
+    if len(blist):
+        block = blist[-1]
+    else:
+        block = None
+
     for node in nodelist:
+
+        if isinstance(node, BlockNode):
+            if node not in blist:
+                blist.append(node)
+            if not block:
+                block = node
+
+        if block:
+            if isinstance(node, template.VariableNode):
+                if(node.filter_expression.var.var == u'block.super'):
+                    block.has_super_var = True
 
         # extends node?
         if hasattr(node, 'parent_name'):
@@ -54,47 +90,21 @@ def _placeholders_recursif(nodelist, plist, blist):
 
         # Is it a placeholder?
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
-                hasattr(node, 'as_varname') and hasattr(node, 'name'):
-            already_in_plist = False
-            for placeholder in plist:
-                if placeholder.name == node.name:
-                    already_in_plist = True
-            if not already_in_plist:
-                if len(blist):
-                    node.found_in_block = blist[len(blist) - 1]
-                plist.append(node)
+            hasattr(node, 'as_varname') and hasattr(node, 'name'):
+            if block:
+                node.found_in_block = block
+            plist.append(node)
             node.render(Context())
 
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
-            if isinstance(node, BlockNode):
-                # delete placeholders found in a block of the same name,
-                # but only if there is no {{ block.super }}
-                remove_same_block = True
-                # TODO: should be a recusrive search
-                for n in node.nodelist:
-                    if isinstance(n, template.VariableNode):
-                        if(n.filter_expression.var.var == u'block.super'):
-                            remove_same_block = False
-
-                if remove_same_block:
-                    offset = 0
-                    _plist = [(i, v) for i, v in enumerate(plist)]
-                    for index, pl in _plist:
-                        if pl.found_in_block and \
-                                pl.found_in_block.name == node.name \
-                                and pl.found_in_block != node:
-                            del plist[index - offset]
-                            offset += 1
-
-                blist.append(node)
 
             if hasattr(node, key):
                 try:
                     _placeholders_recursif(getattr(node, key), plist, blist)
                 except:
                     pass
-            if isinstance(node, BlockNode):
-                blist.pop()
+
+
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.

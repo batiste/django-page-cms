@@ -4,6 +4,16 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.6.2
+=============
+
+Released the XXX 2014.
+
+    * Fix several bugs related to placeholders and cache
+    * Fix a bug with files using non ascii characters.
+    * Fix a bug with the loading icon.
+
+
 Release 1.6.1
 =============
 

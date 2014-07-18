@@ -37,7 +37,7 @@ def get_placeholders(template_name):
     previous = {}
     block_to_remove = []
     for block in blist:
-        if previous.has_key(block.name):
+        if block.name in previous:
             if not hasattr(block, 'has_super_var'):
                 block_to_remove.append(previous[block.name])
         previous[block.name] = block

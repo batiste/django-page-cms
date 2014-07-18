@@ -5,6 +5,7 @@ from django.template import RequestContext, TemplateDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import loader
 from pages.placeholders import PlaceholderNode, get_filename
+from pages.utils import get_placeholders
 
 import django
 import six
@@ -58,7 +59,6 @@ class RegressionTestCase(TestCase):
     def test_bug_152(self):
         """Test bug 152
         http://code.google.com/p/django-page-cms/issues/detail?id=152"""
-        from pages.utils import get_placeholders
         self.assertEqual(
             str(get_placeholders('pages/tests/test1.html')),
             "[<Placeholder Node: body>]"
@@ -66,10 +66,16 @@ class RegressionTestCase(TestCase):
 
     def test_bug_block_super(self):
         """{{ block.super }} doesn't work"""
-        from pages.utils import get_placeholders
         self.assertEqual(
             str(get_placeholders('pages/tests/block2.html')),
             "[<Placeholder Node: body>, <Placeholder Node: body2>]"
+        )
+
+    def test_bug_block_without_super(self):
+        """Without the block the placeholder should not be there"""
+        self.assertEqual(
+            str(get_placeholders('pages/tests/block3.html')),
+            "[<Placeholder Node: test>]"
         )
 
     def test_bug_162(self):

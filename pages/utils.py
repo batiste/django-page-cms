@@ -34,13 +34,13 @@ def get_placeholders(template_name):
     plist, blist = [], []
     _placeholders_recursif(temp.nodelist, plist, blist)
 
-    previous = None
+    previous = {}
     block_to_remove = []
     for block in blist:
-        if previous and previous.name == block.name:
+        if previous.has_key(block.name):
             if not hasattr(block, 'has_super_var'):
-                block_to_remove.append(previous)
-        previous = block
+                block_to_remove.append(previous[block.name])
+        previous[block.name] = block
 
     def keep(p):
         return not p.found_in_block in block_to_remove

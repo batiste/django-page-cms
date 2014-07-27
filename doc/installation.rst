@@ -52,8 +52,8 @@ This CMS has extra dependencies that unlock extra features. Use::
     $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/extra_apps.txt
     $ sudo pip install -r extra_apps.txt
 
-    
-Add django-page-cms into your INSTALLED_APPS   
+
+Add django-page-cms into your INSTALLED_APPS
 ==================================================
 
 To activate django-page-cms you will need to add those application::

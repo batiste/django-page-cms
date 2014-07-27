@@ -7,9 +7,11 @@ This file describe new features and incompatibilites between released version of
 Release 1.6.2
 =============
 
-Released the XXX 2014.
+Released the 27 of July 2014.
 
-    * Fix several bugs related to placeholders and cache
+    * Added a ckeditor placeholder using django-ckeditor
+    * The project now use transifex to handle it's translations (https://www.transifex.com/projects/p/django-page-cms-1/)
+    * Fix several bugs related to placeholders and cache.
     * Fix a bug with files using non ascii characters.
     * Fix a bug with the loading icon.
 
@@ -17,7 +19,7 @@ Released the XXX 2014.
 Release 1.6.1
 =============
 
-Released the 2 June 2014.
+Released the 2 of June 2014.
 
     * Fix a bug with the image upload.
     * Fix a bug with files using non ascii characters.

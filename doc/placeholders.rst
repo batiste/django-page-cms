@@ -255,14 +255,14 @@ and then you can simply use the placeholder syntax::
     {% placeholder custom_widget_example with CustomTextarea %}
 
 .. note::
-    
+
     You have to make sure your `widgets.py` file is executed before using the widget. To be sure of this, you might
     import your file into the models.py of your application.
-    
+
 .. note::
 
     More examples of custom widgets are available in :mod:`pages.widgets.py <pages.widgets>`.
-    
+
 
 .. _placeholder-widgets-list:
 
@@ -308,7 +308,7 @@ A file browsing widget::
 
 .. note::
 
-    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/    
+    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
 
 RichTextarea
 ------------
@@ -319,8 +319,6 @@ A simple `Rich Text Area Editor <http://batiste.dosimple.ch/blog/posts/2007-09-1
 
 .. image:: images/rte_light.png
 
-List of custom placeholders shipped with the CMS
-================================================
 
 CKEditorPlaceholderNode
 -----------------------
@@ -349,7 +347,7 @@ default configuration has to be defined in ``CKEDITOR_CONFIGS``. For example::
     }
 
 .. note::
-    
+
     In order to use this placeholder, the application `django-ckeditor updated
     fork <https://github.com/riklaunim/django-ckeditor>`_ needs to be
     installed and configured (trivial). `See the docs

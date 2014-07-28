@@ -141,7 +141,7 @@ class PageManager(TreeManager):
                 if page.get_complete_slug(lang) == complete_path:
                     return page
         return None
-        
+
 
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""
@@ -218,6 +218,8 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
+        if " " in ctype:
+            raise ValueError("Ctype cannot contain spaces.")
         if not language:
             language = settings.PAGE_DEFAULT_LANGUAGE
 

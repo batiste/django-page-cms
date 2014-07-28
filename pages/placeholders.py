@@ -137,8 +137,8 @@ class PlaceholderNode(template.Node):
         method."""
         result = {}
         for key in list(data.keys()):
-            if key.startswith(self.name + '-'):
-                new_key = key.replace(self.name + '-', '')
+            if key.startswith(self.ctype + '-'):
+                new_key = key.replace(self.ctype + '-', '')
                 result[new_key] = data[key]
         return result
 
@@ -167,14 +167,14 @@ class PlaceholderNode(template.Node):
                 Content.objects.create_content_if_changed(
                     page,
                     language,
-                    self.name,
+                    self.ctype,
                     data
                 )
             else:
                 Content.objects.set_or_create_content(
                     page,
                     language,
-                    self.name,
+                    self.ctype,
                     data
                 )
         # the page is being added
@@ -182,7 +182,7 @@ class PlaceholderNode(template.Node):
             Content.objects.set_or_create_content(
                 page,
                 language,
-                self.name,
+                self.ctype,
                 data
             )
 
@@ -190,12 +190,12 @@ class PlaceholderNode(template.Node):
         if self.untranslated:
             lang = settings.PAGE_DEFAULT_LANGUAGE
             lang_fallback = False
-        content = Content.objects.get_content(page_obj, lang, self.name,
+        content = Content.objects.get_content(page_obj, lang, self.ctype,
             lang_fallback)
         if self.inherited and not content:
             for ancestor in page_obj.get_ancestors():
                 content = Content.objects.get_content(ancestor, lang,
-                    self.name, lang_fallback)
+                    self.ctype, lang_fallback)
                 if content:
                     break
         return content
@@ -219,7 +219,7 @@ class PlaceholderNode(template.Node):
         return mark_safe(self.get_content_from_context(context))
 
     def render(self, context):
-        """Output the content of the `PlaceholdeNode` in the template."""
+        """Output the content of the `PlaceholdeNode` as a template."""
         content = self.get_render_content(context)
         if not content:
             return ''

@@ -302,9 +302,9 @@ class RegressionTestCase(TestCase):
 
     def test_str_method(self):
         """Problem with encoding __str__ method"""
-        page = self.new_page({'title': 'АБВГДЕЖ'})
+        page = self.new_page({'title': u'АБВГДЕЖ'})
         content = Content(page=page, type='title', language='fr-ch',
-            body="АБВГДЕЖ")
+            body=u"АБВГДЕЖ")
         content.save()
         try:
             str(content)

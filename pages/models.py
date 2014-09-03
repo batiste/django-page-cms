@@ -512,7 +512,7 @@ class Content(models.Model):
         verbose_name_plural = _('contents')
 
     def __str__(self):
-        return "{0} :: {1}".format(self.page.slug(), self.body[0:15])
+        return u"{0} :: {1}".format(self.page.slug(), self.body[0:15])
 
 @python_2_unicode_compatible
 class PageAlias(models.Model):

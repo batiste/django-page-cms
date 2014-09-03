@@ -309,6 +309,6 @@ class RegressionTestCase(TestCase):
         try:
             str(content)
         except:
-            self.fail("Cyrilic characters in content should raise an error")
+            self.fail("Cyrilic characters in content should not raise any error")
 
 

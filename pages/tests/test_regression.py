@@ -299,3 +299,16 @@ class RegressionTestCase(TestCase):
         self.assertTrue(fakefile.name in filename)
         self.assertTrue("page_%d" % page.id in filename)
         self.assertTrue(placeholder.name in filename)
+
+    def test_str_method(self):
+        """Problem with encoding __str__ method"""
+        page = self.new_page({'title': 'АБВГДЕЖ'})
+        content = Content(page=page, type='title', language='fr-ch',
+            body="АБВГДЕЖ")
+        content.save()
+        try:
+            str(content)
+        except:
+            self.fail("Cyrilic characters in content should raise an error")
+
+

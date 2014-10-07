@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-11 16:40+0200\n"
-"PO-Revision-Date: 2014-07-11 16:00+0000\n"
+"PO-Revision-Date: 2014-10-07 12:44+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/django-page-cms-1/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -57,13 +57,13 @@ msgstr "Quand la page doit aller en front. \nLe status de la page doit être \"P
 
 #: models.py:82
 msgid "publication end date"
-msgstr "Fin de publication"
+msgstr "Date de fin de publication"
 
 #: models.py:83
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr " Quand la page doit expirer. Laissez\nvide pour ne jamais expirer."
+msgstr "Quand la page doit expirer. Laissez\nvide pour ne jamais expirer."
 
 #: models.py:86
 msgid "last modification date"
@@ -154,7 +154,7 @@ msgstr "Votre message"
 
 #: placeholders.py:363
 msgid "Your email has been sent. Thank you."
-msgstr "Votre message a été envoyé"
+msgstr "Votre message a été envoyé. Merci."
 
 #: placeholders.py:365
 msgid "An error as occured: your email has not been sent."
@@ -185,7 +185,7 @@ msgstr "Supprimer image"
 
 #: widgets.py:93
 msgid "Please save the page to show the file field"
-msgstr "Merci de sauver la page pour affichier le champs de fichier"
+msgstr "Merci de sauver la page pour afficher le champs de fichier"
 
 #: widgets.py:103
 msgid "Delete file"

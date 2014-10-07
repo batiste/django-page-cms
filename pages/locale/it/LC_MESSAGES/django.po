@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Francesco Facconi <francesco@facconi.eu>, 2011
+# Daniele Faraglia <joke2k@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-11 16:40+0200\n"
-"PO-Revision-Date: 2014-07-11 14:53+0000\n"
-"Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
+"PO-Revision-Date: 2014-07-25 10:56+0000\n"
+"Last-Translator: Daniele Faraglia <joke2k@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/django-page-cms-1/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,91 +265,91 @@ msgstr "Blocco"
 
 #: admin/forms.py:89
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
-msgstr ""
+msgstr "Non pubblicare nessun contenuto dopo questa data. Il formato è 'Y-m-d H:M:S'"
 
 #: plugins/jsonexport/actions.py:22
 msgid "Export pages as JSON"
-msgstr ""
+msgstr "Esporta le pagine come JSON"
 
 #: plugins/jsonexport/actions.py:47
 msgid "Import some pages from a JSON file"
-msgstr ""
+msgstr "Importa delle pagine da un file JSON"
 
 #: plugins/jsonexport/utils.py:123
 #, python-format
 msgid "Could not find page for redirect-to field '%s'"
-msgstr ""
+msgstr "Non è possibile trovare una pagina per il campo redirect '%s'"
 
 #: plugins/jsonexport/utils.py:154
 #, python-format
 msgid "Language '%s' not imported"
-msgstr ""
+msgstr "Il linguaggio '%s' non è importato"
 
 #: plugins/jsonexport/utils.py:192
 #, python-format
 msgid "Original author '%s' not found"
-msgstr ""
+msgstr "Autore originale '%s' non trovato"
 
 #: plugins/jsonexport/utils.py:219
 #, python-format
 msgid "Could not add site '%s' to page"
-msgstr ""
+msgstr "Non posso aggiungere il sito '%s' alla pagina"
 
 #: plugins/jsonexport/utils.py:274 plugins/jsonexport/utils.py:396
 #, python-format
 msgid "JSON file is invalid: %s"
-msgstr ""
+msgstr "Il file JSON non è valido: %s"
 
 #: plugins/jsonexport/utils.py:311 plugins/jsonexport/utils.py:433
 #, python-format
 msgid "Unsupported file version: %s"
-msgstr ""
+msgstr "Versione del file non supportata: %s"
 
 #: plugins/jsonexport/utils.py:339 plugins/jsonexport/utils.py:461
 #, python-format
 msgid "%s has no common language with this site"
-msgstr ""
+msgstr "%s non ha una lingua in comune con questo sito"
 
 #: plugins/jsonexport/utils.py:344 plugins/jsonexport/utils.py:466
 #, python-format
 msgid ""
 "%s did not include its parent page and a matching one was not found on this "
 "site"
-msgstr ""
+msgstr "%s non include la sua pagina padre e non sono state trovate corrispondenze in questo sito"
 
 #: plugins/jsonexport/utils.py:348 plugins/jsonexport/utils.py:470
 #, python-format
 msgid "%s uses a template not found on this site: %s"
-msgstr ""
+msgstr "%s usa un modello non trovato in questo sito: %s"
 
 #: plugins/jsonexport/utils.py:354 plugins/jsonexport/utils.py:476
 #, python-format
 msgid "%s template contents are different than our template: %s"
-msgstr ""
+msgstr "I contenuti del modello %s sono differenti dal nostro modello: %s "
 
 #: plugins/jsonexport/management/commands/pages_export_json.py:36
 #, python-format
 msgid "Site with id/domain = '%s' not found"
-msgstr ""
+msgstr "Il sito con id/dominio = '%s' non trovato"
 
 #: plugins/jsonexport/management/commands/pages_import_json.py:27
 #, python-format
 msgid "User with username/id/email = '%s' not found"
-msgstr ""
+msgstr "Utente con username/id/email = '%s' non trovato"
 
 #: plugins/jsonexport/management/commands/pages_import_json.py:35
 msgid "Errors encountered while importing JSON"
-msgstr ""
+msgstr "Rilevatii errori durante l'importazione del JSON"
 
 #: plugins/jsonexport/management/commands/pages_import_json.py:37
 #, python-format
 msgid "%s created."
-msgstr ""
+msgstr "%s creato."
 
 #: plugins/jsonexport/management/commands/pages_import_json.py:37
 #, python-format
 msgid "%s modified."
-msgstr ""
+msgstr "%s modificato."
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
 #: templates/admin/pages/page/change_list.html:11
@@ -357,31 +358,31 @@ msgstr "Principale"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
 msgid "Import Pages"
-msgstr ""
+msgstr "Importa Pagine"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
 msgid "Import"
-msgstr ""
+msgstr "Importa"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
 msgid "Importing pages failed:"
-msgstr ""
+msgstr "Importazione delle pagine fallita:"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
 msgid "Import completed."
-msgstr ""
+msgstr "Importazione completata."
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
 msgid "created"
-msgstr ""
+msgstr "creata"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
 msgid "modified"
-msgstr ""
+msgstr "modificata"
 
 #: plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
 msgid "Return to page list"
-msgstr ""
+msgstr "Ritorna alla lista delle pagine"
 
 #: templates/admin/pages/page/change_form.html:4
 msgid "Edit"
@@ -394,7 +395,7 @@ msgstr "Guarda sul sito"
 
 #: templates/admin/pages/page/change_form.html:25
 msgid "History"
-msgstr ""
+msgstr "Storico"
 
 #: templates/admin/pages/page/change_list.html:5
 msgid "List of pages"

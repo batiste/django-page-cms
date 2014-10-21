@@ -26,9 +26,9 @@ else:
     from django.views.i18n import null_javascript_catalog as javascript_catalog
 
 from os.path import join
-
-
 from django.db import models
+
+
 def create_page_model(placeholders=None):
     """
     Create Page model

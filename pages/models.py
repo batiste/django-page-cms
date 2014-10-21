@@ -9,7 +9,6 @@ from pages import settings
 from datetime import datetime
 from django.db import models
 from django.conf import settings as django_settings
-from django.contrib.auth.models import User, SiteProfileNotAvailable
 from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe

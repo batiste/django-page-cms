@@ -26,38 +26,6 @@ else:
     from django.views.i18n import null_javascript_catalog as javascript_catalog
 
 from os.path import join
-from django.db import models
-
-
-def create_page_model(placeholders=None):
-    """
-    Create Page model
-    """
-    if placeholders is None:
-        placeholders = []
-    app_label='pages'
-    module = 'pages.models.test'
-    class Meta:
-        # Using type('Meta', ...) gives a dictproxy error during model creation
-        pass
-
-    # app_label must be set using the Meta inner class
-    setattr(Meta, 'app_label', app_label)
-
-    # Set up a dictionary to simulate declarations within a class
-    attrs = {'__module__': module, 'Meta': Meta}
-
-    # Add in any fields that were provided
-    for p in placeholders:
-        attrs[p.ctype] = models.TextField(blank=True)
-
-    attrs["slug"] = models.TextField()
-    attrs["title"] = models.TextField()
-
-    # Create the class, which automatically triggers ModelBase processing
-    model = type("Page", (Page,), attrs)
-
-    return model
 
 
 class PageAdmin(admin.ModelAdmin):
@@ -247,9 +215,9 @@ class PageAdmin(admin.ModelAdmin):
 
         template = get_template_from_request(request, obj)
 
-        model = create_page_model(get_placeholders(template))
+        #model = create_page_model(get_placeholders(template))
 
-        form = make_form(model)
+        form = make_form(self.model, get_placeholders(template))
 
         # bound the form
         language = get_language_from_request(request)

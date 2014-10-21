@@ -13,12 +13,18 @@ from pages.widgets import LanguageChoiceWidget
 import collections
 
 
-def make_form(model_):
+def make_form(model_, placeholders):
 
     # a new form is needed every single time as some
     # initial data are bound
     class PageForm(forms.ModelForm):
         """Form for page creation"""
+
+        def __init__(self, *args, **kwargs):
+            super(PageForm, self).__init__(*args, **kwargs)
+            for p in placeholders:
+                if not self.fields[p.ctype]:
+                    self.fields[p.ctype] = forms.TextField()
 
         target = forms.IntegerField(required=False, widget=forms.HiddenInput)
         position = forms.CharField(required=False, widget=forms.HiddenInput)

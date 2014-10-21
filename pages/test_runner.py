@@ -11,6 +11,9 @@ current_dirname = os.path.dirname(__file__)
 #sys.path.insert(0, current_dirname)
 sys.path.insert(0, os.path.join(current_dirname, '..'))
 
+import django
+django.setup()
+
 from django.test.simple import DjangoTestSuiteRunner
 from django.db.models import get_app, get_apps
 from django.contrib.admin.sites import AlreadyRegistered

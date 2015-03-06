@@ -110,7 +110,6 @@ INSTALLED_APPS = (
     #'south',
 
     # these 2 package don't create any dependecies
-    #'authority',
     # haystack change coverage score report by importing modules
     #'haystack',
 )

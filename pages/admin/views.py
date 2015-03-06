@@ -4,7 +4,6 @@ from pages import settings
 from pages.models import Page, Content
 from pages.utils import get_placeholders
 from pages.phttp import get_language_from_request
-from pages.permissions import PagePermission
 
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -17,7 +16,7 @@ def change_status(request, page_id):
     """
     Switch the status of a page.
     """
-    perm = PagePermission(request.user).check('change', method='POST')
+    perm = request.user.has_perm('pages.change_page')
     if perm and request.method == 'POST':
         page = Page.objects.get(pk=page_id)
         page.status = int(request.POST['status'])
@@ -31,9 +30,8 @@ def list_pages_ajax(request, invalid_move=False):
     """Render pages table for ajax function."""
     language = get_language_from_request(request)
     pages = Page.objects.root()
-    perms = PagePermission(request.user)
     context = {
-        'can_publish': perms.check('publish'),
+        'can_publish': request.user.has_perm('pages.can_publish'),
         'invalid_move':invalid_move,
         'language': language,
         'pages': pages,
@@ -47,8 +45,7 @@ list_pages_ajax = staff_member_required(list_pages_ajax)
 def modify_content(request, page_id, content_type, language_id):
     """Modify the content of a page."""
     page = get_object_or_404(Page, pk=page_id)
-    perm = PagePermission(request.user).check('change', page=page,
-            lang=language_id, method='POST')
+    perm = request.user.has_perm('pages.change_page')
     if perm and request.method == 'POST':
         content = request.POST.get('content', False)
         if not content:
@@ -71,8 +68,7 @@ modify_content = staff_member_required(modify_content)
 @csrf_exempt
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
-    perm = PagePermission(request.user).check('delete', page=page,
-            lang=language_id, method='POST')
+    perm = request.user.has_perm('pages.delete_page')
     if not perm:
         raise Http404
 
@@ -140,9 +136,8 @@ def sub_menu(request, page_id):
     page = Page.objects.get(id=page_id)
     pages = page.children.all()
     page_languages = settings.PAGE_LANGUAGES
-    perms = PagePermission(request.user)
     return render_to_response("admin/pages/page/sub_menu.html", {
-        'can_publish': perms.check('publish'),
+        'can_publish': request.user.has_perm('pages.can_publish'),
         'page':page,
         'pages':pages,
         'page_languages':page_languages,

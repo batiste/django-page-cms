@@ -533,7 +533,11 @@ class FunctionnalTestCase(TestCase):
         c.login(username='batiste', password='b')
         # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
-        self.assertEqual(c.session.get('django_language', False), 'fr-ch')
+        try:
+            from django.utils.translation import LANGUAGE_SESSION_KEY 
+        except ImportError:
+            LANGUAGE_SESSION_KEY = 'django_language'
+        self.assertEqual(c.session.get(LANGUAGE_SESSION_KEY, False), 'fr-ch')
 
         # Make sure we're in french
         response = c.get('/admin/pages/page/')

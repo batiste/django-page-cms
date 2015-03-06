@@ -13,11 +13,11 @@ def suite():
         return suite
     suite.addTest(unittest.makeSuite(UnitTestCase))
     suite.addTest(unittest.makeSuite(RegressionTestCase))
-    try:
-        from pages.tests.test_selenium import SeleniumTestCase
-        suite.addTest(unittest.makeSuite(SeleniumTestCase))
-    except ImportError:
-        print("You need to install selenium and PhantomJS to run browsers tests")
+    #try:
+    #    from pages.tests.test_selenium import SeleniumTestCase
+    #    suite.addTest(unittest.makeSuite(SeleniumTestCase))
+    #except ImportError:
+    #    print("You need to install selenium and PhantomJS to run browsers tests")
     # suite.addTest(unittest.makeSuite(LinkTestCase))
     # suite.addTest(unittest.makeSuite(AutoRenderTestCase))
     # being the slower test I run it at the end

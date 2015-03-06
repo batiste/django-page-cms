@@ -1,5 +1,5 @@
 from django.db.models import Avg, Max, Min, Count
-from django.contrib.auth.models import User, SiteProfileNotAvailable
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 from pages.models import Page, Content
@@ -70,7 +70,7 @@ def dump_json_data(page):
         """Allow a user's profile to return an email for the user."""
         try:
             profile = user.get_profile()
-        except (SiteProfileNotAvailable, ObjectDoesNotExist):
+        except:
             return user.email
         get_email = getattr(profile, 'get_email', None)
         return get_email() if get_email else user.email

@@ -2,6 +2,7 @@ import polib
 import os
 from pages.models import Page, Content
 import sys
+from pages import settings
 
 do_not_msg = "DO NOT MODIFIY BELOW THIS LINE"
 po_comment = """Page %s

@@ -9,7 +9,6 @@ from pages.views import PageSitemap, MultiLanguagePageSitemap
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^authority/', include('authority.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 
     (r'^pages/', include('pages.urls')),

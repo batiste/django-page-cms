@@ -11,7 +11,10 @@ current_dirname = os.path.dirname(__file__)
 #sys.path.insert(0, current_dirname)
 sys.path.insert(0, os.path.join(current_dirname, '..'))
 
-from django.test.simple import DjangoTestSuiteRunner
+import django
+django.setup()
+
+from django.test.runner import DiscoverRunner
 from django.db.models import get_app, get_apps
 from django.contrib.admin.sites import AlreadyRegistered
 import fnmatch
@@ -69,7 +72,7 @@ def get_all_coverage_modules(app_module, exclude_patterns=None):
     return mod_list
 
 
-class PageTestSuiteRunner(DjangoTestSuiteRunner):
+class PageTestSuiteRunner(DiscoverRunner):
 
     def run_tests(self, test_labels=('pages',), extra_tests=None):
 
@@ -81,7 +84,7 @@ class PageTestSuiteRunner(DjangoTestSuiteRunner):
         else:
             print("No coverage support")
 
-        results = DjangoTestSuiteRunner.run_tests(self, test_labels, extra_tests)
+        results = DiscoverRunner.run_tests(self, test_labels, extra_tests)
 
         if coverage_module_present:
             cov.stop()

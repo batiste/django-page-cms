@@ -248,35 +248,8 @@ class UnitTestCase(TestCase):
             [('', 'No delegation'), ('Documents', 'Display documents')])
 
     def test_permissions(self):
-        """Test the permissions lightly."""
-
-        from pages.permissions import PagePermission
-        admin = User.objects.get(username='admin')
-        page = self.new_page()
-        pp = PagePermission(user=page.author)
-        self.assertTrue(pp.check('change', page=page, method='GET'))
-        self.assertTrue(pp.check('change', page=page, method='POST'))
-
-        staff = User.objects.get(username='staff')
-        pp = PagePermission(user=staff)
-        # weird because nonstaff?
-        self.assertTrue(pp.check('change', page=page, method='GET',
-            lang='en-us'))
-        self.assertFalse(pp.check('change', page=page, method='POST',
-            lang='en-us'))
-
-        self.assertFalse(pp.check('delete', page=page, method='POST',
-            lang='en-us'))
-        self.assertFalse(pp.check('add', page=page, method='POST',
-            lang='en-us'))
-        self.assertFalse(pp.check('freeze', page=page, method='POST',
-            lang='en-us'))
-
-        self.assertFalse(pp.check('doesnotexist', page=page, method='POST',
-            lang='en-us'))
-
-        self.assertFalse(pp.check('publish', page=page, method='POST',
-            lang='en-us'))
+        # TODO: re-implement
+        pass
 
     def test_managers(self):
         # TODO: this test seems dependant from other tests

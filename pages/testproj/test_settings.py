@@ -98,19 +98,18 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'mptt',
+    'pages',
     TEST_PROJ + '.documents',
     #'tagging',
-    'pages',
-    'pages.plugins.jsonexport',
-    'pages.plugins.pofiles',
-    'mptt',
+    #'pages.plugins.jsonexport',
+    #'pages.plugins.pofiles',
     #'staticfiles',
     #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',
 
     # these 2 package don't create any dependecies
-    'authority',
     # haystack change coverage score report by importing modules
     #'haystack',
 )

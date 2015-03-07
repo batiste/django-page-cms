@@ -1,4 +1,3 @@
-import authority
 
 from django.conf.urls import url, include, patterns
 from django.conf.urls import handler404, handler500
@@ -8,10 +7,8 @@ from pages.views import PageSitemap, MultiLanguagePageSitemap
 
 
 admin.autodiscover()
-authority.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^authority/', include('authority.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 
     (r'^pages/', include('pages.urls')),

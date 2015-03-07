@@ -85,7 +85,7 @@ def _placeholders_recursif(nodelist, plist, blist):
             _placeholders_recursif(node.get_parent(Context()).nodelist,
                                                         plist, blist)
         # include node?
-        elif hasattr(node, 'template'):
+        elif hasattr(node, 'template') and hasattr(node.template, 'nodelist'):
             _placeholders_recursif(node.template.nodelist, plist, blist)
 
         # Is it a placeholder?

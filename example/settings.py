@@ -14,6 +14,8 @@ CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 
+#AUTH_PROFILE_MODULE = 'profiles.Profile'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -104,19 +106,17 @@ INSTALLED_APPS = (
     'pages.testproj.documents',
     #'taggit',
     'pages',
-    'pages.plugins.jsonexport',
+    #'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
     #'tinymce',
     # disabled to make "setup.py test" to work properly
     #'south',
 
-    # these 2 package don't create any dependecies
-    #'authority',
     # haystack change coverage score report by importing modules
     #'haystack',
     #'ckeditor', # if commented will be used the fallback widget
-    'south',
+    #'south',
 )
 
 PAGE_TINYMCE = False

@@ -185,6 +185,7 @@ class Details(object):
             raise Http404
         if result:
             view, args, kwargs = result
+            #import pdb; pdb.set_trace()
             kwargs.update(context)
             # for now the view is called as is.
             return view(request, *args, **kwargs)

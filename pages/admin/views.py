@@ -75,7 +75,7 @@ def delete_content(request, page_id, language_id):
     for c in Content.objects.filter(page=page, language=language_id):
         c.delete()
 
-    destination = request.REQUEST.get('next', request.META.get('HTTP_REFERER',
+    destination = request.POST.get('next', request.META.get('HTTP_REFERER',
         '/admin/pages/page/%s/' % page_id))
     return HttpResponseRedirect(destination)
 delete_content = staff_member_required(delete_content)

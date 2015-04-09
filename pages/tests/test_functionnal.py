@@ -817,7 +817,11 @@ class FunctionnalTestCase(TestCase):
         doc = Document(title='doc title 1', text='text', page=page)
         doc.save()
 
-        response = c.get(self.get_page_url('delegate/doc-%d' % doc.id))
+
+        url = self.get_page_url('delegate/doc-%d' % doc.id)
+        self.assertTrue(str(doc.id) in url)
+
+        response = c.get(url)
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, "doc title 1")

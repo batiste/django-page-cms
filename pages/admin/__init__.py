@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
 from django.conf import settings as global_settings
 from django.http import HttpResponseRedirect, Http404
-from django.contrib.admin.util import unquote
+from django.contrib.admin.utils import unquote
 from django.contrib.admin.sites import AlreadyRegistered
 if global_settings.USE_I18N:
     from django.views.i18n import javascript_catalog

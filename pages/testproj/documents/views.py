@@ -11,5 +11,6 @@ def document_view(request, *args, **kwargs):
         document = Document.objects.get(pk=int(kwargs['document_id']))
         context['document'] = document
     context['in_document_view'] = True
+
     return render_to_response('pages/examples/index.html', 
         context)

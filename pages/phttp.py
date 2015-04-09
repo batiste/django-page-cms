@@ -97,7 +97,7 @@ def get_template_from_request(request, page=None):
     page_templates = settings.get_page_templates()
     if len(page_templates) == 0:
         return settings.PAGE_DEFAULT_TEMPLATE
-    template = request.REQUEST.get('template', None)
+    template = request.GET.get('template', None)
     if template is not None and \
             (template in list(dict(page_templates).keys()) or
             template == settings.PAGE_DEFAULT_TEMPLATE):

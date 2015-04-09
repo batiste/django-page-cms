@@ -242,7 +242,7 @@ class RegressionTestCase(TestCase):
         placeholder.save(page, 'fr-ch', 'hello!', True)
         context = Context({'current_page': page, 'lang':'fr-ch'})
         pl1 = """{% load pages_tags %}{% placeholder "hello world" %}"""
-        template = loader.get_template_from_string(pl1)
+        template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'hello!')
 
     def test_pages_dynamic_tree_menu_bug(self):
@@ -254,7 +254,7 @@ class RegressionTestCase(TestCase):
         context = Context({'current_page': page, 'lang':'en-us'})
 
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
-        template = loader.get_template_from_string(pl1)
+        template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), '\n')
 
     def test_placeholder_bug(self):

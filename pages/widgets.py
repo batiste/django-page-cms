@@ -11,7 +11,7 @@ from django.conf import settings
 from django import forms
 from django.forms import TextInput, Textarea, HiddenInput
 from django.forms import MultiWidget, FileInput
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
 from django.utils.safestring import mark_safe

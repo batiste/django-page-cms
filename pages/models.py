@@ -174,19 +174,19 @@ class Page(MPTTModel):
     def get_children(self):
         """Cache superclass result"""
         key = self.CHILDREN_KEY % self.id
-        children = cache.get(key, None)
-        if children is None:
-            children = super(Page, self).get_children()
-            cache.set(key, children)
+        #children = cache.get(key, None)
+        #if children is None:
+        children = super(Page, self).get_children()
+        #cache.set(key, children)
         return children
 
     def published_children(self):
         """Return a :class:`QuerySet` of published children page"""
         key = self.PUB_CHILDREN_KEY % self.id
-        children = cache.get(key, None)
-        if children is None:
-            children = Page.objects.filter_published(self.get_children())
-            cache.set(key, children)
+        #children = cache.get(key, None)
+        #if children is None:
+        children = Page.objects.filter_published(self.get_children()).all()
+        #cache.set(key, children)
         return children
 
     def get_children_for_frontend(self):

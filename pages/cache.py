@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.core import cache as cache_module
+from django.core.cache import caches
 
-# Wrapper to get the cache we want
-from . import settings
-
-cache = cache_module.get_cache(settings.PAGE_CACHE_LOCATION)
+if hasattr(caches, 'pages'):
+	cache = caches['pages']
+else:
+	cache = caches['default']
 

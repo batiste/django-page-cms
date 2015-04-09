@@ -5,11 +5,10 @@ from pages.cache import cache
 from pages.phttp import get_request_mock
 
 from django.conf import settings as django_settings
-from django.template import TemplateDoesNotExist
-from django.template import loader, Context
 from django.core.management.base import CommandError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.template import Context
 from django import template
 
 import re
@@ -27,11 +26,12 @@ def get_placeholders(template_name):
     :param template_name: the name of the template file
     """
     try:
-        temp = loader.get_template(template_name)
-    except TemplateDoesNotExist:
+        temp_wrapper = template.loader.get_template(template_name)
+    except template.TemplateDoesNotExist:
         return []
 
     plist, blist = [], []
+    temp = temp_wrapper.template
     _placeholders_recursif(temp.nodelist, plist, blist)
 
     previous = {}
@@ -56,6 +56,9 @@ def get_placeholders(template_name):
     return pfiltered
 
 
+dummy_context = Context()
+dummy_context.template = template.Template("")
+
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
@@ -76,13 +79,14 @@ def _placeholders_recursif(nodelist, plist, blist):
                 block = node
 
         if block:
-            if isinstance(node, template.VariableNode):
+            if isinstance(node, template.base.VariableNode):
                 if(node.filter_expression.var.var == u'block.super'):
                     block.has_super_var = True
 
         # extends node?
         if hasattr(node, 'parent_name'):
-            _placeholders_recursif(node.get_parent(Context()).nodelist,
+            #import pdb; pdb.set_trace();
+            _placeholders_recursif(node.get_parent(dummy_context).nodelist,
                                                         plist, blist)
         # include node?
         elif hasattr(node, 'template') and hasattr(node.template, 'nodelist'):
@@ -94,7 +98,7 @@ def _placeholders_recursif(nodelist, plist, blist):
             if block:
                 node.found_in_block = block
             plist.append(node)
-            node.render(Context())
+            node.render(dummy_context)
 
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
 

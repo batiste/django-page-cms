@@ -6,7 +6,7 @@ from pages.testproj import test_settings
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.template import TemplateDoesNotExist
+from django.template import TemplateDoesNotExist, Engine
 from django.contrib.sites.models import Site
 from django.utils.importlib import import_module
 from django.core.urlresolvers import clear_url_caches
@@ -83,6 +83,10 @@ class TestCase(TestCase):
 
     def get_page_url(self, path=''):
         return reverse('pages-details-by-path', args=[path])
+
+
+    def get_template_from_string(self, tpl):
+        return Engine.get_default().from_string(tpl)
 
 
     def reset_urlconf(self):

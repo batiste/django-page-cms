@@ -85,7 +85,6 @@ def _placeholders_recursif(nodelist, plist, blist):
 
         # extends node?
         if hasattr(node, 'parent_name'):
-            #import pdb; pdb.set_trace();
             _placeholders_recursif(node.get_parent(dummy_context).nodelist,
                                                         plist, blist)
         # include node?

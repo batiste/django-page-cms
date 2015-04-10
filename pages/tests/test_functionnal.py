@@ -837,7 +837,7 @@ class FunctionnalTestCase(TestCase):
         unstranslated_string = 'the untranslated string'
         page_data['untrans'] = unstranslated_string
         page_data['template'] = 'pages/tests/untranslated.html'
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post('/admin/pages/page/add/?language=en-us', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
         page = Page.objects.from_path('untranslated', None)

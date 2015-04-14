@@ -817,7 +817,6 @@ class FunctionnalTestCase(TestCase):
         doc = Document(title='doc title 1', text='text', page=page)
         doc.save()
 
-
         url = self.get_page_url('delegate/doc-%d' % doc.id)
         self.assertTrue(str(doc.id) in url)
 

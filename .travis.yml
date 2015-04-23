@@ -2,9 +2,19 @@ language: python
 python:
   - "2.7"
   - "3.3"
+env:
+  - DJANGO_VERSION=1.6.11
+matrix:
+  include:
+    - python: "3.3"
+      env: DJANGO_VERSION=1.7.7
+    - python: "3.4"
+      env: DJANGO_VERSION=1.7.7
 # command to install dependencies
 install:
-  - "pip install -r requirements/external_apps.txt"
-  - "pip install -r requirements/test_apps.txt"
+  - pip install -r requirements/external_apps.txt
+  - pip install -r requirements/test_apps.txt
+  - pip install -q django==$DJANGO_VERSION
 # command to run tests
-script: "python pages/test_runner.py"
+script: 
+  - python pages/test_runner.py

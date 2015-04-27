@@ -98,24 +98,17 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    #'django_admin_bootstrapped',
+    # install django-flat-theme
+    'flat',
     'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'pages.testproj.documents',
-    #'taggit',
     'pages',
     #'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
-    #'tinymce',
-    # disabled to make "setup.py test" to work properly
-    #'south',
-
-    # haystack change coverage score report by importing modules
-    #'haystack',
-    #'ckeditor', # if commented will be used the fallback widget
-    #'south',
+    #'ckeditor', # if commented a fallback widget will be used
 )
 
 PAGE_TINYMCE = False

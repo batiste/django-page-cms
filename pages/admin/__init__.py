@@ -336,6 +336,7 @@ class PageAdmin(admin.ModelAdmin):
             'can_import': settings.PAGE_IMPORT_ENABLED,
             'language': language,
             'name': _("page"),
+            'app_label': _("Pages"),
             'pages': pages,
             'opts': self.model._meta,
             'q': query

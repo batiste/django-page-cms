@@ -4,6 +4,20 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+
+Release 1.8.0
+=============
+
+Released the 23 of April 2015.
+
+    * Updated to Django 1.8
+    * Jumped 2 version to stick with Django versionning numbers
+
+Backward Incompatible Changes
+------------------------------
+
+    * Incompatible with Django 1.7 and lower
+
 Release 1.6.2
 =============
 

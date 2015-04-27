@@ -9,9 +9,6 @@ django-page-cms
   :target: https://coveralls.io/r/batiste/django-page-cms
 
 
-
-`View on Travis CI <https://travis-ci.org/batiste/django-page-cms>`_
-
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
 Django page CMS is based around a placeholders concept. Placeholder is a special template tag that

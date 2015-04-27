@@ -334,9 +334,7 @@ class PageAdmin(admin.ModelAdmin):
         context = {
             'can_publish': request.user.has_perm('pages.can_publish'),
             'can_import': settings.PAGE_IMPORT_ENABLED,
-            'language': language,
-            'name': _("page"),
-            'app_label': _("Pages"),
+            'lang': language, # lang is the key used by show_content
             'pages': pages,
             'opts': self.model._meta,
             'q': query

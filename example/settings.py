@@ -137,15 +137,6 @@ languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
 
-# This enable you to map a language(s) to another one, these languages should
-# be in the LANGUAGES config
-def language_mapping(lang):
-    if lang.startswith('fr'):
-        # serve swiss french for everyone
-        return 'fr-ch'
-    return lang
-
-PAGE_LANGUAGE_MAPPING = language_mapping
 
 PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 

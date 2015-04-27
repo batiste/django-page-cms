@@ -3,7 +3,8 @@ django-page-cms
 ===============
 
 .. image:: https://pypip.in/d/django-page-cms/badge.png
-.. image:: https://api.travis-ci.org/batiste/django-page-cms.png
+.. image:: https://travis-ci.org/batiste/django-page-cms.svg?branch=master
+  :target: https://travis-ci.org/batiste/django-page-cms
 .. image:: https://coveralls.io/repos/batiste/django-page-cms/badge.svg
   :target: https://coveralls.io/r/batiste/django-page-cms
 

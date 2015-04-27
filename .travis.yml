@@ -8,6 +8,6 @@ install:
   - "pip install -r requirements/test_apps.txt"
   - "pip install coveralls"
 # command to run tests
-script: "coverage run --source=pages tests"
+script: "coverage run --source=pages pages/test_runner.py"
 after_success:
   coveralls

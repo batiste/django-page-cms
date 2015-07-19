@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     #'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
+    'rest_framework'
     #'ckeditor', # if commented a fallback widget will be used
 )
 

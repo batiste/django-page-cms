@@ -456,6 +456,8 @@ class Page(MPTTModel):
         """
 
         slug = self.get_content(language, 'slug', language_fallback=fallback)
+        if slug == '':
+            return 'Undefined'
 
         return slug
 

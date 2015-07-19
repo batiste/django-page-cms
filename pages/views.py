@@ -234,3 +234,51 @@ class MultiLanguagePageSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.page.last_modification_date
+
+from pages.serializers import PageSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET', 'POST'])
+def api_list(request):
+    """
+    List all code page, or create a new page.
+    """
+    if request.method == 'GET':
+        pages = Page.objects.all()
+        serializer = PageSerializer(pages, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = PageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+#@csrf_exempt   
+@api_view(['GET', 'POST', 'DELETE'])
+def api_details(request, pk):
+    """
+    Retrieve, update or delete a page.
+    """
+    try:
+        page = Page.objects.get(pk=pk)
+    except Page.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = PageSerializer(page)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = PageSerializer(page, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        page.delete()
+        return HttpResponse(status=204)

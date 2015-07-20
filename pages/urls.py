@@ -6,8 +6,8 @@ from pages import views
 from pages import settings
 
 urlpatterns = patterns('',
-    url(r'^api/$', views.api_list),
-    url(r'^api/(?P<pk>[0-9]+)/$', views.api_details)
+    url(r'^api/$', views.PageList.as_view()),
+    url(r'^api/(?P<pk>[0-9]+)/$', views.PageEdit.as_view())
 )
 
 if settings.PAGE_USE_LANGUAGE_PREFIX:

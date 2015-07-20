@@ -6,7 +6,7 @@ class ContentSerializer(serializers.ModelSerializer):
         model = Content
 
 class PageSerializer(serializers.ModelSerializer):
-    content_set = ContentSerializer(many=True)
+    content_set = ContentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Page

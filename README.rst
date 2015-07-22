@@ -2,11 +2,16 @@
 django-page-cms
 ===============
 
-.. image:: https://pypip.in/d/django-page-cms/badge.png
+
 .. image:: https://travis-ci.org/batiste/django-page-cms.svg?branch=master
   :target: https://travis-ci.org/batiste/django-page-cms
+  
 .. image:: https://coveralls.io/repos/batiste/django-page-cms/badge.svg
   :target: https://coveralls.io/r/batiste/django-page-cms
+  
+.. image:: https://img.shields.io/pypi/dm/django-page-cms.svg
+    :target: https://pypi.python.org/pypi/django-page-cms/
+
 
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.

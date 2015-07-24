@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Batiste Bieler <batiste.bieler@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-11 16:40+0200\n"
-"PO-Revision-Date: 2014-07-11 14:56+0000\n"
+"PO-Revision-Date: 2015-07-22 14:56+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/django-page-cms-1/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr "Veröffentlicht"
 #: models.py:63 templates/admin/pages/page/menu.html:79
 #: templates/admin/pages/page/menu.html:86
 msgid "Hidden"
-msgstr ""
+msgstr "Caché"
 
 #: models.py:64 templates/admin/pages/page/menu.html:77
 #: templates/admin/pages/page/menu.html:84

@@ -1,11 +1,11 @@
 {% extends "admin/change_list.html" %}
 
-{% load admin_list i18n pages_tags %}
+{% load admin_list i18n pages_tags staticfiles %}
 
 {% block coltype %}flex{% endblock %}
 
 {% block extrahead %}{{ block.super }}
-<script type="text/javascript">var static_url = "{{ STATIC_URL }}";</script>
+<script type="text/javascript">var static_url = "{% static "" %}";</script>
 {% endblock %}
 
 {% block result_list %}
@@ -13,7 +13,7 @@
 <form id="changelist-search" action="" method="post">
     {% csrf_token %}
     <div>
-        <label for="searchbar"><img src="{{ STATIC_URL }}pages/img/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
+        <label for="searchbar"><img src="{% static "pages/img/icon_searchbox.png" %}" alt="{% trans "Search" %}" /></label>
         <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
         <input type="submit" name="g" value="{% trans "Go" %}" />
     </div>

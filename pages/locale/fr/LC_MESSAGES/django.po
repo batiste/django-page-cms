@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Batiste Bieler <batiste.bieler@gmail.com>, 2014
+# Batiste Bieler <batiste.bieler@gmail.com>, 2014-2015
 # Julien Fache <fantomas42@gmail.com>, 2009
 msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-11 16:40+0200\n"
-"PO-Revision-Date: 2014-10-07 12:44+0000\n"
+"PO-Revision-Date: 2015-07-23 14:40+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/django-page-cms-1/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -269,7 +269,7 @@ msgstr "Ne pas publier du contenu après cette date. Le format est 'A-m-j h:m:s'
 
 #: plugins/jsonexport/actions.py:22
 msgid "Export pages as JSON"
-msgstr "Exporter ces page en format JSON"
+msgstr "Exporter ces pages en format JSON"
 
 #: plugins/jsonexport/actions.py:47
 msgid "Import some pages from a JSON file"
@@ -293,7 +293,7 @@ msgstr "Auteur originel '%s' non trouvé"
 #: plugins/jsonexport/utils.py:219
 #, python-format
 msgid "Could not add site '%s' to page"
-msgstr ""
+msgstr "Impossible d'ajouter '%s' à la page"
 
 #: plugins/jsonexport/utils.py:274 plugins/jsonexport/utils.py:396
 #, python-format
@@ -408,7 +408,7 @@ msgstr "Chercher"
 
 #: templates/admin/pages/page/change_list.html:31
 msgid "Go"
-msgstr ""
+msgstr "Go"
 
 #: templates/admin/pages/page/change_list_table.html:9
 #: testproj/documents/models.py:9
@@ -455,7 +455,7 @@ msgstr "annuler"
 
 #: templates/admin/pages/page/menu.html:22
 msgid "This page contain broken links"
-msgstr ""
+msgstr "Cette page contient des liens incorrectes"
 
 #: templates/admin/pages/page/menu.html:26
 msgid "view this page"
@@ -513,19 +513,19 @@ msgstr "Supprimer cet traduction"
 
 #: testproj/test_settings.py:128
 msgid "German"
-msgstr ""
+msgstr "Allemand"
 
 #: testproj/test_settings.py:129
 msgid "Swiss french"
-msgstr ""
+msgstr "Français Suisse"
 
 #: testproj/test_settings.py:130
 msgid "US English"
-msgstr ""
+msgstr "Anglais U.S."
 
 #: testproj/test_settings.py:137
 msgid "French"
-msgstr ""
+msgstr "Français"
 
 #: testproj/test_settings.py:138
 msgid "Belgium french"
@@ -533,7 +533,7 @@ msgstr ""
 
 #: testproj/test_settings.py:139
 msgid "Italian"
-msgstr ""
+msgstr "Italien"
 
 #: testproj/documents/models.py:10
 msgid "text"

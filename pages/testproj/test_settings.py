@@ -66,7 +66,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.media",
     "pages.context_processors.media",
-    #"staticfiles.context_processors.static_url",
 )
 
 INTERNAL_IPS = ('127.0.0.1',)

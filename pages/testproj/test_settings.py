@@ -99,14 +99,7 @@ INSTALLED_APPS = (
     'mptt',
     'pages',
     TEST_PROJ + '.documents',
-    #'tagging',
-    #'pages.plugins.jsonexport',
-    #'pages.plugins.pofiles',
-    #'staticfiles',
-    #'tinymce',
-    # disabled to make "setup.py test" to work properly
-    #'south',
-
+    'django.contrib.staticfiles',
     # these 2 package don't create any dependecies
     # haystack change coverage score report by importing modules
     #'haystack',

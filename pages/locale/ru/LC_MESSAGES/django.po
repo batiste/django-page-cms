@@ -1,21 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-29 16:09+0200\n"
+"POT-Creation-Date: 2015-07-29 16:33+0200\n"
 "PO-Revision-Date: 2015-07-29 14:19+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/django-page-cms-1/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/django-page-"
+"cms-1/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: admin/__init__.py:64
 msgid "General"
@@ -61,7 +64,9 @@ msgstr "Slug"
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
-msgstr "Slug будет использован в URL страницы, он должен быть уникальным среди страниц того же уровня."
+msgstr ""
+"Slug будет использован в URL страницы, он должен быть уникальным среди "
+"страниц того же уровня."
 
 #: admin/forms.py:55
 msgid "Language"
@@ -81,7 +86,9 @@ msgstr "Блокировать"
 
 #: admin/forms.py:72
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
-msgstr "Прекратить публикацию содержимого после указанной даты. Формат: ГГГГ-ММ-ДД ЧЧ:ММ:СС"
+msgstr ""
+"Прекратить публикацию содержимого после указанной даты. Формат: ГГГГ-ММ-ДД "
+"ЧЧ:ММ:СС"
 
 #: models.py:61 templates/admin/pages/page/menu.html:74
 msgid "Published"
@@ -117,7 +124,9 @@ msgstr "опубликовано"
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
-msgstr "Когда страница должна стать доступна. Также должен быть выставлен статус \"Опубликовано\"."
+msgstr ""
+"Когда страница должна стать доступна. Также должен быть выставлен статус "
+"\"Опубликовано\"."
 
 #: models.py:81
 msgid "publication end date"
@@ -127,7 +136,9 @@ msgstr "окончание публикации"
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr "Когда страница должна устареть. Оставьте пустым, чтобы страница действовала всегда."
+msgstr ""
+"Когда страница должна устареть. Оставьте пустым, чтобы страница действовала "
+"всегда."
 
 #: models.py:85
 msgid "last modification date"

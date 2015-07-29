@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Daniele Faraglia <joke2k@gmail.com>, 2014
 # Francesco Facconi <francesco@facconi.eu>, 2011
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-29 16:09+0200\n"
+"POT-Creation-Date: 2015-07-29 16:33+0200\n"
 "PO-Revision-Date: 2015-07-29 14:19+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/django-page-cms-1/language/it/)\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/django-page-"
+"cms-1/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admin/__init__.py:64
@@ -38,7 +39,9 @@ msgstr "Un'altra pagina con lo stesso slug esiste già"
 
 #: admin/forms.py:38
 msgid "A sibling with this slug already exists at the targeted position"
-msgstr "Una pagina dello stesso livello con lo stesso slug esiste già nella posizione indicata"
+msgstr ""
+"Una pagina dello stesso livello con lo stesso slug esiste già nella "
+"posizione indicata"
 
 #: admin/forms.py:39
 msgid "A child with this slug already exists at the targeted position"
@@ -50,7 +53,9 @@ msgstr "Una pagina dello stesso livello con lo stesso slug esiste già"
 
 #: admin/forms.py:41
 msgid "A sibling with this slug already exists at the root level"
-msgstr "Una pagina dello stesso livello con lo stesso slug esiste già al livello principale"
+msgstr ""
+"Una pagina dello stesso livello con lo stesso slug esiste già al livello "
+"principale"
 
 #: admin/forms.py:45
 msgid "Title"
@@ -64,7 +69,9 @@ msgstr "Slug"
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
-msgstr "Lo slug verrà usato per costruire l'URL della pagina, deve essere univico fra le altre pagine dello stesso livello."
+msgstr ""
+"Lo slug verrà usato per costruire l'URL della pagina, deve essere univico "
+"fra le altre pagine dello stesso livello."
 
 #: admin/forms.py:55
 msgid "Language"
@@ -84,7 +91,8 @@ msgstr "Blocco"
 
 #: admin/forms.py:72
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
-msgstr "Non pubblicare nessun contenuto dopo questa data. Il formato è 'Y-m-d H:M:S'"
+msgstr ""
+"Non pubblicare nessun contenuto dopo questa data. Il formato è 'Y-m-d H:M:S'"
 
 #: models.py:61 templates/admin/pages/page/menu.html:74
 msgid "Published"
@@ -120,7 +128,9 @@ msgstr "data di pubblicazione"
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
-msgstr "Indica quando la pagina diventa attiva. Lo stato deve essere \"Pubblicato\" affinché la pagina diventi attiva."
+msgstr ""
+"Indica quando la pagina diventa attiva. Lo stato deve essere \"Pubblicato\" "
+"affinché la pagina diventi attiva."
 
 #: models.py:81
 msgid "publication end date"
@@ -130,7 +140,8 @@ msgstr "data di fine pubblicazione"
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr "Indica quando la pagina scade. Lascia il campo vuoto se non vuoi che scada."
+msgstr ""
+"Indica quando la pagina scade. Lascia il campo vuoto se non vuoi che scada."
 
 #: models.py:85
 msgid "last modification date"
@@ -331,7 +342,9 @@ msgstr "%s non ha una lingua in comune con questo sito"
 msgid ""
 "%s did not include its parent page and a matching one was not found on this "
 "site"
-msgstr "%s non include la sua pagina padre e non sono state trovate corrispondenze in questo sito"
+msgstr ""
+"%s non include la sua pagina padre e non sono state trovate corrispondenze "
+"in questo sito"
 
 #: plugins/jsonexport/utils.py:348 plugins/jsonexport/utils.py:470
 #, python-format

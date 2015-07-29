@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Batiste Bieler <batiste.bieler@gmail.com>, 2014-2015
 # Julien Fache <fantomas42@gmail.com>, 2009
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-29 16:09+0200\n"
+"POT-Creation-Date: 2015-07-29 16:33+0200\n"
 "PO-Revision-Date: 2015-07-29 14:31+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/django-page-cms-1/language/fr/)\n"
+"Language-Team: French (http://www.transifex.com/projects/p/django-page-cms-1/"
+"language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: admin/__init__.py:64
@@ -64,7 +65,9 @@ msgstr "Lien"
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
-msgstr "Ce champ va être utilisé pour créer l'adresse de la page. Il doit être unique parmi les autres page du même niveau."
+msgstr ""
+"Ce champ va être utilisé pour créer l'adresse de la page. Il doit être "
+"unique parmi les autres page du même niveau."
 
 #: admin/forms.py:55
 msgid "Language"
@@ -84,7 +87,8 @@ msgstr "Figer"
 
 #: admin/forms.py:72
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
-msgstr "Ne pas publier du contenu après cette date. Le format est 'A-m-j h:m:s'"
+msgstr ""
+"Ne pas publier du contenu après cette date. Le format est 'A-m-j h:m:s'"
 
 #: models.py:61 templates/admin/pages/page/menu.html:74
 msgid "Published"
@@ -120,7 +124,9 @@ msgstr "Date de publication"
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
-msgstr "Quand la page doit aller en front. \nLe status de la page doit être \"Publié\"."
+msgstr ""
+"Quand la page doit aller en front. \n"
+"Le status de la page doit être \"Publié\"."
 
 #: models.py:81
 msgid "publication end date"
@@ -130,7 +136,9 @@ msgstr "Date de fin de publication"
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr "Quand la page doit expirer. Laissez\nvide pour ne jamais expirer."
+msgstr ""
+"Quand la page doit expirer. Laissez\n"
+"vide pour ne jamais expirer."
 
 #: models.py:85
 msgid "last modification date"

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Batiste Bieler <batiste.bieler@gmail.com>, 2015
 msgid ""
@@ -9,14 +9,13 @@ msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-29 16:09+0200\n"
-"PO-Revision-Date: 2015-07-22 14:56+0000\n"
+"PO-Revision-Date: 2015-07-29 14:19+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/django-page-cms-1/"
-"language/de/)\n"
-"Language: de\n"
+"Language-Team: German (http://www.transifex.com/projects/p/django-page-cms-1/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admin/__init__.py:64
@@ -451,7 +450,7 @@ msgstr ""
 
 #: templates/pages/revisions.html:4
 msgid "Revisions"
-msgstr "Revisionen"
+msgstr ""
 
 #: templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
@@ -529,6 +528,3 @@ msgstr ""
 #, python-format
 msgid "The widget %s has not been registered."
 msgstr ""
-
-#~ msgid "List of pages"
-#~ msgstr "Seitenliste"

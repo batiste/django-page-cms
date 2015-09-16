@@ -11,10 +11,6 @@ from django.utils import translation
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from pages.serializers import PageSerializer
-from rest_framework import generics
-from rest_framework.permissions import IsAdminUser
-
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
 
@@ -238,18 +234,4 @@ class MultiLanguagePageSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.page.last_modification_date
-
-
-class PageList(generics.ListCreateAPIView):
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
-    permission_classes = (IsAdminUser,)
-    paginate_by = 100
-
-
-class PageEdit(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
-    permission_classes = (IsAdminUser,)
-    paginate_by = 100
 

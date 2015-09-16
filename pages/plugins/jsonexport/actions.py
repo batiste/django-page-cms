@@ -9,7 +9,6 @@ from pages import settings
 from pages.phttp import get_language_from_request
 from pages.plugins.jsonexport.utils import pages_to_json, json_to_pages
 from pages.models import Page
-from pages.permissions import PagePermission
 
 JSON_PAGE_EXPORT_FILENAME = 'cms_pages.json'
 

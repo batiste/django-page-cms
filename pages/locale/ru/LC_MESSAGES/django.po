@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-29 16:33+0200\n"
+"POT-Creation-Date: 2015-09-16 15:53+0200\n"
 "PO-Revision-Date: 2015-07-29 14:19+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/django-page-"
@@ -90,17 +90,17 @@ msgstr ""
 "Прекратить публикацию содержимого после указанной даты. Формат: ГГГГ-ММ-ДД "
 "ЧЧ:ММ:СС"
 
-#: models.py:61 templates/admin/pages/page/menu.html:74
+#: models.py:61 templates/admin/pages/page/menu.html:80
 msgid "Published"
 msgstr "Опубликовано"
 
-#: models.py:62 templates/admin/pages/page/menu.html:75
-#: templates/admin/pages/page/menu.html:82
+#: models.py:62 templates/admin/pages/page/menu.html:81
+#: templates/admin/pages/page/menu.html:88
 msgid "Hidden"
 msgstr "Скрыто"
 
-#: models.py:63 templates/admin/pages/page/menu.html:73
-#: templates/admin/pages/page/menu.html:80
+#: models.py:63 templates/admin/pages/page/menu.html:79
+#: templates/admin/pages/page/menu.html:86
 msgid "Draft"
 msgstr "Черновик"
 
@@ -112,7 +112,7 @@ msgstr "Автор"
 msgid "parent"
 msgstr "род."
 
-#: models.py:76 models.py:504
+#: models.py:76 models.py:503
 msgid "creation date"
 msgstr "создано"
 
@@ -174,7 +174,7 @@ msgstr "Сайт(ы) на которых доступна эта страниц�
 msgid "sites"
 msgstr "сайты"
 
-#: models.py:119 models.py:502 models.py:520
+#: models.py:119 models.py:501 models.py:519
 msgid "page"
 msgstr "страница"
 
@@ -182,27 +182,27 @@ msgstr "страница"
 msgid "pages"
 msgstr "страницы"
 
-#: models.py:498
+#: models.py:497
 msgid "language"
 msgstr "язык"
 
-#: models.py:499
+#: models.py:498
 msgid "body"
 msgstr "содержимое"
 
-#: models.py:500
+#: models.py:499
 msgid "type"
 msgstr "тип"
 
-#: models.py:510
+#: models.py:509
 msgid "content"
 msgstr "содержимое"
 
-#: models.py:511
+#: models.py:510
 msgid "contents"
 msgstr "содержимое"
 
-#: models.py:525
+#: models.py:524
 msgid "Aliases"
 msgstr "Синонимы"
 
@@ -235,11 +235,11 @@ msgstr "Ваше письмо отправлено. Спасибо."
 msgid "An error as occured: your email has not been sent."
 msgstr "Произошла ошибка, Ваш e-mail не отправлен."
 
-#: plugins/jsonexport/actions.py:22
+#: plugins/jsonexport/actions.py:21
 msgid "Export pages as JSON"
 msgstr ""
 
-#: plugins/jsonexport/actions.py:47
+#: plugins/jsonexport/actions.py:46
 msgid "Import some pages from a JSON file"
 msgstr ""
 
@@ -391,66 +391,70 @@ msgid "published"
 msgstr "Опубликовано"
 
 #: templates/admin/pages/page/change_list_table.html:26
-#: templates/admin/pages/page/menu.html:23
+#: templates/admin/pages/page/menu.html:29
 msgid "move this page"
 msgstr "Передвинуть страницу"
 
 #: templates/admin/pages/page/change_list_table.html:27
-#: templates/admin/pages/page/menu.html:35
+#: templates/admin/pages/page/menu.html:41
 msgid "insert above"
 msgstr "Вставить над указанной"
 
 #: templates/admin/pages/page/change_list_table.html:28
-#: templates/admin/pages/page/menu.html:36
+#: templates/admin/pages/page/menu.html:42
 msgid "insert below"
 msgstr "Вставить под указанной"
 
 #: templates/admin/pages/page/change_list_table.html:29
-#: templates/admin/pages/page/menu.html:37
+#: templates/admin/pages/page/menu.html:43
 msgid "insert as child"
 msgstr "Вставить как подчиненную"
 
 #: templates/admin/pages/page/change_list_table.html:30
-#: templates/admin/pages/page/menu.html:30
-#: templates/admin/pages/page/menu.html:34
+#: templates/admin/pages/page/menu.html:36
+#: templates/admin/pages/page/menu.html:40
 msgid "cancel"
 msgstr "Отмена"
 
-#: templates/admin/pages/page/menu.html:22
+#: templates/admin/pages/page/menu.html:20
+msgid "undefined"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:28
 msgid "view this page"
 msgstr "Смотреть страницу"
 
-#: templates/admin/pages/page/menu.html:24
+#: templates/admin/pages/page/menu.html:30
 msgid "insert a new page here"
 msgstr "Вставить новую страницу сюда"
 
-#: templates/admin/pages/page/menu.html:26
+#: templates/admin/pages/page/menu.html:32
 msgid "delete this page"
 msgstr "Удалить страницу"
 
-#: templates/admin/pages/page/menu.html:30
+#: templates/admin/pages/page/menu.html:36
 msgid "don&#x27;t move this page"
 msgstr "Не передвигать эту страницу"
 
-#: templates/admin/pages/page/menu.html:34
+#: templates/admin/pages/page/menu.html:40
 msgid "don&#x27;t insert a new page here"
 msgstr "Не вставлять сюда новую страницу"
 
-#: templates/admin/pages/page/menu.html:50
+#: templates/admin/pages/page/menu.html:56
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "Править перевод %(lang)s"
 
-#: templates/admin/pages/page/menu.html:53
+#: templates/admin/pages/page/menu.html:59
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "Создать перевод %(lang)s"
 
-#: templates/admin/pages/page/menu.html:60 templates/pages/revisions.html:6
+#: templates/admin/pages/page/menu.html:66 templates/pages/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr "j. N Y, H:i"
 
-#: templates/admin/pages/page/menu.html:81
+#: templates/admin/pages/page/menu.html:87
 msgid "In navigation"
 msgstr "Опубликовано"
 

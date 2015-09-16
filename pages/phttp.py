@@ -33,33 +33,6 @@ def get_request_mock():
     return request
 
 
-def pages_view(view):
-    """
-    Make sure the decorated view gets the essential pages
-    variables.
-    """
-    def pages_view_decorator(request, *args, **kwargs):
-        # if the current page is already there
-        if(kwargs.get('current_page', False) or
-            kwargs.get('pages_navigation', False)):
-            return view(request, *args, **kwargs)
-
-        path = kwargs.pop('path', None)
-        lang = kwargs.pop('lang', None)
-        if path:
-            from pages.views import details
-            response = details(request, path=path, lang=lang,
-                only_context=True, delegation=False)
-            context = response
-            extra_context_var = kwargs.pop('extra_context_var', None)
-            if extra_context_var:
-                kwargs.update({extra_context_var: context})
-            else:
-                kwargs.update(context)
-        return view(request, *args, **kwargs)
-    return pages_view_decorator
-
-
 def get_slug(path):
     """
     Return the page's slug

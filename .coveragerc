@@ -3,5 +3,6 @@ omit =
     */tests/*
     */testproj/*
     */plugins/*
-    serializers.py
-    api.py
+    pages/serializers.py
+    pages/api.py
+    pages/search_indexes.py

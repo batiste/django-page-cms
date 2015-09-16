@@ -3,3 +3,5 @@ omit =
     */tests/*
     */testproj/*
     */plugins/*
+    serializers.py
+    api.py

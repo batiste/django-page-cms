@@ -1,5 +1,4 @@
 django>=1.8,<1.9
 django-mptt>=0.7.2
 six>=1.5.2
-djangorestframework
 Pillow

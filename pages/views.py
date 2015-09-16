@@ -234,3 +234,4 @@ class MultiLanguagePageSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.page.last_modification_date
+

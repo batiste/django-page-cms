@@ -3,4 +3,5 @@ django-haystack
 django-authority
 whoosh
 Markdown
+djangorestframework
 -e git+git@github.com:riklaunim/django-ckeditor.git#egg=django_ckeditor_updated-master

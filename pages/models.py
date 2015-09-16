@@ -456,6 +456,8 @@ class Page(MPTTModel):
         """
 
         slug = self.get_content(language, 'slug', language_fallback=fallback)
+        if slug == '':
+            return "Page {0}".format(self.id)
 
         return slug
 
@@ -482,10 +484,7 @@ class Page(MPTTModel):
         """Representation of the page, saved or not."""
         if self.id:
             # without ID a slug cannot be retrieved
-            slug = self.slug()
-            if slug:
-                return slug
-            return "Page {0}".format(self.id)
+            return self.slug()
         return "Page without id"
 
 

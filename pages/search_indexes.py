@@ -19,7 +19,7 @@ if settings.PAGE_REAL_TIME_SEARCH:
         publication_date = DateTimeField(model_attr='publication_date')
 
         def index_queryset(self, using=None):
-            """ Haystack 2.0 requires this method now """
+            """Haystack 2.0 requires this method now"""
             return self.get_model().objects.published()
 
         def get_queryset(self):

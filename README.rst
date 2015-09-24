@@ -12,8 +12,9 @@ django-page-cms
 .. image:: https://img.shields.io/pypi/dm/django-page-cms.svg
     :target: https://pypi.python.org/pypi/django-page-cms/
 
-
-Full documentation http://pythonhosted.org/django-page-cms/
+  
+  * Full documentation http://pythonhosted.org/django-page-cms/
+  * `How to contribute <doc/contributions.rst>`_
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
@@ -25,4 +26,3 @@ Each page can have a different template with different placeholders.
 
 .. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
 
-`How to contribute <doc/contributions.rst>`_

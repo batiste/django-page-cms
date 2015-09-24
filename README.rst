@@ -24,6 +24,12 @@ Each page can have a different template with different placeholders.
 
 .. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
 
+Contributions
+-------------
+
+A pull request is the prefered way to contribute. If you need to do more in depth changes just fork the project.
+
+
 Documentation
 -------------
 

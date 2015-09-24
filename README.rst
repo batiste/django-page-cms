@@ -25,4 +25,5 @@ Each page can have a different template with different placeholders.
 
 .. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
 
-[How to contribute](docs/contributions.rst)
+
+`How to contribute <doc/contributions.rst>`

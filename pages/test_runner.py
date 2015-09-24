@@ -16,10 +16,12 @@ django.setup()
 
 from django.test.runner import DiscoverRunner
 from django.contrib.admin.sites import AlreadyRegistered
+from django.core.management import call_command
 
 class PageTestSuiteRunner(DiscoverRunner):
 
     def run_tests(self, test_labels=('pages',), extra_tests=None):
+        call_command('collectstatic', '--noinput')
         results = DiscoverRunner.run_tests(self, test_labels, extra_tests)
         sys.exit(results)
 

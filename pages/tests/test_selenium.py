@@ -12,6 +12,8 @@ from django.contrib import auth
 from selenium import webdriver
 from selenium.webdriver import PhantomJS
 
+screenshot_nb = 1
+
 class SeleniumTestCase(TestCase, LiveServerTestCase):
 
     def setUp(self):
@@ -28,6 +30,11 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.browser.get('%s%s' % (self.live_server_url,  "/admin/"))
 
         super(SeleniumTestCase, self).setUp()
+
+    def screenshot(self):
+        global screenshot_nb
+        self.browser.save_screenshot('screenshot_%d.png' % screenshot_nb)
+        screenshot_nb += 1
 
     def select_option(self, select, option_id):
         for option in select.find_elements_by_tag_name('option'):
@@ -61,15 +68,15 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.login()
         page = self.new_page()
         self.browser.get(self.url_change(page.id))
-        #self.browser.save_screenshot('screenie.png')
         status = self.browser.find_element_by_id('id_status')
         self.assertEqual(status.get_attribute('value'), str(page.status))
 
         self.select_option(status, str(Page.DRAFT))
         self.assertEqual(status.get_attribute('value'), str(Page.DRAFT))
 
-        #src = self.browser.find_element_by_css_selector('.status'
-        #    ).find_element_by_tag_name('img'
-        #    ).get_attribute('src')
+        src = self.browser.find_element_by_css_selector('.status'
+            ).find_element_by_tag_name('img'
+            ).get_attribute('src')
 
-        #self.assertTrue(src.endswith('draft.gif'))
+        self.assertTrue(src.endswith('draft.gif'))
+        self.screenshot()

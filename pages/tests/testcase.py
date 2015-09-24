@@ -113,7 +113,7 @@ class TestCase(TestCase):
         return page_data
 
 
-    def new_page(self, content={'title': 'test-page'}, language='en-us'):
+    def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, language='en-us'):
         author = User.objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
             template='pages/examples/index.html')

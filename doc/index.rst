@@ -22,6 +22,7 @@ Table of content
     :maxdepth: 2
 
     introduction.rst
+    contributions.rst
     placeholders.rst
     installation.rst
     display-content.rst

@@ -14,7 +14,6 @@ urlpatterns = patterns('',
     #(r'^grappelli/', include('grappelli.urls')),
     # make tests fail if a backend is not present on the system
     #url(r'^search/', include('haystack.urls'), name='haystack_search'),
-
 )
 
 if 'ckeditor' in settings.INSTALLED_APPS:

@@ -68,34 +68,20 @@ Dependencies & Compatibility
 How to contribute
 ==================
 
-I recommend to `create a clone on github  <http://github.com/batiste/django-page-cms>`_ and
-make modifications in your branch. Please follow those instructions:
-
-  * Add your name to the AUTHORS file.
-  * Write tests for any new code. Keep the test coverage >= 90%.
-  * Follow the pep08 as much as possible.
-  * Add new features in the `doc/changelog.rst` file.
-  * Document how the user might use a new feature.
-  * If a new dependency is introduced, it should have a setting and be disabled by default.
-  * Be careful of performance regresssion.
-  * Every new CMS setting should start with PAGE_<something>
-  * Every new template_tag should start with pages_<something>
+:doc:`Contributions section </contributions>`
 
 Report a bug
 ============
 
 `Github issues <https://github.com/batiste/django-page-cms/issues>`_
 
-Run the tests
--------------------------
 
-Gerbi CMS try to keep the code base stable. The test coverage is higher
-than 90% and we try to keep it that way. To run the test suite::
-
-    $ python pages/test_runner.py
-
-Translations
-------------
+Internationalisation
+====================
 
 This application is available in English, German, French, Spanish, Danish, Russian and Hebrew.
+
+`We use transifex <https://www.transifex.com/batiste/django-page-cms-1/>`_
+
+
 

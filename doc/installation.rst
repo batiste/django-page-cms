@@ -62,7 +62,6 @@ To activate django-page-cms you will need to add those application::
         ...
         'mptt',
         'pages',
-        'south',
         ...
     )
 
@@ -81,14 +80,6 @@ Basically you need to have something like this::
 When you will visit the site the first time (``/pages/``), you will get a 404 error
 because there is no published page. Go to the admin first and create and publish some pages.
 
-You will certainly want to activate the static file serve view in your ``urls.py`` if you are in developement mode::
-
-    if settings.DEBUG:
-        urlpatterns += patterns('',
-            # Trick for Django to support static files (security hole: only for Dev environement! remove this on Prod!!!)
-            url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-            url(r'^admin_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.ADMIN_MEDIA_ROOT}),
-        )
 
 Settings
 ========
@@ -127,16 +118,9 @@ Media directory
 ---------------
 
 The django CMS come with some javascript and CSS files.
-These files are standing in the ``pages/media/pages`` directory.
+These files are standing in the ``pages/static/pages`` directory.
 
-To make these files accessible to your project you can simply copy them  or make a symbolic link into
-your media directory. That's necessary to have a fully functioning administration interface.
-
-You can also look at how the example project is working to make a local setup. It use the very good
-`django-staticfiles <http://pypi.python.org/pypi/django-staticfiles/>`_ application that can gather the media
-files for you. After installation in your project just run::
-
-    $ python manage.py build_static pages
+    $ python manage.py collecstatic pages
 
 And the cms media files will be copied in your project's media directory.
 

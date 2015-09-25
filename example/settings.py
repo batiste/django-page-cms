@@ -104,7 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'pages.testproj.documents',
     'pages',
-    #'pages.plugins.jsonexport',
+    'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
     'rest_framework'

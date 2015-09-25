@@ -20,7 +20,7 @@ def export_pages_as_json(modeladmin, request, queryset):
     return response
 export_pages_as_json.short_description = _("Export pages as JSON")
 
-@transaction.commit_on_success
+@transaction.atomic
 def import_pages_from_json(modeladmin, request, queryset,
         template_name='admin/pages/page/import_pages.html'):
             

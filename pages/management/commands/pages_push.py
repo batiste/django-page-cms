@@ -20,12 +20,17 @@ class Command(BaseCommand):
             data = f.read()
             pages = json.loads(data)
             for page in pages['results']:
-                print("Pushing page " + str(page['id']))
+                page_id = str(page['id'])
+                print("Pushing page " + page_id)
                 data = json.dumps(page)
-                url = host + 'api/' + str(page['id']) + '/'
-                headers = {'Content-Type': 'application/json' }
+                url = host + 'api/' + page_id + '/'
+                headers = {'Content-Type': 'application/json'}
+                # try an update first
                 response = requests.put(url, data=data, auth=(auth[0], auth[1]), headers=headers)
-                if response.status_code != 200:
+                if response.status_code == 404:# or response.status_code == 400:
+                    print("Page " + page_id + " doesn't exist on the target. Skiped.")
+                    continue
+                if response.status_code != 200 and response.status_code != 201:
                     raise ValueError(response.status_code, response.text)
 
 

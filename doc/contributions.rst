@@ -1,5 +1,5 @@
 =============================
-Contribute to Django Page CMS
+Contribute to Gerbi CMS
 =============================
 
 I recommend to `create a fork on github  <http://github.com/batiste/django-page-cms>`_ and

@@ -352,7 +352,7 @@ class ContactPlaceholderNode(PlaceholderNode):
         content = self.get_content_from_context(context)
         request = context.get('request', None)
         if not request:
-            raise ValueError('request no available in the context.')
+            raise ValueError('request not available in the context.')
         if request.method == 'POST':
             form = ContactForm(request.POST)
             if form.is_valid():
@@ -383,7 +383,7 @@ class JsonPlaceholderNode(PlaceholderNode):
         try:
             return json.loads(str(content))
         except:
-            logger.warning("Problem decoding json")
+            logger.warning("JsonPlaceholderNode: coudn't decode json")
         return content
 
 

@@ -68,12 +68,7 @@ def dump_json_data(page):
 
     def custom_email(user):
         """Allow a user's profile to return an email for the user."""
-        try:
-            profile = user.get_profile()
-        except:
-            return user.email
-        get_email = getattr(profile, 'get_email', None)
-        return get_email() if get_email else user.email
+        return user.email
 
     return {
         'complete_slug': dict(
@@ -170,19 +165,8 @@ def create_and_update_from_json_data(d, user):
 
     def custom_get_user_by_email(email):
         """
-        Allow the user profile class to look up a user by email
-        address
+        Simplified version
         """
-        # bit of an unpleasant hack that requres the logged-in
-        # user has a profile, but I don't want to reproduce the
-        # code in get_profile() here
-        try:
-            profile = user.get_profile()
-        except (SiteProfileNotAvailable, ObjectDoesNotExist):
-            return User.objects.get(email=email)
-        get_user_by_email = getattr(profile, 'get_user_by_email', None)
-        if get_user_by_email:
-            return get_user_by_email(email)
         return User.objects.get(email=email)
 
     try:

@@ -1,7 +1,7 @@
 /* Initialization of the change_list page - this script is run once everything is ready. */
 "use strict";
 
-$(function () {
+$(function($) {
 
     if(!$("body").hasClass("change-list")) {
       return;
@@ -14,7 +14,7 @@ $(function () {
     if(!window.gettext) {
         window.gettext = function(str) {
             return str;
-        }
+        };
     }
 
     function update_actions() {
@@ -55,7 +55,9 @@ $(function () {
                     add_children(i, callback);
                 }
             });
-            callback && callback(children);
+            if(callback) {
+                callback(children);
+            }
             update_actions();
         });
     }
@@ -126,7 +128,7 @@ $(function () {
                 update_actions();
             }
         );
-    };
+    }
 
     // let's start event delegation
     changelist.click(function (e) {
@@ -187,9 +189,9 @@ $(function () {
                         init_publish_hanlder(children);
                         // Update the move and add links of the inserted rows
                         if (action == 'move') {
-                            var selected_row = $('#page-row-'+selected_page)
+                            var selected_row = $('#page-row-'+selected_page);
                             selected_row.addClass('selected')
-                            selected_row.add(get_children(selected_page))
+                            selected_row.add(get_children(selected_page));
                             selected_row.addClass('highlighted');
                             // this could become quite slow with a lot of pages
                             $('tr:not(.highlighted)', changelist).addClass('insertable');
@@ -225,6 +227,7 @@ $(function () {
         var lines_position = [];
         var choosen_line = false;
         var trs;
+        var source_left, source_right, source_tree_id;
 
         $("#page-list").on("mousedown", ".movelink", function(e) {
             down = this;
@@ -232,6 +235,9 @@ $(function () {
             line_id = line.attr('id').split('page-row-')[1];
             move_y = 0;
             start_y = e.pageY;
+            source_left = parseInt(line.data('mptt-left'), 10);
+            source_right = parseInt(line.data('mptt-right'), 10);
+            source_tree_id = parseInt(line.data('mptt-tree-id'), 10);
             return false;
         });
 
@@ -245,10 +251,17 @@ $(function () {
                 indicator.show();
                 drag_initiated = true;
                 $(line).css("opacity", "0.5");
-                trs = $("#page-list tbody tr").not(line).not($(".child-of-"+line_id));
+                trs = $("#page-list tbody tr");
                 trs.each(function(i, el) {
+                  var possible_target = $(el);
+                  var left = parseInt(possible_target.data('mptt-left'), 10);
+                  var right = parseInt(possible_target.data('mptt-right'), 10);
+                  var tree_id = parseInt(possible_target.data('mptt-tree-id'), 10);
+                  if(source_tree_id == tree_id && left > source_left && right < source_right) {
+                    return;
+                  }
                   lines_position.push(
-                    {line:el, pos:$(el).position().top + $(el).height() / 2}
+                    {line:el, pos:possible_target.position().top + possible_target.height() / 2}
                   );
                 }); 
               }

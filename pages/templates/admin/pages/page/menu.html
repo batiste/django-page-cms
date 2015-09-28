@@ -1,6 +1,11 @@
 {% load pages_tags i18n cache %}
 
-<tr id="page-row-{{ page.id }}" class="child-of-{{ page.parent_id }} draggable">
+<tr id="page-row-{{ page.id }}" 
+    class="child-of-{{ page.parent_id }} draggable" 
+    data-mptt-left="{{ page.lft }}" 
+    data-mptt-right="{{ page.rght }}"
+    data-mptt-tree-id="{{ page.tree_id }}"
+    >
     <td class="selection-cell action-checkbox-column"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
     <th class="title-cell">
         <div class="title-cell-container" style="margin-{{ LANGUAGE_BIDI|yesno:"right,left" }}:{{ page.margin_level }}em">

@@ -11,3 +11,4 @@ install:
 script: "coverage run --source=pages pages/test_runner.py"
 after_success:
   coveralls
+sudo: false

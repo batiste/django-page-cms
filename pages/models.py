@@ -495,7 +495,7 @@ class Content(models.Model):
 
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
-    body = models.TextField(_('body'))
+    body = models.TextField(_('body'), blank=True)
     type = models.CharField(_('type'), max_length=100, blank=False,
         db_index=True)
     page = models.ForeignKey(Page, verbose_name=_('page'))

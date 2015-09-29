@@ -14,7 +14,10 @@ except ImportError:
 else:
     urlpatterns += [
         url(r'^api/$', api.PageList.as_view()),
-        url(r'^api/(?P<pk>[0-9]+)/$', api.PageEdit.as_view())
+        url(r'^api/pages/$', api.PageList.as_view()),
+        url(r'^api/pages/(?P<pk>[0-9]+)/$', api.PageEdit.as_view()),
+        url(r'^api/contents/$', api.ContentList.as_view()),
+        url(r'^api/contents/(?P<pk>[0-9]+)/$', api.ContentEdit.as_view())
     ]
 
 if settings.PAGE_USE_LANGUAGE_PREFIX:

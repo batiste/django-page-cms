@@ -14,7 +14,7 @@ django-page-cms
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
-  * Full documentation http://pythonhosted.org/django-page-cms/
+  * `Full documentation <http://django-page-cms.readthedocs.org/en/latest/>`_
   * `How to contribute <doc/contributions.rst>`_
 
 Django page CMS is based around a placeholders concept. Placeholder is a special template tag that

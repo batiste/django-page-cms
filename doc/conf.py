@@ -9,13 +9,16 @@ import os
 # To make autodoc find the modules
 sys.path.append(os.path.abspath('..'))
 
-from django.conf import settings
-import django
-settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-    PAGE_DEFAULT_TEMPLATE='index.html',
-    PAGE_TEMPLATES=(),
-    PAGE_LANGUAGES=(),
-    TEMPLATE_DIRS=('/home/web-apps/myapp'))
+try:
+    from django.conf import settings
+    import django
+    settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
+        PAGE_DEFAULT_TEMPLATE='index.html',
+        PAGE_TEMPLATES=(),
+        PAGE_LANGUAGES=(),
+        TEMPLATE_DIRS=('/home/web-apps/myapp'))
+except ImportError:
+    pass
 
 # General configuration
 # ---------------------

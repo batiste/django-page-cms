@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
     def cout(self, msg):
         if self.verbosity > 0:
-            self.cout(' .')
+            sys.stdout.write(' .')
 
     def add_arguments(self, parser):
         parser.add_argument('auth', type=str,

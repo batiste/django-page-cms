@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'rest_framework',
     'mptt',
     'pages',
     TEST_PROJ + '.documents',

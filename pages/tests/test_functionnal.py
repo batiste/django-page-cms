@@ -524,8 +524,7 @@ class FunctionnalTestCase(TestCase):
 
         root_page = Content.objects.get_content_slug_by_slug('root').page
         self.assertEqual(len(root_page.valid_targets()), 0)
-        self.assertEqual(str(c1.valid_targets()),
-                                            "[<Page: root>]")
+        self.assertEqual(str(c1.valid_targets()), "[<Page: root>]")
 
     def test_ajax_language(self):
         """Test that language is working properly"""
@@ -908,4 +907,3 @@ class FunctionnalTestCase(TestCase):
         response = c.get('/admin/pages/page/%d/' % page.id)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'some file')
-

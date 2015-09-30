@@ -12,6 +12,14 @@ def http_error(response):
 class Command(BaseCommand):
     help = 'Push data to a Django Page CMS API'
 
+    def cprint(self, msg):
+        if self.verbosity > 0:
+            print(msg)
+
+    def cout(self, msg):
+        if self.verbosity > 0:
+            self.cout(' .')
+
     def add_arguments(self, parser):
         parser.add_argument('auth', type=str,
             help='authentication in the form user:password')
@@ -35,7 +43,7 @@ class Command(BaseCommand):
                 response = requests.post(url, data=data, auth=self.auth, headers=headers)
             if response.status_code != 200 and response.status_code != 201:
                 http_error(response)
-            sys.stdout.write('.')
+            self.cout('.')
 
     def push_page(self, page):
         page_id = str(page['id'])
@@ -55,12 +63,12 @@ class Command(BaseCommand):
         if server_page:
             self.server_id_mapping[page['id']] = server_page['id']
             page['id'] = server_page['id']
-            sys.stdout.write("Update page " + str(page['id']))
+            self.cout("Update page " + str(page['id']))
             url = self.host + 'pages/' + str(page['id']) + '/'
             data = json.dumps(page)
             response = requests.put(url, data=data, auth=self.auth, headers=headers)
         else:
-            sys.stdout.write("Create page " + str(page['id']))
+            self.cout("Create page " + str(page['id']))
             url = self.host
             data = json.dumps(page)
             response = requests.post(url, data=data, auth=self.auth, headers=headers)
@@ -75,24 +83,27 @@ class Command(BaseCommand):
         if response.status_code != 200 and response.status_code != 201:
             http_error(response)
 
-        sys.stdout.write(' .')
+        self.cout(' .')
         self.push_content(page)
 
-        print('')
+        self.cprint('')
 
     def handle(self, *args, **options):
         auth = options['auth'].split(':')
         self.auth = (auth[0], auth[1])
+        self.verbosity = options.get('verbosity', 1)
         host = options['host']
         if not host.endswith('/'):
             host = host + '/'
+        if not host.startswith('http://'):
+            host = 'http://' + host
         self.host = host
         filename = options['filename']
         self.datetime_mapping = {}
         self.id_mapping = {}
         self.server_id_mapping = {}
 
-        print("Fetching the state of the pages on the server " + self.host)
+        self.cprint("Fetching the state of the pages on the server " + self.host)
         host = self.host + '?format=json'
         response = requests.get(host, auth=self.auth)
         if response.status_code != 200:

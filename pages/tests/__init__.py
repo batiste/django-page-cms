@@ -3,6 +3,7 @@ import unittest
 from pages.tests.test_functionnal import FunctionnalTestCase
 from pages.tests.test_unit import UnitTestCase
 from pages.tests.test_regression import RegressionTestCase
+from pages.tests.test_commands import CommandTestCase
 #from pages.tests.test_pages_link import LinkTestCase
 #from pages.tests.test_auto_render import AutoRenderTestCase
 
@@ -22,4 +23,5 @@ def suite():
     # suite.addTest(unittest.makeSuite(AutoRenderTestCase))
     # being the slower test I run it at the end
     suite.addTest(unittest.makeSuite(FunctionnalTestCase))
+    suite.addTest(unittest.makeSuite(CommandTestCase))
     return suite

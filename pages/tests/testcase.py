@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist, Engine
 from django.contrib.sites.models import Site
-from django.utils.importlib import import_module
+from importlib import import_module
 from django.core.urlresolvers import clear_url_caches
 from six.moves import reload_module
 

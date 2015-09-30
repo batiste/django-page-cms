@@ -10,7 +10,7 @@ urlpatterns = []
 try:
     from pages import api
 except ImportError:
-    pass
+    print("No API as api cannot be imported")
 else:
     urlpatterns += [
         url(r'^api/$', api.PageList.as_view()),

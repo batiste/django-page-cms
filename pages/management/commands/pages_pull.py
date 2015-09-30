@@ -5,6 +5,10 @@ import os
 class Command(BaseCommand):
     help = 'Pull data from a Django Page CMS API'
 
+    def cprint(self, msg):
+        if self.verbosity > 0:
+            print(msg)
+
     def add_arguments(self, parser):
         parser.add_argument('auth', type=str,
             help='authentication in the form user:password')
@@ -17,10 +21,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         auth = options['auth'].split(':')
         host = options['host']
+        self.verbosity = options.get('verbosity', 1)
         if not host.endswith('/'):
             host = host + '/'
+        if not host.startswith('http://'):
+            host = 'http://' + host
 
-        print("Fetching page data on " + host)
+        self.cprint("Fetching page data on " + host)
         host = host + '?format=json'
         filename = options['filename']
 
@@ -33,4 +40,4 @@ class Command(BaseCommand):
             os.makedirs(os.path.dirname(filename))
         with open(filename, "w") as f:
             f.write(json)
-        print(filename + " written to disk")
+        self.cprint(filename + " written to disk")

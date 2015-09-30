@@ -1,4 +1,4 @@
 selenium
 coverage
 polib
-rest_framework
+djangorestframework

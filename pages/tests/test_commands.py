@@ -24,9 +24,10 @@ class CommandTestCase(TestCase, LiveServerTestCase):
     def test_push(self):
         """Push command"""
         url =  self.live_server_url + '/pages/api/'
-        page = self.new_page(content={'title': 'pull-page', 'slug': 'pull-slug'})
+        page1 = self.new_page(content={'title': 'pull-page', 'slug': 'pull-slug'})
+        page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'})
         call_command('pages_pull', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
-        page.delete()
-        self.assertEqual(Page.objects.all().count(), 0)
-        call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
+        page1.delete()
         self.assertEqual(Page.objects.all().count(), 1)
+        call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
+        self.assertEqual(Page.objects.all().count(), 2)

@@ -113,10 +113,10 @@ class TestCase(TestCase):
         return page_data
 
 
-    def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, language='en-us'):
+    def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, parent=None, language='en-us'):
         author = User.objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
-            template='pages/examples/index.html')
+            template='pages/examples/index.html', parent=parent)
         if pages_settings.PAGE_USE_SITE_ID:
             page.sites.add(Site.objects.get(id=1))
         # necessary to clear old URL cache

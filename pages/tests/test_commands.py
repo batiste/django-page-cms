@@ -10,7 +10,7 @@ class CommandTestCase(TestCase, LiveServerTestCase):
     """Django page CMS command tests suite class."""
 
     def test_pull(self):
-        """Pull command"""
+        """Pull command get the correct data"""
         self.new_page(content={'title': 'pull-page', 'slug': 'pull-slug'})
         url =  self.live_server_url + '/pages/api/'
         filename = '/tmp/test'
@@ -22,7 +22,7 @@ class CommandTestCase(TestCase, LiveServerTestCase):
                  self.assertTrue(content['body'] in ['pull-page', 'pull-slug'])
 
     def test_push(self):
-        """Push command"""
+        """Push command put back the content properly"""
         url =  self.live_server_url + '/pages/api/'
         page1 = self.new_page(content={'title': 'pull-page', 'slug': 'pull-slug'})
         page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'})
@@ -31,3 +31,26 @@ class CommandTestCase(TestCase, LiveServerTestCase):
         self.assertEqual(Page.objects.all().count(), 1)
         call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
         self.assertEqual(Page.objects.all().count(), 2)
+
+    def test_tree(self):
+        """Push command" restore the tree properly"""
+        url =  self.live_server_url + '/pages/api/'
+        filename = '/tmp/test'
+        page1 = self.new_page(content={'title': 'pull-page-1', 'slug': 'pull-slug-1'})
+        page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'}, parent=page1)
+        page3 = self.new_page(content={'title': 'pull-page-3', 'slug': 'pull-slug-3'}, parent=page2)
+
+        self.assertItemsEqual(page1.get_children(), [page2])
+        self.assertItemsEqual(page2.get_children(), [page3])
+
+        call_command('pages_pull', 'admin:b', filename=filename, host=url, verbosity=0)
+        page2.move_to(page1, 'left')
+
+        self.assertItemsEqual(page1.get_children(), [])
+        self.assertItemsEqual(page2.get_children(), [page3])
+
+        call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
+
+        self.assertItemsEqual(page1.get_children(), [page2])
+        self.assertItemsEqual(page2.get_children(), [page3])
+

@@ -1,6 +1,8 @@
 from pages.models import Page, Content
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from pages import settings
+from django.contrib.sites.models import Site
 
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,8 +30,13 @@ class PageSerializer(serializers.ModelSerializer):
         if validated_data.get('parent', False):
             cleaned_data['parent'] = validated_data.get('parent')
 
+
         cleaned_data['author'] = admin
 
         page = Page.objects.create(**cleaned_data)
+        if settings.PAGE_USE_SITE_ID:
+            site = Site.objects.get_current()
+            page.sites.add(site)
+
         page.invalidate()
         return page

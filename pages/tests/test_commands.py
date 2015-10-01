@@ -54,3 +54,27 @@ class CommandTestCase(TestCase, LiveServerTestCase):
         self.assertItemsEqual(page1.get_children(), [page2])
         self.assertItemsEqual(page2.get_children(), [page3])
 
+    def test_tree_delete(self):
+        """Push command tree delete"""
+        url =  self.live_server_url + '/pages/api/'
+        filename = '/tmp/test'
+        page1 = self.new_page(content={'title': 'pull-page-1', 'slug': 'pull-slug-1'})
+        page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'}, parent=page1)
+        page3 = self.new_page(content={'title': 'pull-page-3', 'slug': 'pull-slug-3'}, parent=page2)
+
+        self.assertItemsEqual(page1.get_children(), [page2])
+        self.assertItemsEqual(page2.get_children(), [page3])
+
+
+        call_command('pages_pull', 'admin:b', filename=filename, host=url, verbosity=0)
+
+        page4 = self.new_page(content={'title': 'pull-page-4', 'slug': 'pull-slug-4'}, parent=page1)
+        self.assertSequenceEqual(page1.get_children(), [page2, page4])
+        page2.delete()
+        self.assertSequenceEqual(page1.get_children(), [page4])
+
+        call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
+
+        page2 = Page.objects.from_slug('pull-slug-2')
+        self.assertSequenceEqual(page1.get_children(), [page4, page2])
+

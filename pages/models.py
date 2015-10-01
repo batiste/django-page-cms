@@ -97,7 +97,7 @@ class Page(MPTTModel):
 
     if settings.PAGE_USE_SITE_ID:
         sites = models.ManyToManyField(Site,
-                default=lambda: [global_settings.SITE_ID],
+                default=[global_settings.SITE_ID],
                 help_text=_('The site(s) the page is accessible at.'),
                 verbose_name=_('sites'))
 

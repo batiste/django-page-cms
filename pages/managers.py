@@ -142,6 +142,15 @@ class PageManager(TreeManager):
                     return page
         return None
 
+    def from_slug(self, slug):
+        from pages.models import Content
+        content = Content.objects.get_content_slug_by_slug(slug)
+        if content is None:
+            print Content.objects.all()
+            print Content.objects.filter(type='slug', body=slug)
+            raise ValueError("Slug '%s' didn't match any content." % slug)
+        return content.page
+
 
 class ContentManager(models.Manager):
     """:class:`Content <pages.models.Content>` manager methods"""

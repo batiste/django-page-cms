@@ -8,9 +8,9 @@ from pages import settings
 urlpatterns = []
 
 try:
-    from pages import api
-except ImportError:
-    print("No API as api cannot be imported")
+    from pages import api 
+except ImportError as detail:
+    print("API not present because of import error: %s" % detail)
 else:
     urlpatterns += [
         url(r'^api/$', api.PageList.as_view()),

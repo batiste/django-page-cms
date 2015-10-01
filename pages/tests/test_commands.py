@@ -40,19 +40,19 @@ class CommandTestCase(TestCase, LiveServerTestCase):
         page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'}, parent=page1)
         page3 = self.new_page(content={'title': 'pull-page-3', 'slug': 'pull-slug-3'}, parent=page2)
 
-        self.assertItemsEqual(page1.get_children(), [page2])
-        self.assertItemsEqual(page2.get_children(), [page3])
+        self.assertSequenceEqual(page1.get_children(), [page2])
+        self.assertSequenceEqual(page2.get_children(), [page3])
 
         call_command('pages_pull', 'admin:b', filename=filename, host=url, verbosity=0)
         page2.move_to(page1, 'left')
 
-        self.assertItemsEqual(page1.get_children(), [])
-        self.assertItemsEqual(page2.get_children(), [page3])
+        self.assertSequenceEqual(page1.get_children(), [])
+        self.assertSequenceEqual(page2.get_children(), [page3])
 
         call_command('pages_push', 'admin:b', filename='/tmp/test', host=url, verbosity=0)
 
-        self.assertItemsEqual(page1.get_children(), [page2])
-        self.assertItemsEqual(page2.get_children(), [page3])
+        self.assertSequenceEqual(page1.get_children(), [page2])
+        self.assertSequenceEqual(page2.get_children(), [page3])
 
     def test_tree_delete(self):
         """Push command tree delete"""
@@ -62,8 +62,8 @@ class CommandTestCase(TestCase, LiveServerTestCase):
         page2 = self.new_page(content={'title': 'pull-page-2', 'slug': 'pull-slug-2'}, parent=page1)
         page3 = self.new_page(content={'title': 'pull-page-3', 'slug': 'pull-slug-3'}, parent=page2)
 
-        self.assertItemsEqual(page1.get_children(), [page2])
-        self.assertItemsEqual(page2.get_children(), [page3])
+        self.assertSequenceEqual(page1.get_children(), [page2])
+        self.assertSequenceEqual(page2.get_children(), [page3])
 
 
         call_command('pages_pull', 'admin:b', filename=filename, host=url, verbosity=0)

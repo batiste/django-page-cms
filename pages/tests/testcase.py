@@ -80,14 +80,11 @@ class TestCase(TestCase):
         client.login(username='admin', password='b')
         return client
 
-
     def get_page_url(self, path=''):
         return reverse('pages-details-by-path', args=[path])
 
-
     def get_template_from_string(self, tpl):
         return Engine.get_default().from_string(tpl)
-
 
     def reset_urlconf(self):
         url_conf = getattr(settings, 'ROOT_URLCONF', False)
@@ -100,7 +97,6 @@ class TestCase(TestCase):
         reload_module(import_module('pages.testproj.urls'))
         clear_url_caches()
 
-
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
         page_data = {'title': 'test page %d' % self.counter,
@@ -111,7 +107,6 @@ class TestCase(TestCase):
             }
         self.counter = self.counter + 1
         return page_data
-
 
     def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, parent=None, language='en-us'):
         author = User.objects.all()[0]
@@ -124,7 +119,6 @@ class TestCase(TestCase):
         for key, value in list(content.items()):
             Content(page=page, language='en-us', type=key, body=value).save()
         return page
-
 
     def create_new_page(self, client=None, draft=False):
         if not client:

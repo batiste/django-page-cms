@@ -1,13 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 import requests
 import os
+from pages.management.commands.utils import APICommand
 
-class Command(BaseCommand):
+class Command(APICommand):
     help = 'Pull data from a Django Page CMS API'
-
-    def cprint(self, msg):
-        if self.verbosity > 0:
-            print(msg)
 
     def add_arguments(self, parser):
         parser.add_argument('auth', type=str,
@@ -19,25 +16,18 @@ class Command(BaseCommand):
             default="data/download.json")
 
     def handle(self, *args, **options):
-        auth = options['auth'].split(':')
-        host = options['host']
-        self.verbosity = options.get('verbosity', 1)
-        if not host.endswith('/'):
-            host = host + '/'
-        if not host.startswith('http://'):
-            host = 'http://' + host
+        self.parse_options(options)
 
-        self.cprint("Fetching page data on " + host)
-        host = host + '?format=json'
-        filename = options['filename']
+        self.cprint("Fetching page data on " + self.host)
+        self.host = self.host + '?format=json'
 
-        page_list = requests.get(host, auth=(auth[0], auth[1]))
+        page_list = requests.get(self.host, auth=self.auth)
         if page_list.status_code != 200:
             raise ValueError(page_list.status_code)
         json = page_list.text
         
-        if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
-        with open(filename, "w") as f:
+        if not os.path.exists(os.path.dirname(self.filename)):
+            os.makedirs(os.path.dirname(self.filename))
+        with open(self.filename, "w") as f:
             f.write(json)
-        self.cprint(filename + " written to disk")
+        self.cprint(self.filename + " written to disk")

@@ -3,22 +3,10 @@ import requests
 import os
 import json
 import sys
+from pages.management.commands.utils import APICommand
 
-def http_error(response):
-    with open('error.html', "w") as f:
-        f.write(response.text)
-    raise ValueError("Error type " + str(response.status_code) + " file written: error.html")
-
-class Command(BaseCommand):
+class Command(APICommand):
     help = 'Push data to a Django Page CMS API'
-
-    def cprint(self, msg):
-        if self.verbosity > 0:
-            print(msg)
-
-    def cout(self, msg):
-        if self.verbosity > 0:
-            sys.stdout.write(' .')
 
     def add_arguments(self, parser):
         parser.add_argument('auth', type=str,
@@ -42,7 +30,7 @@ class Command(BaseCommand):
                 url = self.host + 'contents/'
                 response = requests.post(url, data=data, auth=self.auth, headers=headers)
             if response.status_code != 200 and response.status_code != 201:
-                http_error(response)
+                self.http_error(response)
             self.cout('.')
 
     def push_page(self, page):
@@ -81,7 +69,7 @@ class Command(BaseCommand):
                 page = new_page
 
         if response.status_code != 200 and response.status_code != 201:
-            http_error(response)
+            self.http_error(response)
 
         self.cout(' .')
         self.push_content(page)
@@ -89,16 +77,8 @@ class Command(BaseCommand):
         self.cprint('')
 
     def handle(self, *args, **options):
-        auth = options['auth'].split(':')
-        self.auth = (auth[0], auth[1])
-        self.verbosity = options.get('verbosity', 1)
-        host = options['host']
-        if not host.endswith('/'):
-            host = host + '/'
-        if not host.startswith('http://'):
-            host = 'http://' + host
-        self.host = host
-        filename = options['filename']
+        self.parse_options(options)
+
         self.datetime_mapping = {}
         self.id_mapping = {}
         self.server_id_mapping = {}
@@ -107,14 +87,14 @@ class Command(BaseCommand):
         host = self.host + '?format=json'
         response = requests.get(host, auth=self.auth)
         if response.status_code != 200:
-            http_error(response)
+            self.http_error(response)
         self.current_page_list = json.loads(response.text)['results']
         
         for page in self.current_page_list:
             self.datetime_mapping[page['creation_date']] = page
             self.id_mapping[page['id']] = page
 
-        with open(filename, "r") as f:
+        with open(self.filename, "r") as f:
             data = f.read()
             pages = json.loads(data)
             for page in pages['results']:

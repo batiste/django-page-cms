@@ -255,45 +255,6 @@ def get_filename(page, placeholder, data):
     return filename
 
 
-class ImagePlaceholderNode(PlaceholderNode):
-    """A `PlaceholderNode` that saves one image on disk.
-
-    `PAGE_UPLOAD_ROOT` setting define where to save the image.
-    """
-
-    def get_field(self, page, language, initial=None):
-        help_text = ""
-        widget = ImageInput(page, language)
-        return ImageField(
-            widget=widget,
-            initial=initial,
-            help_text=help_text,
-            required=False
-        )
-
-    def save(self, page, language, data, change, extra_data=None):
-        if 'delete' in extra_data:
-            return super(ImagePlaceholderNode, self).save(
-                page,
-                language,
-                "",
-                change
-            )
-        filename = ''
-        if change and data:
-            # the image URL is posted if not changed
-            if not isinstance(data, UploadedFile):
-                return
-
-            filename = get_filename(page, self, data)
-            filename = default_storage.save(filename, data)
-            return super(ImagePlaceholderNode, self).save(
-                page,
-                language,
-                filename,
-                change
-            )
-
 class FilePlaceholderNode(PlaceholderNode):
     """A `PlaceholderNode` that saves one file on disk.
 
@@ -332,6 +293,22 @@ class FilePlaceholderNode(PlaceholderNode):
                 filename,
                 change
             )
+
+class ImagePlaceholderNode(FilePlaceholderNode):
+    """A `PlaceholderNode` that saves one image on disk.
+
+    `PAGE_UPLOAD_ROOT` setting define where to save the image.
+    """
+
+    def get_field(self, page, language, initial=None):
+        help_text = ""
+        widget = ImageInput(page, language)
+        return ImageField(
+            widget=widget,
+            initial=initial,
+            help_text=help_text,
+            required=False
+        )
 
 
 class ContactForm(forms.Form):

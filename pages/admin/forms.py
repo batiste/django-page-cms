@@ -12,6 +12,54 @@ from pages.urlconf_registry import get_choices
 from pages.widgets import LanguageChoiceWidget
 import collections
 
+error_dict = {
+    'another_page_error': _('Another page with this slug already exists'),
+    'sibling_position_error': _('A sibling with this slug already exists at the targeted position'),
+    'child_error': _('A child with this slug already exists at the targeted position'),
+    'sibling_error': _('A sibling with this slug already exists'),
+    'sibling_root_error': _('A sibling with this slug already exists at the root level'),
+}
+
+def automatic_slug_renaming(slug, is_slug_safe):
+    """Helper to add numbers to slugs"""
+
+    if not isinstance(is_slug_safe, collections.Callable):
+        raise TypeError('is_slug_safe must be callable')
+
+    if is_slug_safe(slug):
+       return slug
+
+    count = 2
+    new_slug = slug + "-" + str(count)
+    while not is_slug_safe(new_slug):
+        count = count + 1
+        new_slug = slug + "-" + str(count)
+    return new_slug
+
+def unique_slug_required(form, slug):
+    """Enforce a unique slug accross all pages and websistes."""
+
+    if hasattr(form, 'instance') and form.instance.id:
+        if Content.objects.exclude(page=form.instance).filter(
+            body=slug, type="slug").count():
+            raise forms.ValidationError(error_dict['another_page_error'])
+    elif Content.objects.filter(body=slug, type="slug").count():
+        raise forms.ValidationError(error_dict['another_page_error'])
+    return slug
+
+def intersect_sites_method(form):
+    """Return a method to intersect sites."""
+    if settings.PAGE_USE_SITE_ID:
+        if settings.PAGE_HIDE_SITES:
+            site_ids = [global_settings.SITE_ID]
+        else:
+            site_ids = [int(x) for x in form.data.getlist('sites')]
+        def intersects_sites(sibling):
+            return sibling.sites.filter(id__in=site_ids).count() > 0
+    else:
+        def intersects_sites(sibling):
+            return True
+    return intersects_sites
 
 def make_form(model_, placeholders):
 
@@ -32,14 +80,6 @@ def make_form(model_, placeholders):
         class Meta:
             model = model_
             exclude = ('author', 'last_modification_date', 'parent')
-
-        err_dict = {
-            'another_page_error': _('Another page with this slug already exists'),
-            'sibling_position_error': _('A sibling with this slug already exists at the targeted position'),
-            'child_error': _('A child with this slug already exists at the targeted position'),
-            'sibling_error': _('A sibling with this slug already exists'),
-            'sibling_root_error': _('A sibling with this slug already exists at the root level'),
-        }
 
         title = forms.CharField(
             label=_('Title'),
@@ -75,33 +115,6 @@ def make_form(model_, placeholders):
             #widget=widgets.AdminTimeWidget()
         )
 
-        def _clean_page_automatic_slug_renaming(self, slug, is_slug_safe):
-            """Helper to add numbers to slugs"""
-
-            if not isinstance(is_slug_safe, collections.Callable):
-                raise TypeError('is_slug_safe must be callable')
-
-            if is_slug_safe(slug):
-               return slug
-
-            count = 2
-            new_slug = slug + "-" + str(count)
-            while not is_slug_safe(new_slug):
-                count = count + 1
-                new_slug = slug + "-" + str(count)
-            return new_slug
-
-        def _clean_page_unique_slug_required(self, slug):
-            """See if this slug exists already"""
-
-            if hasattr(self, 'instance') and self.instance.id:
-                if Content.objects.exclude(page=self.instance).filter(
-                    body=slug, type="slug").count():
-                    raise forms.ValidationError(self.err_dict['another_page_error'])
-            elif Content.objects.filter(body=slug, type="slug").count():
-                raise forms.ValidationError(self.err_dict['another_page_error'])
-            return slug
-
         def clean_slug(self):
             """Handle move action on the pages"""
 
@@ -121,21 +134,14 @@ def make_form(model_, placeholders):
                     else:
                         return False
 
-                return self._clean_page_automatic_slug_renaming(slug, is_slug_safe)
+                return automatic_slug_renaming(slug, is_slug_safe)
 
             if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-                return self._clean_page_unique_slug_required(slug)
+                # We can return here as not futher checks
+                # are necessary
+                return unique_slug_required(self, slug)
 
-            if settings.PAGE_USE_SITE_ID:
-                if settings.PAGE_HIDE_SITES:
-                    site_ids = [global_settings.SITE_ID]
-                else:
-                    site_ids = [int(x) for x in self.data.getlist('sites')]
-                def intersects_sites(sibling):
-                    return sibling.sites.filter(id__in=site_ids).count() > 0
-            else:
-                def intersects_sites(sibling):
-                    return True
+            intersects_sites = intersect_sites_method(self)
 
             if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
                 if target and position:
@@ -146,24 +152,24 @@ def make_form(model_, placeholders):
                                 if intersects_sites(sibling)]
                         slugs.append(target.slug())
                         if slug in slugs:
-                            raise forms.ValidationError(self.err_dict['sibling_position_error'])
+                            raise forms.ValidationError(error_dict['sibling_position_error'])
                     if position == 'first-child':
                         if slug in [sibling.slug() for sibling in
                                     target.get_children()
                                     if intersects_sites(sibling)]:
-                            raise forms.ValidationError(self.err_dict['child_error'])
+                            raise forms.ValidationError(error_dict['child_error'])
                 else:
                     if self.instance.id:
                         if (slug in [sibling.slug() for sibling in
                             self.instance.get_siblings().exclude(
                                 id=self.instance.id
                             ) if intersects_sites(sibling)]):
-                            raise forms.ValidationError(self.err_dict['sibling_error'])
+                            raise forms.ValidationError(error_dict['sibling_error'])
                     else:
                         if slug in [sibling.slug() for sibling in
                                     Page.objects.root()
                                     if intersects_sites(sibling)]:
-                            raise forms.ValidationError(self.err_dict['sibling_root_error'])
+                            raise forms.ValidationError(error_dict['sibling_root_error'])
             return slug
 
     return PageForm

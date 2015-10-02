@@ -6,7 +6,10 @@ $(function($) {
     if(!$("body").hasClass("change-list")) {
       return;
     }
-
+    if(!window.pages) {
+        return;
+    }
+    var pages = window.pages;
     var action = false;
     var selected_page = false;
     var changelist = $('#changelist');
@@ -50,7 +53,7 @@ $(function($) {
             var expanded = get_expanded();
             var children = $('.child-of-'+id, changelist).each(function () {
                 var i = this.id.substring(9);
-                if ($.inArray(i, expanded) != -1) {
+                if ($.inArray(i, expanded) !== -1) {
                     $('#c'+i).addClass('expanded loading');
                     add_children(i, callback);
                 }
@@ -84,7 +87,7 @@ $(function($) {
     function rem_expanded(id) {
         var expanded = get_expanded();
         var index = $.inArray(id, expanded);
-        if (index != -1) {
+        if (index !== -1) {
             // The following code is based on J. Resig's optimized array remove
             var rest = expanded.slice(index+1);
             expanded.length = index;
@@ -134,6 +137,7 @@ $(function($) {
     changelist.click(function (e) {
         var target = $(e.target);
         var link = target.closest('a').andSelf().filter('a');
+        var id;
 
         if (!target.hasClass('help') && link.length) {
             // Toggles a previous action to come back to the initial state
@@ -165,7 +169,7 @@ $(function($) {
             // Move or add the page and come back to the initial state
             else if (link.hasClass('move-target')) {
                 var position = link.attr('class').match(/left|right|first-child/)[0];
-                var id = link.parent().attr('id').split('move-target-')[1];
+                id = link.parent().attr('id').split('move-target-')[1];
                 var row = $('#page-row-'+selected_page);
 
                 changelist.removeClass('insert-add insert-move');
@@ -175,14 +179,14 @@ $(function($) {
 
                 if (action == 'move') {
                     move_page(selected_page, position, id);
-                } else if (action == 'add') {
+                } else if (action === 'add') {
                     window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
                 }
                 return false;
             }
             // Expand or collapse pages
             else if (link.hasClass('expand-collapse')) {
-                var id = link.attr('id').substring(1);
+                id = link.attr('id').substring(1);
                 if (link.toggleClass('expanded').hasClass('expanded')) {
                     add_expanded(id);
                     add_children(id, function (children) {
@@ -190,12 +194,12 @@ $(function($) {
                         // Update the move and add links of the inserted rows
                         if (action == 'move') {
                             var selected_row = $('#page-row-'+selected_page);
-                            selected_row.addClass('selected')
+                            selected_row.addClass('selected');
                             selected_row.add(get_children(selected_page));
                             selected_row.addClass('highlighted');
                             // this could become quite slow with a lot of pages
                             $('tr:not(.highlighted)', changelist).addClass('insertable');
-                        } else if (action == 'add') {
+                        } else if (action === 'add') {
                             $('#page-row-'+selected_page).addClass('highlighted insertable');
                         }
                     });
@@ -210,7 +214,6 @@ $(function($) {
 
 
     var drag_clientx = false;
-    var insert_position = 'right';
     // will be better of not rewritting the table everytime
     function bind_sortable() {
         // Initialise the table for drag and drop
@@ -311,25 +314,25 @@ $(function($) {
             return false;
         });
 
-        $(document).on("click", ".move-first-child", function(e) {
+        $(document).on("click", ".move-first-child", function() {
             var target = choosen_line.id.split('page-row-')[1];
             move_page(line_id, "first-child", target);
             return false;
         }); 
 
-        $(document).on("click", ".move-bottom", function(e) {
+        $(document).on("click", ".move-bottom", function() {
             var target = choosen_line.id.split('page-row-')[1];
             move_page(line_id, "right", target);
             return false;
         });
 
-        $(document).on("click", ".move-undo", function(e) {
+        $(document).on("click", ".move-undo", function() {
             $(".drag-dialog").hide();
             $("#page-list tbody tr").removeClass("highlighted");
             return false;
         });
 
-        $(document).on("click", function(e) {
+        $(document).on("click", function() {
             $("#page-list tbody tr").removeClass("highlighted");
             $(".drag-dialog").hide();
         }); 

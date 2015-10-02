@@ -10,6 +10,10 @@ django-page-cms
   
 .. image:: https://img.shields.io/pypi/dm/django-page-cms.svg
   :target: https://pypi.python.org/pypi/django-page-cms/
+  
+.. image:: https://codeclimate.com/github/batiste/django-page-cms/badges/gpa.svg
+  :target: https://codeclimate.com/github/batiste/django-page-cms
+  :alt: Code Climate
 
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.

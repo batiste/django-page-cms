@@ -8,15 +8,6 @@ from pages.management.commands.utils import APICommand
 class Command(APICommand):
     help = 'Push data to a Django Page CMS API'
 
-    def add_arguments(self, parser):
-        parser.add_argument('auth', type=str,
-            help='authentication in the form user:password')
-        parser.add_argument('--host', type=str,
-            help='server to pull from', 
-            default='http://127.0.0.1:8000/api/')
-        parser.add_argument('--filename', type=str,
-            default="data/download.json")
-
     def push_content(self, page):
         page_id = str(page['id'])
         auth = self.auth

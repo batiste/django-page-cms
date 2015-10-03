@@ -6,13 +6,13 @@ $(function($) {
     if(!$("body").hasClass("change-list")) {
       return;
     }
-    if(!window.pages) {==
+    if(!window.pages) {
         return;
     }
     var pages = window.pages;
     var static_url = window.static_url;
     var django = window.django;
-    var action = false;
+    var action = false; 
     var selected_page = false;
     var changelist = $('#changelist');
 

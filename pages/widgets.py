@@ -10,7 +10,8 @@ from pages.widgets_registry import register_widget
 from django.conf import settings
 from django import forms
 from django.forms import TextInput, Textarea, HiddenInput
-from django.forms import MultiWidget, FileInput
+from django.forms import MultiWidget
+from django.forms import FileInput as DFileInput
 from django.forms.utils import flatatt
 from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
@@ -57,40 +58,19 @@ class RichTextarea(Textarea):
 register_widget(RichTextarea)
 
 
-class ImageInput(FileInput):
-
-    def __init__(self, page=None, language=None, attrs=None, **kwargs):
-        self.language = language
-        self.page = page
-        super(ImageInput, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None, **kwargs):
-        if not self.page:
-            field_content = _('Please save the page to show the image field')
-        else:
-            field_content = ''
-            if value:
-                field_content += _('Current file: %s<br/>') % value
-            field_content += super(ImageInput, self).render(name, attrs)
-            if value:
-                field_content += '''<br><label for="%s-delete">%s</label>
-                    <input name="%s-delete" id="%s-delete"
-                    type="checkbox" value="true">
-                    ''' % (name, _('Delete image'), name, name)
-        return mark_safe(field_content)
-register_widget(ImageInput)
-
-
-class FileInput(FileInput):
+class FileInput(DFileInput):
 
     def __init__(self, page=None, language=None, attrs=None, **kwargs):
         self.language = language
         self.page = page
         super(FileInput, self).__init__(attrs)
 
+    please_save_msg = _('Please save the page to show the file field')
+    delete_msg = _('Delete file')
+
     def render(self, name, value, attrs=None, **kwargs):
         if not self.page:
-            field_content = _('Please save the page to show the file field')
+            field_content = self.please_save_msg
         else:
             field_content = ''
             if value:
@@ -100,9 +80,17 @@ class FileInput(FileInput):
                 field_content += '''<br><label for="%s-delete">%s</label>
                     <input name="%s-delete" id="%s-delete"
                     type="checkbox" value="true">
-                    ''' % (name, _('Delete file'), name, name)
+                    ''' % (name, self.delete_msg, name, name)
         return mark_safe(field_content)
 register_widget(FileInput)
+
+
+class ImageInput(FileInput):
+
+    please_save_msg = _('Please save the page to show the image field')
+    delete_msg = _('Delete image')
+
+register_widget(ImageInput)
 
 
 class LanguageChoiceWidget(TextInput):

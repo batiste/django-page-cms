@@ -6,10 +6,12 @@ $(function($) {
     if(!$("body").hasClass("change-list")) {
       return;
     }
-    if(!window.pages) {
+    if(!window.pages) {==
         return;
     }
     var pages = window.pages;
+    var static_url = window.static_url;
+    var django = window.django;
     var action = false;
     var selected_page = false;
     var changelist = $('#changelist');
@@ -77,7 +79,7 @@ $(function($) {
     // Add a page id to the list of expanded pages
     function add_expanded(id) {
         var expanded = get_expanded();
-        if ($.inArray(id, expanded) == -1) {
+        if ($.inArray(id, expanded) === -1) {
             expanded.push(id);
             set_expanded(expanded);
         }
@@ -110,7 +112,7 @@ $(function($) {
     // Add the event hanlder to handle the changes of the publication status through ajax
     // In IE, event delegation doesn't work for the onchange event, so we do it the old way
     function init_publish_hanlder(elements) {
-        $('.publish-select', elements).change(function (e) {
+        $('.publish-select', elements).change(function() {
             var url = this.name.split('status-')[1]+'/';
             var img = $(this).parent().find('img');
             pages.update_published_icon(url, this, img, 1);
@@ -177,7 +179,7 @@ $(function($) {
                 $('.expand-collapse', row).remove();
                 $('.insert', row).after('<img class="insert-loading" src="'+static_url+'pages/images/loading.gif" alt="Loading" />');
 
-                if (action == 'move') {
+                if (action === 'move') {
                     move_page(selected_page, position, id);
                 } else if (action === 'add') {
                     window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
@@ -192,7 +194,7 @@ $(function($) {
                     add_children(id, function (children) {
                         init_publish_hanlder(children);
                         // Update the move and add links of the inserted rows
-                        if (action == 'move') {
+                        if (action === 'move') {
                             var selected_row = $('#page-row-'+selected_page);
                             selected_row.addClass('selected');
                             selected_row.add(get_children(selected_page));
@@ -212,9 +214,7 @@ $(function($) {
         }
     });
 
-
-    var drag_clientx = false;
-    // will be better of not rewritting the table everytime
+    // will be better of not rewritting the table every     time
     function bind_sortable() {
         // Initialise the table for drag and drop
 
@@ -260,7 +260,7 @@ $(function($) {
                   var left = parseInt(possible_target.data('mptt-left'), 10);
                   var right = parseInt(possible_target.data('mptt-right'), 10);
                   var tree_id = parseInt(possible_target.data('mptt-tree-id'), 10);
-                  if(source_tree_id == tree_id && left > source_left && right < source_right) {
+                  if(source_tree_id === tree_id && left > source_left && right < source_right) {
                     return;
                   }
                   lines_position.push(
@@ -308,7 +308,7 @@ $(function($) {
             lines_position = [];
         });
 
-        $(document).on("click", ".move-top", function(e) {
+        $(document).on("click", ".move-top", function() {
             var target = choosen_line.id.split('page-row-')[1];
             move_page(line_id, "left", target);
             return false;

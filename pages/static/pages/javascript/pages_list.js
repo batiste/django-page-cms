@@ -129,7 +129,6 @@ $(function($) {
                 init_publish_hanlder(changelist);
                 pages.fade_color($('#page-row-'+selected_page).add(get_children(selected_page)));
                 action = selected_page = '';
-                //bind_sortable()
                 update_actions();
             }
         );
@@ -189,6 +188,7 @@ $(function($) {
     }
 
     function move_link(link, e) {
+        e.preventDefault();
         reset_states();
         action = 'move';
         selected_page = link.attr('id').split('move-link-')[1];
@@ -197,7 +197,6 @@ $(function($) {
             get_children(selected_page)
         ).addClass('highlighted');
         $('tr:not(.highlighted)', changelist).addClass('insertable');
-        return false;
     }
 
     // let's start event delegation
@@ -312,9 +311,6 @@ $(function($) {
               dialog.css("top", $(choosen_line).position().top+"px");
               dialog.css("left", (e.pageX - 20) +"px");
               dialog.show();
-              /*var target = choosen_line.id.split('page-row-')[1];
-              move_page(line_id, "first-child", target);*/
-              // choosen_line = false;
             }
 
             $(line).css("opacity", "1");

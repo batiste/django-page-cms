@@ -135,11 +135,75 @@ $(function($) {
         );
     }
 
+    function expand_collapse(link, e) {
+        e.preventDefault();
+        var id = link.attr('id').substring(1);
+        if (link.toggleClass('expanded').hasClass('expanded')) {
+            add_expanded(id);
+            add_children(id, function (children) {
+                init_publish_hanlder(children);
+                // Update the move and add links of the inserted rows
+                if (action === 'move') {
+                    var selected_row = $('#page-row-'+selected_page);
+                    selected_row.addClass('selected');
+                    selected_row.add(get_children(selected_page));
+                    selected_row.addClass('highlighted');
+                    // this could become quite slow with a lot of pages
+                    $('tr:not(.highlighted)', changelist).addClass('insertable');
+                } else if (action === 'add') {
+                    $('#page-row-'+selected_page).addClass('highlighted insertable');
+                }
+            });
+        } else {
+            rem_expanded(id);
+            rem_children(id);
+        }
+    }
+
+    function move_target(link, e) {
+        e.preventDefault();
+        var position = link.attr('class').match(/left|right|first-child/)[0];
+        var id = link.parent().attr('id').split('move-target-')[1];
+        var row = $('#page-row-'+selected_page);
+
+        changelist.removeClass('insert-add insert-move');
+        $('tr', changelist).removeClass('selected insertable');
+        $('.expand-collapse', row).remove();
+        $('.insert', row).after('<img class="insert-loading" src="'+static_url+'pages/images/loading.gif" alt="Loading" />');
+
+        if (action === 'move') {
+            move_page(selected_page, position, id);
+        } else if (action === 'add') {
+            window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
+        }
+        return false;
+    }
+
+    function add_link(link, e) {
+        e.preventDefault();
+        reset_states();
+        action = 'add';
+        selected_page = link.attr('id').split('add-link-')[1];
+        changelist.addClass('insert-add');
+        $('#page-row-'+selected_page).addClass('selected').addClass('highlighted insertable');
+    }
+
+    function move_link(link, e) {
+        reset_states();
+        action = 'move';
+        selected_page = link.attr('id').split('move-link-')[1];
+        changelist.addClass('insert-move');
+        $('#page-row-'+selected_page).addClass('selected').add(
+            get_children(selected_page)
+        ).addClass('highlighted');
+        $('tr:not(.highlighted)', changelist).addClass('insertable');
+        return false;
+    }
+
     // let's start event delegation
     changelist.click(function (e) {
         var target = $(e.target);
         var link = target.closest('a').andSelf().filter('a');
-        var id;
 
         if (!target.hasClass('help') && link.length) {
             // Toggles a previous action to come back to the initial state
@@ -149,72 +213,24 @@ $(function($) {
             }
             // Ask where to move the page to
             else if (link.hasClass('movelink')) {
-                reset_states();
-                action = 'move';
-                selected_page = link.attr('id').split('move-link-')[1];
-                changelist.addClass('insert-move');
-                $('#page-row-'+selected_page).addClass('selected').add(
-                    get_children(selected_page)
-                ).addClass('highlighted');
-                $('tr:not(.highlighted)', changelist).addClass('insertable');
-                return false;
+                move_link(link, e);
             }
             // Ask where to insert the new page
             else if (link.hasClass('addlink')) {
-                reset_states();
-                action = 'add';
-                selected_page = link.attr('id').split('add-link-')[1];
-                changelist.addClass('insert-add');
-                $('#page-row-'+selected_page).addClass('selected').addClass('highlighted insertable');
-                return false;
+                add_link(link, e);
             }
             // Move or add the page and come back to the initial state
             else if (link.hasClass('move-target')) {
-                var position = link.attr('class').match(/left|right|first-child/)[0];
-                id = link.parent().attr('id').split('move-target-')[1];
-                var row = $('#page-row-'+selected_page);
-
-                changelist.removeClass('insert-add insert-move');
-                $('tr', changelist).removeClass('selected insertable');
-                $('.expand-collapse', row).remove();
-                $('.insert', row).after('<img class="insert-loading" src="'+static_url+'pages/images/loading.gif" alt="Loading" />');
-
-                if (action === 'move') {
-                    move_page(selected_page, position, id);
-                } else if (action === 'add') {
-                    window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
-                }
-                return false;
+                move_target(link, e);
             }
             // Expand or collapse pages
             else if (link.hasClass('expand-collapse')) {
-                id = link.attr('id').substring(1);
-                if (link.toggleClass('expanded').hasClass('expanded')) {
-                    add_expanded(id);
-                    add_children(id, function (children) {
-                        init_publish_hanlder(children);
-                        // Update the move and add links of the inserted rows
-                        if (action === 'move') {
-                            var selected_row = $('#page-row-'+selected_page);
-                            selected_row.addClass('selected');
-                            selected_row.add(get_children(selected_page));
-                            selected_row.addClass('highlighted');
-                            // this could become quite slow with a lot of pages
-                            $('tr:not(.highlighted)', changelist).addClass('insertable');
-                        } else if (action === 'add') {
-                            $('#page-row-'+selected_page).addClass('highlighted insertable');
-                        }
-                    });
-                } else {
-                    rem_expanded(id);
-                    rem_children(id);
-                }
-                return false;
+                expand_collapse(link, e);
             }
         }
     });
 
-    // will be better of not rewritting the table every     time
+    // will be better of not rewritting the table every time
     function bind_sortable() {
         // Initialise the table for drag and drop
 

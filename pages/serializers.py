@@ -11,6 +11,7 @@ class ContentSerializer(serializers.ModelSerializer):
 class PageSerializer(serializers.ModelSerializer):
     content_set = ContentSerializer(many=True, read_only=True)
     creation_date = serializers.DateTimeField()
+    uuid = serializers.UUIDField()
 
     class Meta:
         model = Page
@@ -19,7 +20,7 @@ class PageSerializer(serializers.ModelSerializer):
 
         attributes = ('status', 'delegate_to', 'freeze_date', 'creation_date',
             'publication_end_date', 'template', 'redirect_to_url',
-            'last_modification_date', 'publication_date')
+            'last_modification_date', 'publication_date', 'uuid')
 
         admin = User.objects.filter(is_superuser=True)[0]
 

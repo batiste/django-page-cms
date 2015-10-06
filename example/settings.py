@@ -37,7 +37,7 @@ TIME_ZONE = 'America/Chicago'
 # to load the internationalization machinery.
 USE_I18N = True
 
-MEDIA_ROOT = STATIC_ROOT = os.path.join(PROJECT_DIR, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
@@ -97,11 +97,11 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.staticfiles',
     # install django-flat-theme
     'flat',
     'django.contrib.admin',
     'django.contrib.sites',
-    'django.contrib.staticfiles',
     'pages.testproj.documents',
     'pages',
     'pages.plugins.jsonexport',
@@ -138,14 +138,11 @@ languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
 
 
-PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
+PAGE_DEFAULT_TEMPLATE = 'index.html'
 
 
 PAGE_TEMPLATES = (
-    ('pages/examples/nice.html', 'nice one'),
-    ('pages/examples/cool.html', 'cool one'),
-    ('pages/examples/files.html', 'file upload'),
-    ('pages/examples/ckeditor.html', 'ckeditor example'),
+    ('index.html', 'Bootstrap index'),
 )
 
 PAGE_SANITIZE_USER_INPUT = True

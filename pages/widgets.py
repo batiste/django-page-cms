@@ -20,7 +20,7 @@ from django.utils.html import format_html
 from django.utils.encoding import force_text
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from os.path import join
 

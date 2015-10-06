@@ -20,6 +20,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 from mptt.models import MPTTModel
+import uuid
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
@@ -68,6 +69,9 @@ class Page(MPTTModel):
     ANCESTORS_KEY = 'ancestors_%d'
     CHILDREN_KEY = 'children_%d'
     PUB_CHILDREN_KEY = 'pub_children_%d'
+
+    # used to identify pages across different databases
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
 

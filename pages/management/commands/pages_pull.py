@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 import requests
 import os
-from pages.management.commands.utils import APICommand
+from pages.management.utils import APICommand
 
 class Command(APICommand):
     help = 'Pull data from a Django Page CMS API'

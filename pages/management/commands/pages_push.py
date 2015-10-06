@@ -3,7 +3,7 @@ import requests
 import os
 import json
 import sys
-from pages.management.commands.utils import APICommand
+from pages.management.utils import APICommand
 
 class Command(APICommand):
     help = 'Push data to a Django Page CMS API'
@@ -30,7 +30,7 @@ class Command(APICommand):
 
         headers = {'Content-Type': 'application/json'}
 
-        server_page = self.datetime_mapping.get(page['creation_date'], None)
+        server_page = self.uuid_mapping.get(page['uuid'], None)
 
         # we don't change the parent if for a reason or another it is
         # not present on the server
@@ -55,8 +55,7 @@ class Command(APICommand):
                 new_page = json.loads(response.text)
                 new_page['content_set'] = page['content_set']
                 self.server_id_mapping[page['id']] = new_page['id']
-                self.datetime_mapping[new_page['creation_date']] = new_page
-                self.id_mapping[new_page['id']] = new_page
+                self.uuid_mapping[new_page['uuid']] = new_page
                 page = new_page
 
         if response.status_code != 200 and response.status_code != 201:
@@ -70,8 +69,7 @@ class Command(APICommand):
     def handle(self, *args, **options):
         self.parse_options(options)
 
-        self.datetime_mapping = {}
-        self.id_mapping = {}
+        self.uuid_mapping = {}
         self.server_id_mapping = {}
 
         self.cprint("Fetching the state of the pages on the server " + self.host)
@@ -82,8 +80,7 @@ class Command(APICommand):
         self.current_page_list = json.loads(response.text)['results']
         
         for page in self.current_page_list:
-            self.datetime_mapping[page['creation_date']] = page
-            self.id_mapping[page['id']] = page
+            self.uuid_mapping[page['uuid']] = page
 
         with open(self.filename, "r") as f:
             data = f.read()

@@ -175,7 +175,6 @@ $(function($) {
         } else if (action === 'add') {
             window.location.href += 'add/'+$.query.set('target', id).set('position', position).toString();
         }
-        return false;
     }
 
     function add_link(link, e) {

@@ -17,7 +17,7 @@ class APICommand(BaseCommand):
         self.host = host
         self.filename = options['filename']
 
-    def http_error(response):
+    def http_error(self, response):
         with open('error.html', "w") as f:
             f.write(response.text)
         raise ValueError("Error type " + str(response.status_code) + " file written: error.html")

@@ -29,7 +29,7 @@ class TemplateTestCase(TestCase):
         p1 = self.new_page(content={'inher':'parent-content'})
         p2 = self.new_page()
         template = django.template.loader.get_template('pages/tests/test7.html')
-        context = Context({'current_page': p2, 'lang':'en-us'})
+        context = {'current_page': p2, 'lang':'en-us'}
         self.assertEqual(template.render(context), '')
 
         p2.move_to(p1, position='first-child')
@@ -37,7 +37,7 @@ class TemplateTestCase(TestCase):
 
     def test_get_page_template_tag(self):
         """Test get_page template tag."""
-        context = Context({})
+        context = {}
         pl1 = """{% load pages_tags %}{% get_page "get-page-slug" as toto %}{{ toto }}"""
         template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'None')
@@ -47,7 +47,7 @@ class TemplateTestCase(TestCase):
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
-        context = Context({'current_page': page, 'lang': 'en-us'})
+        context = {'current_page': page, 'lang': 'en-us'}
 
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
         template = self.get_template_from_string(pl1)
@@ -62,7 +62,7 @@ class TemplateTestCase(TestCase):
         setattr(settings, "DEBUG", True)
 
         page = self.new_page({'wrong': '{% wrong %}'})
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = {'current_page': page, 'lang':'en-us'}
 
         pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
         template = self.get_template_from_string(pl2)
@@ -96,7 +96,7 @@ class TemplateTestCase(TestCase):
     def test_placeholder_quoted_name(self):
         """Test placeholder name with quotes."""
         page = self.new_page()
-        context = Context({'current_page': page, 'lang': 'en-us'})
+        context = {'current_page': page, 'lang': 'en-us'}
         placeholder = PlaceholderNode("test name")
         placeholder.save(page, 'en-us', 'some random value', False)
 
@@ -116,13 +116,13 @@ class TemplateTestCase(TestCase):
         setattr(settings, "DEBUG", True)
         page = self.new_page({'title':'<b>{{ "hello"|capfirst }}</b>'})
         page.save()
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = {'current_page': page, 'lang':'en-us'}
         pl_parsed = """{% load pages_tags %}{% placeholder title parsed %}"""
         template = self.get_template_from_string(pl_parsed)
         self.assertEqual(template.render(context), '<b>Hello</b>')
         setattr(settings, "DEBUG", False)
         page = self.new_page({'title':'<b>{{ "hello"|wrong_filter }}</b>'})
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = {'current_page': page, 'lang':'en-us'}
         self.assertEqual(template.render(context), '')
 
     def test_placeholder_untranslated_content(self):
@@ -143,7 +143,7 @@ class TemplateTestCase(TestCase):
         page = self.new_page()
         template = django.template.loader.get_template(
                 'pages/tests/untranslated.html')
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = {'current_page': page, 'lang':'en-us'}
         self.assertEqual(template.render(context), '')
 
     def test_get_content_tag(self):

@@ -14,6 +14,8 @@ from django import template
 import re
 from datetime import datetime
 
+dummy_context = Context()
+
 def get_now():
     if django_settings.USE_TZ:
         return datetime.utcnow().replace(tzinfo=timezone.utc)
@@ -25,6 +27,7 @@ def get_placeholders(template_name):
 
     :param template_name: the name of the template file
     """
+    dummy_context.template = template.Template("")
     try:
         temp_wrapper = template.loader.get_template(template_name)
     except template.TemplateDoesNotExist:
@@ -55,9 +58,6 @@ def get_placeholders(template_name):
 
     return pfiltered
 
-
-dummy_context = Context()
-dummy_context.template = template.Template("")
 
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode

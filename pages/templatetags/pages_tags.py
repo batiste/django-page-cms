@@ -108,12 +108,8 @@ def pages_siblings_menu(context, page, url='/'):
     lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
     page = get_page_from_string_or_id(page, lang)
     if page:
-        if page.parent:
-            root = page.parent
-        else:
-            root = page
-        children = root.get_children_for_frontend()
-        context.update({'children': children, 'page': page})
+        siblings = page.get_siblings()
+        context.update({'children': siblings, 'page': page})
     return context
 pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
                                     takes_context=True)(pages_siblings_menu)
@@ -263,21 +259,6 @@ pages_breadcrumb = register.inclusion_tag(
 
 
 """Tags"""
-
-
-class FakeCSRFNode(template.Node):
-    """Fake CSRF node for django 1.1.1"""
-    def render(self, context):
-        return ''
-
-
-def do_csrf_token(parser, token):
-    return FakeCSRFNode()
-try:
-    from django.views.decorators.csrf import csrf_protect
-except ImportError:
-    do_csrf_token = register.tag('csrf_token', do_csrf_token)
-
 
 class GetPageNode(template.Node):
     """get_page Node"""

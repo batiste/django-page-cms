@@ -8,7 +8,6 @@ from pages.phttp import get_slug
 from django.db import models, connection
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
 from django.db.models import Avg, Max, Min, Count
 from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
@@ -28,24 +27,6 @@ class PageManager(TreeManager):
             """Restrict operations to pages on the current site."""
             return super(PageManager, self).get_query_set().filter(
                 sites=global_settings.SITE_ID)
-
-    def populate_pages(self, parent=None, child=5, depth=5):
-        """Create a population of :class:`Page <pages.models.Page>`
-        for testing purpose."""
-        from pages.models import Content
-        author = User.objects.all()[0]
-        if depth == 0:
-            return
-        p = self.model(parent=parent, author=author,
-            status=self.model.PUBLISHED)
-        p.save()
-        p = self.get(id=p.id)
-        Content(body='page-' + str(p.id), type='title',
-            language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
-        Content(body='page-' + str(p.id), type='slug',
-            language=settings.PAGE_DEFAULT_LANGUAGE, page=p).save()
-        for child in range(1, child + 1):
-            self.populate_pages(parent=p, child=child, depth=(depth - 1))
 
     def on_site(self, site_id=None):
         """Return a :class:`QuerySet` of pages that are published on the site

@@ -40,8 +40,12 @@ USE_I18N = True
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static/')
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, "bootstrap"),
+]
 
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
@@ -111,7 +115,6 @@ INSTALLED_APPS = (
     #'ckeditor', # if commented a fallback widget will be used
 )
 
-PAGE_TINYMCE = False
 PAGE_TAGGING = False
 
 # Default language code for this installation. All choices can be found here:
@@ -144,8 +147,6 @@ PAGE_DEFAULT_TEMPLATE = 'index.html'
 PAGE_TEMPLATES = (
     ('index.html', 'Bootstrap index'),
 )
-
-PAGE_SANITIZE_USER_INPUT = True
 
 SITE_ID = 1
 PAGE_USE_SITE_ID = True

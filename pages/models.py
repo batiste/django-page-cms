@@ -14,7 +14,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.sites.models import Site
+if settings.PAGE_USE_SITE_ID:
+    from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
 from django.utils.encoding import python_2_unicode_compatible
 

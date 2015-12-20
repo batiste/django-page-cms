@@ -153,7 +153,7 @@ class TemplateTestCase(TestCase):
         page_data = {'title': 'test', 'slug': 'test'}
         page = self.new_page(page_data)
 
-        context = RequestContext(MockRequest(), {'page': page})
+        context = {'page': page}
         template = Template('{% load pages_tags %}'
                             '{% get_content page "title" "en-us" as content %}'
                             '{{ content }}')
@@ -176,21 +176,21 @@ class TemplateTestCase(TestCase):
         self.assertEqual(page.slug(language='en-us'), 'english')
 
         # default
-        context = RequestContext(MockRequest(), {'page': page})
+        context = {'page': page}
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'english')
 
         # french specified
-        context = RequestContext(MockRequest(), {'page': page, 'lang': 'fr'})
+        context = {'page': page, 'lang': 'fr'}
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
         self.assertEqual(template.render(context), 'french')
 
         # english specified
-        context = RequestContext(MockRequest(), {'page': page, 'lang': 'en-us'})
+        context = {'page': page, 'lang': 'en-us'}
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
@@ -205,8 +205,7 @@ class TemplateTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = RequestContext(MockRequest(), {'page': page, 'lang':'en-us',
-            'path':'/page-1/'})
+        context = {'page': page, 'lang':'en-us', 'path':'/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" "en-us" %}')
         self.assertEqual(template.render(context), page_data['title'])
@@ -223,8 +222,7 @@ class TemplateTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = RequestContext(MockRequest(), {'page': page, 'lang':'en-us',
-            'path':'/page-1/'})
+        context = {'page': page, 'lang':'en-us', 'path':'/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% pages_siblings_menu page %}')
         renderer = template.render(context)
@@ -238,10 +236,10 @@ class TemplateTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
+        # TODO: need fixing
         request = MockRequest()
         request.COOKIES['tree_expanded'] = "%d,10,20" % page.id
-        context = RequestContext(request, {'page': page, 'lang':'en-us',
-            'path':'/page-1/'})
+        context = {'page': page, 'lang':'en-us', 'path':'/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% pages_admin_menu page %}')
         renderer = template.render(context) 
@@ -260,7 +258,7 @@ class TemplateTestCase(TestCase):
         self.assertEqual(page.get_url_path(language='en-us'),
             self.get_page_url('english'))
 
-        context = RequestContext(MockRequest(), {'page': page})
+        context = {'page': page}
         template = Template('{% load pages_tags %}'
                             '{% show_absolute_url page "en-us" %}')
         self.assertEqual(template.render(context),
@@ -278,8 +276,7 @@ class TemplateTestCase(TestCase):
         content = Content(page=page, language='en-us', type='test_id',
             body=page.id)
         content.save()
-        context = Context({'current_page': page})
-        context = RequestContext(MockRequest(), context)
+        context = {'current_page': page}
         template = Template('{% load pages_tags %}'
                             '{% placeholder test_id as str %}'
                             '{% get_page str as p %}'
@@ -290,8 +287,7 @@ class TemplateTestCase(TestCase):
         """Test get_page_from_string_or_id with an slug context variable."""
         page = self.new_page({'slug': 'test'})
 
-        context = Context({'current_page': page})
-        context = RequestContext(MockRequest(), context)
+        context = {'current_page': page}
         template = Template('{% load pages_tags %}'
                             '{% placeholder slug as str %}'
                             '{% get_page str as p %}'
@@ -305,7 +301,7 @@ class TemplateTestCase(TestCase):
 
     def test_get_page_template_tag_with_page_arg_as_id(self):
         """Test get_page template tag with page argument given as a page id"""
-        context = Context({})
+        context = {}
         pl1 = """{% load pages_tags %}{% get_page 1 as toto %}{{ toto }}"""
         template = self.get_template_from_string(pl1)
         page = self.new_page({'id': 1, 'slug': 'get-page-slug'})
@@ -313,7 +309,7 @@ class TemplateTestCase(TestCase):
 
     def test_get_page_template_tag_with_variable_containing_page_id(self):
         """Test get_page template tag with page argument given as a page id"""
-        context = Context({})
+        context = {}
         pl1 = ('{% load pages_tags %}{% placeholder somepage as page_id %}'
             '{% get_page page_id as toto %}{{ toto }}')
         template = self.get_template_from_string(pl1)
@@ -324,7 +320,7 @@ class TemplateTestCase(TestCase):
 
     def test_get_page_template_tag_with_variable_containing_page_slug(self):
         """Test get_page template tag with page argument given as a page id"""
-        context = Context({})
+        context = {}
         pl1 = ('{% load pages_tags %}{% placeholder somepage as slug %}'
             '{% get_page slug as toto %}{{ toto }}')
         template = self.get_template_from_string(pl1)
@@ -344,7 +340,7 @@ class TemplateTestCase(TestCase):
 
         template = self.get_template_from_string(tpl)
         page = self.new_page({'slug': 'get-page-slug'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(template.render(context), 'get-page-slug')
 
     def test_get_filename(self):
@@ -360,13 +356,13 @@ class TemplateTestCase(TestCase):
 
         template = self.get_template_from_string(tpl)
         page = self.new_page({'p1': '{"a":1}'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(template.render(context), '1')
 
         tpl = ("{% load pages_tags %}{% jsonplaceholder p1 %}")
         template = self.get_template_from_string(tpl)
         page = self.new_page({'p1': 'wrong'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(template.render(context), 'wrong')
 
     def test_file_placeholder(self):
@@ -374,7 +370,7 @@ class TemplateTestCase(TestCase):
         
         template = self.get_template_from_string(tpl)
         page = self.new_page({'f1': 'filename'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(template.render(context), 'filename')
         
     def test_image_placeholder(self):
@@ -382,7 +378,7 @@ class TemplateTestCase(TestCase):
         
         template = self.get_template_from_string(tpl)
         page = self.new_page({'f1': 'filename'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(template.render(context), 'filename')
         
     def test_contact_placeholder(self):
@@ -390,7 +386,7 @@ class TemplateTestCase(TestCase):
         
         template = self.get_template_from_string(tpl)
         page = self.new_page({'contact': 'hello'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         
         import logging
         logger = logging.getLogger("pages")
@@ -402,5 +398,5 @@ class TemplateTestCase(TestCase):
             
         logger.setLevel(lvl)
             
-        context = Context({'current_page': page, 'request':get_request_mock()})
+        context = {'current_page': page, 'request':get_request_mock()}
         self.assertTrue("<form" in template.render(context))

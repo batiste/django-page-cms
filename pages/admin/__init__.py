@@ -92,7 +92,7 @@ class PageAdmin(admin.ModelAdmin):
         from django.conf.urls import patterns, url, include
 
         # Admin-site-wide views.
-        urlpatterns = patterns('',
+        urlpatterns = [
             url(r'^$', self.list_pages, name='admin:pages_page_changelist'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
@@ -108,7 +108,7 @@ class PageAdmin(admin.ModelAdmin):
                 move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 change_status, name='page-change-status'),
-        )
+        ]
 
         urlpatterns += super(PageAdmin, self).urls
 

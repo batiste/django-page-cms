@@ -142,6 +142,16 @@ PAGE_LANGUAGE_MAPPING = language_mapping
 
 PAGE_DEFAULT_TEMPLATE = 'pages/examples/index.html'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': TEMPLATE_CONTEXT_PROCESSORS
+        },
+    },
+]
+
 PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),

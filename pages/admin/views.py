@@ -37,8 +37,7 @@ def list_pages_ajax(request, invalid_move=False):
         'pages': pages,
     }
     return render_to_response("admin/pages/page/change_list_table.html", 
-        context,
-        context_instance=RequestContext(request))
+        context)
 list_pages_ajax = staff_member_required(list_pages_ajax)
 
 @csrf_exempt
@@ -94,7 +93,7 @@ def traduction(request, page_id, language_id):
         'lang':lang,
         'language_error':language_error,
         'placeholders':placeholders,
-    }, context_instance=RequestContext(request))
+    })
 traduction = staff_member_required(traduction)
 
 def get_content(request, page_id, content_id):
@@ -141,5 +140,5 @@ def sub_menu(request, page_id):
         'page':page,
         'pages':pages,
         'page_languages':page_languages,
-    },        context_instance=RequestContext(request))
+    })
 sub_menu = staff_member_required(sub_menu)

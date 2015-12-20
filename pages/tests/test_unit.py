@@ -121,21 +121,6 @@ class UnitTestCase(TestCase):
         self.assertEqual(reg.get_choices(),
             [('', 'No delegation'), ('Documents', 'Display documents')])
 
-    def test_permissions(self):
-        # TODO: re-implement
-        pass
-
-    def test_managers(self):
-        # TODO: this test seems dependant from other tests
-        self.set_setting("PAGE_USE_SITE_ID", False)
-        Page.objects.populate_pages(child=2, depth=2)
-        for p in Page.objects.all():
-            p.invalidate()
-        self.assertEqual(Page.objects.count(), 3)
-        self.assertEqual(Page.objects.published().count(), 3)
-        self.assertEqual(Page.objects.drafts().count(), 0)
-        self.assertEqual(Page.objects.expired().count(), 0)
-
     def test_get_page_ids_by_slug(self):
         """
         Test that get_page_ids_by_slug work as intented.

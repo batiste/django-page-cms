@@ -9,7 +9,6 @@ from django.contrib.sitemaps import Sitemap
 from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
@@ -82,8 +81,7 @@ class Details(object):
         if kwargs.get('only_context', False):
             return context
         template_name = kwargs.get('template_name', template_name)
-        response = render_to_response(template_name,
-            RequestContext(request, context))
+        response = render_to_response(template_name, context)
         current_page = context['current_page']
         return response
 

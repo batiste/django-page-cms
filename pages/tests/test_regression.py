@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-from django.template import Template, RequestContext, Context
-from django.template import RequestContext, TemplateDoesNotExist
+from django.template import Template
+from django.template import TemplateDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import loader
 from pages.placeholders import PlaceholderNode, get_filename
@@ -91,7 +91,7 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test2.html')
-        render = temp.render(RequestContext(request, {}))
+        render = temp.render({})
         self.assertTrue('test-162-slug' in render)
 
     def test_bug_172(self):
@@ -110,13 +110,10 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test3.html')
-        render = temp.render(RequestContext(request, {'page':page}))
+        render = temp.render({'page':page})
         self.assertTrue('title-en-us' in render)
 
-        render = temp.render(RequestContext(
-            request,
-            {'page':page, 'lang':'fr-ch'}
-        ))
+        render = temp.render({'page':page, 'lang':'fr-ch'})
         self.assertTrue('title-fr-ch' in render)
 
 
@@ -126,7 +123,7 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test4.html')
-        render = temp.render(RequestContext(request, {}))
+        render = temp.render({})
         self.assertTrue(page.title() in render)
 
     def test_bug_178(self):
@@ -134,7 +131,7 @@ class RegressionTestCase(TestCase):
         from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test5.html')
-        render = temp.render(RequestContext(request, {'page':None}))
+        render = temp.render({'page':None})
 
     def test_language_fallback_bug(self):
         """Language fallback doesn't work properly."""
@@ -199,7 +196,7 @@ class RegressionTestCase(TestCase):
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
-        render = temp.render(RequestContext(request, {'current_page':page}))
+        render = temp.render({'current_page':page})
 
         self.assertTrue('t1_'+page.get_url_path() in render)
         self.assertTrue('t2_'+page.get_url_path() in render)
@@ -240,7 +237,7 @@ class RegressionTestCase(TestCase):
         page = self.new_page()
         placeholder = PlaceholderNode('hello world', page=page)
         placeholder.save(page, 'fr-ch', 'hello!', True)
-        context = Context({'current_page': page, 'lang':'fr-ch'})
+        context = {'current_page': page, 'lang':'fr-ch'}
         pl1 = """{% load pages_tags %}{% placeholder "hello world" %}"""
         template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'hello!')
@@ -251,7 +248,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=209
         """
         page = self.new_page()
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = {'current_page': page, 'lang':'en-us'}
 
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
         template = self.get_template_from_string(pl1)
@@ -263,7 +260,7 @@ class RegressionTestCase(TestCase):
         """
         p1 = self.new_page(content={'slug':'test', 'one':'one', 'two': 'two'})
         template = django.template.loader.get_template('pages/tests/extends.html')
-        context = Context({'current_page': p1, 'lang':'en-us'})
+        context = {'current_page': p1, 'lang':'en-us'}
         renderer = template.render(context)
         self.assertTrue('one' in renderer)
         self.assertTrue('two' in renderer)

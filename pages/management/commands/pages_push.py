@@ -77,7 +77,7 @@ class Command(APICommand):
         response = requests.get(host, auth=self.auth)
         if response.status_code != 200:
             self.http_error(response)
-        self.current_page_list = json.loads(response.text)['results']
+         self.current_page_list = json.loads(response.text)
         
         for page in self.current_page_list:
             self.uuid_mapping[page['uuid']] = page
@@ -85,6 +85,6 @@ class Command(APICommand):
         with open(self.filename, "r") as f:
             data = f.read()
             pages = json.loads(data)
-            for page in pages['results']:
+            for page in pages:
                 self.push_page(page)
 

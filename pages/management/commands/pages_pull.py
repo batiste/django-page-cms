@@ -12,7 +12,7 @@ class Command(APICommand):
         self.cprint("Fetching page data on " + self.host)
         self.host = self.host + '?format=json'
 
-        page_list = requests.get(self.host, auth=self.auth)
+        page_list = requests.get(self.host, auth=self.auth, timeout=5)
         if page_list.status_code != 200:
             raise ValueError(page_list.status_code)
         json = page_list.text

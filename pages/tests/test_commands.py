@@ -18,7 +18,7 @@ class CommandTestCase(TestCase, LiveServerTestCase):
         with open(filename, "r") as f:
             data = f.read()
             pages = json.loads(data)
-            for content in pages['results'][0]['content_set']:
+            for content in pages[0]['content_set']:
                  self.assertTrue(content['body'] in ['pull-page', 'pull-slug'])
 
     def test_push(self):

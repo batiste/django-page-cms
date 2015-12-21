@@ -4,7 +4,6 @@ import os
 PROJECT_DIR = os.path.dirname(__file__)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -47,19 +46,13 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "bootstrap"),
 ]
 
-
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+_TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
@@ -67,6 +60,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "pages.context_processors.media",
 )
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(PROJECT_DIR, 'templates')],
+        'OPTIONS': {
+            'context_processors': _TEMPLATE_CONTEXT_PROCESSORS
+        },
+    },
+]
 
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -80,13 +84,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'example.urls'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR, 'templates'),
-)
 
 #CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
@@ -142,7 +139,6 @@ LANGUAGES = languages
 
 
 PAGE_DEFAULT_TEMPLATE = 'index.html'
-
 
 PAGE_TEMPLATES = (
     ('index.html', 'Bootstrap index'),

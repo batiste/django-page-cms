@@ -4,6 +4,22 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.8.2
+=============
+
+Released the 20 of December 2015.
+
+    * Migrations files were not included in 1.8.1
+    * Add a pages_push and pages_pull command that permit to pull and push content between 
+      different hosts in rather smart and non breaking way.
+
+Release 1.8.1
+=============
+
+Released the 24 of September 2015.
+
+    * Added support for a REST API using Django Rest Framework (http://www.django-rest-framework.org/)
+    * Refactoring
 
 Release 1.8.0
 =============

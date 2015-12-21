@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 import requests
 import os
+import sys
 
 class APICommand(BaseCommand):
     help = 'Base API command'

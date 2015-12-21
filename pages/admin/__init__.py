@@ -93,7 +93,7 @@ class PageAdmin(admin.ModelAdmin):
 
         # Admin-site-wide views.
         urlpatterns = [
-            url(r'^$', self.list_pages, name='admin_pages_page_changelist'),
+            url(r'^$', self.list_pages, name='page-changelist'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
             url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',

@@ -95,7 +95,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.login()
         page_1 = self.new_page({'slug':'p1'})
         page_2 = self.new_page({'slug':'p2'})
-        self.visit(reverse('admin_pages_page_changelist'))
+        self.visit(reverse('page-changelist'))
 
         h1 = self.browser.find_element_by_css_selector('#content h1')
         self.assertEqual(h1.text, 'Select page to change')

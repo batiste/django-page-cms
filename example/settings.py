@@ -144,6 +144,8 @@ PAGE_TEMPLATES = (
     ('index.html', 'Bootstrap index'),
 )
 
+PAGE_API_ENABLED = True
+
 SITE_ID = 1
 PAGE_USE_SITE_ID = True
 

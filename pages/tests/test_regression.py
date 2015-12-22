@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 """Django page CMS test suite module"""
-from django.template import Template
+from django.template import Context
 from django.template import TemplateDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import loader
+from django.core.urlresolvers import reverse
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.utils import get_placeholders
+from pages.phttp import get_request_mock
 
 import django
 import six
 
 from pages.models import Page, Content
 from pages.tests.testcase import TestCase
+
 
 class RegressionTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -88,7 +91,6 @@ class RegressionTestCase(TestCase):
         page_data['slug'] = 'test-162-slug'
         response = c.post('/admin/pages/page/add/', page_data)
         self.assertRedirects(response, '/admin/pages/page/')
-        from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test2.html')
         render = temp.render({})
@@ -107,7 +109,6 @@ class RegressionTestCase(TestCase):
         Content(page=page, type='title', language='fr-ch',
             body="title-fr-ch").save()
 
-        from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test3.html')
         render = temp.render({'page':page})
@@ -120,7 +121,6 @@ class RegressionTestCase(TestCase):
     def test_page_id_in_template(self):
         """Get a page in the templates via the page id."""
         page = self.create_new_page()
-        from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test4.html')
         render = temp.render({})
@@ -128,7 +128,6 @@ class RegressionTestCase(TestCase):
 
     def test_bug_178(self):
         """http://code.google.com/p/django-page-cms/issues/detail?id=178"""
-        from pages.utils import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test5.html')
         render = temp.render({'page':None})
@@ -192,7 +191,6 @@ class RegressionTestCase(TestCase):
     def test_urls_in_templates(self):
         """Test different ways of displaying urls in templates."""
         page = self.create_new_page()
-        from pages.phttp import get_request_mock
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test7.html')
         temp = loader.get_template('pages/tests/test6.html')
@@ -203,7 +201,6 @@ class RegressionTestCase(TestCase):
         self.assertTrue('t3_'+page.get_url_path() in render)
         self.assertTrue('t4_'+page.slug() in render)
         self.assertTrue('t5_'+page.slug() in render)
-
 
     def test_placeholder_cache_bug(self):
         """There was an bad bug caused when the page cache was filled
@@ -237,7 +234,7 @@ class RegressionTestCase(TestCase):
         page = self.new_page()
         placeholder = PlaceholderNode('hello world', page=page)
         placeholder.save(page, 'fr-ch', 'hello!', True)
-        context = {'current_page': page, 'lang':'fr-ch'}
+        context = Context({'current_page': page, 'lang':'fr-ch'})
         pl1 = """{% load pages_tags %}{% placeholder "hello world" %}"""
         template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'hello!')
@@ -248,7 +245,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=209
         """
         page = self.new_page()
-        context = {'current_page': page, 'lang':'en-us'}
+        context = Context({'current_page': page, 'lang':'en-us'})
 
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
         template = self.get_template_from_string(pl1)
@@ -274,14 +271,14 @@ class RegressionTestCase(TestCase):
         """There was a typo in the change_form.html"""
         c = self.get_admin_client()
         page = self.create_new_page(c)
-        response = c.get('/admin/pages/page/%d/?position=1' % page.id)
+        response = c.get(reverse("admin:pages_page_change", args=[page.id]) + '?position=1')
         self.assertContains(response, "position=1", status_code=200)
 
     def test_language_and_redirect(self):
         """Language choice in the admin is not kept between redirects"""
         c = self.get_admin_client()
         page = self.create_new_page(c)
-        page_url = '/admin/pages/page/%d/?language=en' % page.id
+        page_url = reverse("admin:pages_page_change", args=[page.id]) + '?language=en'
         page_data = self.get_new_page_data()
         page_data['_continue'] = 'true'
         response = c.post(page_url, page_data)
@@ -307,5 +304,3 @@ class RegressionTestCase(TestCase):
             str(content)
         except:
             self.fail("Cyrilic characters in content should not raise any error")
-
-

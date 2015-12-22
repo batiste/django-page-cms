@@ -7,17 +7,14 @@ from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.forms import make_form
 from pages.admin.views import traduction, get_content, sub_menu
-from pages.admin.views import list_pages_ajax
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
-import pages.widgets
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
 from django.conf import settings as global_settings
 from django.http import HttpResponseRedirect, Http404
-from django.contrib.admin.utils import unquote
 from django.contrib.admin.sites import AlreadyRegistered
 if global_settings.USE_I18N:
     from django.views.i18n import javascript_catalog
@@ -89,7 +86,7 @@ class PageAdmin(admin.ModelAdmin):
             cls.actions.append(method)
 
     def urls(self):
-        from django.conf.urls import patterns, url, include
+        from django.conf.urls import url
 
         # Admin-site-wide views.
         urlpatterns = [
@@ -367,4 +364,3 @@ try:
     admin.site.register(PageAlias, AliasAdmin)
 except AlreadyRegistered:
     pass
-

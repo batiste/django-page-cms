@@ -5,9 +5,9 @@ from pages.tests.testcase import TestCase
 
 import django
 from django.conf import settings
-from django.template import Template, RequestContext
-from django.template import TemplateDoesNotExist
+from django.core.urlresolvers import reverse
 from pages.utils import get_now
+from pages.phttp import get_request_mock
 import datetime
 
 
@@ -21,7 +21,6 @@ class FunctionnalTestCase(TestCase):
 
         response = c.get('/admin/pages/page/add/')
         self.assertEqual(response.status_code, 200)
-
 
     def test_create_page(self):
         """Test that a page can be created via the admin."""
@@ -108,7 +107,7 @@ class FunctionnalTestCase(TestCase):
         # post again on page 3 doesn't change the slug
         page_3_slug = page3.slug()
         page_data['slug'] = page_3_slug
-        response = c.post('/admin/pages/page/%d/' % page3.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page3.id]), page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         self.assertEqual(Content.objects.filter(type="slug").count(), 3)
         content = Content.objects.get_content_slug_by_slug(page_3_slug)
@@ -133,7 +132,7 @@ class FunctionnalTestCase(TestCase):
         new_slug.save()
 
         # check than the new slug does trigger a new slug for page 3
-        response = c.post('/admin/pages/page/%d/' % page3.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page3.id]), page_data)
         content = Content.objects.get_content_slug_by_slug(page_3_slug)
         self.assertEqual(page1.id, content.page.id)
         content = Content.objects.get_content_slug_by_slug(page_3_slug+'-2')
@@ -164,26 +163,24 @@ class FunctionnalTestCase(TestCase):
         response = c.get(self.get_page_url('test-page-2'))
         self.assertEqual(response.status_code, 200)
 
-
     def test_edit_page(self):
         """Test that a page can edited via the admin."""
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(reverse('admin:pages_page_add'), page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         page = Page.objects.all()[0]
-        response = c.get('/admin/pages/page/%d/' % page.id)
+        response = c.get(reverse("admin:pages_page_change", args=[page.id]))
         self.assertEqual(response.status_code, 200)
         page_data['title'] = 'changed title'
         page_data['body'] = 'changed body'
-        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         self.assertRedirects(response, '/admin/pages/page/')
         page = Page.objects.get(id=page.id)
         self.assertEqual(page.title(), 'changed title')
         body = Content.objects.get_content(page, 'en-us', 'body')
         self.assertEqual(body, 'changed body')
-
 
     def test_site_framework(self):
         """Test the site framework, and test if it's possible to
@@ -253,7 +250,6 @@ class FunctionnalTestCase(TestCase):
 
         setattr(settings, "SITE_ID", 1)
 
-
     def test_languages(self):
         """Test post a page with different languages
         and test that the admin views works correctly."""
@@ -287,13 +283,13 @@ class FunctionnalTestCase(TestCase):
         else:
             major, middle = [int(v) for v in django_version]
         if major >= 1 and middle > 0:
-            response = c.get('/admin/pages/page/%d/?language=de' % page.id)
+            response = c.get(reverse("admin:pages_page_change", args=[page.id]) + '?language=de')
             self.assertContains(response, 'value="de"')
 
         # add a french version of the same page
         page_data["language"] = 'fr-ch'
         page_data["title"] = 'french title'
-        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
         # test that the frontend view use the good parameters
@@ -321,7 +317,6 @@ class FunctionnalTestCase(TestCase):
         self.assertContains(response, 'french title')
         self.assertContains(response, 'lang="fr-ch"')
 
-
     def test_revision(self):
         """Test that a page can edited several times."""
         c = self.get_admin_client()
@@ -331,12 +326,12 @@ class FunctionnalTestCase(TestCase):
         page = Page.objects.all()[0]
 
         page_data['body'] = 'changed body'
-        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body')
 
         page_data['body'] = 'changed body 2'
-        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         page.invalidate()
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
@@ -349,7 +344,6 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
             'changed body 2')
 
-
     def test_placeholder(self):
         """
         Test that the placeholder is correctly displayed in
@@ -361,11 +355,10 @@ class FunctionnalTestCase(TestCase):
         page_data['template'] = 'pages/examples/nice.html'
         response = c.post('/admin/pages/page/add/', page_data)
         page = Page.objects.all()[0]
-        response = c.get('/admin/pages/page/%d/' % page.id)
+        response = c.get(reverse("admin:pages_page_change", args=[page.id]))
         self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, 'name="right-column"', 1)
-
 
     def test_directory_slug(self):
         """
@@ -533,7 +526,7 @@ class FunctionnalTestCase(TestCase):
         # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
         try:
-            from django.utils.translation import LANGUAGE_SESSION_KEY 
+            from django.utils.translation import LANGUAGE_SESSION_KEY
         except ImportError:
             LANGUAGE_SESSION_KEY = 'django_language'
         self.assertEqual(c.session.get(LANGUAGE_SESSION_KEY, False), 'fr-ch')
@@ -602,14 +595,12 @@ class FunctionnalTestCase(TestCase):
         page1 = Content.objects.get_content_slug_by_slug('page1').page
 
         from pages.views import details
-        from pages.utils import get_request_mock
         request = get_request_mock()
         context = details(request, path='/page1/', only_context=True)
         self.assertEqual(context['current_page'], page1)
 
 
     def test_request_mockup(self):
-        from pages.utils import get_request_mock
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
 
@@ -689,12 +680,11 @@ class FunctionnalTestCase(TestCase):
 
         # try to change the page 2 slug into page 1
         page_data['slug'] = 'child-1'
-        response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[child_2.id]), page_data)
         self.assertEqual(response.status_code, 200)
         setattr(pages_settings, "PAGE_UNIQUE_SLUG_REQUIRED", True)
-        response = c.post('/admin/pages/page/%d/' % child_2.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[child_2.id]), page_data)
         self.assertEqual(response.status_code, 200)
-
 
     def test_tree(self):
         """
@@ -744,7 +734,6 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(str(Page.objects.navigation()),
             "[<Page: page3>, <Page: page1>]")
 
-
     def test_page_redirect_to_url(self):
         """Test page redirected to external url."""
 
@@ -759,7 +748,6 @@ class FunctionnalTestCase(TestCase):
         response = client.get(page1.get_url_path())
         self.assertTrue(response.status_code == 301)
         self.assertTrue(response['Location'] == url)
-
 
     def test_page_freeze_date(self):
         """Test page freezing feature."""
@@ -778,7 +766,7 @@ class FunctionnalTestCase(TestCase):
         page_data['title'] = 'after'
         page_data['slug'] = 'after'
         # this post erase the limit
-        response = c.post('/admin/pages/page/%d/' % page.id, page_data)
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         self.assertRedirects(response, '/admin/pages/page/')
 
         page = Page.objects.from_path('after', None)
@@ -790,7 +778,6 @@ class FunctionnalTestCase(TestCase):
         page.freeze_date = limit
         page.save()
         self.assertEqual(page.slug(), 'before')
-
 
     def test_delegate_to(self):
         """Test the view delegate feature."""
@@ -825,7 +812,6 @@ class FunctionnalTestCase(TestCase):
         self.assertContains(response, "doc title 1")
         reg.registry = []
 
-
     def test_untranslated(self):
         """Test the untranslated feature in the admin."""
         c = self.get_admin_client()
@@ -845,9 +831,8 @@ class FunctionnalTestCase(TestCase):
         )
 
         page_data['untrans'] = ''
-        response = c.get('/admin/pages/page/%d/?language=fr-ch' % page.id)
+        response = c.get(reverse("admin:pages_page_change", args=[page.id]) + '?language=fr-ch')
         self.assertContains(response, unstranslated_string)
-
 
     def test_root_page(self):
         """Test that the root page doesn't trigger a 404."""
@@ -860,7 +845,6 @@ class FunctionnalTestCase(TestCase):
         response = c.get(self.get_page_url())
         self.assertEqual(response.status_code, 200)
 
-
     def test_page_with_trailing_slash(self):
         """
         Test that a page is also available with and without a trailing slash.
@@ -872,7 +856,6 @@ class FunctionnalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = c.get(self.get_page_url('other/'))
         self.assertEqual(response.status_code, 200)
-
 
     def test_page_sitemap(self):
         """
@@ -893,17 +876,16 @@ class FunctionnalTestCase(TestCase):
 
         self.assertContains(response, 'english-slug')
         self.assertContains(response, 'french-slug')
-        
-    
+
     def test_fileinput_in_admin(self):
         """Test that a page can edited via the admin."""
         c = self.get_admin_client()
         c.login(username='batiste', password='b')
-        
+
         page = self.new_page(content={'slug': 'just-a-test', 'file':'some file'})
         page.template = 'pages/tests/fileinput.html'
         page.save()
 
-        response = c.get('/admin/pages/page/%d/' % page.id)
+        response = c.get(reverse("admin:pages_page_change", args=[page.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'some file')

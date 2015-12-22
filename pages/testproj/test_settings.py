@@ -6,7 +6,6 @@ PROJECT_DIR = os.path.dirname(__file__)
 TEST_PROJ = 'pages.testproj'
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 USE_TZ = True
 
 ADMINS = (
@@ -59,7 +58,7 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+_TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.template.context_processors.i18n",
     "django.template.context_processors.debug",
@@ -80,7 +79,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = TEST_PROJ + '.urls'
 
-TEMPLATE_DIRS = (
+_TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -146,8 +145,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'DIRS': _TEMPLATE_DIRS,
         'OPTIONS': {
-            'context_processors': TEMPLATE_CONTEXT_PROCESSORS
+            'debug': DEBUG,
+            'context_processors': _TEMPLATE_CONTEXT_PROCESSORS,
         },
     },
 ]
@@ -185,4 +186,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-

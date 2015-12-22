@@ -2,11 +2,24 @@ language: python
 python:
   - "2.7"
   - "3.3"
+  - "3.4"
+  - "3.5"
+env:
+  - DJANGO="Django<1.9"
+  - DJANGO="Django<1.10"
+matrix:
+  exclude:
+    # Django 1.9+ no longer supports python 3.2/3.3
+    - python: "3.2"
+      env: DJANGO="Django<1.10"
+    - python: "3.3"
+      env: DJANGO="Django<1.10"
 # command to install dependencies
 install:
   - "pip install -r requirements/external_apps.txt"
   - "pip install -r requirements/test_apps.txt"
   - "pip install coveralls"
+  - "pip install $DJANGO"
 # command to run tests
 script: "coverage run --source=pages pages/test_runner.py"
 after_success:

@@ -4,7 +4,7 @@ Commands
 
 .. contents::
 
-Import and export content between diffent hosts usgin the API
+Import and export content between diffent hosts using the API
 ================================================================
 
 Gerbi CMS comes with a simple API that uses Django REST Framework. You can enable the

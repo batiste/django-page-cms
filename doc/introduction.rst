@@ -47,8 +47,8 @@ Features
 Dependencies & Compatibility
 ============================
 
-  * Django 1.8
-  * Python 2.7, 3.3
+  * Django 1.8, 1.9
+  * Python 2.7, 3.3, 3.4, 3.5
   * `django-mptt <https://github.com/django-mptt/django-mptt>`_ is needed
   * `django-taggit if needed <https://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
   * `django-haystack if needed <http://haystacksearch.org/>`_

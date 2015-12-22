@@ -21,7 +21,6 @@ from django.core.files.uploadedfile import UploadedFile
 import logging
 import os
 import time
-import re
 import six
 
 logging.basicConfig()
@@ -243,6 +242,7 @@ class PlaceholderNode(template.Node):
     def __repr__(self):
         return "<Placeholder Node: %s>" % self.name
 
+
 def get_filename(page, placeholder, data):
     """
     Generate a stable filename using the orinal filename.
@@ -294,6 +294,7 @@ class FilePlaceholderNode(PlaceholderNode):
                 change
             )
 
+
 class ImagePlaceholderNode(FilePlaceholderNode):
     """A `PlaceholderNode` that saves one image on disk.
 
@@ -316,7 +317,7 @@ class ContactForm(forms.Form):
     Simple contact form
     """
     email = forms.EmailField(label=_('Your email'))
-    subject = forms.CharField(label=_('Subject'), 
+    subject = forms.CharField(label=_('Subject'),
       max_length=150)
     message = forms.CharField(widget=forms.Textarea(),
       label=_('Your message'))
@@ -336,14 +337,14 @@ class ContactPlaceholderNode(PlaceholderNode):
                 data = form.cleaned_data
                 recipients = [adm[1] for adm in global_settings.ADMINS]
                 try:
-                    send_mail(data['subject'], data['message'], 
+                    send_mail(data['subject'], data['message'],
                         data['email'], recipients, fail_silently=False)
                     return _("Your email has been sent. Thank you.")
                 except:
                     return _("An error as occured: your email has not been sent.")
         else:
             form = ContactForm()
-        renderer = render_to_string('pages/contact.html', {'form':form}, 
+        renderer = render_to_string('pages/contact.html', {'form':form},
             RequestContext(request))
         return mark_safe(renderer)
 

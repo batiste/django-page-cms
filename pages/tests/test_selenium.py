@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 """Django page CMS selemium test module"""
-import django
-
-from django.conf import settings
-from pages.models import Page, Content
+from pages.models import Page
 from pages.tests.testcase import TestCase
 from django.core.urlresolvers import reverse
 from django.test import LiveServerTestCase
 from django.contrib import auth
 
 from selenium import webdriver
-from selenium.webdriver import PhantomJS
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
 screenshot_nb = 1
+
 
 class SeleniumTestCase(TestCase, LiveServerTestCase):
 
@@ -73,7 +70,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         super(SeleniumTestCase, self).tearDown()
 
     def url_change(self, id):
-        return reverse('admin:pages_page_change',  args=[id])
+        return reverse('admin:pages_page_change', args=[id])
 
     def test_admin_select(self):
         self.login()
@@ -124,5 +121,3 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.assertEqual(row_1.get_attribute('id'), 'page-row-%d' % page_2.id)
         self.assertEqual(row_2.get_attribute('id'), 'page-row-%d' % page_1.id)
         self.assertEqual(row_3.get_attribute('id'), 'page-row-%d' % page_3.id)
-
-

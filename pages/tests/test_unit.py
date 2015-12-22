@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
 """Django page CMS unit test suite module."""
 from pages.models import Page, Content
-from pages.placeholders import PlaceholderNode, get_filename
-from pages.tests.testcase import TestCase, MockRequest
+from pages.tests.testcase import TestCase
 from pages import urlconf_registry as reg
-from pages.phttp import get_language_from_request, get_slug
+from pages.phttp import get_language_from_request
 from pages.phttp import get_request_mock, remove_slug
 from pages.utils import get_now
 from pages.views import details
 
-
-import django
-import six
 from django.http import Http404
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 import datetime
 
@@ -96,8 +90,6 @@ class UnitTestCase(TestCase):
         page.publication_end_date = yesterday
         self.assertEqual(page.calculated_status, Page.EXPIRED)
 
-
-
     def test_urlconf_registry(self):
         """Test urlconf_registry basic functions."""
         reg.register_urlconf('Documents', 'example.documents.urls',
@@ -120,21 +112,6 @@ class UnitTestCase(TestCase):
 
         self.assertEqual(reg.get_choices(),
             [('', 'No delegation'), ('Documents', 'Display documents')])
-
-    def test_permissions(self):
-        # TODO: re-implement
-        pass
-
-    def test_managers(self):
-        # TODO: this test seems dependant from other tests
-        self.set_setting("PAGE_USE_SITE_ID", False)
-        Page.objects.populate_pages(child=2, depth=2)
-        for p in Page.objects.all():
-            p.invalidate()
-        self.assertEqual(Page.objects.count(), 3)
-        self.assertEqual(Page.objects.published().count(), 3)
-        self.assertEqual(Page.objects.drafts().count(), 0)
-        self.assertEqual(Page.objects.expired().count(), 0)
 
     def test_get_page_ids_by_slug(self):
         """
@@ -387,7 +364,7 @@ class UnitTestCase(TestCase):
         """Test that the page's context processor is properly activated."""
         from pages.views import details
         req = get_request_mock()
-        page1 = self.new_page(content={'slug': 'page1', 'title': 'hello'})
+        page1 = self.new_page(content={'slug': 'page1', 'title': 'hello', 'status': 'published'})
         page1.save()
         self.set_setting("PAGES_MEDIA_URL", "test_request_context")
         self.assertContains(details(req, path='/'), "test_request_context")

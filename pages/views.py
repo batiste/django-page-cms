@@ -8,8 +8,7 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from django.contrib.sitemaps import Sitemap
 from django.core.urlresolvers import resolve, Resolver404
 from django.utils import translation
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
@@ -82,10 +81,7 @@ class Details(object):
         if kwargs.get('only_context', False):
             return context
         template_name = kwargs.get('template_name', template_name)
-        response = render_to_response(template_name,
-            RequestContext(request, context))
-        current_page = context['current_page']
-        return response
+        return render(request, template_name, context)
 
     def resolve_page(self, request, context, is_staff):
         """Return the appropriate page according to the path."""
@@ -95,7 +91,7 @@ class Details(object):
             exclude_drafts=(not is_staff))
         if page:
             return page
-        # if the complete path didn't worked out properly 
+        # if the complete path didn't worked out properly
         # and if didn't used PAGE_USE_STRICT_URL setting we gonna
         # try to see if it might be a delegation page.
         # To do that we remove the right part of the url and try again
@@ -110,7 +106,7 @@ class Details(object):
                     if page.delegate_to:
                         return page
                 path = remove_slug(path)
-                
+
         return None
 
     def resolve_alias(self, request, path, lang):

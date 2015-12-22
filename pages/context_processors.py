@@ -1,6 +1,5 @@
 """Context processors for Page CMS."""
 from pages import settings
-from pages.models import Page
 
 
 def media(request):

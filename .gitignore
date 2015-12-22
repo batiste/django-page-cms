@@ -13,3 +13,5 @@ local_settings.py
 pages/testproj/media/
 screenshot_*
 *~
+.tox
+ghostdriver.log

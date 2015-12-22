@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 """Django page CMS template test suite module."""
-from pages.models import Page, Content
+from pages.models import Content
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.tests.testcase import TestCase, MockRequest
 from pages.templatetags.pages_tags import get_page_from_string_or_id
 from django.contrib.auth.models import User
-from pages.phttp import get_request_mock, remove_slug
+from pages.phttp import get_request_mock
 
 import django
-import unittest
 import six
 
-from django.template import Template, RequestContext, Context
-from django.template import Template, TemplateSyntaxError
+from django.template import Template, Context, TemplateSyntaxError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
-import datetime
 
 def render(template, context):
     return template.render(Context(context))
+
 
 class TemplateTestCase(TestCase):
     """Django page CMS unit test suite class."""
@@ -59,7 +57,6 @@ class TemplateTestCase(TestCase):
         template = self.get_template_from_string(pl1)
         self.assertEqual(render(template, context), page.title())
 
-
         # to be sure to raise an errors in parse template content
         setattr(settings, "DEBUG", True)
 
@@ -69,11 +66,17 @@ class TemplateTestCase(TestCase):
         pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
         template = self.get_template_from_string(pl2)
         from pages.placeholders import PLACEHOLDER_ERROR
-        error = PLACEHOLDER_ERROR % {
+        # There are diffrence in errors in each Django so check each
+        error18 = PLACEHOLDER_ERROR % {
+            'name': 'wrong',
+            'error': "Invalid block tag: 'wrong'",
+        }
+        error19 = PLACEHOLDER_ERROR % {
             'name': 'wrong',
             'error': "Invalid block tag on line 1: 'wrong'. Did you forget to register or load this tag?",
         }
-        self.assertEqual(error, render(template, context))
+        rendered_error = render(template, context)
+        self.assertIn(rendered_error, [error18, error19])
 
         # generate errors
         pl3 = """{% load pages_tags %}{% placeholder %}"""
@@ -93,7 +96,6 @@ class TemplateTestCase(TestCase):
             template = self.get_template_from_string(pl5)
         except TemplateSyntaxError:
             pass
-
 
     def test_placeholder_quoted_name(self):
         """Test placeholder name with quotes."""
@@ -244,7 +246,7 @@ class TemplateTestCase(TestCase):
         context = {'page': page, 'lang':'en-us', 'path':'/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% pages_admin_menu page %}')
-        renderer = render(template, context) 
+        renderer = render(template, context)
 
     def test_show_absolute_url_with_language(self):
         """
@@ -317,7 +319,7 @@ class TemplateTestCase(TestCase):
         template = self.get_template_from_string(pl1)
         page = self.new_page({'id': 1, 'slug': 'get-page-slug',
             'somepage': '1'})
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(render(template, context), 'get-page-slug')
 
     def test_get_page_template_tag_with_variable_containing_page_slug(self):
@@ -328,7 +330,7 @@ class TemplateTestCase(TestCase):
         template = self.get_template_from_string(pl1)
         page = self.new_page({'slug': 'get-page-slug', 'somepage':
             'get-page-slug' })
-        context = Context({'current_page': page})
+        context = {'current_page': page}
         self.assertEqual(render(template, context), 'get-page-slug')
 
     def test_variable_disapear_in_block(self):
@@ -369,36 +371,36 @@ class TemplateTestCase(TestCase):
 
     def test_file_placeholder(self):
         tpl = ("{% load pages_tags %}{% fileplaceholder f1 %}")
-        
+
         template = self.get_template_from_string(tpl)
         page = self.new_page({'f1': 'filename'})
         context = {'current_page': page}
         self.assertEqual(render(template, context), 'filename')
-        
+
     def test_image_placeholder(self):
         tpl = ("{% load pages_tags %}{% imageplaceholder f1 %}")
-        
+
         template = self.get_template_from_string(tpl)
         page = self.new_page({'f1': 'filename'})
         context = {'current_page': page}
         self.assertEqual(render(template, context), 'filename')
-        
+
     def test_contact_placeholder(self):
         tpl = ("{% load pages_tags %}{% contactplaceholder contact %}")
-        
+
         template = self.get_template_from_string(tpl)
         page = self.new_page({'contact': 'hello'})
         context = {'current_page': page}
-        
+
         import logging
         logger = logging.getLogger("pages")
         lvl = logger.getEffectiveLevel()
         logger.setLevel(logging.ERROR)
-        
-        with self.assertRaises(ValueError): 
+
+        with self.assertRaises(ValueError):
             self.assertEqual(render(template, context), 'hello')
-            
+
         logger.setLevel(lvl)
-            
+
         context = {'current_page': page, 'request':get_request_mock()}
         self.assertTrue("<form" in render(template, context))

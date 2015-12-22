@@ -1,7 +1,7 @@
 /* Common stuff used in pages_list.js as well as in pages_form.js */
 
 // http://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
-$('html').ajaxSend(function(event, xhr, settings) {
+$(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie != '') {
@@ -108,6 +108,9 @@ pages.update_published_icon = function (url, select, img, change_status) {
         'alt': 'Loading'
     });
     if (change_status) {
+        if (!url) {
+            url = window.location.pathname.replace('/change/', '/')
+        }
         $.post(url+'change-status/', {'status':$(select).val()}, function(val) {
             img.attr({
                 'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.gif'),

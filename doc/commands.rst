@@ -4,25 +4,25 @@ Commands
 
 .. contents::
 
-Import and export content between diffent hosts usgint the API
+Import and export content between diffent hosts usgin the API
 ================================================================
 
 Gerbi CMS comes with a simple API that uses Django REST Framework. You can enable the
-API by setting the PAGE_API_ENABLED in the CMS settings to true.
+API by setting the PAGE_API_ENABLED in the CMS settings to `True`.
 
-When that is done, the host that host the CMS application should have an API at the 
-address <address of the cms>/api/
+When this is done, your host should have an API at the following
+address <address of your cms>/api/
 
 Pulling data from a host: pages_pull
 ---------------------------------------
 
-From example if you enabled the API on your local development instance::
+From example if you enabled the API on your local development instance you can do::
 
     $ python manage.py pages_pull staff_account_name:password
     Fetching page data on http://127.0.0.1:8000/api/
     data/download.json written to disk
 
-This command accept the option `--filename` and `--host`
+The default for the host is the localhost (127.0.0.1:8000). This command accept the option `--filename` and `--host`
 
 Pushing data to a host: pages_push
 -------------------------------------

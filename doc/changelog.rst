@@ -4,13 +4,22 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release TODO
+=============
+
+Released the TODO.
+
+    * Support Django 1.9
+    * Support Python 3.4, 3.5
+    * Cleanup
+
 Release 1.8.2
 =============
 
 Released the 20 of December 2015.
 
     * Migrations files were not included in 1.8.1
-    * Add a pages_push and pages_pull command that permit to pull and push content between 
+    * Add a pages_push and pages_pull command that permit to pull and push content between
       different hosts in rather smart and non breaking way.
 
 Release 1.8.1
@@ -76,8 +85,8 @@ Backward Incompatible Changes
 ------------------------------
 
     * HTML sanitization and the dependecy to the html5lib have been removed.
-    * Remove support for WYMEditor, markItUp and CKEditor editors. Rational: 
-      Those Widget are untested, not updated and were created when packages for those widgets didn't exists as python packages (django-ckeditor, django-wymeditor, django-markitup). 
+    * Remove support for WYMEditor, markItUp and CKEditor editors. Rational:
+      Those Widget are untested, not updated and were created when packages for those widgets didn't exists as python packages (django-ckeditor, django-wymeditor, django-markitup).
       If you need those editors please install the package and register the widget to use them directly in your templates.
     * The pages_navigation context processor has been removed. This is not useful as {% load_pages %} already load the pages_navigation variable in the context.
     * Removal of the video placeholder. Rational: Used as an example but add no real value to the CMS.

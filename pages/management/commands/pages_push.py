@@ -4,15 +4,16 @@ import os
 import json
 import sys
 from pages.management.utils import APICommand
+from tqdm import tqdm
 
 class Command(APICommand):
     help = 'Push data to a Django Page CMS API'
 
-    def push_content(self, page):
+    def push_content(self, page, desc):
         page_id = str(page['id'])
         auth = self.auth
         headers = {'Content-Type': 'application/json'}
-        for content in page['content_set']:
+        for content in tqdm(page['content_set'], leave=True, desc=desc):
             content['page'] = page_id
             data = json.dumps(content)
             url = self.host + 'contents/' + str(content['id']) + '/'
@@ -22,7 +23,6 @@ class Command(APICommand):
                 response = requests.post(url, data=data, auth=self.auth, headers=headers)
             if response.status_code != 200 and response.status_code != 201:
                 self.http_error(response)
-            self.cout('.')
 
     def push_page(self, page):
         page_id = str(page['id'])
@@ -39,15 +39,17 @@ class Command(APICommand):
         else:
             del page['parent']
 
+        desc = None
+
         if server_page:
             self.server_id_mapping[page['id']] = server_page['id']
             page['id'] = server_page['id']
-            self.cout("Update page " + str(page['id']))
+            desc = "Update page " + str(page['id'])
             url = self.host + 'pages/' + str(page['id']) + '/'
             data = json.dumps(page)
             response = requests.put(url, data=data, auth=self.auth, headers=headers)
         else:
-            self.cout("Create page " + str(page['id']))
+            desc = "Create page " + str(page['id'])
             url = self.host
             data = json.dumps(page)
             response = requests.post(url, data=data, auth=self.auth, headers=headers)
@@ -61,10 +63,8 @@ class Command(APICommand):
         if response.status_code != 200 and response.status_code != 201:
             self.http_error(response)
 
-        self.cout(' .')
-        self.push_content(page)
+        self.push_content(page, desc)
 
-        self.cprint('')
 
     def handle(self, *args, **options):
         self.parse_options(options)
@@ -72,13 +72,14 @@ class Command(APICommand):
         self.uuid_mapping = {}
         self.server_id_mapping = {}
 
-        self.cprint("Fetching the state of the pages on the server " + self.host)
+        self.cprint("Fetching the state of the pages on the server: " + self.host)
         host = self.host + '?format=json'
         response = requests.get(host, auth=self.auth)
         if response.status_code != 200:
             self.http_error(response)
         self.current_page_list = json.loads(response.text)
-        
+        self.cprint("Valid JSON document received.")
+
         for page in self.current_page_list:
             self.uuid_mapping[page['uuid']] = page
 

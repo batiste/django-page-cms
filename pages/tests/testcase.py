@@ -56,7 +56,6 @@ class TestCase(TestCase):
         self.reset_urlconf()
         self.settings_to_reset = {}
 
-
     def set_setting(self, name, value):
         old_value = getattr(pages_settings, name)
         setattr(pages_settings, name, value)
@@ -64,7 +63,6 @@ class TestCase(TestCase):
             self.reset_urlconf()
         if name not in self.settings_to_reset:
             self.settings_to_reset[name] = old_value
-
 
     def assert404(self, func):
         try:
@@ -129,4 +127,3 @@ class TestCase(TestCase):
         slug_content = Content.objects.get_content_slug_by_slug(
             page_data['slug'])
         return slug_content.page
-

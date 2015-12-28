@@ -40,6 +40,11 @@ Where the model might look like this::
         def __unicode__(self):
             return self.name
 
+.. warning:: pages checks that every template in PAGE_TEMPLATE exists with
+             ``django.template.loader.find_template`` when its app config is
+             ready. It will raise a warning ``basic_cms.W001`` if a template
+             can't be found and if a template has a syntax error then a
+             TemplateSyntaxError is raised.
 
 PAGE_DEFAULT_TEMPLATE
 =========================
@@ -197,3 +202,7 @@ PAGE_CACHE_LOCATION
 
 Allows you to use a cache other than 'default' for cms caching.
 
+PAGE_TESTS_SAVE_SCREENSHOTS
+==================================
+
+Allows you to save screenshots from selenium tests

@@ -202,3 +202,7 @@ PAGE_CACHE_LOCATION
 
 Allows you to use a cache other than 'default' for cms caching.
 
+PAGE_TESTS_SAVE_SCREENSHOTS
+==================================
+
+Allows you to save screenshots from selenium tests

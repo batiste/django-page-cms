@@ -2,6 +2,7 @@
 """Django page CMS selemium test module"""
 from pages.models import Page
 from pages.tests.testcase import TestCase
+from pages import settings
 from django.core.urlresolvers import reverse
 from django.test import LiveServerTestCase
 from django.contrib import auth
@@ -34,8 +35,9 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
 
     def screenshot(self):
         global screenshot_nb
-        self.browser.save_screenshot('screenshot_%d.png' % screenshot_nb)
-        screenshot_nb += 1
+        if settings.PAGE_TESTS_SAVE_SCREENSHOTS:
+            self.browser.save_screenshot('screenshot_%d.png' % screenshot_nb)
+            screenshot_nb += 1
 
     def select_option(self, select, option_id):
         for option in select.find_elements_by_tag_name('option'):

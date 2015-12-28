@@ -11,6 +11,9 @@ from pages.views import details
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.template import Context
+from django.test.utils import override_settings
+from taggit.models import Tag
 
 import datetime
 
@@ -368,3 +371,16 @@ class UnitTestCase(TestCase):
         page1.save()
         self.set_setting("PAGES_MEDIA_URL", "test_request_context")
         self.assertContains(details(req, path='/'), "test_request_context")
+
+    @override_settings(PAGE_TAGGING=True)
+    def test_get_pages_with_tag(self):
+        """Test get_pages_with_tag template tag with tag name argument and return a list of pages"""
+        page = self.new_page({'slug': 'footer-page', 'somepage': 'get-footer-slug'})
+        page2 = self.new_page({'slug': 'footer-page2', 'somepage': 'get-footer-slug'})
+        tag = Tag.objects.create(name="footer")
+        page.tags.add(tag)
+        page2.tags.add(tag)
+        pl1 = '{% load pages_tags %}{% get_pages_with_tag "footer" as pages %}' \
+              '{% for page in pages %}{{ page.slug }},{% endfor %}'
+        template = self.get_template_from_string(pl1)
+        self.assertEqual(template.render(Context({})), u'footer-page,footer-page2,')

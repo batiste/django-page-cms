@@ -99,8 +99,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    # install django-flat-theme
-    #'flat',
     'django.contrib.admin',
     'django.contrib.sites',
     'pages.testproj.documents',

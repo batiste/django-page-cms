@@ -18,6 +18,7 @@ matrix:
 install:
   - "pip install -r requirements/external_apps.txt"
   - "pip install -r requirements/test_apps.txt"
+  - "pip install -r requirements/extra_apps.txt"
   - "pip install coveralls"
   - "pip install $DJANGO"
 # command to run tests

@@ -98,6 +98,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'mptt',
     'pages',
+    'taggit',
     TEST_PROJ + '.documents',
     'django.contrib.staticfiles',
     # these 2 package don't create any dependecies
@@ -165,6 +166,8 @@ PAGE_TEMPLATES = (
 PAGE_SANITIZE_USER_INPUT = True
 
 PAGE_USE_SITE_ID = True
+
+PAGE_TAGGING = True
 
 HAYSTACK_SITECONF = 'example.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'dummy'

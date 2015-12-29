@@ -52,6 +52,14 @@ class Details(object):
 
         current_page = self.resolve_page(request, context, is_staff)
 
+        # Do redirect to new page (if enabled)
+        if settings.PAGE_REDIRECT_OLD_SLUG and current_page:
+            url = current_page.get_absolute_url(language=lang)
+            slug = current_page.get_complete_slug(language=lang)
+            current_url = request.get_full_path()
+            if url != path and url + '/' != current_url and slug != path:
+                return HttpResponsePermanentRedirect(url)
+
         # if no pages has been found, we will try to find it via an Alias
         if not current_page:
             redirection = self.resolve_alias(request, path, lang)
@@ -230,4 +238,3 @@ class MultiLanguagePageSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.page.last_modification_date
-

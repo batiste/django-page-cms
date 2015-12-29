@@ -206,3 +206,8 @@ PAGE_TESTS_SAVE_SCREENSHOTS
 ==================================
 
 Allows you to save screenshots from selenium tests
+
+PAGE_REDIRECT_OLD_SLUG
+==================================
+
+Allows to redirect to new url after updating slug (Default: False)

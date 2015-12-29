@@ -220,7 +220,9 @@ PAGE_API_ENABLED = getattr(settings, 'PAGE_API_ENABLED', False)
 PAGE_CACHE_LOCATION = get_setting('PAGE_CACHE_LOCATION',
     default_value='default')
 
-
 # If you want to see screenshots from selenium tests override this
 PAGE_TESTS_SAVE_SCREENSHOTS = getattr(settings, 'PAGE_TESTS_SAVE_SCREENSHOTS',
                                      False)
+
+# If you want to redirect to new page url
+PAGE_REDIRECT_OLD_SLUG = getattr(settings, 'PAGE_REDIRECT_OLD_SLUG', False)

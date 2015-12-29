@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from pages.utils import get_now
 from pages.phttp import get_request_mock
+from pages.views import details
 import datetime
 
 
@@ -400,7 +401,6 @@ class FunctionnalTestCase(TestCase):
         response = c.get(self.get_page_url('same-slug/same-slug'))
         self.assertContains(response, "children title", 3)
 
-
     def test_page_admin_view(self):
         """Test page admin view"""
         c = self.get_admin_client()
@@ -437,7 +437,6 @@ class FunctionnalTestCase(TestCase):
         url = '/admin/pages/page/%d/delete-content/en-us/' % page.id
         response = c.get(url)
         self.assertEqual(response.status_code, 302)
-
 
     def test_page_alias(self):
         """Test page aliasing system"""
@@ -482,7 +481,6 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response,
             self.get_page_url('downloads-page'), 301)
 
-
     def test_page_redirect_to(self):
         """Test page redirected to an other page."""
 
@@ -498,7 +496,6 @@ class FunctionnalTestCase(TestCase):
         # now check whether you go to the target page.
         response = client.get(page1.get_url_path())
         self.assertRedirects(response, page2.get_url_path(), 301)
-
 
     def test_page_valid_targets(self):
         """Test page valid_targets method"""
@@ -581,7 +578,6 @@ class FunctionnalTestCase(TestCase):
         # Make sure the content response we got was in french
         self.assertTrue(b'Auteur' in response.content)
 
-
     def test_view_context(self):
         """
         Test that the default view can only return the context
@@ -599,11 +595,9 @@ class FunctionnalTestCase(TestCase):
         context = details(request, path='/page1/', only_context=True)
         self.assertEqual(context['current_page'], page1)
 
-
     def test_request_mockup(self):
         request = get_request_mock()
         self.assertEqual(hasattr(request, 'session'), True)
-
 
     def test_tree_admin_interface(self):
         """
@@ -889,3 +883,30 @@ class FunctionnalTestCase(TestCase):
         response = c.get(reverse("admin:pages_page_change", args=[page.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'some file')
+
+    def test_redirect_old_slug(self):
+        """Test that a page redirect to new slug."""
+        c = self.get_admin_client()
+        c.login(username='batiste', password='b')
+        page_data = self.get_new_page_data()
+        page_data['slug'] = 'page1'
+        response = c.post(reverse('admin:pages_page_add'), page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.all()[0]
+        page_data['slug'] = 'page2'
+        response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
+        self.assertRedirects(response, '/admin/pages/page/')
+        page = Page.objects.get(id=page.id)
+        self.assertEqual(page.slug(), 'page2')
+
+        req = get_request_mock()
+
+        def _get_context_page(path):
+            return details(req, path, 'en-us')
+
+        self.assertEqual(_get_context_page('/pages/page1/').status_code, 200)
+
+        # Activate redirect
+        self.set_setting("PAGE_REDIRECT_OLD_SLUG", True)
+        self.assertEqual(_get_context_page('/pages/page1/').status_code, 301)
+        self.assertEqual(_get_context_page('/pages/page1/')._headers['location'][1], '/pages/page2')

@@ -11,6 +11,8 @@ Released the TODO.
 
     * Support Django 1.9
     * Support Python 3.4, 3.5
+    * Redirect to new urls after updating slug. New settings PAGE_REDIRECT_OLD_SLUG
+    * Added get_pages_with_tag templatetag
     * Cleanup
 
 Release 1.8.2

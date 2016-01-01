@@ -1,11 +1,11 @@
 from django.utils.translation import ugettext as _
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import User
-from pages.plugins.jsonexport.utils import (pages_to_json,
+from django.contrib.auth import get_user_model
+from pages.plugins.jsonexport.utils import (json_to_pages,
     monkeypatch_remove_pages_site_restrictions)
-from pages.models import Page
 
 import sys
+
 
 class Command(BaseCommand):
     args = '<user>'
@@ -17,11 +17,12 @@ class Command(BaseCommand):
         specified by username, id or email address.
         """
         monkeypatch_remove_pages_site_restrictions()
+        user_model = get_user_model()
         for match in ('username', 'pk', 'email'):
             try:
-                u = User.objects.get(**{match:user})
+                u = user_model.objects.get(**{match: user})
                 break
-            except (User.DoesNotExist, ValueError):
+            except (user_model.DoesNotExist, ValueError):
                 continue
         else:
             raise CommandError(_("User with username/id/email = '%s' not found")
@@ -38,4 +39,3 @@ class Command(BaseCommand):
                 page.get_complete_slug()))
             for m in messages:
                 print(" - " + m)
-

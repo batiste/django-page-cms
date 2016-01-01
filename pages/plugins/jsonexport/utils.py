@@ -1,5 +1,5 @@
 from django.db.models import Avg, Max, Min, Count
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from pages.models import Page, Content
@@ -118,8 +118,8 @@ def update_redirect_to_from_json(page, redirect_to_complete_slugs):
         messages.append(_("Could not find page for redirect-to field"
             " '%s'") % (s,))
     return messages
-    
-    
+
+
 def create_and_update_from_json_data(d, user):
     """
     Create or update page based on python dict d loaded from JSON data.
@@ -163,15 +163,17 @@ def create_and_update_from_json_data(d, user):
         page = Page(parent=parent)
         created = True
 
+    user_model = get_user_model
+
     def custom_get_user_by_email(email):
         """
         Simplified version
         """
-        return User.objects.get(email=email)
+        return user_model.objects.get(email=email)
 
     try:
         page.author = custom_get_user_by_email(d['author_email'])
-    except (User.DoesNotExist, User.MultipleObjectsReturned):
+    except (user_model.DoesNotExist, user_model.MultipleObjectsReturned):
         page.author = user
         messages.append(_("Original author '%s' not found")
             % (d['author_email'],))
@@ -219,8 +221,8 @@ def create_and_update_from_json_data(d, user):
             create_content(lang, ctype, langs_bodies[lang])
 
     return page, created, messages
-    
-    
+
+
 def pages_to_json(queryset):
     """
     Return a JSON string export of the pages in queryset.

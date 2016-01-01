@@ -9,7 +9,7 @@ from pages.utils import get_now
 from pages.views import details
 
 from django.http import Http404
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.template import Context
 from django.test.utils import override_settings
@@ -24,7 +24,7 @@ class UnitTestCase(TestCase):
     def test_date_ordering(self):
         """Test page date ordering feature."""
         self.set_setting("PAGE_USE_SITE_ID", False)
-        author = User.objects.all()[0]
+        author = get_user_model().objects.all()[0]
         yesterday = get_now() - datetime.timedelta(days=1)
         now = get_now()
         p1 = Page(author=author, status=Page.PUBLISHED, publication_date=now)
@@ -120,7 +120,7 @@ class UnitTestCase(TestCase):
         """
         Test that get_page_ids_by_slug work as intented.
         """
-        page_data = {'title':'test1', 'slug':'test1'}
+        page_data = {'title': 'test1', 'slug': 'test1'}
         page1 = self.new_page(page_data)
 
         self.assertEqual(
@@ -128,7 +128,7 @@ class UnitTestCase(TestCase):
             [page1.id]
         )
 
-        page_data = {'title':'test1', 'slug':'test1'}
+        page_data = {'title': 'test1', 'slug': 'test1'}
         page2 = self.new_page(page_data)
 
         self.assertEqual(
@@ -242,7 +242,7 @@ class UnitTestCase(TestCase):
         """
         Check that PAGE_CONTENT_REVISION_DEPTH works.
         """
-        page1 = self.new_page(content={'slug':'page1'})
+        page1 = self.new_page(content={'slug': 'page1'})
         self.set_setting("PAGE_CONTENT_REVISION_DEPTH", 3)
         Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev1')
         Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev2')
@@ -257,7 +257,7 @@ class UnitTestCase(TestCase):
         """
         Check that content_dict method works.
         """
-        page1 = self.new_page(content={'slug':'page1'})
+        page1 = self.new_page(content={'slug': 'page1'})
         page1.save()
         c = Content.objects.create_content_if_changed(page1, 'en-us', 'body', 'test')
         self.assertEqual(
@@ -270,8 +270,8 @@ class UnitTestCase(TestCase):
         Check that the strict handling of URLs work as
         intended.
         """
-        page1 = self.new_page(content={'slug':'page1'})
-        page2 = self.new_page(content={'slug':'page2'})
+        page1 = self.new_page(content={'slug': 'page1'})
+        page2 = self.new_page(content={'slug': 'page2'})
         page1.save()
         page2.save()
         page2.parent = page1
@@ -307,8 +307,8 @@ class UnitTestCase(TestCase):
     def test_path_too_long(self):
         """Test that the CMS try to resolve the whole page path to find
         a suitable sub path with delegation."""
-        page1 = self.new_page(content={'slug':'page1'})
-        page2 = self.new_page(content={'slug':'page2'})
+        page1 = self.new_page(content={'slug': 'page1'})
+        page2 = self.new_page(content={'slug': 'page2'})
         from pages import urlconf_registry as reg
         reg.register_urlconf('test2', 'pages.testproj.documents.urls',
             label='test')
@@ -344,7 +344,7 @@ class UnitTestCase(TestCase):
 
     def test_page_methods(self):
         """Test that some methods run properly."""
-        page1 = self.new_page(content={'slug': 'page1', 'title':'hello'})
+        page1 = self.new_page(content={'slug': 'page1', 'title': 'hello'})
         page2 = self.new_page(content={'slug': 'page2'})
         page1.save()
         page2.save()

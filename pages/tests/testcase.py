@@ -4,7 +4,7 @@ from pages.models import Page, Content
 from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist, Engine
 from django.contrib.sites.models import Site
@@ -97,17 +97,18 @@ class TestCase(TestCase):
 
     def get_new_page_data(self, draft=False):
         """Helper method for creating page datas"""
-        page_data = {'title': 'test page %d' % self.counter,
-            'slug': 'test-page-%d' % self.counter, 'language':'en-us',
+        page_data = {
+            'title': 'test page %d' % self.counter,
+            'slug': 'test-page-%d' % self.counter, 'language': 'en-us',
             'sites': [1], 'status': Page.DRAFT if draft else Page.PUBLISHED,
             # used to disable an error with connected models
             'document_set-TOTAL_FORMS': 0, 'document_set-INITIAL_FORMS': 0,
-            }
+        }
         self.counter = self.counter + 1
         return page_data
 
     def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, parent=None, language='en-us'):
-        author = User.objects.all()[0]
+        author = get_user_model().objects.all()[0]
         page = Page.objects.create(author=author, status=Page.PUBLISHED,
             template='pages/examples/index.html', parent=parent)
         if pages_settings.PAGE_USE_SITE_ID:

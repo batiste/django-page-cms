@@ -1,8 +1,8 @@
 from django.db.models import Max
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
+from django.contrib.auth import get_user_model
 
 from pages.models import Page, Content
 from pages.managers import PageManager
@@ -171,15 +171,17 @@ def create_and_update_from_json_data(d, user):
         page = Page(parent=parent)
         created = True
 
+    user_model = get_user_model()
+
     def custom_get_user_by_email(email):
         """
         Simplified version
         """
-        return User.objects.get(email=email)
+        return user_model.objects.get(email=email)
 
     try:
         page.author = custom_get_user_by_email(d['author_email'])
-    except (User.DoesNotExist, User.MultipleObjectsReturned):
+    except (user_model.DoesNotExist, user_model.MultipleObjectsReturned):
         page.author = user
         messages.append(_("Original author '%s' not found")
             % (d['author_email'],))

@@ -1,6 +1,8 @@
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Max
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.sites.models import Site
+from django.conf import settings as global_settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 
 from pages.models import Page, Content
 from pages.managers import PageManager
@@ -10,7 +12,7 @@ from pages import settings
 from datetime import datetime
 import json as _json
 
-ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f' # for parsing dates from JSON
+ISODATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'  # for parsing dates from JSON
 JSON_PAGE_EXPORT_NAME = 'gerbi_cms_page_export_version'
 JSON_PAGE_EXPORT_VERSION = 4
 # make it readable -- there are better ways to save space
@@ -23,11 +25,11 @@ def monkeypatch_remove_pages_site_restrictions():
     removing customized get_query_set. Only actually matters
     if PAGE_HIDE_SITES is set
     """
-    from pages.managers import PageManager
     try:
         del PageManager.get_query_set
     except AttributeError:
         pass
+
 
 def dump_json_data(page):
     """
@@ -59,7 +61,7 @@ def dump_json_data(page):
         out = {}
         for p in get_placeholders(page.get_template()):
             if p.ctype in ('title', 'slug'):
-                continue # these were already included
+                continue  # these were already included
             out[p.name] = language_content(p.name)
         return out
 
@@ -69,6 +71,10 @@ def dump_json_data(page):
     def custom_email(user):
         """Allow a user's profile to return an email for the user."""
         return user.email
+
+    tags = []
+    if settings.PAGE_TAGGING_FIELD:
+        tags = [tag.name for tag in page.tags.all()]
 
     return {
         'complete_slug': dict(
@@ -96,7 +102,9 @@ def dump_json_data(page):
             ) if page.redirect_to is not None else None,
         'content': placeholder_content(),
         'content_language_updated_order': languages,
+        'tags': tags,
     }
+
 
 def update_redirect_to_from_json(page, redirect_to_complete_slugs):
     """
@@ -163,7 +171,7 @@ def create_and_update_from_json_data(d, user):
         page = Page(parent=parent)
         created = True
 
-    user_model = get_user_model
+    user_model = get_user_model()
 
     def custom_get_user_by_email(email):
         """
@@ -195,6 +203,17 @@ def create_and_update_from_json_data(d, user):
     page.redirect_to_url = d['redirect_to_url']
 
     page.save()
+
+    # Add tags
+    if settings.PAGE_TAGGING_FIELD:
+        from taggit.models import Tag
+        tags = d.get('tags', [])
+        page.tags.clear()
+        if tags:
+            for tag in tags:
+                Tag.objects.get_or_create(name=tag)
+                page.tags.add(tag)
+            page.save()
 
     if settings.PAGE_USE_SITE_ID:
         if d['sites']:
@@ -233,6 +252,7 @@ def pages_to_json(queryset):
         {JSON_PAGE_EXPORT_NAME: JSON_PAGE_EXPORT_VERSION,
             'pages': [dump_json_data(page) for page in queryset]},
         indent=JSON_PAGE_EXPORT_INDENT, sort_keys=True)
+
 
 def json_to_pages(json, user, preferred_lang=None):
     """
@@ -306,7 +326,7 @@ def validate_pages_json_data(d, preferred_lang):
                 continue
             seen_complete_slugs[lang].add(s)
 
-            if '/' not in s: # root level, no parent req'd
+            if '/' not in s:  # root level, no parent req'd
                 seen_parent = True
             if not seen_parent:
                 parent_slug, ignore = s.rsplit('/', 1)

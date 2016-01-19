@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.core.cache import caches
+from django.core.cache.backends.base import InvalidCacheBackendError
+import pdb
 
-if hasattr(caches, 'pages'):
+try:
     cache = caches['pages']
-else:
+except InvalidCacheBackendError:
     cache = caches['default']
 

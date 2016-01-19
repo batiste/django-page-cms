@@ -180,9 +180,23 @@ setting-up a cache-backend_ to have decent performance.
 
 .. _cache-backend: http://docs.djangoproject.com/en/dev/topics/cache/#setting-up-the-cache
 
-You can easily setup a local memory cache this way::
+If you want to setup a specific cache for Gerbi CMS instead of using the default you
+can do it by setting up the 'pages' cache entry::
 
-    CACHE_BACKEND = "locmem:///?max_entries=5000"
+    CACHES = {
+        'default': ...
+        'pages': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
+
+.. note::
+
+    The cache has been designed with memcache in mind: a single point of truth for cache. The CMS
+    invalidates the cache actively when changes are made. That means that you need a central cache if
+    you run this CMS in serveral processes otherwise the caches will become inconsitent.
+
 
 The sites framework
 -------------------

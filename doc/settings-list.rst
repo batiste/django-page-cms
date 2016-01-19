@@ -197,11 +197,6 @@ PAGE_EXTRA_CONTEXT
 This setting is a function that can be defined if you need to pass extra
 context data to the pages templates.
 
-PAGE_CACHE_LOCATION
-==================================
-
-Allows you to use a cache other than 'default' for cms caching.
-
 PAGE_TESTS_SAVE_SCREENSHOTS
 ==================================
 

@@ -29,7 +29,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
             email='admin_s@example.com'
         )
 
-        self.browser.get('%s%s' % (self.live_server_url,  "/admin/"))
+        self.browser.get('%s%s' % (self.live_server_url,  reverse("admin:index")))
 
         super(SeleniumTestCase, self).setUp()
 

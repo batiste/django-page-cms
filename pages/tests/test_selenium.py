@@ -59,7 +59,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
             EC.presence_of_element_located((By.ID, id)))
 
     def login(self):
-        self.visit("/admin/")
+        self.visit(reverse("admin:index"))
         # Fill login information of admin
         username = self.browser.find_element_by_id("id_username")
         username.send_keys("admin_s")

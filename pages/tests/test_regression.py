@@ -15,6 +15,8 @@ import six
 from pages.models import Page, Content
 from pages.tests.testcase import TestCase
 
+add_url = reverse("admin:pages_page_add")
+
 
 class RegressionTestCase(TestCase):
     """Django page CMS test suite class"""
@@ -30,7 +32,7 @@ class RegressionTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(add_url, page_data)
         page1 = Content.objects.get_content_slug_by_slug('page1').page
 
         page1.status = Page.DRAFT
@@ -48,7 +50,7 @@ class RegressionTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(add_url, page_data)
 
         response = c.get('/pages/page1/')
         self.assertEqual(response.status_code, 200)
@@ -89,8 +91,8 @@ class RegressionTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['title'] = 'test-162-title'
         page_data['slug'] = 'test-162-slug'
-        response = c.post('/admin/pages/page/add/', page_data)
-        self.assertRedirects(response, '/admin/pages/page/')
+        response = c.post(add_url, page_data)
+        self.assertRedirects(response, reverse("admin:pages_page_changelist"))
         request = get_request_mock()
         temp = loader.get_template('pages/tests/test2.html')
         render = temp.render({})
@@ -104,7 +106,7 @@ class RegressionTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['title'] = 'title-en-us'
         page_data['slug'] = 'slug'
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(add_url, page_data)
         page = Content.objects.get_content_slug_by_slug('slug').page
         Content(page=page, type='title', language='fr-ch',
             body="title-fr-ch").save()
@@ -158,7 +160,7 @@ class RegressionTestCase(TestCase):
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         page_data['title'] = 'title &amp;'
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(add_url, page_data)
         page1 = Content.objects.get_content_slug_by_slug('page1').page
         page1.invalidate()
         c = Content.objects.get_content(page1, 'en-us', 'title')
@@ -171,7 +173,7 @@ class RegressionTestCase(TestCase):
         page_data['slug'] = 'page1'
 
         # create a draft page and ensure we can view it
-        response = c.post('/admin/pages/page/add/', page_data)
+        response = c.post(add_url, page_data)
         response = c.get(self.get_page_url('page1/'))
         self.assertEqual(response.status_code, 200)
 

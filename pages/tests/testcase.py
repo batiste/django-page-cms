@@ -29,6 +29,7 @@ class Error404Expected(Exception):
     pass
 
 
+
 class TestCase(TestCase):
     """Django page CMS test suite class"""
     fixtures = ['pages_tests.json']
@@ -123,8 +124,8 @@ class TestCase(TestCase):
         if not client:
             client = self.get_admin_client()
         page_data = self.get_new_page_data(draft=draft)
-        response = client.post('/admin/pages/page/add/', page_data)
-        self.assertRedirects(response, '/admin/pages/page/')
+        response = client.post(reverse("admin:pages_page_add"), page_data)
+        self.assertRedirects(response, reverse("admin:pages_page_changelist"))
         slug_content = Content.objects.get_content_slug_by_slug(
             page_data['slug'])
         return slug_content.page

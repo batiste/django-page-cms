@@ -115,16 +115,17 @@ class LanguageChoiceWidget(TextInput):
 
 class PageLinkWidget(MultiWidget):
     '''A page link `Widget` for the admin.'''
+
     def __init__(self, attrs=None, page=None, language=None,
-        video_url=None, linkedpage=None, text=None):
-            l = [('', '----')]
-            for p in Page.objects.all():
-                l.append((p.id, str(p)))
-            widgets = [
-                forms.Select(choices=l),
-                TextInput(attrs=attrs)
-            ]
-            super(PageLinkWidget, self).__init__(widgets, attrs)
+            video_url=None, linkedpage=None, text=None):
+        l = [('', '----')]
+        for p in Page.objects.all():
+            l.append((p.id, str(p)))
+        widgets = [
+            forms.Select(choices=l),
+            TextInput(attrs=attrs)
+        ]
+        super(PageLinkWidget, self).__init__(widgets, attrs)
 
     def decompress(self, value):
         import json
@@ -162,5 +163,3 @@ class PageLinkWidget(MultiWidget):
             <tr><td>text</td><td>%s</td></tr>
         </table>""" % tuple(rendered_widgets)
 register_widget(PageLinkWidget)
-
-

@@ -47,7 +47,7 @@ class PageManager(TreeManager):
     def navigation(self):
         """Creates a :class:`QuerySet` of the published root pages."""
         return self.on_site().filter(
-                status=self.model.PUBLISHED).filter(parent__isnull=True)
+            status=self.model.PUBLISHED).filter(parent__isnull=True)
 
     def hidden(self):
         """Creates a :class:`QuerySet` of the hidden pages."""
@@ -112,8 +112,8 @@ class PageManager(TreeManager):
             pages_list = pages_list.exclude(status=self.model.DRAFT)
         if len(pages_list) == 1:
             if(settings.PAGE_USE_STRICT_URL and
-                pages_list[0].get_complete_slug(lang) != complete_path):
-                    return None
+                    pages_list[0].get_complete_slug(lang) != complete_path):
+                return None
             return pages_list[0]
         # if more than one page is matching the slug,
         # we need to use the full URL
@@ -179,7 +179,7 @@ class ContentManager(models.Manager):
         if settings.PAGE_CONTENT_REVISION_DEPTH:
             oldest_content = self.filter(page=page, language=language,
                 type=ctype).order_by('-creation_date'
-                )[settings.PAGE_CONTENT_REVISION_DEPTH:]
+                                     )[settings.PAGE_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
 

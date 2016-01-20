@@ -287,7 +287,6 @@ class PageAdmin(admin.ModelAdmin):
                 response = HttpResponseRedirect(urllib.parse.urlunparse(splitted))
         return response
 
-
     def add_view(self, request, form_url='', extra_context=None):
         """The ``add`` admin view for the :class:`Page <pages.models.Page>`."""
         extra_context = {
@@ -295,7 +294,7 @@ class PageAdmin(admin.ModelAdmin):
             'page_languages': settings.PAGE_LANGUAGES,
         }
         return super(PageAdmin, self).add_view(request, form_url,
-                                                            extra_context)
+                                               extra_context)
 
     def has_add_permission(self, request):
         """Return ``True`` if the current user has permission to add a new
@@ -331,7 +330,7 @@ class PageAdmin(admin.ModelAdmin):
         context = {
             'can_publish': request.user.has_perm('pages.can_publish'),
             'can_import': settings.PAGE_IMPORT_ENABLED,
-            'lang': language, # lang is the key used by show_content
+            'lang': language,  # lang is the key used by show_content
             'pages': pages,
             'opts': self.model._meta,
             'q': query
@@ -355,6 +354,7 @@ class ContentAdmin(admin.ModelAdmin):
     search_fields = ('body',)
 
 #admin.site.register(Content, ContentAdmin)
+
 
 class AliasAdmin(admin.ModelAdmin):
     list_display = ('page', 'url',)

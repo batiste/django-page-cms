@@ -84,14 +84,14 @@ def _placeholders_recursif(nodelist, plist, blist):
             dummy_context2 = Context()
             dummy_context2.template = template.Template("")
             _placeholders_recursif(node.get_parent(dummy_context2).nodelist,
-                                                        plist, blist)
+                                   plist, blist)
         # include node?
         elif hasattr(node, 'template') and hasattr(node.template, 'nodelist'):
             _placeholders_recursif(node.template.nodelist, plist, blist)
 
         # Is it a placeholder?
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
-            hasattr(node, 'as_varname') and hasattr(node, 'name'):
+                hasattr(node, 'as_varname') and hasattr(node, 'name'):
             if block:
                 node.found_in_block = block
             plist.append(node)
@@ -104,7 +104,6 @@ def _placeholders_recursif(nodelist, plist, blist):
                     _placeholders_recursif(getattr(node, key), plist, blist)
                 except:
                     pass
-
 
 
 def normalize_url(url):
@@ -128,4 +127,3 @@ def normalize_url(url):
     if len(url) > 1 and url.endswith('/'):
         url = url[0:len(url) - 1]
     return url
-

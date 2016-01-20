@@ -55,7 +55,7 @@ def parse_placeholder(parser, token):
         if bit in param_options:
             if len(remaining) < 2:
                 raise TemplateSyntaxError(
-                "Placeholder option '%s' need a parameter" % bit)
+                    "Placeholder option '%s' need a parameter" % bit)
             if bit == 'as':
                 params['as_varname'] = remaining[1]
             if bit == 'with':
@@ -162,7 +162,7 @@ class PlaceholderNode(template.Node):
         if change:
             # we need create a new content if revision is enabled
             if(settings.PAGE_CONTENT_REVISION and self.name
-                not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
+                    not in settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
                 Content.objects.create_content_if_changed(
                     page,
                     language,
@@ -344,7 +344,7 @@ class ContactPlaceholderNode(PlaceholderNode):
                     return _("An error as occured: your email has not been sent.")
         else:
             form = ContactForm()
-        renderer = render_to_string('pages/contact.html', {'form':form},
+        renderer = render_to_string('pages/contact.html', {'form': form},
             RequestContext(request))
         return mark_safe(renderer)
 

@@ -102,14 +102,14 @@ class Page(MPTTModel):
 
     if settings.PAGE_USE_SITE_ID:
         sites = models.ManyToManyField(Site,
-                default=[global_settings.SITE_ID],
-                help_text=_('The site(s) the page is accessible at.'),
-                verbose_name=_('sites'))
+            default=[global_settings.SITE_ID],
+            help_text=_('The site(s) the page is accessible at.'),
+            verbose_name=_('sites'))
 
     redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
-            related_name='redirected_pages')
+        related_name='redirected_pages')
 
     # Managers
     objects = PageManager()
@@ -180,7 +180,7 @@ class Page(MPTTModel):
         """Cache superclass result"""
         key = self.CHILDREN_KEY % self.id
         #children = cache.get(key, None)
-        #if children is None:
+        # if children is None:
         children = super(Page, self).get_children()
         #cache.set(key, children)
         return children
@@ -189,7 +189,7 @@ class Page(MPTTModel):
         """Return a :class:`QuerySet` of published children page"""
         key = self.PUB_CHILDREN_KEY % self.id
         #children = cache.get(key, None)
-        #if children is None:
+        # if children is None:
         children = Page.objects.filter_published(self.get_children()).all()
         #cache.set(key, children)
         return children
@@ -206,7 +206,7 @@ class Page(MPTTModel):
     def move_to(self, target, position='first-child'):
         """Invalidate cache when moving"""
 
-        # Invalidate both in case position matters, 
+        # Invalidate both in case position matters,
         # otherwise only target is needed.
         self.invalidate()
         target.invalidate()
@@ -253,8 +253,8 @@ class Page(MPTTModel):
             return self._languages
 
         languages = [c['language'] for
-                            c in Content.objects.filter(page=self,
-                            type="slug").values('language')]
+            c in Content.objects.filter(page=self,
+            type="slug").values('language')]
         # remove duplicates
         languages = list(set(languages))
         languages.sort()
@@ -330,9 +330,9 @@ class Page(MPTTModel):
         for p in self.get_descendants():
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
-    
-    ### Content methods
-    
+
+    # Content methods
+
     def get_content(self, language, ctype, language_fallback=False):
         """Shortcut method for retrieving a piece of page content
 
@@ -375,9 +375,9 @@ class Page(MPTTModel):
             except Content.DoesNotExist:
                 pass
         return content_list
-        
+
     ### Title and slug
-    
+
     def get_url_path(self, language=None):
         """Return the URL's path component. Add the language prefix if
         ``PAGE_USE_LANGUAGE_PREFIX`` setting is set to ``True``.
@@ -402,7 +402,7 @@ class Page(MPTTModel):
 
     def get_absolute_url(self, language=None):
         """Alias for `get_url_path`.
-        
+
         :param language: the wanted url language.
         """
         return self.get_url_path(language=language)
@@ -478,8 +478,8 @@ class Page(MPTTModel):
             language = settings.PAGE_DEFAULT_LANGUAGE
 
         return self.get_content(language, 'title', language_fallback=fallback)
-        
-    ### Formating methods
+
+    # Formating methods
 
     def margin_level(self):
         """Used in the admin menu to create the left margin."""
@@ -517,6 +517,7 @@ class Content(models.Model):
     def __str__(self):
         return u"{0} :: {1}".format(self.page.slug(), self.body[0:15])
 
+
 @python_2_unicode_compatible
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
@@ -535,4 +536,3 @@ class PageAlias(models.Model):
 
     def __str__(self):
         return "{0} :: {1}".format(self.url, self.page.get_complete_slug())
-

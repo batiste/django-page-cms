@@ -4,17 +4,18 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release TODO
+Release 1.9.0
 =============
 
-Released the TODO.
+Released the 1 of February 2016.
 
     * Support Django 1.9
     * Support Python 3.4, 3.5
     * Redirect to new urls after updating slug. New settings PAGE_REDIRECT_OLD_SLUG
     * Added get_pages_with_tag templatetag
     * Added tags in JSON export/import
-    * Cleanup
+    * Code cleanup
+    * PAGE_CACHE_LOCATION setting is removed
 
 Release 1.8.2
 =============

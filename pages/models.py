@@ -256,8 +256,7 @@ class Page(MPTTModel):
             c in Content.objects.filter(page=self,
             type="slug").values('language')]
         # remove duplicates
-        languages = list(set(languages))
-        languages.sort()
+        languages = sorted(set(languages))
         cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
         self._languages = languages
         return languages

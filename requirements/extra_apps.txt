@@ -1,8 +1,8 @@
-django-taggit
-django-haystack
-django-authority
-whoosh
-Markdown
-djangorestframework==3.3.2
-requests==2.9.0
+django-haystack>=2.4.1,<2.5.0
+django-mptt>=0.8.3,<0.9.0
+django-taggit>=0.18.1,<0.19.0
+Markdown>=2.6.6,<2.7.0
+Whoosh>=2.7.4,<2.8.0
+djangorestframework>=3.3.2,<3.4.0
+requests>=2.9.0,<3.4.0
 -e git+git@github.com:riklaunim/django-ckeditor.git#egg=django_ckeditor_updated-master

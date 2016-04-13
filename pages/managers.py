@@ -5,13 +5,10 @@ from pages.cache import cache
 from pages.utils import normalize_url, get_now
 from pages.phttp import get_slug
 
-from django.db import models, connection
+from django.db import models
 from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg, Max, Min, Count
-from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
-from django.utils.translation import ugettext_lazy as _
 
 from mptt.managers import TreeManager
 
@@ -177,9 +174,8 @@ class ContentManager(models.Manager):
 
         # Delete old revisions
         if settings.PAGE_CONTENT_REVISION_DEPTH:
-            oldest_content = self.filter(page=page, language=language,
-                type=ctype).order_by('-creation_date'
-                                     )[settings.PAGE_CONTENT_REVISION_DEPTH:]
+            oldest_content = self.filter(page=page, language=language, 
+                type=ctype).order_by('-creation_date')[settings.PAGE_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
 

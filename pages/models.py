@@ -6,16 +6,11 @@ from pages.managers import PageManager, ContentManager
 from pages.managers import PageAliasManager
 from pages import settings
 
-from datetime import datetime
 from django.db import models
 from django.conf import settings as django_settings
-from django.db.models import Max
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
-if settings.PAGE_USE_SITE_ID:
-    from django.contrib.sites.models import Site
 from django.conf import settings as global_settings
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -24,6 +19,9 @@ from mptt.models import MPTTModel
 import uuid
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
+
+if settings.PAGE_USE_SITE_ID:
+    from django.contrib.sites.models import Site
 
 
 @python_2_unicode_compatible
@@ -74,7 +72,8 @@ class Page(MPTTModel):
     # used to identify pages across different databases
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
-    author = models.ForeignKey(django_settings.AUTH_USER_MODEL, verbose_name=_('author'))
+    author = models.ForeignKey(django_settings.AUTH_USER_MODEL,
+            verbose_name=_('author'))
 
     parent = models.ForeignKey('self', null=True, blank=True,
             related_name='children', verbose_name=_('parent'))

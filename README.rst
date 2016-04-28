@@ -15,6 +15,9 @@ django-page-cms
   :target: https://codeclimate.com/github/batiste/django-page-cms
   :alt: Code Climate
 
+.. image:: https://scrutinizer-ci.com/g/batiste/django-page-cms/badges/quality-score.png?b=master
+  :target: https://scrutinizer-ci.com/g/batiste/django-page-cms/?branch=master
+  :alt: Scrutinizer Code Quality
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 

@@ -16,9 +16,7 @@ matrix:
       env: DJANGO="Django<1.10"
 # command to install dependencies
 install:
-  - "pip install -r requirements/external_apps.txt"
-  - "pip install -r requirements/test_apps.txt"
-  # - "pip install -r requirements/extra_apps.txt"
+  - "pip install -r requirements/tests.txt"
   - "pip install django-taggit"
   - "pip install coveralls"
   - "pip install $DJANGO"

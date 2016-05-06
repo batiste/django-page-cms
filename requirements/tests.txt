@@ -1,4 +1,5 @@
 -r base.txt
+-r extra.txt
 selenium
 coverage
 polib

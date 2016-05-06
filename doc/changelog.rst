@@ -9,6 +9,7 @@ Release 1.xx.xx
 
 Released the ....
 
+    * Grappelli support
     * Bug fixes
     * Code cleanup
 

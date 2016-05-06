@@ -4,6 +4,7 @@ build/
 coverage/
 dist/
 example/media/
+example/collect-static/
 django_page_cms.egg-info/
 cms.db
 local_settings.py

@@ -13,7 +13,7 @@
 <div id="content-main">
 
 {% if change %}{% if not is_popup %}
-  <ul class="object-tools">
+  <ul class="object-tools grp-object-tools">
     {% block object-tools-items %}
     {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
     <li><a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a></li>

@@ -104,6 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    # 'grappelli',
     'django.contrib.admin',
     'django.contrib.sites',
     'pages.testproj.documents',

@@ -107,11 +107,16 @@ a.popup:hover .help,
 
 /* change-list page =========================================== */
 
+/* Grappelli has fixed actions so we don't need twice */
+#grp-changelist .grp-changelist-actions {
+    display: none;
+}
+
 /* Table-wide */
-.change-list tbody tr:hover {
+.change-list-pages tbody tr:hover {
     background: #f0f2f8;
 }
-.change-list tbody tr.highlighted {
+.change-list-pages tbody tr.highlighted {
     background: #ffb;
 }
 
@@ -128,60 +133,60 @@ a.popup:hover .help,
 }
 
 /* Title cell theader */
-.change-list thead .title-cell {
+.change-list-pages thead .title-cell {
     padding: 5px 10px;
 }
 
-.change-list .title-cell .message {
+.change-list-pages .title-cell .message {
     /* improve behavior with drag-drop */
     position:absolute;
 }
 
-.change-list .selection-cell {
+.change-list-pages .selection-cell {
     /* improve behavior with drag-drop */
     /*width:22px;*/
 }
 
 /* Title cell tbody */
-.change-list tbody .title-cell-container {
+.change-list-pages tbody .title-cell-container {
     position: relative;
     text-align: left;
     font-weight: bold;
     height: 100%;
     padding-right: 150px;
 }
-html[dir=rtl] .change-list tbody .title-cell-container {
+html[dir=rtl] .change-list-pages tbody .title-cell-container {
     text-align: right;
     padding-right: 0;
     padding-left:150px;
 }
 
-.change-list tbody .title-cell .title {
+.change-list-pages tbody .title-cell .title {
     float: left;
     margin: 0 0 0 20px;
     padding: 0 14px 0 0;
     background: none;
 }
-html[dir=rtl] .change-list tbody .title-cell .title {
+html[dir=rtl] .change-list-pages tbody .title-cell .title {
     float: right;
     margin: 0 20px 0 0;
     padding: 0 0 0 14px;
     background: none;
 }
-.change-list tbody .title-cell .title:hover {
+.change-list-pages tbody .title-cell .title:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
-html[dir=rtl] .change-list tbody .title-cell .title:hover {
+html[dir=rtl] .change-list-pages tbody .title-cell .title:hover {
     background-position: left 0.2em;
 }
 /* Expand-collapse link */
-.change-list .expand-collapse {
+.change-list-pages .expand-collapse {
     position: absolute;
     left: 4px; top: 1px;
     font-family: monospace;
     font-size: 16px;
 }
-html[dir=rtl] .change-list .expand-collapse  {
+html[dir=rtl] .change-list-pages .expand-collapse  {
     left: auto; right:4px;
 }
 
@@ -189,19 +194,19 @@ html[dir=rtl] .change-list .expand-collapse  {
   margin-left:320px;
 }
 
-.change-list .expand,
-.change-list .expanded .collapse,
-.change-list .loading .expand-loading {
+.change-list-pages .expand,
+.change-list-pages .expanded .collapse,
+.change-list-pages .loading .expand-loading {
     display: block;
 }
-.change-list .collapse,
-.change-list .expanded .expand,
-.change-list .loading .expand,
-.change-list .loading .collapse,
-.change-list .expand-loading {
+.change-list-pages .collapse,
+.change-list-pages .expanded .expand,
+.change-list-pages .loading .expand,
+.change-list-pages .loading .collapse,
+.change-list-pages .expand-loading {
     display: none;
 }
-.change-list .expand-loading {
+.change-list-pages .expand-loading {
     position: relative;
     top: -2px;
     left: -4px;
@@ -218,7 +223,7 @@ html[dir=rtl] #page-list .actions-pages {
     right:auto;
     left:-5px;
 }
-.change-list .actions-pages a {
+.change-list-pages .actions-pages a {
     float: left;
     width: 15px;
     height: 14px;
@@ -227,36 +232,36 @@ html[dir=rtl] #page-list .actions-pages {
     background-repeat: no-repeat;
     opacity: 0.5; filter: alpha(opacity=50);
 }
-html[dir=rtl] .change-list .actions-pages a {
+html[dir=rtl] .change-list-pages .actions-pages a {
     float: right;
     margin-left: 5px;
     margin-right:0;
 }
-.change-list .actions-pages a:hover,
-.change-list tr:hover .actions-pages a {
+.change-list-pages .actions-pages a:hover,
+.change-list-pages tr:hover .actions-pages a {
     opacity: 1; filter: alpha(opacity=100);
 }
-.change-list .insert-add .actions-pages a,
-.change-list .insert-move .actions-pages a {
+.change-list-pages .insert-add .actions-pages a,
+.change-list-pages .insert-move .actions-pages a {
     display: none;
 }
-.change-list .actions-pages a.viewlink {
+.change-list-pages .actions-pages a.viewlink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -72px;
 }
-.change-list .actions-pages a.movelink {
+.change-list-pages .actions-pages a.movelink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -60px;
 }
-.change-list .actions-pages a.deletelink {
+.change-list-pages .actions-pages a.deletelink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -12px;
 }
-.change-list .actions-pages a.addlink {
+.change-list-pages .actions-pages a.addlink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px 0px;
 }
-.change-list .pagelink-broken {
+.change-list-pages .pagelink-broken {
     float: left;
     height: 12px;
     width: 16px;
@@ -269,15 +274,15 @@ html[dir=rtl] .change-list .actions-pages a {
     margin-left: 16px;
 }
 
-.change-list tbody .title-cell a.broken {
+.change-list-pages tbody .title-cell a.broken {
     margin-left: 3px;
 }
-.change-list .actions-pages a.cancellink {
+.change-list-pages .actions-pages a.cancellink {
     display: none;
     font-weight: normal;
     opacity: 1;  filter: alpha(opacity=100);
 }
-.change-list .insert-move .selected .actions-pages a.cancellink {
+.change-list-pages .insert-move .selected .actions-pages a.cancellink {
     display: block;
     width: auto;
     height: auto;
@@ -286,11 +291,11 @@ html[dir=rtl] .change-list .actions-pages a {
 }
 
 /* Page Status links */
-.change-list td.publish-cell {
+.change-list-pages td.publish-cell {
     vertical-align: middle;
     width: 200px;
 }
-.change-list .publish-cell span,
+.change-list-pages .publish-cell span,
 .status span {
     float: left;
     height: 12px;
@@ -300,64 +305,66 @@ html[dir=rtl] .change-list .actions-pages a {
     text-indent: -9999px;
     margin-top: 6px;
 }
-.change-list .publish-cell span.draft,
+.change-list-pages .publish-cell span.draft,
 .status span.draft {
     background-position: -2px -24px;
 }
-.change-list .publish-cell span.published,
+.change-list-pages .publish-cell span.published,
 .status span.published {
     background-position: -2px -48px;
 }
-.change-list .publish-cell span.hidden,
+.change-list-pages .publish-cell span.hidden,
 .status span.hidden {
     background-position: -2px -36px;
 }
 
 
 /* Move links */
-.change-list .insert {
+.change-list-pages .insert {
     display: none;
     position: absolute;
     right: 0; top: -4px;
     height: 21px; /* IE6 fix */
 }
-html[dir=rtl] .change-list .insert {
+html[dir=rtl] .change-list-pages .insert {
     right:auto;
     left:0;
 }
 
-.change-list .insertable .insert {
+.change-list-pages .insertable .insert {
     display: block;
 }
-.change-list .insert a {
+.change-list-pages .insert a {
     float: left;
     width: 10px; height: 21px;
     padding: 0 5px;
     background: url(../images/icons/insert.gif) no-repeat;
 }
-.change-list .insert a.left                             { background-position:   5px 0; }
-.change-list .insert a.right                            { background-position: -10px 0; }
-.change-list .insert a.first-child                      { background-position: -25px 0; width: 14px; }
-.change-list .insert-add tr:hover .insert a.left,
-.change-list .insert-add .insert a.left:hover           { background-position:   5px -21px; }
-.change-list .insert-add tr:hover .insert a.right,
-.change-list .insert-add .insert a.right:hover          { background-position: -10px -21px; }
-.change-list .insert-add tr:hover .insert a.first-child,
-.change-list .insert-add .insert a.first-child:hover    { background-position: -25px -21px; }
-.change-list .insert-move tr:hover .insert a.left,
-.change-list .insert-move .insert a.left:hover          { background-position:   5px -42px; }
-.change-list .insert-move tr:hover .insert a.right,
-.change-list .insert-move .insert a.right:hover         { background-position: -10px -42px; }
-.change-list .insert-move tr:hover .insert a.first-child,
-.change-list .insert-move .insert a.first-child:hover   { background-position: -25px -42px; }
-.change-list .insert .help {
+.change-list-pages .insert a.left  {
+    background-position:   5px 0;
+}
+.change-list-pages .insert a.right                            { background-position: -10px 0; }
+.change-list-pages .insert a.first-child                      { background-position: -25px 0; width: 14px; }
+.change-list-pages .insert-add tr:hover .insert a.left,
+.change-list-pages .insert-add .insert a.left:hover           { background-position:   5px -21px; }
+.change-list-pages .insert-add tr:hover .insert a.right,
+.change-list-pages .insert-add .insert a.right:hover          { background-position: -10px -21px; }
+.change-list-pages .insert-add tr:hover .insert a.first-child,
+.change-list-pages .insert-add .insert a.first-child:hover    { background-position: -25px -21px; }
+.change-list-pages .insert-move tr:hover .insert a.left,
+.change-list-pages .insert-move .insert a.left:hover          { background-position:   5px -42px; }
+.change-list-pages .insert-move tr:hover .insert a.right,
+.change-list-pages .insert-move .insert a.right:hover         { background-position: -10px -42px; }
+.change-list-pages .insert-move tr:hover .insert a.first-child,
+.change-list-pages .insert-move .insert a.first-child:hover   { background-position: -25px -42px; }
+.change-list-pages .insert .help {
     top: -20px;
 }
-.change-list .insert a.cancellink {
+.change-list-pages .insert a.cancellink {
     display: none;
     font-weight: normal;
 }
-.change-list .insert-add .selected .insert a.cancellink {
+.change-list-pages .insert-add .selected .insert a.cancellink {
     display: block;
     width: auto;
     height: auto;
@@ -365,82 +372,82 @@ html[dir=rtl] .change-list .insert {
     padding: 0 5px;
     background: none;
 }
-.change-list .insert a.cancellink .help {
+.change-list-pages .insert a.cancellink .help {
     top: -24px;
 }
-.change-list .insert-loading {
+.change-list-pages .insert-loading {
     position: absolute;
     left: 0; top: -1px;
     font-size: 16px;
 }
 
 /* Languages */
-.change-list th.language-cell {
+.change-list-pages th.language-cell {
     padding-right: 10px;
 }
-.change-list .language-cell {
+.change-list-pages .language-cell {
     width: 1%;
     white-space: nowrap;
     padding: 5px 0 5px 10px;
 }
-.change-list .language-cell ul {
+.change-list-pages .language-cell ul {
     margin: 0;
     padding: 0;
 }
-.change-list .language-cell li {
+.change-list-pages .language-cell li {
     display: inline;
     list-style: none;
     padding: 0
 }
-.change-list .language-cell .changelink {
+.change-list-pages .language-cell .changelink {
     margin: 0 4px;
     padding: 0 12px 0 0;
     font-weight: bold;
     text-transform: uppercase;
     background: none;
 }
-.change-list .language-cell .changelink:hover {
+.change-list-pages .language-cell .changelink:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
-.change-list .language-cell .addlang {
+.change-list-pages .language-cell .addlang {
     color: #ccc;
 }
-.change-list .language-cell .addlang:hover {
+.change-list-pages .language-cell .addlang:hover {
     color: #007418;
     background: url(../images/icons/add.gif) right 0.2em no-repeat;
 }
 
 /* Publication status */
-.change-list .publish-cell {
+.change-list-pages .publish-cell {
     width: 1%;
     white-space: nowrap;
     padding: 0 20px 0 10px;
 }
-.change-list .publish-cell .box {
+.change-list-pages .publish-cell .box {
     width: 130px;
 }
 
-.change-list th.publish-cell {
+.change-list-pages th.publish-cell {
     padding: 5px 10px;
 }
-.change-list .publish-cell img {
+.change-list-pages .publish-cell img {
     width: 10px;
     height: 10px;
 }
-.change-list .publish-cell .publish-select {
+.change-list-pages .publish-cell .publish-select {
     margin: 2px;
     padding: 1px;
 }
 
 /* Publication status */
-.change-list .template-cell {
+.change-list-pages .template-cell {
     width: 1%;
     white-space: nowrap;
     padding: 5px 10px;
 }
 
 /* autor */
-.change-list .author-cell {
+.change-list-pages .author-cell {
     width: 1%;
     white-space: nowrap;
     padding: 5px 10px;
@@ -449,35 +456,48 @@ html[dir=rtl] .change-list .insert {
 /* change-form page =========================================== */
 
 /* Global */
+.grp-change-form .sidebar,
 .change-form .sidebar {
     width: 305px;
     float: left;
     display: inline; /* IE6 fix */
     margin-right: 1em;
 }
+html[dir=rtl] .grp-change-form .sidebar,
 html[dir=rtl] .change-form .sidebar {
     float:right;
     margin-left:1em;
     margin-right: 0;
 }
 
+.grp-change-form .grp-module:not(.grp-submit-row) {
+    min-width: 0;
+}
+
+.grp-change-form label,
 .change-form label {
     width: 90px; /* IE6 fix */
     line-height: 20px;
 }
+.grp-change-form .sidebar input,
+.grp-change-form .sidebar select,
 .change-form .sidebar input,
 .change-form .sidebar select {
     width: 148px;
 }
 
+.grp-change-form .sidebar p.help,
+.grp-change-form .sidebar .form-row p.help ,
 .change-form .sidebar p.help,
 .change-form .sidebar .form-row p.help {
     margin-left: 0;
     padding: 2px 0 0;
 }
+.grp-change-form .sidebar div.description,
 .change-form .sidebar div.description {
     margin: 5px;
 }
+.grp-change-form .field-box
 .change-form .field-box {
     position: relative;
     float: none;
@@ -508,6 +528,7 @@ html[dir=rtl] .change-form .sidebar {
 html[dir=rtl] .module-general .status img {margin-left:0; margin-right:4px;}
 
 /* Options */
+.grp-change-form .module-options .form-row,
 .change-form .module-options .form-row {
     float: left;
     width: 33.3333%;
@@ -516,6 +537,7 @@ html[dir=rtl] .module-general .status img {margin-left:0; margin-right:4px;}
     border-bottom: none;
     border-right: 1px solid #eee;
 }
+html[dir=rtl] .grp-change-form .module-options .form-row,
 html[dir=rtl] .change-form .module-options .form-row {
     float: right;
     margin-right:0;
@@ -524,12 +546,16 @@ html[dir=rtl] .change-form .module-options .form-row {
     border-right: 0px none;
 }
 
+.grp-change-form .module-options .form-row .field-box,
 .change-form .module-options .form-row .field-box {
     padding: 8px 12px;
+    /*background: red;*/
 }
+.grp-change-form .module-options select,
 .change-form .module-options select {
     width: 150px;
 }
+.grp-change-form .module-options .redirect_to,
 .change-form .module-options .redirect_to {
     border-right: none;
 }
@@ -546,6 +572,7 @@ html[dir=rtl] .change-form .module-options .form-row {
     width: 94px;
 }
 /* Languages */
+.grp-change-form .module-options .language ul,
 .change-form .module-options .language ul {
     margin: 0;
     padding: 3px 0;
@@ -556,6 +583,9 @@ html[dir=rtl] .change-form .module-options .form-row {
     margin: 0;
     padding: 0
 }
+.grp-change-form .module-options .language .editlink,
+.grp-change-form .module-options .language .addlink,
+.grp-change-form .module-options .language .current,
 .change-form .module-options .language .editlink,
 .change-form .module-options .language .addlink,
 .change-form .module-options .language .current {
@@ -568,16 +598,20 @@ html[dir=rtl] .change-form .module-options .form-row {
     text-transform: uppercase;
     background: none;
 }
+.grp-change-form .module-options .language .editlink:hover,
 .change-form .module-options .language .editlink:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
+.grp-grp-change-form .module-options .language .addlink,
 .change-form .module-options .language .addlink {
     color: #ccc;
 }
+.grp-change-form .module-options .language .addlink:hover,
 .change-form .module-options .language .addlink:hover {
     color: #007418;
     background: url(../images/icons/add.gif) right 0.2em no-repeat;
 }
+.grp-change-form .module-options .language .current,
 .change-form .module-options .language .current {
     margin-right: 16px;
     padding: 0 2px;
@@ -586,22 +620,33 @@ html[dir=rtl] .change-form .module-options .form-row {
 }
 
 /* Content */
+.grp-change-form .module-content {
+    width: auto;
+    float: none;
+    clear: none;
+}
+
+.grp-change-form .module-content .form-row,
 .change-form .module-content .form-row {
     position: relative;
     padding: 0;
 }
+.grp-change-form .module-content .field-box,
 .change-form .module-content .field-box {
     position: relative;
     float: none;
     padding: 8px 12px;
 }
+.grp-change-form .module-content .revisions,
 .change-form .module-content .revisions {
     width: 150px;
 }
+.grp-change-form .module-content input[type=text],
 .change-form .module-content input[type=text] {
   width:25em;
 }
 
+.grp-change-form .module-content textarea,
 .change-form .module-content textarea {
   width:35em;
 }

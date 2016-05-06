@@ -10,6 +10,7 @@ Release 1.xx.xx
 Released the ....
 
     * Bug fixes
+    * Code cleanup
 
 Release 1.9.0
 =============

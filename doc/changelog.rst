@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.xx.xx
+=============
+
+Released the ....
+
+    * Bug fixes
+
 Release 1.9.0
 =============
 

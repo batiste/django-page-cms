@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_modify pages_tags staticfiles %}
+{% load i18n admin_modify pages_tags staticfiles admin_urls %}
 
 {% block title %}{% trans "Edit" %}{% endblock %}
 
@@ -22,7 +22,8 @@
 {% if change %}{% if not is_popup %}
   <ul class="object-tools">
     {% block object-tools-items %}
-    <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+    {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+    <li><a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a></li>
     {% if has_absolute_url %}<li><a href="{% show_absolute_url original %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
     {% endblock %}
   </ul>

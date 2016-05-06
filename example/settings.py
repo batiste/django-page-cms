@@ -13,7 +13,7 @@ CACHE_BACKEND = 'locmem:///'
 
 MANAGERS = ADMINS
 
-#AUTH_PROFILE_MODULE = 'profiles.Profile'
+# AUTH_PROFILE_MODULE = 'profiles.Profile'
 
 DATABASES = {
     'default': {
@@ -85,7 +85,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'example.urls'
 
-#CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
+# CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
 CACHES = {
     'default': {
@@ -112,7 +112,7 @@ INSTALLED_APPS = (
     'pages.plugins.pofiles',
     'mptt',
     'rest_framework'
-    #'ckeditor', # if commented a fallback widget will be used
+    # 'ckeditor', # if commented a fallback widget will be used
 )
 
 PAGE_TAGGING = False
@@ -123,7 +123,7 @@ LANGUAGE_CODE = 'en-us'
 
 # This is defined here as a do-nothing function because we can't import
 # django.utils.translation -- that module depends on the settings.
-gettext_noop = lambda s: s
+gettext_noop = lambda s: s  # noqa
 
 # languages you want to translate into the CMS.
 PAGE_LANGUAGES = (
@@ -189,23 +189,23 @@ if 'ckeditor' in INSTALLED_APPS:
         'default': {
             'width': 600,
             'height': 300,
-            #'language': 'en', # it not defined, the widget is localized with
-                               # the browser default value
+            # 'language': 'en', # it not defined, the widget is localized with
+            # the browser default value
             'toolbar': [
-                ['Bold', 'Italic','Underline', 'Strike', 'Subscript'],
-                [ 'Source','-', 'Cut','Copy','Paste','PasteText','PasteFromWord'],
+                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript'],
+                ['Source', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'],
             ]
         },
         'minimal': {
             'width': 600,
             'toolbar': [
-                ['Bold', 'Italic','Underline', 'Strike', 'Subscript', '-',
-                'Link','Unlink' ],
+                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', '-',
+                 'Link', 'Unlink'],
             ],
         },
     }
 
 try:
-    from local_settings import *
+    from local_settings import *  # noqa
 except ImportError:
     pass

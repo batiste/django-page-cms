@@ -2,9 +2,8 @@
 django-haystack>=2.4.1,<2.5.0
 Markdown>=2.6.6,<2.7.0
 Whoosh>=2.7.4,<2.8.0
--e git+git@github.com:django-ckeditor/django-ckeditor.git#egg=django_ckeditor
+django-ckeditor>=5.0.3,<6.0.0
 selenium
 coverage
 polib
 djangorestframework==3.3.2
-	

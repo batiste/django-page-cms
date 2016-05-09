@@ -348,8 +348,7 @@ default configuration has to be defined in ``CKEDITOR_CONFIGS``. For example::
 
 .. note::
 
-    In order to use this placeholder, the application `django-ckeditor updated
-    fork <https://github.com/riklaunim/django-ckeditor>`_ needs to be
+    In order to use this placeholder, the application `django-ckeditor <https://github.com/django-ckeditor/django-ckeditor>`_ needs to be
     installed and configured (trivial). `See the docs
     <https://github.com/riklaunim/django-ckeditor#django-ckeditor>`_ for
     further details. Also have a look at the example project to see a working

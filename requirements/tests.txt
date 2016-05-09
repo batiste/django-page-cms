@@ -1,7 +1,10 @@
 -r base.txt
--r extra.txt
+django-haystack>=2.4.1,<2.5.0
+Markdown>=2.6.6,<2.7.0
+Whoosh>=2.7.4,<2.8.0
+-e git+git@github.com:riklaunim/django-ckeditor.git#egg=django_ckeditor_updated-master
 selenium
 coverage
 polib
 djangorestframework==3.3.2
-requests==2.9.0
+	

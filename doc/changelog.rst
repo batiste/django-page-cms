@@ -4,6 +4,15 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.1
+=============
+
+Released the <to be determined>.
+
+    * Language fallback for empty page placeholders in the admin was enabeled
+      and causing possible weirdness
+
+
 Release 1.9.0
 =============
 

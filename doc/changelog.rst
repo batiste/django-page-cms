@@ -11,7 +11,8 @@ Released the <to be determined>.
 
     * Language fallback for empty page placeholders in the admin was enabeled
       and causing possible weirdness
-
+    * Bug fixes
+    * Code cleanup
 
 Release 1.9.0
 =============

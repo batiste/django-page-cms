@@ -3,7 +3,7 @@
 
 $(function($) {
 
-    if(!$("body").hasClass("change-list")) {
+    if(!$("body").hasClass("change-list-pages")) {
       return;
     }
     if(!window.pages) {
@@ -12,9 +12,9 @@ $(function($) {
     var pages = window.pages;
     var static_url = window.static_url;
     var django = window.django;
-    var action = false; 
+    var action = false;
     var selected_page = false;
-    var changelist = $('#changelist');
+    var changelist = $('#page-list');
 
     if(!window.gettext) {
         window.gettext = function(str) {
@@ -262,7 +262,7 @@ $(function($) {
             if(down) {
               move_y = start_y - e.pageY;
               // we have a drag an drop
-              if(Math.abs(move_y) > 8 && !drag_initiated) { 
+              if(Math.abs(move_y) > 8 && !drag_initiated) {
                 indicator = $(".drag-indicator");
                 indicator.text(line.find(".title").text());
                 indicator.show();
@@ -280,7 +280,7 @@ $(function($) {
                   lines_position.push(
                     {line:el, pos:possible_target.position().top + possible_target.height() / 2}
                   );
-                }); 
+                });
               }
               if(drag_initiated) {
                 indicator.show();
@@ -329,7 +329,7 @@ $(function($) {
             var target = choosen_line.id.split('page-row-')[1];
             move_page(line_id, "first-child", target);
             return false;
-        }); 
+        });
 
         $(document).on("click", ".move-bottom", function() {
             var target = choosen_line.id.split('page-row-')[1];
@@ -346,7 +346,7 @@ $(function($) {
         $(document).on("click", function() {
             $("#page-list tbody tr").removeClass("highlighted");
             $(".drag-dialog").hide();
-        }); 
+        });
 
     }
     bind_sortable();

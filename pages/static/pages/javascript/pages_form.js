@@ -3,7 +3,7 @@
 
 $(function() {
 
-    if(!$("body").hasClass("change-form")) {
+    if(!$("body").hasClass("change-form") && !$("body").hasClass("grp-change-form")) {
       return;
     }
 

@@ -1,8 +1,8 @@
 {% load pages_tags i18n cache %}
 
-<tr id="page-row-{{ page.id }}" 
-    class="child-of-{{ page.parent_id }} draggable" 
-    data-mptt-left="{{ page.lft }}" 
+<tr id="page-row-{{ page.id }}"
+    class="child-of-{{ page.parent_id }} draggable"
+    data-mptt-left="{{ page.lft }}"
     data-mptt-right="{{ page.rght }}"
     data-mptt-tree-id="{{ page.tree_id }}"
     >
@@ -32,7 +32,7 @@
             <div class="actions-pages">
                 <a class="viewlink" href="{% show_absolute_url page %}" target="_blank" title="{% trans "view this page" %}"></a>
                 <a class="movelink" id="move-link-{{ page.id }}" href="#" title="{% trans "move this page" %}"></a>
-                <a class="addlink" id="add-link-{{ page.id }}" href="#" title="{% trans "insert a new page here" %}"></a>
+                <a class="addlink gpr-addlink" id="add-link-{{ page.id }}" href="#" title="{% trans "insert a new page here" %}"></a>
                 {% if not page.children.count %}
                 <a class="deletelink" href="{{ page.id }}/delete/" title="{% trans "delete this page" %}"></a>
                 {% else %}

@@ -8,6 +8,8 @@
 <script type="text/javascript">var static_url = "{% static "" %}";</script>
 {% endblock %}
 
+{% block bodyclass %}{{ block.super }} change-list-pages{% endblock %}
+
 {% block result_list %}
 <div id="toolbar">
 <form id="changelist-search" action="" method="post">

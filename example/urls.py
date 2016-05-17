@@ -24,6 +24,6 @@ if 'ckeditor' in settings.INSTALLED_APPS:
     ]
 
 urlpatterns += [
-    # this gonna match /admin if someone forget the traling slash
+    # this will match /admin if someone forget the traling slash
     url(r'^', include('pages.urls')),
 ]

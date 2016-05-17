@@ -85,11 +85,11 @@ class PageAdmin(admin.ModelAdmin):
         if method not in cls.actions:
             cls.actions.append(method)
 
-    def urls(self):
+    def get_urls(self):
+        urls = super(PageAdmin, self).get_urls()
         from django.conf.urls import url
 
-        # Admin-site-wide views.
-        urlpatterns = [
+        pages_urls = [
             url(r'^$', self.list_pages, name='page-changelist'),
             url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 traduction, name='page-traduction'),
@@ -107,11 +107,8 @@ class PageAdmin(admin.ModelAdmin):
                 change_status, name='page-change-status'),
         ]
 
-        urlpatterns += super(PageAdmin, self).urls
+        return pages_urls + urls
 
-        return urlpatterns
-
-    urls = property(urls)
 
     def i18n_javascript(self, request):
         """Displays the i18n JavaScript that the Django admin

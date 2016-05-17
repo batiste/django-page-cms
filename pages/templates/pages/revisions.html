@@ -3,7 +3,7 @@
     <select class="revisions">
         <option value="" selected="selected">{% trans "Revisions" %}</option>
         {% for revision in revisions %}
-            <option value="./get-content/{{ revision.id }}/">{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</option>
+            <option value='{% url "admin:page-get-content" revision.page.id revision.id %}'>{{ revision.creation_date|date:_("DATETIME_FORMAT") }}</option>
         {% endfor %}
     </select>
 {% endif %}

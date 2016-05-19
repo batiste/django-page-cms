@@ -4,13 +4,13 @@ django-page-cms
 
 .. image:: https://travis-ci.org/batiste/django-page-cms.svg?branch=master
   :target: https://travis-ci.org/batiste/django-page-cms
-  
+
 .. image:: https://coveralls.io/repos/batiste/django-page-cms/badge.svg
   :target: https://coveralls.io/r/batiste/django-page-cms
-  
+
 .. image:: https://img.shields.io/pypi/dm/django-page-cms.svg
   :target: https://pypi.python.org/pypi/django-page-cms/
-  
+
 .. image:: https://codeclimate.com/github/batiste/django-page-cms/badges/gpa.svg
   :target: https://codeclimate.com/github/batiste/django-page-cms
   :alt: Code Climate
@@ -21,7 +21,7 @@ django-page-cms
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
-  * `Full documentation <http://django-page-cms.readthedocs.org/en/latest/>`_
+  * `Full documentation <http://django-page-cms.readthedocs.io/en/latest/>`_
   * `How to contribute <doc/contributions.rst>`_
 
 Django page CMS is based around a placeholders concept. Placeholder is a special template tag that

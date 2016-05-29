@@ -91,7 +91,8 @@ def _placeholders_recursif(nodelist, plist, blist):
 
         # Is it a placeholder?
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
-                hasattr(node, 'as_varname') and hasattr(node, 'name'):
+                hasattr(node, 'as_varname') and hasattr(node, 'name') \
+                and hasattr(node, 'section'):
             if block:
                 node.found_in_block = block
             plist.append(node)

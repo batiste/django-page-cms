@@ -12,6 +12,7 @@ Released the <to be determined>.
     * Language fallback for empty page placeholders in the admin was enabeled
       and causing possible weirdness
     * Grappelli support
+    * Support for section (grouping) fields in admin
     * Bug fixes
     * Code cleanup
 

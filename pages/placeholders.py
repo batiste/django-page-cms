@@ -45,7 +45,7 @@ def parse_placeholder(parser, token):
     remaining = bits[2:]
     params = {}
     simple_options = ['parsed', 'inherited', 'untranslated']
-    param_options = ['as', 'on', 'with']
+    param_options = ['as', 'on', 'with', 'section']
     all_options = simple_options + param_options
     while remaining:
         bit = remaining[0]
@@ -62,6 +62,8 @@ def parse_placeholder(parser, token):
                 params['widget'] = remaining[1]
             if bit == 'on':
                 params['page'] = remaining[1]
+            if bit == 'section':
+                params['section'] = unescape_string_literal(remaining[1])
             remaining = remaining[2:]
         elif bit == 'parsed':
             params['parsed'] = True
@@ -99,7 +101,7 @@ class PlaceholderNode(template.Node):
     widget = TextInput
 
     def __init__(self, name, page=None, widget=None, parsed=False,
-            as_varname=None, inherited=False, untranslated=False, has_revision=True):
+            as_varname=None, inherited=False, untranslated=False, has_revision=True, section=None):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -112,6 +114,7 @@ class PlaceholderNode(template.Node):
         self.inherited = inherited
         self.untranslated = untranslated
         self.as_varname = as_varname
+        self.section = section
 
         self.found_in_block = None
 

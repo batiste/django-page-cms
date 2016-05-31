@@ -10,6 +10,7 @@ from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
 
+from collections import defaultdict
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -160,7 +161,6 @@ class PageAdmin(admin.ModelAdmin):
         Add fieldsets of placeholders to the list of already
         existing fieldsets.
         """
-        general_fields = list(self.general_fields)
 
         # some ugly business to remove freeze_date
         # from the field list
@@ -178,17 +178,24 @@ class PageAdmin(admin.ModelAdmin):
         default_fieldsets[0][1] = general_module
 
         placeholder_fieldsets = []
+        section_placeholder_fieldsets = defaultdict(list)
         template = get_template_from_request(request, obj)
         for placeholder in get_placeholders(template):
-            if placeholder.ctype not in self.mandatory_placeholders:
+            if placeholder.ctype not in self.mandatory_placeholders and not placeholder.section:
                 placeholder_fieldsets.append(placeholder.ctype)
+            elif placeholder.section:
+                section_placeholder_fieldsets[placeholder.section].append(placeholder.ctype)
 
         additional_fieldsets = []
+        for title, fieldset in section_placeholder_fieldsets.items():
+            additional_fieldsets.append((title, {
+                'fields': fieldset,
+                'classes': ('module-content collapse grp-collapse grp-closed',),
+            }))
         additional_fieldsets.append((_('Content'), {
             'fields': placeholder_fieldsets,
             'classes': ('module-content',),
         }))
-
         return default_fieldsets + additional_fieldsets
 
     def save_form(self, request, form, change):

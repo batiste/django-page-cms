@@ -402,3 +402,18 @@ class TemplateTestCase(TestCase):
 
         context = {'current_page': page, 'request': get_request_mock()}
         self.assertTrue("<form" in render(template, context))
+
+    def test_placeholder_section(self):
+        tpl = ("{% load pages_tags %}{% placeholder 'meta_description' section 'SEO Options' %}")
+
+        template = self.get_template_from_string(tpl)
+        found = False
+        for node in template.nodelist:
+            if isinstance(node, PlaceholderNode):
+                found = True
+                self.assertEqual(node.section, 'SEO Options')
+        self.assertTrue(found)
+
+        page = self.new_page({'meta_description': 'foo'})
+        context = {'current_page': page, 'request': get_request_mock()}
+        self.assertTrue("foo" in render(template, context))

@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
 
+import re
+import unicodedata
+
 from django.conf import settings as django_settings
 from django.utils import timezone
 from django.template import Context
 from django import template
+from django.utils.encoding import force_text
+from django.utils.safestring import SafeText, mark_safe
+from django.utils.functional import allow_lazy
+from django.utils import six
 
 from datetime import datetime
 
@@ -128,3 +135,23 @@ def normalize_url(url):
     if len(url) > 1 and url.endswith('/'):
         url = url[0:len(url) - 1]
     return url
+
+
+def slugify(value, allow_unicode=False):
+    """
+    Convert to ASCII if 'allow_unicode' is False. Convert spaces to hyphens.
+    Remove characters that aren't alphanumerics, underscores, or hyphens.
+    Convert to lowercase. Also strip leading and trailing whitespace.
+    Copyright: https://docs.djangoproject.com/en/1.9/_modules/django/utils/text/#slugify
+    TODO: replace after stopping support for Django 1.8
+    """
+    value = force_text(value)
+    if allow_unicode:
+        value = unicodedata.normalize('NFKC', value)
+        value = re.sub('[^\w\s-]', '', value, flags=re.U).strip().lower()
+        return mark_safe(re.sub('[-\s]+', '-', value, flags=re.U))
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    return mark_safe(re.sub('[-\s]+', '-', value))
+
+slugify = allow_lazy(slugify, six.text_type, SafeText)

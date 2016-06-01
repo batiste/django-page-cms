@@ -354,6 +354,13 @@ class TemplateTestCase(TestCase):
         self.assertTrue("page_%d" % page.id in filename)
         self.assertTrue(placeholder.name in filename)
 
+    def test_get_filename_edge_case(self):
+        placeholder = PlaceholderNode("placeholdername")
+        page = self.new_page({'slug': 'page1'})
+        fakefile = SimpleUploadedFile(name=u"hello<script>world", content=six.b('bytes'))
+        filename = get_filename(page, placeholder, fakefile)
+        self.assertNotIn('<', filename)
+
     def test_json_placeholder(self):
         tpl = ("{% load pages_tags %}{% jsonplaceholder p1 as v %}{{ v.a }}")
 

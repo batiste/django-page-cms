@@ -13,6 +13,7 @@ Released the <to be determined>.
       and causing possible weirdness
     * Grappelli support
     * Support for section (grouping) fields in admin
+    * Clean upload file names
     * Bug fixes
     * Code cleanup
 

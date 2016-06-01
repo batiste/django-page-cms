@@ -3,6 +3,7 @@ from pages.widgets_registry import get_widget
 from pages import settings
 from pages.models import Content
 from pages.widgets import ImageInput, FileInput
+from pages.utils import slugify
 
 from django import forms
 from django.core.mail import send_mail
@@ -250,10 +251,12 @@ def get_filename(page, placeholder, data):
     """
     Generate a stable filename using the orinal filename.
     """
+    name_parts = data.name.split('.')
+    name = slugify('.'.join(name_parts[:-1]), allow_unicode=True)
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
-        placeholder.ctype + '-' + str(time.time()) + '-' + data.name
+        placeholder.ctype + '-' + str(time.time()) + '-' + name + '.' + name_parts[-1]
     )
     return filename
 

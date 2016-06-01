@@ -348,10 +348,11 @@ class TemplateTestCase(TestCase):
     def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        fakefile = SimpleUploadedFile(name=six.u("myfile.pdf"), content=six.b('bytes'))
-        self.assertTrue(fakefile.name in get_filename(page, placeholder, fakefile))
-        self.assertTrue("page_%d" % page.id in get_filename(page, placeholder, fakefile))
-        self.assertTrue(placeholder.name in get_filename(page, placeholder, fakefile))
+        fakefile = SimpleUploadedFile(name=u"some {}[]@$%*()+myfile.pdf", content=six.b('bytes'))
+        filename = get_filename(page, placeholder, fakefile)
+        self.assertTrue('some-myfile.pdf' in filename)
+        self.assertTrue("page_%d" % page.id in filename)
+        self.assertTrue(placeholder.name in filename)
 
     def test_json_placeholder(self):
         tpl = ("{% load pages_tags %}{% jsonplaceholder p1 as v %}{{ v.a }}")

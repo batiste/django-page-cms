@@ -9,16 +9,6 @@ package_name = 'django-page-cms'
 def local_open(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
-requirements = local_open('requirements/external_apps.txt')
-
-# Build the list of dependency to install
-required_to_install = []
-for dist in requirements.readlines():
-    dist = dist.strip()
-    try:
-        require(dist)
-    except DistributionNotFound:
-        required_to_install.append(dist)
 
 data_dirs = []
 for directory in os.walk('pages/templates'):
@@ -50,7 +40,7 @@ setup(
     license=pages.__license__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
-    install_requires=required_to_install,
+    #install_requires=required_to_install,
     packages=find_packages(exclude=['example', 'example.*']),
     # very important for the binary distribution to include the templates.
     package_data={'pages': data_dirs},

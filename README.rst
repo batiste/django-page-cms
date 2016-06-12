@@ -30,5 +30,5 @@ dynamically appears in the page admin interface.
 
 Each page can have a different template with different placeholders.
 
-.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
+.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/admin-screenshot1.png
 

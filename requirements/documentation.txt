@@ -1,5 +1,2 @@
-django>=1.8,<1.10
-django-mptt>=0.8.0
-six>=1.5.2
-Pillow>=3.2.0<3.3.0
+-r base.txt
 sphinx

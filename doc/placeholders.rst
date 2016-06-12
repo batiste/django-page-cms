@@ -79,13 +79,19 @@ Template syntax example::
     <img src="{{ img_src }}" alt=""/>
 
 The **section** option
------------------
+-------------------------
 
-The **section** option is used to group a placeholder into a section in admin.
+The **section** option is used to group placeholders into a section in the admin interface.
+A section is collapsed by default and hides the fields.
 
 Template syntax example::
 
     <meta name="description" content="{% placeholder "meta_description" section "SEO" %}" />
+    <meta name="description" content="{% placeholder "meta_keywords" section "SEO" %}" />
+
+You will get
+
+.. image:: images/section.png
 
 The **parsed** keyword
 -----------------------

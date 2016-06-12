@@ -22,6 +22,7 @@ recursive-include pages *.mo
 recursive-include pages *.po
 global-exclude *.pyc
 prune pages/testproj/media/*
+prune doc/.build
 # global-exclude coverage/*
 # this important to prune at the end
 # prune example

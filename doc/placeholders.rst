@@ -20,6 +20,16 @@ The syntax for a placeholder tag is the following::
 Enable the placeholder tags
 =============================
 
+.. code:: html
+
+    <div>{{ test }}</div>
+
+
+.. code:: django
+
+    <div>{{ test }}</div>
+
+
 The required syntax to load placeholder tags is the following::
 
     {% load pages_tags %}
@@ -35,7 +45,9 @@ If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
 to get the content of the placeholder.
 
-Template syntax example::
+Template syntax example
+
+.. code:: django
 
     {% placeholder "main menu" on root_page %}
 
@@ -171,13 +183,15 @@ A file upload field will appears into the page admin interface.
 Markdown placeholder
 =====================
 
-If you want to write in the MarkDown format there is a MarkDown placeholder
+If you want to write in the MarkDown format there is a MarkDown placeholder::
 
     {% markdownplaceholder mark %}
 
 .. note::
     
-    You will have to install the Markdown library::
+    You will have to install the Markdown library
+
+    .. code:: shell
 
         pip install Markdown
 

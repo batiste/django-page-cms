@@ -9,6 +9,7 @@ django_page_cms.egg-info/
 cms.db
 local_settings.py
 *.pyc
+.build
 .DS_Store
 .idea
 pages/testproj/media/

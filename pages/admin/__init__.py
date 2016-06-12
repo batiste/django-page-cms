@@ -79,6 +79,7 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/pages_list.js',
             'javascript/pages_form.js',
             'javascript/jquery.query-2.1.7.js',
+            'javascript/iframeResizer.min.js',
         )]
 
     @classmethod

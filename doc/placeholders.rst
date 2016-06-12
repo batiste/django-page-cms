@@ -8,9 +8,9 @@ The placeholder template tag is what make Gerbi CMS special. The workflow
 is that you design your template first according to the page design.
 Then you put placeholder tag where you want dynamic content.
 
-For each placeholder you will have a corresponding field appearing automaticaly
+For each placeholder you will get a corresponding field appearing automaticaly
 in the administration interface. You can make as many templates as you want, even
-use the template inheritance: this CMS administration will still behave as intended.
+use the template inheritance: this CMS administration interface will still behave as intended.
 
 The syntax for a placeholder tag is the following::
 
@@ -19,16 +19,6 @@ The syntax for a placeholder tag is the following::
 
 Enable the placeholder tags
 =============================
-
-.. code:: html
-
-    <div>{{ test }}</div>
-
-
-.. code:: django
-
-    <div>{{ test }}</div>
-
 
 The required syntax to load placeholder tags is the following::
 

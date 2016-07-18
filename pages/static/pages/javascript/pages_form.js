@@ -7,6 +7,8 @@ $(function() {
       return;
     }
 
+    $('iframe').iFrameResize({maxHeight:800});
+
     // Hide form rows containing only hidden inputs
     $('.form-row').each(function() {
         if (!$('p, label, select, input:not([type=hidden])', this).length) {

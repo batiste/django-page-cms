@@ -504,6 +504,10 @@ html[dir=rtl] .change-form .sidebar {
     margin: 0;
 }
 
+.change-form .field-box {
+    display:block;
+}
+
 /* Title */
 .module-general .title label {
     float: none;

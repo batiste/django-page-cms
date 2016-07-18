@@ -9,16 +9,9 @@ import os
 # To make autodoc find the modules
 sys.path.append(os.path.abspath('..'))
 
-try:
-    from django.conf import settings
-    import django
-    settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-        PAGE_DEFAULT_TEMPLATE='index.html',
-        PAGE_TEMPLATES=(),
-        PAGE_LANGUAGES=(),
-        TEMPLATE_DIRS=('/home/web-apps/myapp'))
-except ImportError:
-    pass
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example.settings")
+import django
+django.setup()
 
 # General configuration
 # ---------------------
@@ -94,7 +87,8 @@ pygments_style = 'sphinx'
 # The style sheet to use for HTML and HTML Help pages. A file of that name
 # must exist either in Sphinx' static/ path, or in one of the custom paths
 # given in html_static_path.
-# html_style = 'default.css'
+
+html_static_path = ['static']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -115,9 +109,13 @@ html_logo = 'gerbi.png'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['sphinx_rtd_theme/static']
-html_theme = "sphinx_rtd_theme"
-html_theme_path = ["."]
+from better import better_theme_path
+html_theme_path = [better_theme_path]
+html_theme = 'better'
+
+html_theme_options = {
+    'cssfiles': ['_static/main.css']
+}
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

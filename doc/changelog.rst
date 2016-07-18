@@ -7,14 +7,17 @@ This file describe new features and incompatibilites between released version of
 Release 1.9.1
 =============
 
-Released the <to be determined>.
+Released the 12 of june 2016.
 
+    * A new keyword section on the placeholer has been added to create groups 
+      in the admin
     * Language fallback for empty page placeholders in the admin was enabeled
       and causing possible weirdness
-    * Grappelli support
+    * Grappelli support (incomplete)
     * Support for section (grouping) fields in admin
     * Clean upload file names
     * Bug fixes
+    * Basic RTE improvement in the admin
     * Code cleanup
 
 Release 1.9.0

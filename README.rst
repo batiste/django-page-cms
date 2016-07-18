@@ -10,6 +10,9 @@ django-page-cms
 
 .. image:: https://img.shields.io/pypi/dm/django-page-cms.svg
   :target: https://pypi.python.org/pypi/django-page-cms/
+  
+.. image:: https://readthedocs.org/projects/django-page-cms/badge/?version=latest
+  :target: http://django-page-cms.readthedocs.io/en/latest/
 
 .. image:: https://codeclimate.com/github/batiste/django-page-cms/badges/gpa.svg
   :target: https://codeclimate.com/github/batiste/django-page-cms
@@ -30,5 +33,5 @@ dynamically appears in the page admin interface.
 
 Each page can have a different template with different placeholders.
 
-.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/admin-screenshot1.png
+.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/admin-screenshot1.png
 

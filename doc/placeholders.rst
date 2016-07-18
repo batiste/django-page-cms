@@ -8,9 +8,9 @@ The placeholder template tag is what make Gerbi CMS special. The workflow
 is that you design your template first according to the page design.
 Then you put placeholder tag where you want dynamic content.
 
-For each placeholder you will have a corresponding field appearing automaticaly
+For each placeholder you will get a corresponding field appearing automaticaly
 in the administration interface. You can make as many templates as you want, even
-use the template inheritance: this CMS administration will still behave as intended.
+use the template inheritance: this CMS administration interface will still behave as intended.
 
 The syntax for a placeholder tag is the following::
 
@@ -35,7 +35,9 @@ If the **on** option is omitted the CMS will automatically
 take the current page (by using the `current_page` context variable)
 to get the content of the placeholder.
 
-Template syntax example::
+Template syntax example
+
+.. code:: django
 
     {% placeholder "main menu" on root_page %}
 
@@ -79,13 +81,19 @@ Template syntax example::
     <img src="{{ img_src }}" alt=""/>
 
 The **section** option
------------------
+-------------------------
 
-The **section** option is used to group a placeholder into a section in admin.
+The **section** option is used to group placeholders into a section in the admin interface.
+A section is collapsed by default and hides the fields.
 
 Template syntax example::
 
     <meta name="description" content="{% placeholder "meta_description" section "SEO" %}" />
+    <meta name="description" content="{% placeholder "meta_keywords" section "SEO" %}" />
+
+You will get
+
+.. image:: images/section.png
 
 The **parsed** keyword
 -----------------------
@@ -165,13 +173,15 @@ A file upload field will appears into the page admin interface.
 Markdown placeholder
 =====================
 
-If you want to write in the MarkDown format there is a MarkDown placeholder
+If you want to write in the MarkDown format there is a MarkDown placeholder::
 
     {% markdownplaceholder mark %}
 
 .. note::
     
-    You will have to install the Markdown library::
+    You will have to install the Markdown library
+
+    .. code:: shell
 
         pip install Markdown
 

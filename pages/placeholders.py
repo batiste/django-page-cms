@@ -252,11 +252,16 @@ def get_filename(page, placeholder, data):
     Generate a stable filename using the orinal filename.
     """
     name_parts = data.name.split('.')
-    name = slugify('.'.join(name_parts[:-1]), allow_unicode=True)
+    if len(name_parts) > 1:
+        name = slugify('.'.join(name_parts[:-1]), allow_unicode=True)
+        ext = slugify(name_parts[-1])
+        name = name + '.' + ext
+    else:
+        name = slugify(data.name)
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
-        placeholder.ctype + '-' + str(time.time()) + '-' + name + '.' + name_parts[-1]
+        placeholder.ctype + '-' + str(time.time()) + '-' + name
     )
     return filename
 

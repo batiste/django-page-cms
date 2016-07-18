@@ -14,6 +14,7 @@ CACHE_BACKEND = 'locmem:///'
 MANAGERS = ADMINS
 
 # AUTH_PROFILE_MODULE = 'profiles.Profile'
+LOGGING_CONFIG = None
 
 DATABASES = {
     'default': {

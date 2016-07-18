@@ -626,17 +626,6 @@ html[dir=rtl] .change-form .module-options .form-row {
     clear: none;
 }
 
-.grp-change-form .module-content .form-row,
-.change-form .module-content .form-row {
-    position: relative;
-    padding: 0;
-}
-.grp-change-form .module-content .field-box,
-.change-form .module-content .field-box {
-    position: relative;
-    float: none;
-    padding: 8px 12px;
-}
 .grp-change-form .module-content .revisions,
 .change-form .module-content .revisions {
     width: 150px;
@@ -714,10 +703,6 @@ html[dir=rtl] .change-form .module-content .revisions {
 .change-form .module-translation-helper .translation-helper-placeholder h5 { font-size: 12px; line-height: 14px; }
 .change-form .module-translation-helper .translation-helper-placeholder h6 { font-size: 11px; line-height: 13px; }
 
-/* Submit */
-.change-form .submit-row {
-    clear: both;
-}
 
 /* page link */
 .change-form .module-translation-helper .translation-helper-placeholder .externallink_broken,
@@ -725,7 +710,6 @@ html[dir=rtl] .change-form .module-content .revisions {
 
 
 /* grapelli specific */
-
 .grp-changelist-actions {
     overflow: hidden;
 }

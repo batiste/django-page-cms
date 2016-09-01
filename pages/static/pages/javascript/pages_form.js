@@ -39,17 +39,27 @@ $(function() {
         pages.update_published_icon('', select, img, change_status);
     });
 
-    // Confirm language and template change if page is not saved
-    // this code doesn't work with languages
-    $.each(['language', 'template'], function(i, label) {
-        var select = $('#id_'+label);
-        if (select.length) {
-            var orig_ = select.val();
-            select.change(function() {
-                if(confirm(gettext('You may lose any changes you have done to the page. Are you sure?')))
-                    $('input[name=_continue]').click();
-            });
-        };
+    var comfirm_msg = gettext('You may lose any changes you have done to the page. Are you sure?');
+
+    // Confirm template change if page is not saved
+    var select = $('#id_template');
+    if (select.length) {
+        var orig_ = select.val();
+        select.change(function() {
+            if(confirm(comfirm_msg)) {
+                $('input[name=_continue]').click();
+            } else {
+                select.se
+            }
+        });
+    };
+
+    $('.js-confirm-change').click(function(e){
+        if(confirm(comfirm_msg)) {
+            
+        } else {
+            e.preventDefault();
+        }
     });
 
     if(document.location.search) {
@@ -69,30 +79,6 @@ $(function() {
             });
         });
     }
-
-    // Disable the page content if the page is a redirection
-    /*
-    // To fix if we use placeholder in templates for META or extra content
-
-    var redirect = $('#id_redirect_to').change(update_redirect);
-    var affected = $('.form-row:has(#id_language), .form-row:has(#id_template), .module-content .form-row')
-        .css('position', 'relative');
-    var overlay = $('<div class="overlay"></div>').css({
-            'display': 'none',
-            'position': 'absolute',
-            'z-index': '1000',
-            'top': '0',
-            'left': '0',
-            'height': '100%',
-            'width': '100%',
-            'opacity': '0.66',
-            'background': 'white'
-        }).appendTo(affected);
-    function update_redirect() {
-        redirect.val() ? overlay.show() : overlay.hide();
-    }
-    update_redirect();
-    */
 
     // Content revision selector
     $('.revisions').change(function () {

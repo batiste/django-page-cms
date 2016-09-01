@@ -529,64 +529,23 @@ html[dir=rtl] .change-form .sidebar {
     width:140px;
 }
 
-.module-general .status img {
+.module-general .status img, .module-general .field-status img {
     width: 10px;
     height: 10px;
     margin-left:4px;
 }
-html[dir=rtl] .module-general .status img {margin-left:0; margin-right:4px;}
 
-/* Options */
-.grp-change-form .module-options .form-row,
-.change-form .module-options .form-row {
-    float: left;
-    width: 33.3333%;
-    margin-right: -1px;
-    padding: 0;
-    border-bottom: none;
-    border-right: 1px solid #eee;
-}
-html[dir=rtl] .grp-change-form .module-options .form-row,
-html[dir=rtl] .change-form .module-options .form-row {
-    float: right;
-    margin-right:0;
-    margin-left:-1px;
-    border-left: 1px solid #eee;
-    border-right: 0px none;
+html[dir=rtl] .module-general .field-status img {
+    margin-left:0; margin-right:4px;
 }
 
-.grp-change-form .module-options .form-row .field-box,
-.change-form .module-options .form-row .field-box {
-    padding: 8px 12px;
-    /*background: red;*/
-}
-.grp-change-form .module-options select,
-.change-form .module-options select {
-    width: 150px;
-}
-.grp-change-form .module-options .redirect_to,
-.change-form .module-options .redirect_to {
-    border-right: none;
-}
-
-.change-form .module-options .redirect_to_url {
-    float: right;
-}
-
-.change-form .module-options .redirect_to_url input {
-    width: 195px;
-}
-.change-form .module-options .redirect_to label,
-.change-form .module-options .redirect_to_url label {
-    width: 94px;
-}
 /* Languages */
-.grp-change-form .module-options .language ul,
-.change-form .module-options .language ul {
+.grp-change-form .language ul,
+.change-form .field-language ul {
     margin: 0;
     padding: 3px 0;
 }
-.change-form .module-options .language li {
+.change-form .field-language li {
     display: inline;
     list-style: none;
     margin: 0;
@@ -595,9 +554,9 @@ html[dir=rtl] .change-form .module-options .form-row {
 .grp-change-form .module-options .language .editlink,
 .grp-change-form .module-options .language .addlink,
 .grp-change-form .module-options .language .current,
-.change-form .module-options .language .editlink,
-.change-form .module-options .language .addlink,
-.change-form .module-options .language .current {
+.change-form .field-language .editlink,
+.change-form .field-language .addlink,
+.change-form .field-language .current {
     float: left;
     display: inline; /* IE6 fix */
     margin: 0 6px 0 0;
@@ -608,20 +567,20 @@ html[dir=rtl] .change-form .module-options .form-row {
     background: none;
 }
 .grp-change-form .module-options .language .editlink:hover,
-.change-form .module-options .language .editlink:hover {
+.change-form .language .editlink:hover {
     background: url(../images/icons/edit.gif) right 0.2em no-repeat;
 }
 .grp-grp-change-form .module-options .language .addlink,
-.change-form .module-options .language .addlink {
+.change-form .field-language .addlink {
     color: #ccc;
 }
 .grp-change-form .module-options .language .addlink:hover,
-.change-form .module-options .language .addlink:hover {
+.change-form .field-language .addlink:hover {
     color: #007418;
     background: url(../images/icons/add.gif) right 0.2em no-repeat;
 }
 .grp-change-form .module-options .language .current,
-.change-form .module-options .language .current {
+.change-form .field-language .current {
     margin-right: 16px;
     padding: 0 2px;
     border: 1px solid #888;
@@ -669,57 +628,6 @@ html[dir=rtl] .change-form .module-content .revisions {
 .change-form .module-content .header_image_title input {
     width: 60%;
 }
-
-/* Translation helper */
-.change-form .module-translation-helper #translation-helper-content {
-    overflow: hidden;
-    display: none;
-}
-.change-form .module-translation-helper .translation-helper-title {
-    margin-top: 1em !important;
-}
-.change-form .module-translation-helper .translation-helper-placeholder {
-    overflow: auto;
-    max-height: 400px;
-    padding: 1em;
-    background: #ffc;
-}
-.change-form .module-translation-helper .translation-helper-placeholder p,
-.change-form .module-translation-helper .translation-helper-placeholder h1,
-.change-form .module-translation-helper .translation-helper-placeholder h2,
-.change-form .module-translation-helper .translation-helper-placeholder h3,
-.change-form .module-translation-helper .translation-helper-placeholder h4,
-.change-form .module-translation-helper .translation-helper-placeholder h5,
-.change-form .module-translation-helper .translation-helper-placeholder h6,
-.change-form .module-translation-helper .translation-helper-placeholder pre {
-    margin: 0 0 5px !important; padding: 0;
-    line-height: 12px;
-    text-transform: none;
-    color: black; background: none;
-}
-.change-form .module-translation-helper .translation-helper-placeholder blockquote {
-    margin: 0 0 5px;
-    line-height: 12px;
-    color: black; background: none;
-}
-.change-form .module-translation-helper .translation-helper-placeholder h1,
-.change-form .module-translation-helper .translation-helper-placeholder h2,
-.change-form .module-translation-helper .translation-helper-placeholder h3,
-.change-form .module-translation-helper .translation-helper-placeholder h4,
-.change-form .module-translation-helper .translation-helper-placeholder h5,
-.change-form .module-translation-helper .translation-helper-placeholder h6 { font-weight: bold; }
-.change-form .module-translation-helper .translation-helper-placeholder h1 { font-size: 20px; line-height: 22px; }
-.change-form .module-translation-helper .translation-helper-placeholder h2 { font-size: 18px; line-height: 20px; }
-.change-form .module-translation-helper .translation-helper-placeholder h3 { font-size: 16px; line-height: 18px; }
-.change-form .module-translation-helper .translation-helper-placeholder h4 { font-size: 14px; line-height: 16px; }
-.change-form .module-translation-helper .translation-helper-placeholder h5 { font-size: 12px; line-height: 14px; }
-.change-form .module-translation-helper .translation-helper-placeholder h6 { font-size: 11px; line-height: 13px; }
-
-
-/* page link */
-.change-form .module-translation-helper .translation-helper-placeholder .externallink_broken,
-.change-form .module-translation-helper .translation-helper-placeholder .pagelink_broken { text-decoration: line-through; }
-
 
 /* grapelli specific */
 .grp-changelist-actions {

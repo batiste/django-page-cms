@@ -84,7 +84,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.select_option(status, str(Page.DRAFT))
         self.assertEqual(status.get_attribute('value'), str(Page.DRAFT))
 
-        src = self.browser.find_element_by_css_selector('.status'
+        src = self.browser.find_element_by_css_selector('.status-field'
             ).find_element_by_tag_name('img'
             ).get_attribute('src')
 

@@ -16,10 +16,6 @@
     <!-- Paper theme -->
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
     <style>
-    body>.navbar{
-        -webkit-transition:background-color .3s ease-in;
-        transition:background-color .3s ease-in
-    }
     body {
       margin-top:60px;
     }
@@ -56,12 +52,6 @@
           <a class="navbar-brand" href="/">Gerbi CMS</a>
         </div>
 
-      <form class="navbar-form navbar-left pull-right" role="search" action="/search/">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request.GET.q }}">
-        </div>
-      </form>
-
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             {% for page in pages_navigation %}
@@ -83,6 +73,14 @@
                 {% endif %}
             </li>
             {% endfor %}
+            <li>
+      <form class="navbar-form navbar-left" role="search" action="/search/">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request.GET.q }}">
+        </div>
+      </form>
+        </li>
+          </ul>
         </div>
 
       </div>

@@ -1,5 +1,6 @@
 -r base.txt
-django-haystack>=2.4.1,<2.5.0
+-e git+https://github.com/django-haystack/django-haystack@42f53cda9a770ff7daf2ff792cbcab5cd843e2a7#egg=django-haystack
+django-haystack 
 Markdown>=2.6.6,<2.7.0
 Whoosh>=2.7.4,<2.8.0
 django-ckeditor>=5.0.3,<5.1.0

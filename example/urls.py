@@ -11,8 +11,13 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     # url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/', include(admin.site.urls)),
-    # url(r'^search/', include('haystack.urls'), name='haystack_search'),
 ]
+
+try:
+	import haystack
+	urlpatterns += [url(r'^search/', include('haystack.urls'), name='haystack_search')]
+except ImportError:
+	pass
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, show_indexes=True)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT, show_indexes=True)

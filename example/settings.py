@@ -108,7 +108,7 @@ CACHES = {
     }
 }
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -121,9 +121,10 @@ INSTALLED_APPS = (
     'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
-    'rest_framework'
+    'rest_framework',
     # 'ckeditor', # if commented a fallback widget will be used
-)
+    'haystack'
+]
 
 PAGE_TAGGING = False
 
@@ -154,7 +155,7 @@ LANGUAGES = languages
 PAGE_DEFAULT_TEMPLATE = 'index.html'
 
 PAGE_TEMPLATES = (
-    ('index.html', 'Bootstrap index'),
+    ('index.html', 'Default template'),
 )
 
 PAGE_API_ENABLED = True

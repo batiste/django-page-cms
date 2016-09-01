@@ -528,7 +528,9 @@ class PageHasContentNode(template.Node):
         self.nodelist = nodelist
 
     def render(self, context):
-        page = context[self.page]
+        page = context.get(self.page)
+        if not page:
+            return ''
         content = page.get_content(context.get('lang', None), self.content_type)
         if(content):
             output = self.nodelist.render(context)

@@ -470,6 +470,11 @@ html[dir=rtl] .change-form .sidebar {
     margin-right: 0;
 }
 
+.change-form .sidebar .revisions {
+    margin-left: 100px;
+    margin-top: 2px;
+}
+
 .grp-change-form .grp-module:not(.grp-submit-row) {
     min-width: 0;
 }
@@ -631,8 +636,11 @@ html[dir=rtl] .change-form .module-options .form-row {
 }
 
 .grp-change-form .module-content .revisions,
-.change-form .module-content .revisions {
+.change-form .module-content .revisions,
+.change-form .sidebar .revisions {
     width: 150px;
+    color: #888;
+    background-color: #fff;
 }
 .grp-change-form .module-content input[type=text],
 .change-form .module-content input[type=text] {

@@ -3,6 +3,7 @@ from django import template
 from django.utils.safestring import SafeText
 from django.template import TemplateSyntaxError
 from django.conf import settings
+from django.utils.text import unescape_string_literal
 
 from pages import settings as pages_settings
 from pages.models import Content, Page
@@ -484,4 +485,53 @@ def get_pages_with_tag(tag):
         {% get_pages_with_tag "footer" as pages %}
     """
     return Page.objects.filter(tags__name__in=[tag])
+
+
+def do_page_has_content(parser, token):
+    """
+    Conditional tag that only renders its nodes if the page
+    has content for a particular content type. By default the
+    current page is used.
+
+    Syntax::
+
+        {% page_has_content <content_type> [<page var name>] %}
+            ...
+        {%_end page_has_content %}
+
+    Example use:
+        {% page_has_content 'header-image' %}
+            <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}">
+        {% end_page_has_content %}
+    """
+    nodelist = parser.parse(('end_page_has_content',))
+    parser.delete_first_token()
+    args = token.split_contents()
+    try:
+        content_type = unescape_string_literal(args[1])
+    except IndexError:
+        raise template.TemplateSyntaxError(
+            "%r tag requires arguments content_type" % args[0]
+        )
+    if len(args) > 2:
+        page = args[2]
+    else:
+        page = None
+    return PageHasContentNode(page, content_type, nodelist)
+register.tag('page_has_content', do_page_has_content)
+
+class PageHasContentNode(template.Node):
+
+    def __init__(self, page, content_type, nodelist):
+        self.page = page or 'current_page'
+        self.content_type = content_type
+        self.nodelist = nodelist
+
+    def render(self, context):
+        page = context[self.page]
+        content = page.get_content(context.get('lang', None), self.content_type)
+        if(content):
+            output = self.nodelist.render(context)
+            return output
+        return ''
 

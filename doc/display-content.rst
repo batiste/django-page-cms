@@ -41,6 +41,26 @@ Output the content of a page directly within the template::
 
     You can use either the page object, the slug, or the id of the page.
 
+page_has_content
+----------------
+
+Conditional tag that only renders its nodes if the page
+has content for a particular content type. By default the
+current page is used.
+
+Syntax::
+
+    {% page_has_content <content_type> [<page var name>] %}
+        ...
+    {% end page_has_content %}
+
+Example use::
+
+    {% page_has_content 'header-image' %}
+        <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}">
+    {% end_page_has_content %}
+
+
 get_page
 ------------
 
@@ -93,46 +113,6 @@ that the template knows which language is used within the context and display th
     You can use either the page object, the slug, or the id of the page.
 
 
-Display content from other applications
-----------------------------------------
-
-There is several ways to change the way the default view provided
-by the CMS render the pages. This list try explain the most common.
-
-Using the PAGE_EXTRA_CONTEXT setting
-======================================
-
-Considering you have a simple news model::
-
-    class News(models.Model):
-        title = models.CharField(max_length=200)
-        postdate = models.DateTimeField(default=datetime.now)
-        body = models.CharField(max_length=200)
-
-And that you would like to display a list of news into some of your page's templates::
-
-    <ul>
-    {% for new in news %}
-        <li>
-            <h2>{{ news.title }}</p>
-            <p>{{ news.body }}</p>
-        </li>
-    {% endfor %}
-    </ul>
-
-Then you might want to use the `PAGE_EXTRA_CONTEXT` setting. You should set this setting to be a function.
-This function should return a Python dictionary. This dictionary will be merged with the context of
-every page of your website.
-
-Example in the case of the news::
-
-    def extra_context():
-        from news.models import News
-        lastest_news = News.object.all()
-        return {'news': lastest_news}
-
-    PAGE_EXTRA_CONTEXT = extra_context
-
 Delegate the page rendering to another application
 ===================================================
 
@@ -141,8 +121,10 @@ Delegate the page rendering to another application
 Subclass the default view
 ===================================================
 
-New in 1.3.0: The default view is now a real class. That will
-help if you want to override some default behavior::
+This CMS view is a class based view. This means is is easy
+to override some default behavior. For example if you want to inject
+additional context information into all the pages templates you can override
+th method extra_context::
 
 
     from pages.views import Details
@@ -156,7 +138,8 @@ help if you want to override some default behavior::
 
     details = NewsView()
 
-And don't forget to redefine the urls to point to your new view with something similar to this code::
+For your view to be taken to be used in place of the CMS one, you simply need
+to point to it with something similar to this::
 
     from django.conf.urls.defaults import url, include, patterns
     from YOUR_APP.views import details
@@ -171,3 +154,5 @@ And don't forget to redefine the urls to point to your new view with something s
         urlpatterns = patterns('',
             url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
         )
+
+Have a look at ``page.urls` for more details.

@@ -9,7 +9,7 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
-CACHE_BACKEND = 'locmem:///'
+CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
 MANAGERS = ADMINS
 
@@ -95,8 +95,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'example.urls'
-
-# CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
 CACHES = {
     'default': {

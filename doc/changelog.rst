@@ -4,10 +4,21 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.2
+=============
+
+Released the 2 of Semptember 2016.
+
+    * A new conditional template tag called page_has_content
+    * A new gerbi console command to create demo websites: gerbi --create mywebsite
+    * Improve page admin look and feel
+    * Fix problems withing the admin (Javascript errors)
+    * Update documentation
+
 Release 1.9.1
 =============
 
-Released the 12 of june 2016.
+Released the 12 of June 2016.
 
     * A new keyword section on the placeholer has been added to create groups 
       in the admin

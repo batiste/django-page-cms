@@ -4,7 +4,7 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
-Release 1.9.2
+Release 1.9.3
 =============
 
 Released the 2 of Semptember 2016.

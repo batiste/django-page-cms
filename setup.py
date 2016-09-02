@@ -58,7 +58,7 @@ tests_require = [
 
 extras_require = {
     'extra': extra,
-    'test': install_requires + extra + tests_require,
+    'tests': install_requires + extra + tests_require,
     'full': install_requires + extra + ['Django>=1.8,<1.10']
 }
 

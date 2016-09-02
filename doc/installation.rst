@@ -15,9 +15,9 @@ This application works out of the box and will certainly help you to get started
 Evaluate quickly the application
 =================================
 
-After you have installed all the dependencies you can simply create a website with the gerbi command::
+Copy and paste this command in your virtual environnement and you should get a running cms instance::
 
-    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; pip install django-page-cms; gerbi --create mywebsite
+    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; gerbi --create mywebsite
 
 Then visit http://127.0.0.1:8000/
 

@@ -1,3 +1,4 @@
+# All the dependencies required for running the CMS
 -r base.txt
 -e git+https://github.com/django-haystack/django-haystack@42f53cda9a770ff7daf2ff792cbcab5cd843e2a7#egg=django-haystack
 Markdown>=2.6.6,<2.7.0

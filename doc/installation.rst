@@ -17,9 +17,9 @@ Evaluate quickly the application
 
 After you have installed all the dependencies you can simply create a website with the gerbi command::
 
-    gerbi --create mywebsite
+    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; pip install django-page-cms; gerbi --create mywebsite
 
-Then visit http://127.0.0.1:8000/admin/ and create a few pages.
+Then visit http://127.0.0.1:8000/
 
 
 Install dependencies by using pip
@@ -27,11 +27,7 @@ Install dependencies by using pip
 
 The pip install is the easiest and the recommended installation method. Use::
 
-    $ sudo easy_install pip
-    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/all.txt
-    $ sudo pip install -r all.txt
-
-Every package listed in the ``all.txt`` should be downloaded and installed.
+    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; pip install django-page-cms
 
 If you are not using the source code version of the application then install it using::
 

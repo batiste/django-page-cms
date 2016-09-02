@@ -1,0 +1,3 @@
+# Requirement used in the documentation and install
+Django>=1.8,<1.10
+-r all.txt

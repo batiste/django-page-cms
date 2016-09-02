@@ -122,7 +122,7 @@ class TestCase(TestCase):
         return page_data
 
     def new_page(self, *args, **kwargs):
-        new_page(*args, **kwargs)
+        return new_page(*args, **kwargs)
 
     def create_new_page(self, client=None, draft=False):
         if not client:

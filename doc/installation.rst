@@ -27,7 +27,7 @@ Install dependencies by using pip
 
 The pip install is the easiest and the recommended installation method. Use::
 
-    $ pip install -r https://raw.githubusercontent.com/batiste/django-page-cms/master/requirements/install.txt; pip install django-page-cms
+    $ pip install -r https://raw.githubusercontent.com/batiste/django-page-cms/master/requirements/install.txt
 
 If you are not using the source code version of the application then install it using::
 

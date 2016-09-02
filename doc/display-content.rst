@@ -54,7 +54,7 @@ Syntax::
         ...
     {% end page_has_content %}
 
-Example use::
+Example::
 
     {% page_has_content 'header-image' %}
         <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}">
@@ -94,9 +94,9 @@ an example of the use of this template tag to display a list of footer pages::
     {% get_pages_with_tag "footer" as footer_pages %}
     <ul>
     {% for page in footer_pages %}
-    <li>
-        <a href="{{ page.url }}">{{ page.title }}</a>
-    </li>
+        <li>
+            <a href="{{ page.url }}">{{ page.title }}</a>
+        </li>
     {% endfor %}
     </ul>
 

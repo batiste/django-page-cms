@@ -44,12 +44,13 @@ $(function() {
     // Confirm template change if page is not saved
     var template_select = $('#id_template');
     if (template_select.length) {
-        var orig_ = template_select.val();
+        var orig_value = template_select.val();
         template_select.change(function() {
             if(confirm(comfirm_msg)) {
                 $('input[name=_continue]').click();
+                orig_value = template_select.val();
             } else {
-                //template_select
+                template_select.val(orig_value);
             }
         });
     };

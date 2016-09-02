@@ -230,12 +230,13 @@ class PageAdmin(admin.ModelAdmin):
 
         template = get_template_from_request(request, obj)
         page_templates = settings.get_page_templates()
-        if len(page_templates) > 0:
-            template_choices = list(page_templates)
+        template_choices = list(page_templates)
+        # is default template is not in the list add it
+        if not [tpl for tpl in template_choices if tpl[0] == settings.PAGE_DEFAULT_TEMPLATE]:
             template_choices.insert(0, (settings.PAGE_DEFAULT_TEMPLATE,
                     _('Default template')))
-            form.base_fields['template'].choices = template_choices
-            form.base_fields['template'].initial = force_text(template)
+        form.base_fields['template'].choices = template_choices
+        form.base_fields['template'].initial = force_text(template)
 
         for placeholder in get_placeholders(template):
             ctype = placeholder.ctype

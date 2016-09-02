@@ -481,7 +481,7 @@ def get_pages_with_tag(tag):
 
         {% get_pages_with_tag <tag name> as <varname> %}
 
-    Example use:
+    Example use::
         {% get_pages_with_tag "footer" as pages %}
     """
     return Page.objects.filter(tags__name__in=[tag])
@@ -499,10 +499,12 @@ def do_page_has_content(parser, token):
             ...
         {%_end page_has_content %}
 
-    Example use:
+    Example use::
+
         {% page_has_content 'header-image' %}
             <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}">
         {% end_page_has_content %}
+
     """
     nodelist = parser.parse(('end_page_has_content',))
     parser.delete_first_token()
@@ -511,7 +513,7 @@ def do_page_has_content(parser, token):
         content_type = unescape_string_literal(args[1])
     except IndexError:
         raise template.TemplateSyntaxError(
-            "%r tag requires arguments content_type" % args[0]
+            "%r tag requires the argument content_type" % args[0]
         )
     if len(args) > 2:
         page = args[2]

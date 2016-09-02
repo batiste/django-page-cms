@@ -5,6 +5,8 @@ from pages.utils import get_placeholders, normalize_url, get_now
 from pages.managers import PageManager, ContentManager
 from pages.managers import PageAliasManager
 from pages import settings
+# checks
+from pages import checks
 
 from django.db import models
 from django.conf import settings as django_settings

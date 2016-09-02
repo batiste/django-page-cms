@@ -40,6 +40,11 @@ Where the model might look like this::
         def __unicode__(self):
             return self.name
 
+.. note::
+
+    You can use `django-dbtemplates <http://django-dbtemplates.readthedocs.io/en/latest/>`_ to store the actual
+    template in your database if it what you want.
+
 .. warning:: pages checks that every template in PAGE_TEMPLATE exists with
              ``django.template.loader.find_template`` when its app config is
              ready. It will raise a warning ``basic_cms.W001`` if a template

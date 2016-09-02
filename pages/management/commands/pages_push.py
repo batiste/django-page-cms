@@ -1,12 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
-import requests
-import os
-import json
-import sys
-from pages.management.utils import APICommand
-from tqdm import tqdm
 
-class Command(APICommand):
+class Command(BaseCommand):
     help = 'Push data to a Django Page CMS API'
 
     def push_content(self, page, desc):

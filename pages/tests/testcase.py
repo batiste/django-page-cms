@@ -29,6 +29,19 @@ class Error404Expected(Exception):
     pass
 
 
+def new_page(content={'title': 'test-page', 'slug': 'test-page-slug'}, 
+        parent=None, language='en-us', template='pages/examples/index.html'):
+    author = get_user_model().objects.all()[0]
+    page = Page.objects.create(author=author, status=Page.PUBLISHED,
+        template=template, parent=parent)
+    if pages_settings.PAGE_USE_SITE_ID:
+        page.sites.add(Site.objects.get(id=1))
+    # necessary to clear old URL cache
+    page.invalidate()
+    for key, value in list(content.items()):
+        Content(page=page, language='en-us', type=key, body=value).save()
+    return page
+
 
 class TestCase(TestCase):
     """Django page CMS test suite class"""
@@ -108,17 +121,8 @@ class TestCase(TestCase):
         self.counter = self.counter + 1
         return page_data
 
-    def new_page(self, content={'title': 'test-page', 'slug': 'test-page-slug'}, parent=None, language='en-us'):
-        author = get_user_model().objects.all()[0]
-        page = Page.objects.create(author=author, status=Page.PUBLISHED,
-            template='pages/examples/index.html', parent=parent)
-        if pages_settings.PAGE_USE_SITE_ID:
-            page.sites.add(Site.objects.get(id=1))
-        # necessary to clear old URL cache
-        page.invalidate()
-        for key, value in list(content.items()):
-            Content(page=page, language='en-us', type=key, body=value).save()
-        return page
+    def new_page(self, *args, **kwargs):
+        new_page(*args, **kwargs)
 
     def create_new_page(self, client=None, draft=False):
         if not client:

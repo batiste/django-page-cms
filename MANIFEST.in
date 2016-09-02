@@ -10,6 +10,9 @@ include MANIFEST.in
 recursive-include doc *
 recursive-include pages *
 recursive-include requirements *
+recursive-include example *
+recursive-include example/templates *
+recursive-include example *.html
 recursive-include pages/templates *
 recursive-include pages/static *
 recursive-include pages/locale *
@@ -21,10 +24,13 @@ recursive-include pages *.html
 recursive-include pages *.mo
 recursive-include pages *.po
 global-exclude *.pyc
+global-exclude *.db
 prune pages/testproj/media/*
 prune doc/.build
+prune .DS_Store
+prune example/whoosh_index
+prune example/media
 # global-exclude coverage/*
 # this important to prune at the end
-# prune example
 # prune dist
 

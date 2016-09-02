@@ -15,16 +15,9 @@ This application works out of the box and will certainly help you to get started
 Evaluate quickly the application
 =================================
 
-After you have installed all the dependencies you can simply checkout the code with git::
+After you have installed all the dependencies you can simply create a website with the gerbi command::
 
-    git clone git://github.com/batiste/django-page-cms.git django-page-cms
-
-And then, run the example project::
-
-    cd django-page-cms/example/
-    python manage.py syncdb
-    python manage.py collectstatic pages
-    python manage.py runserver
+    gerbi --create mywebsite
 
 Then visit http://127.0.0.1:8000/admin/ and create a few pages.
 
@@ -35,22 +28,14 @@ Install dependencies by using pip
 The pip install is the easiest and the recommended installation method. Use::
 
     $ sudo easy_install pip
-    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/external_apps.txt
-    $ sudo pip install -r external_apps.txt
+    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/all.txt
+    $ sudo pip install -r all.txt
 
-Every package listed in the ``external_app.txt`` should be downloaded and installed.
+Every package listed in the ``all.txt`` should be downloaded and installed.
 
 If you are not using the source code version of the application then install it using::
 
     $ sudo pip install django-page-cms
-
-Install dependencies extra dependencies
-==========================================
-
-This CMS has extra dependencies that unlock extra features. Use::
-
-    $ curl -O https://github.com/batiste/django-page-cms/raw/master/requirements/extra_apps.txt
-    $ sudo pip install -r extra_apps.txt
 
 
 Add django-page-cms into your INSTALLED_APPS

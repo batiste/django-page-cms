@@ -26,6 +26,10 @@ for directory in os.walk('pages/locale'):
 for directory in os.walk('pages/fixtures'):
     data_dirs.append(directory[0][6:] + '/*.*')
 
+example_dirs = []
+for directory in os.walk('example/templates'):
+    example_dirs.append(directory[0][8:] + '/*.*')
+
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
@@ -41,9 +45,9 @@ setup(
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     #install_requires=required_to_install,
-    packages=find_packages(exclude=['example', 'example.*']),
+    packages=find_packages(),
     # very important for the binary distribution to include the templates.
-    package_data={'pages': data_dirs},
+    package_data={'pages': data_dirs, 'example': example_dirs},
     #include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[
@@ -61,4 +65,7 @@ setup(
         'Programming Language :: JavaScript',
         'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],
+    entry_points={
+        'console_scripts': ['gerbi=pages.command_line:main'],
+    }
 )

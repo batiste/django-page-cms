@@ -50,6 +50,8 @@ PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
 
 def get_page_templates():
     """The callable that is used by the CMS."""
+    PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
+        default_value=())
     if isinstance(PAGE_TEMPLATES, collections.Callable):
         return PAGE_TEMPLATES()
     else:

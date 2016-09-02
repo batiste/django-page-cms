@@ -17,7 +17,7 @@ Evaluate quickly the application
 
 Copy and paste this command in your virtual environnement and you should get a running cms instance::
 
-    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; gerbi --create mywebsite
+    $ pip install -r https://raw.githubusercontent.com/batiste/django-page-cms/master/requirements/install.txt; gerbi --create mywebsite
 
 Then visit http://127.0.0.1:8000/
 
@@ -27,7 +27,7 @@ Install dependencies by using pip
 
 The pip install is the easiest and the recommended installation method. Use::
 
-    $ pip install -r https://github.com/batiste/django-page-cms/raw/master/requirements/install.txt; pip install django-page-cms
+    $ pip install -r https://raw.githubusercontent.com/batiste/django-page-cms/master/requirements/install.txt; pip install django-page-cms
 
 If you are not using the source code version of the application then install it using::
 

@@ -30,11 +30,14 @@ def main():
         if ret != 0:
             return
         print_green('Migration done')
-        _input = raw_input("Would you like to create a superuser to connect to the admin? [N/y]")
+        _input = raw_input("Would you like to create a superuser to connect to the admin? [N/y] ")
         if _input.lower() == 'y':
             call(['./manage.py'.format(args.create), 'createsuperuser'], cwd=absolute)
+        print_green('Creating demo pages')
         call(['./manage.py'.format(args.create), 'pages_demo'], cwd=absolute)
+        print_green('Rebuild search index')
         call(['./manage.py'.format(args.create), 'rebuild_index', '--noinput'], cwd=absolute)
+        print_green('Run webserver')
         call(['./manage.py'.format(args.create), 'runserver'], cwd=absolute)
     else:
         parser.print_help()

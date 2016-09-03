@@ -94,7 +94,7 @@ Media directory
 ---------------
 
 The django CMS come with some javascript and CSS files.
-These files are standing in the ``pages/static/pages`` directory.
+These files are standing in the ``pages/static/pages`` directory::
 
     $ python manage.py collecstatic pages
 

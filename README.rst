@@ -37,3 +37,8 @@ Each page can have a different template with different placeholders.
     :width: 350px
     :align: center
 
+
+
+.. image:: https://badges.gitter.im/django-page-cms/Lobby.svg
+   :alt: Join the chat at https://gitter.im/django-page-cms/Lobby
+   :target: https://gitter.im/django-page-cms/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge

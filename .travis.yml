@@ -1,26 +1,37 @@
+sudo: false
+
 language: python
+
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
+  - "nightly"
+
 env:
-  - DJANGO="Django<1.9"
-  - DJANGO="Django<1.10"
-matrix:
-  exclude:
-    # Django 1.9+ no longer supports python 3.2/3.3
-    - python: "3.2"
-      env: DJANGO="Django<1.10"
-    - python: "3.3"
-      env: DJANGO="Django<1.10"
-# command to install dependencies
+  - >
+    REQUIREMENTS=min
+    DJANGO="Django==1.8.0"
+  - >
+    REQUIREMENTS=pypi
+    DJANGO="Django<1.10"
+  - >
+    REQUIREMENTS=dev
+    DJANGO="Django<1.10"
+
+before_install:
+  - "pip install coveralls git+https://github.com/greut/requirements-builder@output#egg=requirements-builder"
+  - "requirements-builder --level=min setup.py > requirements-min.txt"
+  - "requirements-builder --level=pypi setup.py > requirements-pypi.txt"
+  - "requirements-builder --level=dev --req=requirements-devel.txt setup.py > requirements-dev.txt"
+
 install:
+  - "pip install -r requirements-${REQUIREMENTS}.txt"
+  - "pip install ${DJANGO}"
   - "pip install -e .[tests]"
-  - "pip install coveralls"
-  - "pip install $DJANGO"
-# command to run tests
-script: "coverage run --source=pages pages/test_runner.py"
+
+script:
+  - "coverage run --source=pages pages/test_runner.py"
+
 after_success:
-  coveralls
-sudo: false
+  - "coveralls"

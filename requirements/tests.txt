@@ -1,3 +1,0 @@
--r all.txt
-selenium
-coverage

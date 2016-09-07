@@ -1,10 +1,5 @@
 import os
 import sys
-coverage_module_present = True
-try:
-    from coverage import coverage
-except ImportError:
-    coverage_module_present = False
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pages.testproj.test_settings")
 current_dirname = os.path.dirname(__file__)
@@ -15,7 +10,6 @@ import django
 django.setup()
 
 from django.test.runner import DiscoverRunner
-from django.contrib.admin.sites import AlreadyRegistered
 from django.core.management import call_command
 
 class PageTestSuiteRunner(DiscoverRunner):

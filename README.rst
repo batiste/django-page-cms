@@ -28,6 +28,7 @@ django-page-cms
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
+  * `Install <http://django-page-cms.readthedocs.io/en/latest/installation.html>`_
   * `Full documentation <http://django-page-cms.readthedocs.io/en/latest/>`_
   * `How to contribute <doc/contributions.rst>`_
 

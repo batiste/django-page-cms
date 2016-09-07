@@ -20,6 +20,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.PhantomJS()
+        self.browser.set_page_load_timeout(10)
         client = self.get_admin_client()
 
         # setUp is where you instantiate the selenium webdriver and loads the browser.

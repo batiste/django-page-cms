@@ -1,5 +1,3 @@
-.[full]
-django
-sphinx
-sphinx-better-theme
-Sphinx-PyPI-upload
+# Read the docs loves `requirements.txt` files.
+
+.[docs]

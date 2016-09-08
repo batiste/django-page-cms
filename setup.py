@@ -36,33 +36,40 @@ url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
 install_requires = [
-    'django-mptt>=0.8.3',
-    'six>=1.10.0',
-    'Pillow>=3.2.0',
-    'tqdm>=4.4.0',
-    'django-taggit>=0.18.1',
-    'requests>=2.9.0',
     'Django>=1.8,<1.10',
+    'django-mptt>=0.8.3',
+    'django-taggit>=0.18.1',
+    'Pillow>=3.2.0',
+    'requests>=2.9.0',
+    'six>=1.10.0',
+    'tqdm>=4.4.0',
 ]
 
 extra = [
-    'django-haystack',
-    'Markdown>=2.6.6',
-    'Whoosh>=2.7.4',
     'django-ckeditor>=5.0.3',
+    'django-haystack',
+    'djangorestframework>=3.3.2',
+    'Markdown>=2.6.6',
     'polib>=1.0.7',
-    'djangorestframework>=3.3.2'
+    'Whoosh>=2.7.4',
 ]
 
 tests_require = [
+    'coverage',
     'selenium',
-    'coverage'
+]
+
+docs_require = [
+    'Sphinx',
+    'sphinx-better-theme',
+    'Sphinx-PyPI-upload',
 ]
 
 extras_require = {
+    'docs': install_requires + extra + docs_require,
     'extra': extra,
+    'full': install_requires + extra,
     'tests': install_requires + extra + tests_require,
-    'full': install_requires + extra
 }
 
 dependency_links = [

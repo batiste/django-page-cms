@@ -30,7 +30,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
             email='admin_s@example.com'
         )
 
-        self.browser.get('%s%s' % (self.live_server_url,  reverse("admin:index")))
+        self.browser.get('%s%s' % (self.live_server_url, reverse("admin:index")))
 
         super(SeleniumTestCase, self).setUp()
 
@@ -49,7 +49,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         # Open the django admin page.
         # DjangoLiveServerTestCase provides a live server url attribute
         # to access the base url in tests
-        url = '%s%s' % (self.live_server_url,  url)
+        url = '%s%s' % (self.live_server_url, url)
         try:
             return self.browser.get(url)
         except TimeoutException:
@@ -100,20 +100,19 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.select_option(status, str(Page.DRAFT))
         self.assertEqual(status.get_attribute('value'), str(Page.DRAFT))
 
-        src = self.find_element_by_css_selector('.field-status'
-            ).find_element_by_tag_name('img'
-            ).get_attribute('src')
+        src = self.find_element_by_css_selector(
+            '.field-status'
+        ).find_element_by_tag_name(
+            'img'
+        ).get_attribute('src')
 
         self.assertTrue(src.endswith('draft.gif'))
 
     def test_admin_move_page(self):
         self.login()
-        page_1 = self.new_page({'slug':'p1'})
-        page_2 = self.new_page({'slug':'p2'})
+        page_1 = self.new_page({'slug': 'p1'})
+        page_2 = self.new_page({'slug': 'p2'})
         self.visit(reverse('admin:pages_page_changelist'))
-
-        h1 = self.find_element_by_css_selector('#content h1')
-        self.assertEqual(h1.text, 'Select page to change')
 
         rows = self.find_elements_by_css_selector('#page-list tbody tr')
         row_1 = rows[0]
@@ -122,7 +121,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.assertEqual(row_1.get_attribute('id'), 'page-row-%d' % page_1.id)
         self.assertEqual(row_2.get_attribute('id'), 'page-row-%d' % page_2.id)
 
-        page_3 = self.new_page({'slug':'p3'})
+        page_3 = self.new_page({'slug': 'p3'})
 
         self.click('#move-link-%d' % page_2.id)
         self.click('#move-target-%d .move-target.left' % page_1.id)

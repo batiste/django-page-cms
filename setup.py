@@ -7,6 +7,7 @@ package_name = 'django-page-cms'
 
 base = os.path.dirname(__file__)
 
+
 def local_open(fname):
     return open(os.path.join(base, fname), 'r')
 
@@ -41,6 +42,7 @@ install_requires = [
     'tqdm>=4.4.0',
     'django-taggit>=0.18.1',
     'requests>=2.9.0',
+    'Django>=1.8,<1.10',
 ]
 
 extra = [
@@ -60,10 +62,10 @@ tests_require = [
 extras_require = {
     'extra': extra,
     'tests': install_requires + extra + tests_require,
-    'full': install_requires + extra + ['Django>=1.8,<1.10']
+    'full': install_requires + extra
 }
 
-dependency_links=[
+dependency_links = [
     'git+ssh://git@github.com/django-haystack/django-haystack.git@42f53cda9a770ff7daf2ff792cbcab5cd843e2a7#egg=django-haystack'
 ]
 
@@ -85,7 +87,7 @@ setup(
     packages=find_packages(),
     # very important for the binary distribution to include the templates.
     package_data={'pages': data_dirs, 'example': example_dirs},
-    #include_package_data=True, # include package data under svn source control
+    # include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',

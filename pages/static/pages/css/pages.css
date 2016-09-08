@@ -135,10 +135,14 @@ a.popup:hover .help,
 
 .drag-indicator {
     cursor:crosshair;
+    padding-left:20px;
+    background-color: #609ab6;
+    color:#fff;
 }
 
 .drag-dialog .button{
-    padding: 2px 6px;
+    padding: 4px 7px;
+    margin-right:4px;
 }
 
 .drag-dialog .move-top{

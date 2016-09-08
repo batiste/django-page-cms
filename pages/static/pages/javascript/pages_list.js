@@ -228,10 +228,8 @@ $(function($) {
         }
     });
 
-    // will be better of not rewritting the table every time
     function bind_sortable() {
         // Initialise the table for drag and drop
-
         var down = false;
         var move_y = 0;
         var start_y = 0;

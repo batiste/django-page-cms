@@ -1,3 +1,4 @@
+.
 sphinx
 sphinx-better-theme
 Sphinx-PyPI-upload

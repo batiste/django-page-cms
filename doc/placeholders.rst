@@ -332,11 +332,11 @@ A file browsing widget::
 RichTextarea
 ------------
 
-A simple `Rich Text Area Editor <http://batiste.dosimple.ch/blog/posts/2007-09-11-1/rich-text-editor-jquery.html>`_ based on jQuery::
+A simple Rich Text Area Editor based on jQuery::
 
     {% placeholder "<name>" with RichTextarea %}
 
-.. image:: images/rte_light.png
+.. image:: images/rte-light.png
 
 
 CKEditorPlaceholderNode

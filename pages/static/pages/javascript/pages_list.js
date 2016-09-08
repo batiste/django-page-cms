@@ -264,8 +264,8 @@ $(function($) {
               // we have a drag an drop
               if(Math.abs(move_y) > 8 && !drag_initiated) {
                 indicator = $(".drag-indicator");
-                indicator.text(line.find(".title").text());
                 indicator.show();
+                $(".moved-page-title").text(line.find(".title").text());
                 drag_initiated = true;
                 $(line).css("opacity", "0.5");
                 trs = $("#page-list tbody tr");
@@ -304,11 +304,14 @@ $(function($) {
 
         $(document).on("mouseup", function(e) {
             // release
-            if(drag_initiated) {
+            var target_line_id = choosen_line.id.split('page-row-')[1];
+
+            if(drag_initiated && target_line_id != line_id) {
               drag_initiated = false;
               var dialog = $(".drag-dialog");
               dialog.css("top", $(choosen_line).position().top+"px");
               dialog.css("left", (e.pageX - 20) +"px");
+              $('.drag-dialog .target-page-title').text($(choosen_line).find(".title").text());
               dialog.show();
             }
 

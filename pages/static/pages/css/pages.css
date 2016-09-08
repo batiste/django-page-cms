@@ -128,8 +128,30 @@ a.popup:hover .help,
   position:absolute;
   display:none;
   background:#ffb;
-  border:1px #000 solid;
-  padding:6px 10px;
+  border:1px #999 solid;
+  padding:8px 10px;
+  border-radius: 3px;
+}
+
+.drag-indicator {
+    cursor:crosshair;
+}
+
+.drag-dialog .button{
+    padding: 2px 6px;
+}
+
+.drag-dialog .move-top{
+    cursor: s-resize;
+}
+
+.drag-dialog .move-bottom{
+    cursor: n-resize;
+}
+
+
+.drag-dialog .move-first-child{
+    cursor: nw-resize;
 }
 
 /* Title cell theader */
@@ -252,6 +274,7 @@ html[dir=rtl] .change-list-pages .actions-pages a {
 .change-list-pages .actions-pages a.movelink {
     background-image: url(../images/icons/icons.gif);
     background-position: -2px -60px;
+    cursor: all-scroll;
 }
 .change-list-pages .actions-pages a.deletelink {
     background-image: url(../images/icons/icons.gif);

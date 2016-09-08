@@ -6,13 +6,15 @@ Welcome on the documentation of the simple multilingual Gerbi CMS (package name:
 changes to the code base on the `github project page <http://github.com/batiste/django-page-cms>`_.
 To get more information about this CMS and its feature go to the :doc:`Introduction section </introduction>`.
 
-To get the source code with git use::
+For a quick install::
 
-    git clone git://github.com/batiste/django-page-cms.git django-page-cms
+    $ pip install django-page-cms[full]; gerbi --create mywebsite
 
-To get installations instructions go to the :doc:`Installation section </installation>`.
+For more complete installations instructions go to 
+the :doc:`Installation section </installation>`. To get source code with git use::
 
-The latest changelog can be found here :doc:`Changelog section </changelog>`.
+    $ git clone git://github.com/batiste/django-page-cms.git django-page-cms
+
 
 
 Table of content

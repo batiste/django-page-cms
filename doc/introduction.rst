@@ -17,7 +17,13 @@ The project code repository is found at this address: http://github.com/batiste/
 Screenshot
 ============
 
-.. image:: images/admin-screenshot1.png
+Admin page list
+
+.. image:: images/admin-screenshot-1.png
+
+Admin page edition
+
+.. image:: images/admin-screenshot-2.png
 
 Features
 ============

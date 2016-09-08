@@ -1,4 +1,4 @@
-.
+.[full]
 django
 sphinx
 sphinx-better-theme

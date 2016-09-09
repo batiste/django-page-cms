@@ -9,15 +9,9 @@ python:
   - "nightly"
 
 env:
-  - >
-    REQUIREMENTS=min
-    DJANGO="Django==1.8.0"
-  - >
-    REQUIREMENTS=pypi
-    DJANGO="Django<1.10"
-  - >
-    REQUIREMENTS=dev
-    DJANGO="Django<1.10"
+  - REQUIREMENTS=min
+  - REQUIREMENTS=pypi
+  - REQUIREMENTS=dev
 
 before_install:
   - "pip install coveralls git+https://github.com/greut/requirements-builder@dev#egg=requirements-builder"
@@ -27,7 +21,6 @@ before_install:
 
 install:
   - "pip install -r requirements-${REQUIREMENTS}.txt"
-  - "pip install ${DJANGO}"
   - "pip install -e .[tests]"
 
 script:

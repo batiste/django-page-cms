@@ -282,7 +282,7 @@ class FunctionnalTestCase(TestCase):
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
         if len(django_version) > 2:
-            major, middle, minor = [int(v) for v in django_version]
+            major, middle = [int(v) for v in django_version[:2]]
         else:
             major, middle = [int(v) for v in django_version]
         if major >= 1 and middle > 0:

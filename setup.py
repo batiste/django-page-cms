@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-from pkg_resources import require, DistributionNotFound
-import pages
 import os
+import pages
+
 package_name = 'django-page-cms'
+
+base = os.path.dirname(__file__)
 
 
 def local_open(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname))
+    return open(os.path.join(base, fname), 'r')
 
 
 data_dirs = []
@@ -34,35 +36,43 @@ url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
 install_requires = [
-    'django-mptt>=0.8.3,<0.9.0',
-    'six>=1.10.0,<1.11.0',
-    'Pillow>=3.2.0,<3.3.0',
-    'tqdm>=4.4.0,<4.5.0',
-    'django-taggit>=0.18.1,<0.19.0',
-    'requests>=2.9.0,<3.0.0',
+    'Django>=1.8,<1.10',
+    'django-mptt>=0.8.3',
+    'django-taggit>=0.18.1',
+    'Pillow>=3.2.0',
+    'requests>=2.9.0',
+    'six>=1.10.0',
+    'tqdm>=4.4.0',
 ]
 
 extra = [
+    'django-ckeditor>=5.0.3',
     'django-haystack',
-    'Markdown>=2.6.6,<2.7.0',
-    'Whoosh>=2.7.4,<2.8.0',
-    'django-ckeditor>=5.0.3,<5.1.0',
-    'polib>=1.0.7,<1.1.0',
-    'djangorestframework>=3.3.2,<3.4.0'
+    'djangorestframework>=3.3.2',
+    'Markdown>=2.6.6',
+    'polib>=1.0.7',
+    'Whoosh>=2.7.4',
 ]
 
 tests_require = [
+    'coverage',
     'selenium',
-    'coverage'
+]
+
+docs_require = [
+    'Sphinx',
+    'sphinx-better-theme',
+    'Sphinx-PyPI-upload',
 ]
 
 extras_require = {
+    'docs': install_requires + extra + docs_require,
     'extra': extra,
+    'full': install_requires + extra,
     'tests': install_requires + extra + tests_require,
-    'full': install_requires + extra + ['Django>=1.8,<1.10']
 }
 
-dependency_links=[
+dependency_links = [
     'git+ssh://git@github.com/django-haystack/django-haystack.git@42f53cda9a770ff7daf2ff792cbcab5cd843e2a7#egg=django-haystack'
 ]
 
@@ -84,7 +94,7 @@ setup(
     packages=find_packages(),
     # very important for the binary distribution to include the templates.
     package_data={'pages': data_dirs, 'example': example_dirs},
-    #include_package_data=True, # include package data under svn source control
+    # include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',

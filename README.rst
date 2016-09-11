@@ -2,6 +2,10 @@
 django-page-cms
 ===============
 
+.. image:: https://badges.gitter.im/django-page-cms/Lobby.svg
+   :alt: Join the chat at https://gitter.im/django-page-cms/Lobby
+   :target: https://gitter.im/django-page-cms/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://travis-ci.org/batiste/django-page-cms.svg?branch=master
   :target: https://travis-ci.org/batiste/django-page-cms
 
@@ -24,6 +28,7 @@ django-page-cms
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
+  * `Install <http://django-page-cms.readthedocs.io/en/latest/installation.html>`_
   * `Full documentation <http://django-page-cms.readthedocs.io/en/latest/>`_
   * `How to contribute <doc/contributions.rst>`_
 
@@ -33,7 +38,7 @@ dynamically appears in the page admin interface.
 
 Each page can have a different template with different placeholders.
 
-.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/admin-screenshot1.png
+.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/admin-screenshot-1.png
     :width: 350px
     :align: center
 

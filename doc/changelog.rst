@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.5
+=============
+
+Released the 8 of Semptember 2016.
+
+    * Improvement in the drag and drop UX
+
 Release 1.9.4
 =============
 

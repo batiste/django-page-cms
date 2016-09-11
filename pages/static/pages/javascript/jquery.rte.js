@@ -20,7 +20,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         iframe.contentWindow.focus();
         try{
             iframe.contentWindow.document.execCommand(command, false, option);
-        }catch(e){console.log(e)}
+        }catch(e){console.log(e);}
         iframe.contentWindow.focus();
     }
     
@@ -30,23 +30,23 @@ jQuery.fn.rte = function(css_url, media_url) {
             iframe.contentWindow.document.write(doc);
             iframe.contentWindow.document.close();
         } catch(error) {
-            console.log(error)
+            console.log(error);
         }
         if (document.contentEditable) {
             iframe.contentWindow.document.designMode = "On";
             callback();
             return true;
         }
-        else if (document.designMode != null) {
+        else if (document.designMode !== null) {
             try {
                 iframe.contentWindow.document.designMode = "on";
                 callback();
                 return true;
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         }
-        setTimeout(function(){tryEnableDesignMode(iframe, doc, callback)}, 250);
+        setTimeout(function(){tryEnableDesignMode(iframe, doc, callback);}, 250);
         return false;
     }
     
@@ -65,11 +65,12 @@ jQuery.fn.rte = function(css_url, media_url) {
             iframe.title = textarea.attr('name');
         textarea.after(iframe);
         var css = "";
-        if(css_url)
-            var css = "<link type='text/css' rel='stylesheet' href='"+css_url+"' />"
+        if(css_url) {
+            css = "<link type='text/css' rel='stylesheet' href='"+css_url+"' />";
+        }
         var content = textarea.val();
         // Mozilla need this to display caret
-        if($.trim(content)=='')
+        if($.trim(content)==='')
             content = '<br>';
         var doc = "<html><head>"+css+"</head><body class='frameBody'>"+content+"</body></html>";
         tryEnableDesignMode(iframe, doc, function() {
@@ -81,10 +82,12 @@ jQuery.fn.rte = function(css_url, media_url) {
 
     function disableDesignMode(iframe, submit) {
         var content = iframe.contentWindow.document.getElementsByTagName("body")[0].innerHTML;
-        if(submit==true)
-            var textarea = $('<input type="hidden" />');
-        else
-            var textarea = $('<textarea cols="40" rows="10"></textarea>');
+        var textarea;
+        if(submit === true) {
+            textarea = $('<input type="hidden" />');
+        } else {
+            textarea = $('<textarea cols="40" rows="10"></textarea>');
+        }
         textarea.val(content);
         t = textarea.get(0);
         if(iframe.className)
@@ -94,15 +97,16 @@ jQuery.fn.rte = function(css_url, media_url) {
         if(iframe.title)
             t.name = iframe.title;
         $(iframe).before(textarea);
-        if(submit!=true)
+        if(submit!==true) {
             $(iframe).remove();
+        }
         return textarea;
     }
 
     function toolbar(iframe) {
         
         var tb = $("<div class='rte-toolbar' id='toolbar-"+iframe.title+"'><div>\
-            <p>\
+            <p><i class='fa fa-font' aria-hidden='true'></i>\
                 <select>\
                     <option value=''>Bloc style</option>\
                     <option value='p'>Paragraph</option>\
@@ -110,14 +114,14 @@ jQuery.fn.rte = function(css_url, media_url) {
                 </select>\
             </p>\
             <p>\
-                <a href='#' class='bold'><img src='"+media_url+"bold.gif' alt='bold' /></a>\
-                <a href='#' class='italic'><img src='"+media_url+"italic.gif' alt='italic' /></a>\
+                <a href='#' class='bold'><i class='fa fa-bold' aria-hidden='true'></i></a>\
+                <a href='#' class='italic'><i class='fa fa-italic' aria-hidden='true'></i></a>\
             </p>\
             <p>\
-                <a href='#' class='unorderedlist'><img src='"+media_url+"unordered.gif' alt='unordered list' /></a>\
-                <a href='#' class='link'><img src='"+media_url+"link.png' alt='link' /></a>\
-                <a href='#' class='image'><img src='"+media_url+"image.png' alt='image' /></a>\
-                <a href='#' class='disable'><img src='"+media_url+"close.gif' alt='close rte' /></a>\
+                <a href='#' class='unorderedlist'><i class='fa fa-list-ul' aria-hidden='true'></i></a>\
+                <a href='#' class='link'><i class='fa fa-link' aria-hidden='true'></i></a>\
+                <a href='#' class='image'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
+                <a href='#' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
             </p></div></div>");
         $('select', tb).change(function(){
             var index = this.selectedIndex;
@@ -217,4 +221,4 @@ jQuery.fn.rte = function(css_url, media_url) {
         }
         return node;
     }
-}
+};

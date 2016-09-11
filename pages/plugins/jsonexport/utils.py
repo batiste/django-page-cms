@@ -73,7 +73,7 @@ def dump_json_data(page):
         return user.email
 
     tags = []
-    if settings.PAGE_TAGGING_FIELD:
+    if settings.PAGE_TAGGING:
         tags = [tag.name for tag in page.tags.all()]
 
     return {
@@ -205,7 +205,7 @@ def create_and_update_from_json_data(d, user):
     page.save()
 
     # Add tags
-    if settings.PAGE_TAGGING_FIELD:
+    if settings.PAGE_TAGGING:
         from taggit.models import Tag
         tags = d.get('tags', [])
         page.tags.clear()

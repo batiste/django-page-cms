@@ -1,7 +1,7 @@
 {% load i18n pages_tags %}
 <div class="language_choice_widget">
     <input id="id_language" name="language" type="hidden" value="{{ value }}" />
-    <ul class="clearfix">
+    <ul>
     {% for lang in page_languages %}
         {% ifequal value lang.0 %}
             <li><span class="current">{{ lang.0 }}</span></li>

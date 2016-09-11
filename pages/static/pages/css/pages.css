@@ -506,16 +506,17 @@ html[dir=rtl] .change-form .sidebar {
     min-width: 0;
 }
 
-.grp-change-form label,
-.change-form label {
-    width: 90px; /* IE6 fix */
+.grp-change-form .sidebar label,
+.change-form .sidebar label {
+    width: 90px;
     line-height: 20px;
 }
+
 .grp-change-form .sidebar input,
 .grp-change-form .sidebar select,
 .change-form .sidebar input,
 .change-form .sidebar select {
-    width: 148px;
+    width: 160px;
 }
 
 .grp-change-form .sidebar p.help,
@@ -537,7 +538,22 @@ html[dir=rtl] .change-form .sidebar {
 }
 
 .change-form .field-box {
-    display:block;
+    display: block;
+    width:100%;
+    margin-right: 0px;
+}
+
+.change-form .sidebar ul {
+    margin-left:100px;
+    padding:0;
+}
+
+.change-form .sidebar .language_choice_widget {
+    display: inline-block;
+}
+
+.change-form .sidebar .language_choice_widget ul {
+    margin-top:5px;
 }
 
 /* Title */

@@ -12,8 +12,10 @@ parser = argparse.ArgumentParser(description='Gerbi CMS console tool.')
 parser.add_argument('--create', type=str,
                     help='Create a new CMS example website')
 
+
 def print_green(msg):
     print('\033[92m' + msg + '\033[0m')
+
 
 def main():
     args = parser.parse_args()

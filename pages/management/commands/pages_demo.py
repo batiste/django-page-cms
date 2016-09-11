@@ -3,6 +3,7 @@ from pages.models import Page
 from pages.tests.testcase import new_page
 from django.contrib.auth import get_user_model
 
+
 lorem = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Quisque tempus tellus enim, quis tempus dui pretium non. 
 Cras eget enim vel magna fringilla cursus ut sit amet mi. 
@@ -23,21 +24,21 @@ class Command(BaseCommand):
             UserModel.objects.create(username='demo', password='demo')
 
         new_page(content={
-            'title': 'Home', 'slug': 'home', 'lead': 'Welcome to the Gerbi CMS', 'content':lorem
+            'title': 'Home', 'slug': 'home', 'lead': 'Welcome to the Gerbi CMS', 'content': lorem
         }, template='index.html')
         prod_page = new_page(content={
-            'title': 'Products', 'slug': 'products', 'lead': 'Our products', 'content':lorem
+            'title': 'Products', 'slug': 'products', 'lead': 'Our products', 'content': lorem
         }, template='index.html')
         new_page(content={
-            'title': 'Poney', 'slug': 'poney', 'lead': 'Our shiny poney', 'content':lorem},
+            'title': 'Poney', 'slug': 'poney', 'lead': 'Our shiny poney', 'content': lorem},
             parent=prod_page,
             template='index.html')
         new_page(content={
-            'title': 'Hat', 'slug': 'hat', 'lead': 'Fedora for elegance', 'content':lorem},
+            'title': 'Hat', 'slug': 'hat', 'lead': 'Fedora for elegance', 'content': lorem},
             parent=prod_page,
             template='index.html')
         new_page(content={
-            'title': 'Contact', 'slug': 'products', 
+            'title': 'Contact', 'slug': 'contact', 
             'lead': 'Contact us at gerbi@example.com', 'content':lorem
         }, template='index.html')
         

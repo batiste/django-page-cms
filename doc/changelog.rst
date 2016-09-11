@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.6
+=============
+
+Released the 11 of Semptember 2016.
+
+    * Improvement in the page edit form UX
+
 Release 1.9.5
 =============
 

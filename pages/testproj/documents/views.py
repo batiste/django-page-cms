@@ -12,5 +12,6 @@ def document_view(request, *args, **kwargs):
         context['document'] = document
     context['in_document_view'] = True
 
-    return render(request, 'pages/examples/index.html',
+    return render(
+        request, 'pages/examples/index.html',
         context)

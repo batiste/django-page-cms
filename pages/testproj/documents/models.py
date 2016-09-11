@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from pages.models import Page
 from django.utils.translation import ugettext_lazy as _
 
+
 class Document(models.Model):
     "A dummy model used to illustrate the use of linked models in django-page-cms"
 
@@ -12,8 +13,8 @@ class Document(models.Model):
     # the foreign key _must_ be called page
     page = models.ForeignKey(Page)
 
+
 class DocumentForm(ModelForm):
     class Meta:
         model = Document
-        fields = "__all__" 
-
+        fields = "__all__"

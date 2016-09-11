@@ -116,7 +116,6 @@ INSTALLED_APPS = [
     # 'grappelli',
     'django.contrib.admin',
     'django.contrib.sites',
-    'pages.testproj.documents',
     'pages',
     'pages.plugins.jsonexport',
     'pages.plugins.pofiles',

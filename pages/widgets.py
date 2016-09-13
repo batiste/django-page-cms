@@ -2,24 +2,19 @@
 """Django CMS come with a set of ready to use widgets that you can enable
 in the admin via a placeholder tag in your template."""
 
-from pages.settings import PAGES_MEDIA_URL, PAGE_TAGGING
+from pages.settings import PAGES_MEDIA_URL
 from pages.settings import PAGE_LANGUAGES
 from pages.models import Page
 from pages.widgets_registry import register_widget
 
-from django.conf import settings
 from django import forms
-from django.forms import TextInput, Textarea, HiddenInput
+from django.forms import TextInput, Textarea
 from django.forms import MultiWidget
 from django.forms import FileInput as DFileInput
-from django.forms.utils import flatatt
 from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
 from django.utils.safestring import mark_safe
-from django.utils.html import format_html
-from django.utils.encoding import force_text
 from django.template.loader import render_to_string
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 
 from os.path import join
@@ -116,7 +111,8 @@ class LanguageChoiceWidget(TextInput):
 class PageLinkWidget(MultiWidget):
     '''A page link `Widget` for the admin.'''
 
-    def __init__(self, attrs=None, page=None, language=None,
+    def __init__(
+            self, attrs=None, page=None, language=None,
             video_url=None, linkedpage=None, text=None):
         l = [('', '----')]
         for p in Page.objects.all():

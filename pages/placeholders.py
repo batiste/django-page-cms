@@ -101,8 +101,10 @@ class PlaceholderNode(template.Node):
     field = CharField
     widget = TextInput
 
-    def __init__(self, name, page=None, widget=None, parsed=False,
-            as_varname=None, inherited=False, untranslated=False, has_revision=True, section=None):
+    def __init__(
+            self, name, page=None, widget=None, parsed=False,
+            as_varname=None, inherited=False, untranslated=False,
+            has_revision=True, section=None):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -152,8 +154,9 @@ class PlaceholderNode(template.Node):
         else:
             help_text = ''
         widget = self.get_widget(page, language)
-        return self.field(widget=widget, initial=initial,
-                    help_text=help_text, required=False)
+        return self.field(
+            widget=widget, initial=initial,
+            help_text=help_text, required=False)
 
     def save(self, page, language, data, change, extra_data=None):
         """Actually save the placeholder data into the Content object."""
@@ -193,18 +196,19 @@ class PlaceholderNode(template.Node):
         if self.untranslated:
             lang = settings.PAGE_DEFAULT_LANGUAGE
             lang_fallback = False
-        content = Content.objects.get_content(page_obj, lang, self.ctype,
-            lang_fallback)
+        content = Content.objects.get_content(
+            page_obj, lang, self.ctype, lang_fallback)
         if self.inherited and not content:
             for ancestor in page_obj.get_ancestors():
-                content = Content.objects.get_content(ancestor, lang,
+                content = Content.objects.get_content(
+                    ancestor, lang,
                     self.ctype, lang_fallback)
                 if content:
                     break
         return content
 
     def get_content_from_context(self, context):
-        if not self.page in context:
+        if self.page not in context:
             return ''
         # current_page can be set to None
         if not context[self.page]:
@@ -328,17 +332,16 @@ class ContactForm(forms.Form):
     Simple contact form
     """
     email = forms.EmailField(label=_('Your email'))
-    subject = forms.CharField(label=_('Subject'),
-      max_length=150)
-    message = forms.CharField(widget=forms.Textarea(),
-      label=_('Your message'))
+    subject = forms.CharField(
+        label=_('Subject'), max_length=150)
+    message = forms.CharField(
+        widget=forms.Textarea(), label=_('Your message'))
 
 
 class ContactPlaceholderNode(PlaceholderNode):
     """A contact `PlaceholderNode` example."""
 
     def render(self, context):
-        content = self.get_content_from_context(context)
         request = context.get('request', None)
         if not request:
             raise ValueError('request not available in the context.')
@@ -348,15 +351,16 @@ class ContactPlaceholderNode(PlaceholderNode):
                 data = form.cleaned_data
                 recipients = [adm[1] for adm in global_settings.ADMINS]
                 try:
-                    send_mail(data['subject'], data['message'],
+                    send_mail(
+                        data['subject'], data['message'],
                         data['email'], recipients, fail_silently=False)
                     return _("Your email has been sent. Thank you.")
                 except:
                     return _("An error as occured: your email has not been sent.")
         else:
             form = ContactForm()
-        renderer = render_to_string('pages/contact.html', {'form': form},
-            RequestContext(request))
+        renderer = render_to_string(
+            'pages/contact.html', {'form': form}, RequestContext(request))
         return mark_safe(renderer)
 
 

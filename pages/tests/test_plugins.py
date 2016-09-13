@@ -4,6 +4,11 @@ from pages.tests.testcase import TestCase
 from pages.plugins.jsonexport import utils
 from pages.models import Page
 import json
+from pages.plugins.jsonexport.tests import JSONExportTestCase
+
+
+class Dummy(JSONExportTestCase):
+    pass
 
 
 class PluginTestCase(TestCase):

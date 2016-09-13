@@ -49,7 +49,7 @@ def get_placeholders(template_name):
         previous[block.name] = block
 
     def keep(p):
-        return not p.found_in_block in block_to_remove
+        return p.found_in_block not in block_to_remove
 
     placeholders = [p for p in plist if keep(p)]
     names = []

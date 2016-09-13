@@ -1,12 +1,9 @@
 """Page CMS functions related to the ``request`` object."""
 from pages import settings
-from django.template import RequestContext
-try:
-    from io import StringIO
-except ImportError:
-    from io import StringIO
+
 
 LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
+
 
 def get_request_mock():
     """Build a ``request`` mock up that is used in to render
@@ -21,15 +18,15 @@ def get_request_mock():
     factory = RequestFactory()
     basehandler = BaseHandler()
     basehandler.load_middleware()
-    
+
     request = factory.get('/')
     # Apply request middleware
     for middleware_method in basehandler._request_middleware:
         # LocaleMiddleware should never be applied a second time because
         # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.__self__.__class__):
-            response = middleware_method(request)
-    
+            middleware_method(request)
+
     return request
 
 

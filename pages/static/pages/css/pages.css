@@ -124,38 +124,39 @@ a.popup:hover .help,
     position: static;
 }
 
-.drag-indicator, .drag-dialog {
-  position:absolute;
-  display:none;
-  background:#ffb;
-  border:1px #999 solid;
-  padding:8px 10px;
-  border-radius: 3px;
+#page-table-dnd {
+    border-collapse: collapse; 
+}
+
+#page-table-dnd td, #page-table-dnd th {
+    border-bottom: 2px solid transparent;
+    border-top: 3px solid transparent;
+    margin:0 2px;
+}
+
+#page-table-dnd .target-insert-left td, #page-table-dnd .target-insert-left th {
+    border-top: 3px solid #79aec8;
+}
+
+#page-table-dnd .target-insert-right td, #page-table-dnd .target-insert-right th {
+    border-bottom: 3px solid #79aec8;
+}
+
+#page-table-dnd .target-insert-first-child {
+    outline: 3px solid #79aec8;
 }
 
 .drag-indicator {
+    position:absolute;
+    display:none;
+    background:#ffb;
+    border:1px #999 solid;
+    padding:8px 10px;
+    border-radius: 3px;
     cursor:crosshair;
     padding-left:20px;
     background-color: #609ab6;
     color:#fff;
-}
-
-.drag-dialog .button{
-    padding: 4px 7px;
-    margin-right:4px;
-}
-
-.drag-dialog .move-top{
-    cursor: s-resize;
-}
-
-.drag-dialog .move-bottom{
-    cursor: n-resize;
-}
-
-
-.drag-dialog .move-first-child{
-    cursor: nw-resize;
 }
 
 /* Title cell theader */

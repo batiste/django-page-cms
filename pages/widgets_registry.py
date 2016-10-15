@@ -1,6 +1,7 @@
 """Django page CMS widget registry."""
-__all__ = ('register_widget',)
 from django.utils.translation import ugettext as _
+
+__all__ = ('register_widget',)
 
 
 class WidgetAlreadyRegistered(Exception):

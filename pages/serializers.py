@@ -20,7 +20,8 @@ class PageSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        attributes = ('status', 'delegate_to', 'freeze_date', 'creation_date',
+        attributes = (
+            'status', 'delegate_to', 'freeze_date', 'creation_date',
             'publication_end_date', 'template', 'redirect_to_url',
             'last_modification_date', 'publication_date', 'uuid')
 

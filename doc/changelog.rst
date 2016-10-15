@@ -23,7 +23,7 @@ Release 1.9.4
 
 Released the 2 of Semptember 2016.
 
-    * Changes in setup.py so dependecies can be installed with `pip install django-page-cms[full]
+    * Changes in setup.py so dependecies can be installed with `pip install django-page-cms[full]`
 
 Release 1.9.3
 =============

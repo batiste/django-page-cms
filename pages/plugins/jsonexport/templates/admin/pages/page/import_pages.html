@@ -38,7 +38,7 @@
     <ul>
         {% for page, created, messages in pages_created %}
         <li>
-            <a href="../{{ page.id }}/">{{ page.get_complete_slug }} "{{ page.title }}"</a>
+            <a href="{{ page.id }}/">{{ page.get_complete_slug }} "{{ page.title }}"</a>
             {% if created %}
             {% trans "created" %}
             {% else %}

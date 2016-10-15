@@ -155,4 +155,4 @@ to point to it with something similar to this::
             url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
         )
 
-Have a look at ``page.urls` for more details.
+Have a look at `page.urls` for more details.

@@ -1,7 +1,6 @@
 /* Initialization of the change_list page - this script is run once everything is ready. */
-"use strict";
-
 $(function($) {
+    "use strict";
 
     if(!$("body").hasClass("change-list-pages")) {
       return;
@@ -241,13 +240,17 @@ $(function($) {
         var drag_initiated = false;
         var lines_position = [];
         var choosen_line = false;
+        var insert_at = false;
         var trs;
         var source_left, source_right, source_tree_id;
+        var all_lines;
 
         $("#page-list").on("mousedown", ".movelink", function(e) {
+            all_lines = $("#page-table-dnd tbody tr");
             down = this;
             line = $($(this).parents("tr").get(0));
             line_id = line.attr('id').split('page-row-')[1];
+            insert_at = 'above'
             move_y = 0;
             start_y = e.pageY;
             source_left = parseInt(line.data('mptt-left'), 10);
@@ -276,7 +279,7 @@ $(function($) {
                     return;
                   }
                   lines_position.push(
-                    {line:el, pos:possible_target.position().top + possible_target.height() / 2}
+                    {el:el, pos:possible_target.position(), h:possible_target.height()}
                   );
                 });
               }
@@ -285,16 +288,30 @@ $(function($) {
                 indicator.css("top", e.pageY-22 + "px");
                 indicator.css("left", e.pageX-8 + "px");
                 var i;
-                choosen_line = lines_position[0].line;
+                choosen_line = lines_position[0];
                 var distance = 10000;
                 for(i = 0; i<lines_position.length; i++) {
-                  if(Math.abs(lines_position[i].pos - e.pageY) < distance) {
-                      distance = Math.abs(lines_position[i].pos - e.pageY);
-                      choosen_line = lines_position[i].line;
+                  var _line = lines_position[i];
+                  var top = Math.abs((_line.pos.top + _line.h / 2) - e.pageY) ;
+                  if(top < distance) {
+                      distance = top;
+                      choosen_line = _line;
                   }
                 }
-                $("#page-list tbody tr").removeClass("highlighted");
-                $(choosen_line).addClass("highlighted");
+
+                all_lines.removeClass('target-insert-first-child target-insert-left target-insert-right highlighted');
+                var target_line_id = choosen_line.el.id.split('page-row-')[1];
+                if(choosen_line && target_line_id != line_id) {
+                  var percent = (e.pageY - choosen_line.pos.top) / parseFloat(choosen_line.h, 10);
+                  insert_at = 'first-child';
+                  if(percent < 0.30) {
+                    insert_at = 'left';
+                  }
+                  if(percent > 0.70) {
+                    insert_at = 'right';
+                  }
+                  $(choosen_line.el).addClass('highlighted').addClass('target-insert-' + insert_at);
+                }
               }
             }
             return false;
@@ -302,15 +319,11 @@ $(function($) {
 
         $(document).on("mouseup", function(e) {
             // release
-            var target_line_id = choosen_line.id.split('page-row-')[1];
+            var target_line_id = choosen_line.el.id.split('page-row-')[1];
 
             if(drag_initiated && target_line_id != line_id) {
               drag_initiated = false;
-              var dialog = $(".drag-dialog");
-              dialog.css("top", $(choosen_line).position().top+"px");
-              dialog.css("left", (e.pageX - 20) +"px");
-              $('.drag-dialog .target-page-title').text($(choosen_line).find(".title").text());
-              dialog.show();
+                move_page(line_id, insert_at, target_line_id);
             }
 
             $(line).css("opacity", "1");
@@ -318,35 +331,6 @@ $(function($) {
             down = false;
             drag_initiated = false;
             lines_position = [];
-        });
-
-        $(document).on("click", ".move-top", function() {
-            var target = choosen_line.id.split('page-row-')[1];
-            move_page(line_id, "left", target);
-            return false;
-        });
-
-        $(document).on("click", ".move-first-child", function() {
-            var target = choosen_line.id.split('page-row-')[1];
-            move_page(line_id, "first-child", target);
-            return false;
-        });
-
-        $(document).on("click", ".move-bottom", function() {
-            var target = choosen_line.id.split('page-row-')[1];
-            move_page(line_id, "right", target);
-            return false;
-        });
-
-        $(document).on("click", ".move-undo", function() {
-            $(".drag-dialog").hide();
-            $("#page-list tbody tr").removeClass("highlighted");
-            return false;
-        });
-
-        $(document).on("click", function() {
-            $("#page-list tbody tr").removeClass("highlighted");
-            $(".drag-dialog").hide();
         });
 
     }

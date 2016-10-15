@@ -95,7 +95,8 @@ class Details(object):
         """Return the appropriate page according to the path."""
         path = context['path']
         lang = context['lang']
-        page = Page.objects.from_path(path, lang,
+        page = Page.objects.from_path(
+            path, lang,
             exclude_drafts=(not is_staff))
         if page:
             return page
@@ -107,7 +108,8 @@ class Details(object):
         if not settings.PAGE_USE_STRICT_URL:
             path = remove_slug(path)
             while path is not None:
-                page = Page.objects.from_path(path, lang,
+                page = Page.objects.from_path(
+                    path, lang,
                     exclude_drafts=(not is_staff))
                 # find a match. Is the page delegating?
                 if page:

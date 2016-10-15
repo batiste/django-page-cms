@@ -125,6 +125,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
 
         self.click('#move-link-%d' % page_2.id)
         self.click('#move-target-%d .move-target.left' % page_1.id)
+        self.visit(reverse('admin:pages_page_changelist'))
 
         self.find_element_by_id('page-row-%d' % page_3.id)
 

@@ -13,7 +13,7 @@ env:
   - REQUIREMENTS=dev
 
 before_install:
-  - "pip install coveralls Requirements-Builder
+  - "pip install coveralls Requirements-Builder"
   - "requirements-builder --level=min setup.py > requirements-min.txt"
   - "requirements-builder --level=pypi setup.py > requirements-pypi.txt"
   - "requirements-builder --level=dev --req=requirements-devel.txt setup.py > requirements-dev.txt"

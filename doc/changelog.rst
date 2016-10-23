@@ -7,35 +7,35 @@ This file describe new features and incompatibilites between released version of
 Release 1.9.7
 =============
 
-Released the 23 of October 2016.
+Released the 23rd of October 2016.
 
     * Fix the build and some details in the admin
 
 Release 1.9.6
 =============
 
-Released the 11 of Semptember 2016.
+Released the 11th of September 2016.
 
     * Improvement in the page edit form UX
 
 Release 1.9.5
 =============
 
-Released the 8 of Semptember 2016.
+Released the 8th of September 2016.
 
     * Improvement in the drag and drop UX
 
 Release 1.9.4
 =============
 
-Released the 2 of Semptember 2016.
+Released the 2nd of September 2016.
 
     * Changes in setup.py so dependecies can be installed with `pip install django-page-cms[full]`
 
 Release 1.9.3
 =============
 
-Released the 2 of Semptember 2016.
+Released the 2nd of Semptember 2016.
 
     * A new conditional template tag called page_has_content
     * A new gerbi console command to create demo websites: gerbi --create mywebsite
@@ -46,7 +46,7 @@ Released the 2 of Semptember 2016.
 Release 1.9.1
 =============
 
-Released the 12 of June 2016.
+Released the 12th of June 2016.
 
     * A new keyword section on the placeholer has been added to create groups 
       in the admin
@@ -62,7 +62,7 @@ Released the 12 of June 2016.
 Release 1.9.0
 =============
 
-Released the 1 of February 2016.
+Released the 1st of February 2016.
 
     * Support Django 1.9
     * Support Python 3.4, 3.5
@@ -75,7 +75,7 @@ Released the 1 of February 2016.
 Release 1.8.2
 =============
 
-Released the 20 of December 2015.
+Released the 20th of December 2015.
 
     * Migrations files were not included in 1.8.1
     * Add a pages_push and pages_pull command that permit to pull and push content between
@@ -84,7 +84,7 @@ Released the 20 of December 2015.
 Release 1.8.1
 =============
 
-Released the 24 of September 2015.
+Released the 24th of September 2015.
 
     * Added support for a REST API using Django Rest Framework (http://www.django-rest-framework.org/)
     * Refactoring
@@ -92,7 +92,7 @@ Released the 24 of September 2015.
 Release 1.8.0
 =============
 
-Released the 23 of April 2015.
+Released the 23rd of April 2015.
 
     * Updated to Django 1.8
     * Jumped 2 version to stick with Django versionning numbers
@@ -105,7 +105,7 @@ Backward Incompatible Changes
 Release 1.6.2
 =============
 
-Released the 27 of July 2014.
+Released the 27th of July 2014.
 
     * Added a ckeditor placeholder using django-ckeditor
     * The project now use transifex to handle it's translations (https://www.transifex.com/projects/p/django-page-cms-1/)
@@ -117,7 +117,7 @@ Released the 27 of July 2014.
 Release 1.6.1
 =============
 
-Released the 2 of June 2014.
+Released the 2nd of June 2014.
 
     * Fix a bug with the image upload.
     * Fix a bug with files using non ascii characters.
@@ -127,7 +127,7 @@ Released the 2 of June 2014.
 Release 1.6.0
 ==============
 
-Released the 11 of March 2014.
+Released the 11th of March 2014.
 
 Highlights
 --------------

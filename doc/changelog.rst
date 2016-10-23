@@ -10,6 +10,7 @@ Release 1.9.7
 Released the 23rd of October 2016.
 
     * Fix the build and some details in the admin
+    * Improvement in the drag and drop interface
 
 Release 1.9.6
 =============

@@ -57,18 +57,18 @@
             {% for page in pages_navigation %}
             <li {% ifequal page.id current_page.id %}class="active"{% endifequal %}>
                 {% if page.published_children %}
-                    <a href="{{ page.get_absolute_url }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ page.title }} <span class="caret"></span></a>
+                    <a href="{{ page.get_absolute_url }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% show_content page "title" %} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                     {% for child in page.published_children %}
                         <li><a href="{{ child.get_absolute_url }}">
-                        {{ child.title }}
+                        {% show_content page "title" %}
                         </a>
                         </li>
                     {% endfor %}
                     </ul>
                 {% else %}
                 <a href="{{ page.get_absolute_url }}">
-                {{ page.title }}
+                  {% show_content page "title" %}
                 </a>
                 {% endif %}
             </li>

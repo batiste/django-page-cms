@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.7
+=============
+
+Released the 23 of October 2016.
+
+    * Fix the build and some details in the admin
+
 Release 1.9.6
 =============
 

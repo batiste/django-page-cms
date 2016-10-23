@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
+        fields = '__all__'
 
 
 class PageSerializer(serializers.ModelSerializer):
@@ -17,6 +18,7 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
+        fields = '__all__'
 
     def create(self, validated_data):
 

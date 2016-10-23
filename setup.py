@@ -47,7 +47,7 @@ install_requires = [
 
 extra = [
     'django-ckeditor>=5.0.3',
-    'django-haystack',
+    'django-haystack>=2.5.0',
     'djangorestframework>=3.3.2',
     'Markdown>=2.6.6',
     'polib>=1.0.7',
@@ -55,8 +55,8 @@ extra = [
 ]
 
 tests_require = [
-    'coverage',
-    'selenium',
+    'coverage>=4.2.0',
+    'selenium>=3.0.1',
 ]
 
 docs_require = [

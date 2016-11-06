@@ -22,7 +22,7 @@ First you need a `urls.py` file that you can register to the CMS. It might look 
 
 .. note::
 
-    The CMS will pass the keyword arguements `current_page` and `pages_navigation` to the view
+    The CMS will pass the keyword arguments `current_page` and `pages_navigation` to the view
 
 Then you need to register the urlconf module of your application to use it
 within the admin interface. Put this code in you urls.py `before` admin.autodiscover(). Here is an example for a document application.::

@@ -101,7 +101,7 @@ an example of the use of this template tag to display a list of footer pages::
     </ul>
 
 show_absolute_url
------------------
+-------------------
 
 This tag show the absolute url of a page. The difference with the `Page.get_url_path` method is
 that the template knows which language is used within the context and display the URL accordingly::
@@ -114,12 +114,12 @@ that the template knows which language is used within the context and display th
 
 
 Delegate the page rendering to another application
-===================================================
+----------------------------------------------------
 
 :doc:`You can set another application to render certain pages of your website </3rd-party-apps>`.
 
 Subclass the default view
-===================================================
+-----------------------------
 
 This CMS view is a class based view. This means is is easy
 to override some default behavior. For example if you want to inject
@@ -138,7 +138,7 @@ th method extra_context::
 
     details = NewsView()
 
-For your view to be taken to be used in place of the CMS one, you simply need
+For your view to be used in place of the CMS one, you simply need
 to point to it with something similar to this::
 
     from django.conf.urls.defaults import url, include, patterns
@@ -155,4 +155,7 @@ to point to it with something similar to this::
             url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
         )
 
-Have a look at `page.urls` for more details.
+.. note::
+
+    Have a look at `pages.urls` for a up to date example of URLs configuration.
+

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import argparse
-import sys
 import os
 import shutil
 import stat
 from subprocess import call
+from six.moves import input
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXAMPLE_DIR = os.path.join(PROJECT_DIR, 'example')
 
@@ -32,7 +32,7 @@ def main():
         if ret != 0:
             return
         print_green('Migration done')
-        _input = raw_input("Would you like to create a superuser to connect to the admin? [N/y] ")
+        _input = input("Would you like to create a superuser to connect to the admin? [N/y] ")
         if _input.lower() == 'y':
             call(['./manage.py'.format(args.create), 'createsuperuser'], cwd=absolute)
         print_green('Creating demo pages')

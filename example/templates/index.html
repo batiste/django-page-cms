@@ -61,7 +61,7 @@
                     <ul class="dropdown-menu" role="menu">
                     {% for child in page.published_children %}
                         <li><a href="{{ child.get_absolute_url }}">
-                        {% show_content page "title" %}
+                        {% show_content child "title" %}
                         </a>
                         </li>
                     {% endfor %}

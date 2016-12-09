@@ -43,8 +43,8 @@
     page_id = $(this).attr('data-page-id');
     lang = $(this).attr('data-language');
 
-    var modify_url = '/admin/pages/page/' + 
-      page_id + '/modify-placeholder/' + lang + '/?content_type=' + name;
+    var modify_url = '/admin/pages/page/modify-placeholder/' + 
+      lang + '/?content_type=' + name + '&page_id=' + page_id;
      
     var form = overlay.find('form');
     form.attr('action', modify_url);
@@ -55,10 +55,10 @@
 
     var offset = $(this).offset()
 
-    overlay.css('top', offset.top);
-    overlay.css('left', offset.left);
-    overlay.css('width', $(this).width());
-    overlay.css('min-height', $(this).height());
+    overlay.css('top', offset.top-5);
+    overlay.css('left', offset.left-5);
+    overlay.css('width', $(this).width()+5);
+    overlay.css('min-height', $(this).height()+5);
 
     overlay.find('input,textarea').addClass('form-control').focus();
 
@@ -66,8 +66,10 @@
   });
 
   $('#post-iframe').load(function() {
-    console.log('iframe loaded')
-    $.get('/admin/pages/page/' + page_id + '/get-last-content/' + name + '/' + lang + '/', function(result) {
+    console.log('iframe loaded');
+    var get_content_url = '/admin/pages/page/get-last-content/' + name + '/' + lang + '/';
+    get_content_url += '?page_id=' + page_id
+    $.get(get_content_url, function(result) {
         setTimeout(function(){
           overlay.find('button,input').prop('disabled', false);
         }, 100);

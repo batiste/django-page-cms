@@ -45,26 +45,35 @@ def list_pages_ajax(request, invalid_move=False):
         context)
 
 
+from pages.managers import fake_page
+
+
 @staff_member_required
 @csrf_exempt
-def modify_content(request, page_id, content_type, language_id):
+def modify_content(request, content_type, language_id):
     """Modify the content of a page."""
-    page = get_object_or_404(Page, pk=page_id)
+    page_id = request.GET.get('page_id')
+    if page_id:
+        page = get_object_or_404(Page, pk=page_id)
+    else:
+        page = None
     perm = request.user.has_perm('pages.change_page')
     if perm and request.method == 'POST':
         content = request.POST.get('content', False)
         if not content:
             raise Http404
-        page = Page.objects.get(pk=page_id)
         if settings.PAGE_CONTENT_REVISION:
             Content.objects.create_content_if_changed(page, language_id,
                                                       content_type, content)
         else:
             Content.objects.set_or_create_content(page, language_id,
                                                   content_type, content)
-        page.invalidate()
-        # to update last modification date
-        page.save()
+        if page:
+            page.invalidate()
+            # to update last modification date
+            page.save()
+        else:
+            fake_page.invalidate(content_type)
 
         return HttpResponse('ok')
     raise Http404
@@ -72,8 +81,9 @@ def modify_content(request, page_id, content_type, language_id):
 
 @staff_member_required
 @csrf_exempt
-def modify_placeholder(request, page_id, language_id):
+def modify_placeholder(request, language_id):
     """Modify the content of a page."""
+    page_id = request.GET.get('page_id')
     page = get_object_or_404(Page, pk=page_id)
     content_type = request.GET.get('content_type')
     perm = request.user.has_perm('pages.change_page')
@@ -81,21 +91,50 @@ def modify_placeholder(request, page_id, language_id):
         placeholders = get_placeholders(page.get_template())
         for placeholder in placeholders:
             if placeholder.name == content_type:
-
-                initial = placeholder.get_content(page, language_id, lang_fallback=False)
+                initial = placeholder.get_content(
+                    page, language_id, lang_fallback=False)
                 form = forms.Form(request.POST)
-                form.fields[content_type] = placeholder.get_field(page,
-                    language_id, initial=initial)
+                form.fields[content_type] = placeholder.get_field(
+                    page, language_id, initial=initial)
                 if not form.is_valid():
                     return HttpResponse(form.as_p())
 
-                placeholder.save(page, language_id, form.cleaned_data[content_type], True)
-                page.invalidate()
-                # to update last modification date
-                page.save()
+                if placeholder.shared:
+                    save_page = None
+                else:
+                    save_page = page
+
+                placeholder.save(
+                    save_page, language_id,
+                    form.cleaned_data[content_type], True)
+                if save_page:
+                    page.invalidate()
+                    # to update last modification date
+                    page.save()
+                else:
+                    fake_page.invalidate(content_type)
+
                 return HttpResponse('ok')
         raise Http404("Content type not found in placeholders")
 
+    raise Http404
+
+
+@staff_member_required
+def get_last_content(request, content_type, language_id):
+    """Get the latest content for a particular type"""
+    page_id = request.GET.get('page_id')
+    page = get_object_or_404(Page, pk=page_id)
+    placeholders = get_placeholders(page.get_template())
+    for placeholder in placeholders:
+        if placeholder.name == content_type:
+            if placeholder.shared:
+                source_page = None
+            else:
+                source_page = page
+            content = Content.objects.get_content(
+                source_page, language_id, content_type)
+            return HttpResponse(content)
     raise Http404
 
 
@@ -143,15 +182,6 @@ def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
     content = Content.objects.get(pk=content_id)
     return HttpResponse(content.body)
-
-
-@staff_member_required
-def get_last_content(request, page_id, content_type, language_id):
-    """Get the latest content for a particular type"""
-    page = Page.objects.get(pk=page_id)
-    page.invalidate()
-    content = Content.objects.get_content(page, language_id, content_type)
-    return HttpResponse(content)
 
 
 @staff_member_required

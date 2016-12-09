@@ -57,6 +57,9 @@
       border-bottom:0;
       box-shadow: -1px -1px 3px #9ecaed;
     }
+    #post-iframe {
+      display:none;
+    }
 
     </style>
 
@@ -135,7 +138,8 @@
             <h1>{% placeholder 'title' %}</h1>
             <p class="lead">{% placeholder 'lead' %}</p>
             {% page_has_content 'header-image' current_page %}
-            <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}" class="img-responsive" alt="">
+              {% imageplaceholder 'header-image' as image %}
+              <img src="{{ MEDIA_URL }}{{ image }}" class="img-responsive" alt="">
             {% end_page_has_content %}
           {% endblock %}
           </div>
@@ -178,13 +182,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
     </script>
 
-    <div id="overlay">
-      <form class="form-group">
-      <button style="float:right">Save</button>
-      <button style="float:right">Undo</button>
+    <div id="overlay" style="display:none">
+      <form class="form-group" action="" method="post" target="post-iframe">
+      {% csrf_token %}
+      <button style="float:right" id="save-edit">Save</button>
+      <button style="float:right" id="undo-edit">Undo</button>
       {% load_edit %}
       </form> 
     </div>
+
+    <iframe id="post-iframe" name="post-iframe" src="/"></iframe>
 
     <script>
       var plc = $("*").contents().filter(function(){
@@ -198,14 +205,33 @@
         $(el).remove();
       });
 
-      var name, page_id, lang;
+      var overlay = $("#overlay");
+      var name, page_id, lang, element;
+
+      $(document).on('click', '#undo-edit', function(e) {
+        e.preventDefault();
+        overlay.hide();
+      });
+
+      $(document).on('click', '#save-edit', function(e) {
+        setTimeout(function(){
+          overlay.find('button,input').prop('disabled', true);
+        }, 100);
+        //overlay.find('form').submit();
+      });
 
       $(document).on('click', '.edit-placeholder', function(){
+        element = $(this);
+        overlay.show();
         name = $(this).attr('data-placeholder-name');
         page_id = $(this).attr('data-page-id');
         lang = $(this).attr('data-language');
-        var overlay = $("#overlay");
+
+        var modify_url = '/admin/pages/page/' + 
+          page_id + '/modify-placeholder/' + lang + '/?content_type=' + name;
+         
         var form = overlay.find('form');
+        form.attr('action', modify_url);
         var label = form.find("[for='id_" + name + "']");
 
         overlay.find('form>p').hide();
@@ -221,6 +247,17 @@
         overlay.find('input').addClass('form-control').focus();
 
         label.show();
+      });
+
+      $('#post-iframe').load(function() {
+        console.log('iframe loaded')
+        $.get('/admin/pages/page/' + page_id + '/get-last-content/' + name + '/' + lang + '/', function(result) {
+            setTimeout(function(){
+              overlay.find('button,input').prop('disabled', false);
+            }, 100);
+            overlay.hide();
+            element.html(result);
+        });
       });
     </script>
 

@@ -10,6 +10,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
+from django import forms
 
 
 @staff_member_required
@@ -71,6 +72,35 @@ def modify_content(request, page_id, content_type, language_id):
 
 @staff_member_required
 @csrf_exempt
+def modify_placeholder(request, page_id, language_id):
+    """Modify the content of a page."""
+    page = get_object_or_404(Page, pk=page_id)
+    content_type = request.GET.get('content_type')
+    perm = request.user.has_perm('pages.change_page')
+    if perm and request.method == 'POST':
+        placeholders = get_placeholders(page.get_template())
+        for placeholder in placeholders:
+            if placeholder.name == content_type:
+
+                initial = placeholder.get_content(page, language_id, lang_fallback=False)
+                form = forms.Form(request.POST)
+                form.fields[content_type] = placeholder.get_field(page,
+                    language_id, initial=initial)
+                if not form.is_valid():
+                    return HttpResponse(form.as_p())
+
+                placeholder.save(page, language_id, form.cleaned_data[content_type], True)
+                page.invalidate()
+                # to update last modification date
+                page.save()
+                return HttpResponse('ok')
+        raise Http404("Content type not found in placeholders")
+
+    raise Http404
+
+
+@staff_member_required
+@csrf_exempt
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
     perm = request.user.has_perm('pages.delete_page')
@@ -113,6 +143,15 @@ def get_content(request, page_id, content_id):
     """Get the content for a particular page"""
     content = Content.objects.get(pk=content_id)
     return HttpResponse(content.body)
+
+
+@staff_member_required
+def get_last_content(request, page_id, content_type, language_id):
+    """Get the latest content for a particular type"""
+    page = Page.objects.get(pk=page_id)
+    page.invalidate()
+    content = Content.objects.get_content(page, language_id, content_type)
+    return HttpResponse(content)
 
 
 @staff_member_required

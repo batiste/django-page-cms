@@ -56,6 +56,8 @@ def has_content_in(page, language):
     :param page: the current page
     :param language: the language you want to look at
     """
+    if page is None:
+        return False
     return Content.objects.filter(page=page, language=language).count() > 0
 
 

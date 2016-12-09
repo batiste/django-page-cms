@@ -251,6 +251,9 @@ class PlaceholderNode(template.Node):
                 else:
                     content = ''
         if self.as_varname is None:
+            request = context.get('request')
+            if not request or not request.user.is_staff:
+                return content
             return u"""{}<!--placeholder ;{};{};{};-->""".format(
                 content, self.name, context[self.page].id,
                 self.get_lang(context), )

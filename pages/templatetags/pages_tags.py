@@ -57,6 +57,8 @@ def has_content_in(page, language):
     :param language: the language you want to look at
     """
     return Content.objects.filter(page=page, language=language).count() > 0
+
+
 register.filter(has_content_in)
 
 
@@ -76,6 +78,8 @@ def pages_menu(context, page, url='/'):
         children = page.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
+
+
 pages_menu = register.inclusion_tag('pages/menu.html',
                                     takes_context=True)(pages_menu)
 
@@ -95,6 +99,8 @@ def pages_sub_menu(context, page, url='/'):
         children = root.get_children_for_frontend()
         context.update({'children': children, 'page': page})
     return context
+
+
 pages_sub_menu = register.inclusion_tag('pages/sub_menu.html',
                                         takes_context=True)(pages_sub_menu)
 
@@ -112,6 +118,8 @@ def pages_siblings_menu(context, page, url='/'):
         siblings = page.get_siblings()
         context.update({'children': siblings, 'page': page})
     return context
+
+
 pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
                                     takes_context=True)(pages_siblings_menu)
 
@@ -130,8 +138,11 @@ def pages_admin_menu(context, page):
                 expanded = True
     context.update({'expanded': expanded, 'page': page})
     return context
-pages_admin_menu = register.inclusion_tag('admin/pages/page/menu.html',
-                                        takes_context=True)(pages_admin_menu)
+
+
+pages_admin_menu = register.inclusion_tag(
+    'admin/pages/page/menu.html', takes_context=True
+)(pages_admin_menu)
 
 
 def show_content(context, page, content_type, lang=None, fallback=True):
@@ -155,8 +166,11 @@ def show_content(context, page, content_type, lang=None, fallback=True):
         (default None, use the request object to know)
     :param fallback: use fallback content from other language
     """
-    return {'content': _get_content(context, page, content_type, lang,
-                                                                fallback)}
+    return {'content': _get_content(
+        context, page, content_type, lang, fallback)
+    }
+
+
 show_content = register.inclusion_tag('pages/content.html',
                                       takes_context=True)(show_content)
 
@@ -381,7 +395,80 @@ def do_load_pages(parser, token):
         </ul>
     """
     return LoadPagesNode()
+
+
 do_load_pages = register.tag('load_pages', do_load_pages)
+
+
+from pages.utils import get_placeholders
+from django.forms.widgets import Media
+from django import forms
+from django.template.loader import get_template
+
+
+class LoadEditNode(template.Node):
+    """Load edit node."""
+
+    def render(self, context):
+        request = context.get('request')
+        if not request.user.is_staff:
+            return ''
+        template_name = context.get('template_name')
+        placeholders = get_placeholders(template_name)
+        page = context.get('current_page')
+        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
+        form = forms.Form()
+        for p in placeholders:
+            field = p.get_field(page, lang, initial=p.get_content_from_context(context))
+            form.fields[p.name] = field
+
+        template = get_template('pages/inline-edit.html')
+        with context.push():
+            context['form'] = form
+            content = template.render(context)
+
+        return content
+
+
+def do_load_edit(parser, token):
+    """
+    """
+    return LoadEditNode()
+
+
+do_load_edit = register.tag('load_edit', do_load_edit)
+
+
+class LoadEditMediaNode(template.Node):
+    """Load edit node."""
+
+    def render(self, context):
+        request = context.get('request')
+        if not request.user.is_staff:
+            return ''
+        template_name = context.get('template_name')
+        placeholders = get_placeholders(template_name)
+        page = context.get('current_page')
+        lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
+        form = forms.Form()
+        for p in placeholders:
+            field = p.get_field(page, lang)
+            form.fields[p.name] = field
+
+        link = '<link href="{}" type="text/css" media="all" rel="stylesheet" />'.format(
+            '/static/pages/css/inline-edit.css'
+            )
+
+        return unicode(form.media) + link
+
+
+def do_load_edit_media(parser, token):
+    """
+    """
+    return LoadEditMediaNode()
+
+
+do_load_edit = register.tag('load_edit_media', do_load_edit_media)
 
 
 def do_placeholder(parser, token):

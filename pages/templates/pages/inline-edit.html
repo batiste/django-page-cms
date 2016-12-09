@@ -1,0 +1,78 @@
+<div id="edit-overlay" style="display:none">
+  <form class="form-group" action="" method="post" target="post-iframe">
+  {% csrf_token %}
+  <button style="float:right" id="save-edit">Save</button>
+  <button style="float:right" id="undo-edit">Undo</button>
+  {{ form.as_p }}
+  </form> 
+</div>
+
+<iframe id="post-iframe" name="post-iframe" src="/"></iframe>
+
+<script>
+  var plc = $("*").contents().filter(function(){
+    return (this.nodeValue && this.nodeValue.startsWith("placeholder") && this.nodeType == Node.COMMENT_NODE)
+  })
+  plc.each(function(i, el) {
+    $(el.parentNode).addClass('edit-placeholder');
+    $(el.parentNode).attr('data-placeholder-name', el.nodeValue.split(";")[1]);
+    $(el.parentNode).attr('data-page-id', el.nodeValue.split(";")[2]);
+    $(el.parentNode).attr('data-language', el.nodeValue.split(";")[3]);
+    $(el).remove();
+  });
+
+  var overlay = $("#edit-overlay");
+  var name, page_id, lang, element;
+
+  $(document).on('click', '#undo-edit', function(e) {
+    e.preventDefault();
+    overlay.hide();
+  });
+
+  $(document).on('click', '#save-edit', function(e) {
+    setTimeout(function(){
+      overlay.find('button,input').prop('disabled', true);
+    }, 100);
+    //overlay.find('form').submit();
+  });
+
+  $(document).on('click', '.edit-placeholder', function(){
+    element = $(this);
+    overlay.show();
+    name = $(this).attr('data-placeholder-name');
+    page_id = $(this).attr('data-page-id');
+    lang = $(this).attr('data-language');
+
+    var modify_url = '/admin/pages/page/' + 
+      page_id + '/modify-placeholder/' + lang + '/?content_type=' + name;
+     
+    var form = overlay.find('form');
+    form.attr('action', modify_url);
+    var label = form.find("[for='id_" + name + "']");
+
+    overlay.find('form>p').hide();
+    $(label[0].parentNode).show();
+
+    var offset = $(this).offset()
+
+    overlay.css('top', offset.top);
+    overlay.css('left', offset.left);
+    overlay.css('width', $(this).width());
+    overlay.css('min-height', $(this).height());
+
+    overlay.find('input,textarea').addClass('form-control').focus();
+
+    label.show();
+  });
+
+  $('#post-iframe').load(function() {
+    console.log('iframe loaded')
+    $.get('/admin/pages/page/' + page_id + '/get-last-content/' + name + '/' + lang + '/', function(result) {
+        setTimeout(function(){
+          overlay.find('button,input').prop('disabled', false);
+        }, 100);
+        overlay.hide();
+        element.html(result);
+    });
+  });
+</script>

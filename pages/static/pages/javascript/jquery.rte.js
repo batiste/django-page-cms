@@ -6,16 +6,16 @@
  */
 
 // define the rte light plugin
+$(function () {
 jQuery.fn.rte = function(css_url, media_url) {
 
-    if(document.designMode || document.contentEditable)
-    {
+    if(document.designMode || document.contentEditable) {
         $(this).each( function(){
             var textarea = $(this);
             enableDesignMode(textarea);
         });
     }
-    
+
     function formatText(iframe, command, option) {
         iframe.contentWindow.focus();
         try{
@@ -23,7 +23,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         }catch(e){console.log(e);}
         iframe.contentWindow.focus();
     }
-    
+
     function tryEnableDesignMode(iframe, doc, callback) {
         try {
             iframe.contentWindow.document.open();
@@ -49,7 +49,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         setTimeout(function(){tryEnableDesignMode(iframe, doc, callback);}, 250);
         return false;
     }
-    
+
     function enableDesignMode(textarea) {
         // need to be created this way
         var iframe = document.createElement("iframe");
@@ -222,3 +222,5 @@ jQuery.fn.rte = function(css_url, media_url) {
         return node;
     }
 };
+
+});

@@ -88,6 +88,7 @@ def _placeholders_recursif(nodelist, plist, blist):
 
         # extends node?
         if hasattr(node, 'parent_name'):
+            # I do not know why I did this... but the tests are guarding it
             dummy_context2 = Context()
             dummy_context2.template = template.Template("")
             _placeholders_recursif(node.get_parent(dummy_context2).nodelist,

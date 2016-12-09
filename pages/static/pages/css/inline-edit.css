@@ -1,0 +1,37 @@
+.edit-placeholder:hover {
+  outline: none;
+  border-color: #9ecaed;
+  box-shadow: 0 0 10px #9ecaed;
+  cursor:pointer;
+}
+#edit-overlay {
+  position:absolute;
+  background-color:#fff;
+  box-shadow: 0 0 10px #9ecaed;
+}
+#edit-overlay form>p {
+  display:none;
+}
+#edit-overlay input, #edit-overlay textarea {
+  width:80%;
+}
+#edit-overlay button {
+  margin-left:4px;
+}
+
+#edit-overlay form {
+  margin:6px;
+}
+#edit-overlay form label {
+  position: absolute;
+  margin-top:-32px;
+  height:26px;
+  padding:4px 8px;
+  background: #fff;
+  border:1px solid #9ecaed;
+  border-bottom:0;
+  box-shadow: -1px -1px 3px #9ecaed;
+}
+#post-iframe {
+  display:none;
+}

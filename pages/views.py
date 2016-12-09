@@ -3,6 +3,7 @@ from pages import settings
 from pages.models import Page, PageAlias
 from pages.phttp import get_language_from_request, remove_slug
 from pages.urlconf_registry import get_urlconf
+from pages.utils import get_placeholders
 
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.contrib.sitemaps import Sitemap
@@ -21,7 +22,8 @@ class Details(object):
     All is rendered with the current page's template.
     """
 
-    def __call__(self, request, path=None, lang=None, delegation=True,
+    def __call__(
+            self, request, path=None, lang=None, delegation=True,
             **kwargs):
 
         current_page = False
@@ -77,8 +79,6 @@ class Details(object):
         if redirection:
             return redirection
 
-        template_name = self.get_template(request, context)
-
         self.extra_context(request, context)
 
         if delegation and current_page.delegate_to:
@@ -88,7 +88,12 @@ class Details(object):
 
         if kwargs.get('only_context', False):
             return context
-        template_name = kwargs.get('template_name', template_name)
+        template_name = kwargs.get(
+            'template_name',
+            self.get_template(request, context))
+
+        context['template_name'] = template_name
+
         return render(request, template_name, context)
 
     def resolve_page(self, request, context, is_staff):

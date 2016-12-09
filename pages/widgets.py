@@ -30,10 +30,12 @@ class RichTextarea(Textarea):
     class Media:
         js = [join(PAGES_MEDIA_URL, path) for path in (
             'javascript/jquery.js',
+            'javascript/jquery.rte.js'
         )]
         css = {
             'all': [join(PAGES_MEDIA_URL, path) for path in (
                 'css/rte.css',
+                'css/font-awesome.min.css'
             )]
         }
 
@@ -50,6 +52,8 @@ class RichTextarea(Textarea):
         }
         return rendered + mark_safe(render_to_string(
             'pages/widgets/richtextarea.html', context))
+
+
 register_widget(RichTextarea)
 
 

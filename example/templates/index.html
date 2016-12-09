@@ -24,6 +24,39 @@
       padding-top:20px;
       border-top: 1px solid #eeeeee;
     }
+    .edit-placeholder:hover {
+      outline: none;
+      border-color: #9ecaed;
+      box-shadow: 0 0 10px #9ecaed;
+    }
+    #overlay {
+      position:absolute;
+      background-color:#fff;
+      box-shadow: 0 0 10px #9ecaed;
+    }
+    #overlay form>p {
+      display:none;
+    }
+    #overlay input, #overlay textarea {
+      width:80%;
+    }
+    #overlay button {
+      margin-left:4px;
+    }
+
+    #overlay form {
+      margin:6px;
+    }
+    #overlay form label {
+      position: absolute;
+      margin-top:-32px;
+      height:26px;
+      padding:4px 8px;
+      background: #fff;
+      border:1px solid #9ecaed;
+      border-bottom:0;
+      box-shadow: -1px -1px 3px #9ecaed;
+    }
 
     </style>
 
@@ -33,6 +66,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    {% load_edit_media %}
 
 </head>
 
@@ -88,6 +123,11 @@
 
     <div class="container">
 
+    {% for p in placeholders %}
+      {{ p }}
+      {{ p.get_field }}
+    {% endfor %}
+
     <div class="page-header" id="banner">
         <div class="row">
           <div class="col-lg-8 col-md-7 col-sm-6">
@@ -136,6 +176,52 @@
     <!-- Bootstrap Core JavaScript -->
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+    </script>
+
+    <div id="overlay">
+      <form class="form-group">
+      <button style="float:right">Save</button>
+      <button style="float:right">Undo</button>
+      {% load_edit %}
+      </form> 
+    </div>
+
+    <script>
+      var plc = $("*").contents().filter(function(){
+        return (this.nodeValue && this.nodeValue.startsWith("placeholder") && this.nodeType == Node.COMMENT_NODE)
+      })
+      plc.each(function(i, el) {
+        $(el.parentNode).addClass('edit-placeholder');
+        $(el.parentNode).attr('data-placeholder-name', el.nodeValue.split(";")[1]);
+        $(el.parentNode).attr('data-page-id', el.nodeValue.split(";")[2]);
+        $(el.parentNode).attr('data-language', el.nodeValue.split(";")[3]);
+        $(el).remove();
+      });
+
+      var name, page_id, lang;
+
+      $(document).on('click', '.edit-placeholder', function(){
+        name = $(this).attr('data-placeholder-name');
+        page_id = $(this).attr('data-page-id');
+        lang = $(this).attr('data-language');
+        var overlay = $("#overlay");
+        var form = overlay.find('form');
+        var label = form.find("[for='id_" + name + "']");
+
+        overlay.find('form>p').hide();
+        $(label[0].parentNode).show();
+
+        var offset = $(this).offset()
+
+        overlay.css('top', offset.top);
+        overlay.css('left', offset.left);
+        overlay.css('width', $(this).width());
+        overlay.css('min-height', $(this).height());
+
+        overlay.find('input').addClass('form-control').focus();
+
+        label.show();
+      });
     </script>
 
 

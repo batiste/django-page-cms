@@ -207,6 +207,13 @@ class PlaceholderNode(template.Node):
                     break
         return content
 
+    def get_lang(self, context):
+        if self.untranslated:
+            lang = settings.PAGE_DEFAULT_LANGUAGE
+        else:
+            lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
+        return lang
+
     def get_content_from_context(self, context):
         if self.page not in context:
             return ''
@@ -216,11 +223,12 @@ class PlaceholderNode(template.Node):
 
         if self.untranslated:
             lang_fallback = False
-            lang = settings.PAGE_DEFAULT_LANGUAGE
         else:
             lang_fallback = True
-            lang = context.get('lang', settings.PAGE_DEFAULT_LANGUAGE)
-        return self.get_content(context[self.page], lang, lang_fallback)
+        return self.get_content(
+            context[self.page],
+            self.get_lang(context),
+            lang_fallback)
 
     def get_render_content(self, context):
         return mark_safe(self.get_content_from_context(context))
@@ -243,7 +251,9 @@ class PlaceholderNode(template.Node):
                 else:
                     content = ''
         if self.as_varname is None:
-            return content
+            return u"""{}<!--placeholder ;{};{};{};-->""".format(
+                content, self.name, context[self.page].id,
+                self.get_lang(context), )
         context[self.as_varname] = content
         return ''
 

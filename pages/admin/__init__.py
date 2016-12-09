@@ -10,6 +10,7 @@ from pages.admin.views import traduction, get_content, sub_menu
 from pages.admin.views import change_status, modify_content, delete_content
 from pages.admin.views import move_page
 
+from os.path import join
 from collections import defaultdict
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -22,15 +23,14 @@ if global_settings.USE_I18N:
 else:
     from django.views.i18n import null_javascript_catalog as javascript_catalog
 
-from os.path import join
-
 
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
 
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
-    general_fields = ['title', 'slug', 'status', 'target',
+    general_fields = [
+        'title', 'slug', 'status', 'target',
         'position', 'freeze_date', 'template', 'language',
         'redirect_to', 'redirect_to_url']
 

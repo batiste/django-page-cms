@@ -403,12 +403,16 @@ do_load_pages = register.tag('load_pages', do_load_pages)
 from pages.utils import get_placeholders
 from django.forms.widgets import Media
 from django import forms
+from django.template.loader import get_template
 
 
 class LoadEditNode(template.Node):
     """Load edit node."""
 
     def render(self, context):
+        request = context.get('request')
+        if not request.user.is_staff:
+            return ''
         template_name = context.get('template_name')
         placeholders = get_placeholders(template_name)
         page = context.get('current_page')
@@ -418,7 +422,12 @@ class LoadEditNode(template.Node):
             field = p.get_field(page, lang, initial=p.get_content_from_context(context))
             form.fields[p.name] = field
 
-        return form.as_p()
+        template = get_template('pages/inline-edit.html')
+        with context.push():
+            context['form'] = form
+            content = template.render(context)
+
+        return content
 
 
 def do_load_edit(parser, token):
@@ -434,6 +443,9 @@ class LoadEditMediaNode(template.Node):
     """Load edit node."""
 
     def render(self, context):
+        request = context.get('request')
+        if not request.user.is_staff:
+            return ''
         template_name = context.get('template_name')
         placeholders = get_placeholders(template_name)
         page = context.get('current_page')
@@ -442,7 +454,12 @@ class LoadEditMediaNode(template.Node):
         for p in placeholders:
             field = p.get_field(page, lang)
             form.fields[p.name] = field
-        return form.media
+
+        link = '<link href="{}" type="text/css" media="all" rel="stylesheet" />'.format(
+            '/static/pages/css/inline-edit.css'
+            )
+
+        return unicode(form.media) + link
 
 
 def do_load_edit_media(parser, token):

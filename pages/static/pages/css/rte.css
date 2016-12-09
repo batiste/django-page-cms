@@ -28,6 +28,11 @@ iframe.rte {
     margin-bottom:4px;
 }
 
+.rte-toolbar select { 
+    font-size:16px;
+    padding: 5px 12px;
+}
+
 .rte-toolbar i { 
     font-size:20px;
     margin: 1px 1px;

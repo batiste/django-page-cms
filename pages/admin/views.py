@@ -50,13 +50,9 @@ from pages.managers import fake_page
 
 @staff_member_required
 @csrf_exempt
-def modify_content(request, content_type, language_id):
+def modify_content(request, page_id, content_type, language_id):
     """Modify the content of a page."""
-    page_id = request.GET.get('page_id')
-    if page_id:
-        page = get_object_or_404(Page, pk=page_id)
-    else:
-        page = None
+    page = get_object_or_404(Page, pk=page_id)
     perm = request.user.has_perm('pages.change_page')
     if perm and request.method == 'POST':
         content = request.POST.get('content', False)

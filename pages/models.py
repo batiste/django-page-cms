@@ -227,18 +227,29 @@ class Page(MPTTModel):
         self._complete_slug = None
         self._content_dict = dict()
 
-        p_names = [p.ctype for p in get_placeholders(self.get_template())]
+        placeholders = get_placeholders(self.get_template())
+
+        p_names = [p.ctype for p in placeholders]
         if 'slug' not in p_names:
             p_names.append('slug')
         if 'title' not in p_names:
             p_names.append('title')
+
+        from pages.managers import fake_page
+        shared = [p for p in placeholders if p.shared]
+        for share in shared:
+            print(share.ctype)
+            fake_page.invalidate(share.ctype)
+
         # delete content cache, frozen or not
         for name in p_names:
             # frozen
-            cache.delete(PAGE_CONTENT_DICT_KEY %
+            cache.delete(
+                PAGE_CONTENT_DICT_KEY %
                 (self.id, name, 1))
             # not frozen
-            cache.delete(PAGE_CONTENT_DICT_KEY %
+            cache.delete(
+                PAGE_CONTENT_DICT_KEY %
                 (self.id, name, 0))
 
         cache.delete(self.PAGE_URL_KEY % (self.id))
@@ -501,11 +512,13 @@ class Content(models.Model):
     # languages could have five characters : Brazilian Portuguese is pt-br
     language = models.CharField(_('language'), max_length=5, blank=False)
     body = models.TextField(_('body'), blank=True)
-    type = models.CharField(_('type'), max_length=100, blank=False,
+    type = models.CharField(
+        _('type'), max_length=100, blank=False,
         db_index=True)
-    page = models.ForeignKey(Page, verbose_name=_('page'))
+    page = models.ForeignKey(Page, verbose_name=_('page'), null=True)
 
-    creation_date = models.DateTimeField(_('creation date'), editable=False,
+    creation_date = models.DateTimeField(
+        _('creation date'), editable=False,
         default=get_now)
     objects = ContentManager()
 

@@ -7,10 +7,30 @@ from pages.phttp import get_slug
 
 from django.db import models
 from django.db.models import Q
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Max
 from django.conf import settings as global_settings
 
 from mptt.managers import TreeManager
+
+
+class FakePage():
+    """
+    Used for pageless Content object
+    """
+
+    def __init__(self):
+        self.id = -999  # an impossible number to get with DB id, do not change
+        self._content_dict = {}
+        self.freeze_date = None
+
+    def invalidate(self, content_type):
+        key = ContentManager.PAGE_CONTENT_DICT_KEY % (
+            self.id, content_type, 0)
+        cache.delete(key)
+        self._content_dict = None
+
+
+fake_page = FakePage()
 
 
 class PageManager(TreeManager):
@@ -163,19 +183,23 @@ class ContentManager(models.Manager):
         :param body: the content of the Content object.
         """
         try:
-            content = self.filter(page=page, language=language,
-                                  type=ctype).latest('creation_date')
+            content = self.filter(
+                page=page, language=language,
+                type=ctype).latest('creation_date')
             if content.body == body:
                 return content
         except self.model.DoesNotExist:
             pass
-        content = self.create(page=page, language=language, body=body,
-                type=ctype)
+        content = self.create(
+            page=page, language=language, body=body,
+            type=ctype)
 
         # Delete old revisions
         if settings.PAGE_CONTENT_REVISION_DEPTH:
-            oldest_content = self.filter(page=page, language=language, 
-                type=ctype).order_by('-creation_date')[settings.PAGE_CONTENT_REVISION_DEPTH:]
+            oldest_content = self.filter(
+                page=page, language=language,
+                type=ctype
+            ).order_by('-creation_date')[settings.PAGE_CONTENT_REVISION_DEPTH:]
             for c in oldest_content:
                 c.delete()
 
@@ -187,7 +211,7 @@ class ContentManager(models.Manager):
         params = {
             'language': language,
             'type': ctype,
-            'page': page
+            'page': None if page is fake_page else page
         }
         if page.freeze_date:
             params['creation_date__lte'] = page.freeze_date
@@ -202,6 +226,9 @@ class ContentManager(models.Manager):
         :param ctype: the content type.
         :param language_fallback: fallback to another language if ``True``.
         """
+        if page is None:
+            page = fake_page
+
         if " " in ctype:
             raise ValueError("Ctype cannot contain spaces.")
         if not language:

@@ -45,7 +45,7 @@ def parse_placeholder(parser, token):
         name = bits[1]
     remaining = bits[2:]
     params = {}
-    simple_options = ['parsed', 'inherited', 'untranslated']
+    simple_options = ['parsed', 'inherited', 'untranslated', 'shared']
     param_options = ['as', 'on', 'with', 'section']
     all_options = simple_options + param_options
     while remaining:
@@ -74,6 +74,9 @@ def parse_placeholder(parser, token):
             remaining = remaining[1:]
         elif bit == 'untranslated':
             params['untranslated'] = True
+            remaining = remaining[1:]
+        elif bit == 'shared':
+            params['shared'] = True
             remaining = remaining[1:]
     return name, params
 
@@ -104,7 +107,7 @@ class PlaceholderNode(template.Node):
     def __init__(
             self, name, page=None, widget=None, parsed=False,
             as_varname=None, inherited=False, untranslated=False,
-            has_revision=True, section=None):
+            has_revision=True, section=None, shared=False):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -118,6 +121,7 @@ class PlaceholderNode(template.Node):
         self.untranslated = untranslated
         self.as_varname = as_varname
         self.section = section
+        self.shared = shared
 
         self.found_in_block = None
 
@@ -165,6 +169,9 @@ class PlaceholderNode(template.Node):
         if self.untranslated:
             language = settings.PAGE_DEFAULT_LANGUAGE
 
+        if self.shared:
+            page = None
+
         # the page is being changed
         if change:
             # we need create a new content if revision is enabled
@@ -196,6 +203,9 @@ class PlaceholderNode(template.Node):
         if self.untranslated:
             lang = settings.PAGE_DEFAULT_LANGUAGE
             lang_fallback = False
+        if self.shared:
+            return Content.objects.get_content(
+                None, lang, self.ctype, lang_fallback)
         content = Content.objects.get_content(
             page_obj, lang, self.ctype, lang_fallback)
         if self.inherited and not content:
@@ -215,16 +225,22 @@ class PlaceholderNode(template.Node):
         return lang
 
     def get_content_from_context(self, context):
+        if self.untranslated:
+            lang_fallback = False
+        else:
+            lang_fallback = True
+
+        if self.shared:
+            return self.get_content(
+                None,
+                self.get_lang(context),
+                lang_fallback)
         if self.page not in context:
             return ''
         # current_page can be set to None
         if not context[self.page]:
             return ''
 
-        if self.untranslated:
-            lang_fallback = False
-        else:
-            lang_fallback = True
         return self.get_content(
             context[self.page],
             self.get_lang(context),
@@ -254,8 +270,9 @@ class PlaceholderNode(template.Node):
             request = context.get('request')
             if not request or not request.user.is_staff:
                 return content
+            page_id = context[self.page].id
             return u"""{}<!--placeholder ;{};{};{};-->""".format(
-                content, self.name, context[self.page].id,
+                content, self.name, page_id,
                 self.get_lang(context), )
         context[self.as_varname] = content
         return ''

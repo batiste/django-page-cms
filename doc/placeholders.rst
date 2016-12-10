@@ -129,6 +129,18 @@ Template syntax example::
 
     {% imageplaceholder "logo" untranslated %}
 
+The **shared** keyword
+-----------------------------
+
+If you add the keyword **shared** the placeholder's content
+will be the same for all the pages. In effect the placeholder is
+no linked to any particular pages and editing it in one page change
+it in all the other.
+
+Template syntax example::
+
+    {% placeholder "footer-links" shared %}
+
 Examples of other valid syntaxes
 ------------------------------------
 

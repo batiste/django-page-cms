@@ -4,14 +4,21 @@ from django.utils.safestring import SafeText
 from django.template import TemplateSyntaxError
 from django.conf import settings
 from django.utils.text import unescape_string_literal
+from django import forms
+from django.template.loader import get_template
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from pages import settings as pages_settings
 from pages.models import Content, Page
-from pages.placeholders import PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
+from pages.placeholders import (
+    PlaceholderNode, ImagePlaceholderNode, FilePlaceholderNode
+)
 from pages.placeholders import ContactPlaceholderNode, MarkdownPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
 from six.moves import urllib
 import six
+from pages.utils import get_placeholders
+
 
 register = template.Library()
 
@@ -22,13 +29,14 @@ def get_page_from_string_or_id(page_string, lang=None):
         return Page.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates
     if (isinstance(page_string, SafeText) or
-        isinstance(page_string, six.string_types)):
+            isinstance(page_string, six.string_types)):
         if page_string.isdigit():
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)
     # in any other case we return the input becasue it's probably
     # a Page object.
     return page_string
+
 
 def _get_content(context, page, content_type, lang, fallback=True):
     """Helper function used by ``PlaceholderNode``."""
@@ -46,6 +54,7 @@ def _get_content(context, page, content_type, lang, fallback=True):
     content = Content.objects.get_content(page, lang, content_type, fallback)
     return content
 
+
 """Filters"""
 
 
@@ -56,6 +65,8 @@ def has_content_in(page, language):
     :param page: the current page
     :param language: the language you want to look at
     """
+    if page is None:
+        return False
     return Content.objects.filter(page=page, language=language).count() > 0
 
 
@@ -120,8 +131,9 @@ def pages_siblings_menu(context, page, url='/'):
     return context
 
 
-pages_siblings_menu = register.inclusion_tag('pages/sub_menu.html',
-                                    takes_context=True)(pages_siblings_menu)
+pages_siblings_menu = register.inclusion_tag(
+    'pages/sub_menu.html',
+    takes_context=True)(pages_siblings_menu)
 
 
 def pages_admin_menu(context, page):
@@ -132,8 +144,11 @@ def pages_admin_menu(context, page):
     if request and "tree_expanded" in request.COOKIES:
         cookie_string = urllib.parse.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
-            ids = [int(id) for id in
-                urllib.parse.unquote(request.COOKIES['tree_expanded']).split(',')]
+            ids = [
+                int(id) for id in
+                urllib.parse.unquote(
+                    request.COOKIES['tree_expanded']).split(',')
+            ]
             if page.id in ids:
                 expanded = True
     context.update({'expanded': expanded, 'page': page})
@@ -201,8 +216,11 @@ def show_absolute_url(context, page, lang=None):
     if url:
         return {'content': url}
     return {'content': ''}
-show_absolute_url = register.inclusion_tag('pages/content.html',
-                                      takes_context=True)(show_absolute_url)
+
+
+show_absolute_url = register.inclusion_tag(
+    'pages/content.html',
+    takes_context=True)(show_absolute_url)
 
 
 def show_revisions(context, page, content_type, lang=None):
@@ -211,13 +229,17 @@ def show_revisions(context, page, content_type, lang=None):
     if (not pages_settings.PAGE_CONTENT_REVISION or
             content_type in pages_settings.PAGE_CONTENT_REVISION_EXCLUDE_LIST):
         return {'revisions': None}
-    revisions = Content.objects.filter(page=page, language=lang,
-                                type=content_type).order_by('-creation_date')
+    revisions = Content.objects.filter(
+        page=page, language=lang,
+        type=content_type).order_by('-creation_date')
     if len(revisions) < 2:
         return {'revisions': None}
     return {'revisions': revisions[0:10]}
-show_revisions = register.inclusion_tag('pages/revisions.html',
-                                        takes_context=True)(show_revisions)
+
+
+show_revisions = register.inclusion_tag(
+    'pages/revisions.html',
+    takes_context=True)(show_revisions)
 
 
 def pages_dynamic_tree_menu(context, page, url='/'):
@@ -238,12 +260,16 @@ def pages_dynamic_tree_menu(context, page, url='/'):
         current_page = context['current_page']
         # if this node is expanded, we also have to render its children
         # a node is expanded if it is the current node or one of its ancestors
-        if(page.tree_id == current_page.tree_id and
+        if(
+            page.tree_id == current_page.tree_id and
             page.lft <= current_page.lft and
-            page.rght >= current_page.rght):
+            page.rght >= current_page.rght
+        ):
             children = page.get_children_for_frontend()
     context.update({'children': children, 'page': page})
     return context
+
+
 pages_dynamic_tree_menu = register.inclusion_tag(
     'pages/dynamic_tree_menu.html',
     takes_context=True
@@ -267,6 +293,8 @@ def pages_breadcrumb(context, page, url='/'):
         pages_navigation = page.get_ancestors()
     context.update({'pages_navigation': pages_navigation, 'page': page})
     return context
+
+
 pages_breadcrumb = register.inclusion_tag(
     'pages/breadcrumb.html',
     takes_context=True
@@ -274,6 +302,7 @@ pages_breadcrumb = register.inclusion_tag(
 
 
 """Tags"""
+
 
 class GetPageNode(template.Node):
     """get_page Node"""
@@ -307,6 +336,8 @@ def do_get_page(parser, token):
     page_filter = parser.compile_filter(bits[1])
     varname = bits[-1]
     return GetPageNode(page_filter, varname)
+
+
 do_get_page = register.tag('get_page', do_get_page)
 
 
@@ -367,6 +398,8 @@ def do_get_content(parser, token):
     else:
         lang_filter = parser.compile_filter("lang")
     return GetContentNode(page, content_type, varname, lang, lang_filter)
+
+
 do_get_content = register.tag('get_content', do_get_content)
 
 
@@ -400,12 +433,6 @@ def do_load_pages(parser, token):
 do_load_pages = register.tag('load_pages', do_load_pages)
 
 
-from pages.utils import get_placeholders
-from django.forms.widgets import Media
-from django import forms
-from django.template.loader import get_template
-
-
 class LoadEditNode(template.Node):
     """Load edit node."""
 
@@ -419,7 +446,8 @@ class LoadEditNode(template.Node):
         lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
         form = forms.Form()
         for p in placeholders:
-            field = p.get_field(page, lang, initial=p.get_content_from_context(context))
+            field = p.get_field(
+                page, lang, initial=p.get_content_from_context(context))
             form.fields[p.name] = field
 
         template = get_template('pages/inline-edit.html')
@@ -456,7 +484,7 @@ class LoadEditMediaNode(template.Node):
             form.fields[p.name] = field
 
         link = '<link href="{}" type="text/css" media="all" rel="stylesheet" />'.format(
-            '/static/pages/css/inline-edit.css'
+            static('pages/css/inline-edit.css')
             )
 
         return unicode(form.media) + link
@@ -491,6 +519,7 @@ def do_placeholder(parser, token):
     return PlaceholderNode(name, **params)
 register.tag('placeholder', do_placeholder)
 
+
 def do_markdownlaceholder(parser, token):
     """
     Method that parse the markdownplaceholder template tag.
@@ -498,6 +527,7 @@ def do_markdownlaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return MarkdownPlaceholderNode(name, **params)
 register.tag('markdownplaceholder', do_markdownlaceholder)
+
 
 def do_imageplaceholder(parser, token):
     """
@@ -507,6 +537,7 @@ def do_imageplaceholder(parser, token):
     return ImagePlaceholderNode(name, **params)
 register.tag('imageplaceholder', do_imageplaceholder)
 
+
 def do_fileplaceholder(parser, token):
     """
     Method that parse the fileplaceholder template tag.
@@ -514,6 +545,7 @@ def do_fileplaceholder(parser, token):
     name, params = parse_placeholder(parser, token)
     return FilePlaceholderNode(name, **params)
 register.tag('fileplaceholder', do_fileplaceholder)
+
 
 def do_contactplaceholder(parser, token):
     """
@@ -530,6 +562,8 @@ def do_jsonplaceholder(parser, token):
     """
     name, params = parse_placeholder(parser, token)
     return JsonPlaceholderNode(name, **params)
+
+
 register.tag('jsonplaceholder', do_jsonplaceholder)
 
 
@@ -548,14 +582,18 @@ def language_content_up_to_date(page, language):
         # official version is always "up to date"
         return True
     # get the last modified date for the official version
-    last_modified = Content.objects.filter(language=lang_code,
+    last_modified = Content.objects.filter(
+        language=lang_code,
         page=page).order_by('-creation_date')
     if not last_modified:
         # no official version
         return True
-    lang_modified = Content.objects.filter(language=language,
+    lang_modified = Content.objects.filter(
+        language=language,
         page=page).order_by('-creation_date')[0].creation_date
     return lang_modified > last_modified[0].creation_date
+
+
 register.filter(language_content_up_to_date)
 
 
@@ -607,7 +645,10 @@ def do_page_has_content(parser, token):
     else:
         page = None
     return PageHasContentNode(page, content_type, nodelist)
+
+
 register.tag('page_has_content', do_page_has_content)
+
 
 class PageHasContentNode(template.Node):
 
@@ -620,9 +661,9 @@ class PageHasContentNode(template.Node):
         page = context.get(self.page)
         if not page:
             return ''
-        content = page.get_content(context.get('lang', None), self.content_type)
+        content = page.get_content(
+            context.get('lang', None), self.content_type)
         if(content):
             output = self.nodelist.render(context)
             return output
         return ''
-

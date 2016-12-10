@@ -11,6 +11,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
 from django import forms
+from pages.managers import fake_page
 
 
 @staff_member_required
@@ -43,9 +44,6 @@ def list_pages_ajax(request, invalid_move=False):
     return render(
         request, "admin/pages/page/change_list_table.html",
         context)
-
-
-from pages.managers import fake_page
 
 
 @staff_member_required

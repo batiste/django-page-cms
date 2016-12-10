@@ -1,5 +1,5 @@
 <div id="edit-overlay" style="display:none">
-  <form class="form-group" action="" method="post" target="post-iframe">
+  <form class="form-group" action="" method="post" target="post-iframe" enctype="multipart/form-data">
   {% csrf_token %}
   <button style="float:right" id="save-edit">Save</button>
   <button style="float:right" id="undo-edit">Undo</button>

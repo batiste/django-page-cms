@@ -14,6 +14,7 @@ class UrlconfNotFound(Exception):
     The requested urlconf was not found
     """
 
+
 registry = []
 
 

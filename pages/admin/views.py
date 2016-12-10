@@ -87,7 +87,7 @@ def modify_placeholder(request, page_id):
             if placeholder.name == content_type:
                 initial = placeholder.get_content(
                     page, language_id, lang_fallback=False)
-                form = forms.Form(request.POST)
+                form = forms.Form(request.POST, request.FILES)
                 form.fields[content_type] = placeholder.get_field(
                     page, language_id, initial=initial)
                 if not form.is_valid():
@@ -98,9 +98,11 @@ def modify_placeholder(request, page_id):
                 else:
                     save_page = page
 
+                extra_data = placeholder.get_extra_data(form.data)
+
                 placeholder.save(
                     save_page, language_id,
-                    form.cleaned_data[content_type], True)
+                    form.cleaned_data[content_type], True, extra_data)
                 if save_page:
                     page.invalidate()
                     # to update last modification date

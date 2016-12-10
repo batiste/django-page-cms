@@ -317,7 +317,9 @@ class FilePlaceholderNode(PlaceholderNode):
         )
 
     def save(self, page, language, data, change, extra_data=None):
-        if 'delete' in extra_data:
+        if self.shared:
+            page = None
+        if extra_data and 'delete' in extra_data:
             return super(FilePlaceholderNode, self).save(
                 page,
                 language,

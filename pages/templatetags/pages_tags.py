@@ -464,7 +464,7 @@ def do_load_edit(parser, token):
     return LoadEditNode()
 
 
-do_load_edit = register.tag('load_edit', do_load_edit)
+do_load_edit = register.tag('pages_edit_init', do_load_edit)
 
 
 class LoadEditMediaNode(template.Node):
@@ -496,7 +496,7 @@ def do_load_edit_media(parser, token):
     return LoadEditMediaNode()
 
 
-do_load_edit = register.tag('load_edit_media', do_load_edit_media)
+do_load_edit = register.tag('pages_edit_media', do_load_edit_media)
 
 
 def do_placeholder(parser, token):

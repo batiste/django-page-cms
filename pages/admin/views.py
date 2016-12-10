@@ -81,11 +81,11 @@ def modify_content(request, content_type, language_id):
 
 @staff_member_required
 @csrf_exempt
-def modify_placeholder(request, language_id):
+def modify_placeholder(request, page_id):
     """Modify the content of a page."""
-    page_id = request.GET.get('page_id')
-    page = get_object_or_404(Page, pk=page_id)
     content_type = request.GET.get('content_type')
+    language_id = request.GET.get('language_id')
+    page = get_object_or_404(Page, pk=page_id)
     perm = request.user.has_perm('pages.change_page')
     if perm and request.method == 'POST':
         placeholders = get_placeholders(page.get_template())
@@ -121,9 +121,10 @@ def modify_placeholder(request, language_id):
 
 
 @staff_member_required
-def get_last_content(request, content_type, language_id):
+def get_last_content(request, page_id):
     """Get the latest content for a particular type"""
-    page_id = request.GET.get('page_id')
+    content_type = request.GET.get('content_type')
+    language_id = request.GET.get('language_id')
     page = get_object_or_404(Page, pk=page_id)
     placeholders = get_placeholders(page.get_template())
     for placeholder in placeholders:

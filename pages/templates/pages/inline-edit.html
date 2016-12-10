@@ -7,7 +7,7 @@
   </form> 
 </div>
 
-<iframe id="post-iframe" name="post-iframe" src="/"></iframe>
+<iframe id="post-iframe" name="post-iframe"></iframe>
 
 <script>
   var plc = $("*").contents().filter(function(){
@@ -43,8 +43,9 @@
     page_id = $(this).attr('data-page-id');
     lang = $(this).attr('data-language');
 
-    var modify_url = '/admin/pages/page/modify-placeholder/' + 
-      lang + '/?content_type=' + name + '&page_id=' + page_id;
+
+    var modify_url = '{% url "admin:page-modify-placeholder" current_page.id %}';
+    modify_url = modify_url + '?content_type=' + name + '&language_id=' + lang
      
     var form = overlay.find('form');
     form.attr('action', modify_url);
@@ -67,8 +68,8 @@
 
   $('#post-iframe').load(function() {
     console.log('iframe loaded');
-    var get_content_url = '/admin/pages/page/get-last-content/' + name + '/' + lang + '/';
-    get_content_url += '?page_id=' + page_id
+    var get_content_url = '{% url "admin:page-get-last-content" current_page.id %}';
+    get_content_url = get_content_url + '?content_type=' + name + '&language_id=' + lang
     $.get(get_content_url, function(result) {
         setTimeout(function(){
           overlay.find('button,input').prop('disabled', false);

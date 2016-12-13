@@ -55,7 +55,7 @@
 
     overlay.css('top', offset.top-5);
     overlay.css('left', offset.left-5);
-    overlay.css('width', $(this).width()+5);
+    overlay.css('min-width', $(this).width()+5);
     overlay.css('min-height', $(this).height()+5);
 
     overlay.find('input,textarea').addClass('form-control').focus();

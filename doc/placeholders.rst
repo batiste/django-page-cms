@@ -134,8 +134,8 @@ The **shared** keyword
 
 If you add the keyword **shared** the placeholder's content
 will be the same for all the pages. In effect the placeholder is
-no linked to any particular pages and editing it in one page change
-it in all the other.
+not linked to any page and editing it change
+its content in all pages.
 
 Template syntax example::
 

@@ -96,7 +96,9 @@
           {% block header %}
             <h1>{% placeholder 'title' %}</h1>
             <p class="lead">{% placeholder 'lead' %}</p>
-            <div>{% imageplaceholder 'header-image' %}</div>
+            {% if request.user.is_staff %}
+                <button>Change image: {% imageplaceholder 'header-image' %}</button>
+            {% endif %}
             {% page_has_content 'header-image' current_page %}
               {% imageplaceholder 'header-image' as image %}
               <img src="{{ MEDIA_URL }}{{ image }}" class="img-responsive" alt="">

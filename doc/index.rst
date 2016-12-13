@@ -28,6 +28,7 @@ Table of content
     placeholders.rst
     installation.rst
     display-content.rst
+    edit-content.rst
     navigation-template-tags.rst
 
     3rd-party-apps.rst

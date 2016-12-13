@@ -34,7 +34,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    {% load_edit_media %}
+    {% pages_edit_media %}
 
 </head>
 
@@ -96,6 +96,9 @@
           {% block header %}
             <h1>{% placeholder 'title' %}</h1>
             <p class="lead">{% placeholder 'lead' %}</p>
+            {% if request.user.is_staff %}
+                <button>Change image: {% imageplaceholder 'header-image' %}</button>
+            {% endif %}
             {% page_has_content 'header-image' current_page %}
               {% imageplaceholder 'header-image' as image %}
               <img src="{{ MEDIA_URL }}{{ image }}" class="img-responsive" alt="">
@@ -145,9 +148,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
     </script>
 
-    {% load_edit %}
-
-
+    {% pages_edit_init %}
 
 </body>
 

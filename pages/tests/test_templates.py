@@ -55,6 +55,10 @@ class TemplateTestCase(TestCase):
         template = self.get_template_from_string(pl1)
         self.assertEqual(render(template, context), page.title())
 
+        pl1 = """{% load pages_tags %}{% placeholder "title" shared %}{{ hello }}"""
+        template = self.get_template_from_string(pl1)
+        self.assertEqual(render(template, context), page.title())
+
         # to be sure to raise an errors in parse template content
         setattr(settings, "DEBUG", True)
 

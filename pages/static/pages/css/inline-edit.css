@@ -1,9 +1,11 @@
-.edit-placeholder:hover {
+
+[data-placeholder-name]:hover {
   outline: none;
   border-color: #9ecaed;
   box-shadow: 0 0 10px #9ecaed;
   cursor:pointer;
 }
+
 #edit-overlay {
   position:absolute;
   background-color:#fff;

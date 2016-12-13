@@ -249,11 +249,21 @@ class PlaceholderNode(template.Node):
     def get_render_content(self, context):
         return mark_safe(self.get_content_from_context(context))
 
+    def edit_tag(self):
+        return u"""<!--placeholder ;{};-->""".format(self.name)
+
     def render(self, context):
         """Output the content of the `PlaceholdeNode` as a template."""
         content = self.get_render_content(context)
+        request = context.get('request')
+        render_edit_tag = False
+        if request and request.user.is_staff:
+            render_edit_tag = True
+
         if not content:
-            return ''
+            if not render_edit_tag:
+                return ''
+            return self.edit_tag()
         if self.parsed:
             try:
                 t = template.Template(content, name=self.name)
@@ -267,13 +277,9 @@ class PlaceholderNode(template.Node):
                 else:
                     content = ''
         if self.as_varname is None:
-            request = context.get('request')
-            if not request or not request.user.is_staff:
+            if not render_edit_tag:
                 return content
-            page_id = context[self.page].id
-            return u"""{}<!--placeholder ;{};{};{};-->""".format(
-                content, self.name, page_id,
-                self.get_lang(context), )
+            return content + self.edit_tag()
         context[self.as_varname] = content
         return ''
 
@@ -317,7 +323,9 @@ class FilePlaceholderNode(PlaceholderNode):
         )
 
     def save(self, page, language, data, change, extra_data=None):
-        if 'delete' in extra_data:
+        if self.shared:
+            page = None
+        if extra_data and 'delete' in extra_data:
             return super(FilePlaceholderNode, self).save(
                 page,
                 language,

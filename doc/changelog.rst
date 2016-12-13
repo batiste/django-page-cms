@@ -4,6 +4,16 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+
+Release 1.9.8
+=============
+
+Released the 13th of December 2016.
+
+    * Official support for inline frontend editing
+    * New shared keyword for placeholder: shared content accross pages
+
+
 Release 1.9.7
 =============
 

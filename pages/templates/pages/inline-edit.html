@@ -1,5 +1,5 @@
 <div id="edit-overlay" style="display:none">
-  <form class="form-group" action="" method="post" target="post-iframe">
+  <form class="form-group" action="" method="post" target="post-iframe" enctype="multipart/form-data">
   {% csrf_token %}
   <button style="float:right" id="save-edit">Save</button>
   <button style="float:right" id="undo-edit">Undo</button>
@@ -12,12 +12,12 @@
 <script>
   var plc = $("*").contents().filter(function(){
     return (this.nodeValue && this.nodeValue.startsWith("placeholder") && this.nodeType == Node.COMMENT_NODE)
-  })
+  });
+  var page_id = "{{ current_page.id }}";
+  var lang = "{{ lang }}";
+
   plc.each(function(i, el) {
-    $(el.parentNode).addClass('edit-placeholder');
     $(el.parentNode).attr('data-placeholder-name', el.nodeValue.split(";")[1]);
-    $(el.parentNode).attr('data-page-id', el.nodeValue.split(";")[2]);
-    $(el.parentNode).attr('data-language', el.nodeValue.split(";")[3]);
     $(el).remove();
   });
 
@@ -36,13 +36,10 @@
     //overlay.find('form').submit();
   });
 
-  $(document).on('click', '.edit-placeholder', function(){
+  $(document).on('click', '[data-placeholder-name]', function(){
     element = $(this);
     overlay.show();
     name = $(this).attr('data-placeholder-name');
-    page_id = $(this).attr('data-page-id');
-    lang = $(this).attr('data-language');
-
 
     var modify_url = '{% url "admin:page-modify-placeholder" current_page.id %}';
     modify_url = modify_url + '?content_type=' + name + '&language_id=' + lang
@@ -58,7 +55,7 @@
 
     overlay.css('top', offset.top-5);
     overlay.css('left', offset.left-5);
-    overlay.css('width', $(this).width()+5);
+    overlay.css('min-width', $(this).width()+5);
     overlay.css('min-height', $(this).height()+5);
 
     overlay.find('input,textarea').addClass('form-control').focus();

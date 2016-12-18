@@ -487,7 +487,7 @@ class LoadEditMediaNode(template.Node):
             static('pages/css/inline-edit.css')
             )
 
-        return unicode(form.media) + link
+        return "{}{}".format(form.media, link)
 
 
 def do_load_edit_media(parser, token):

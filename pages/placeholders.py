@@ -23,6 +23,7 @@ import logging
 import os
 import time
 import six
+import copy
 
 logging.basicConfig()
 logger = logging.getLogger("pages")
@@ -37,10 +38,9 @@ def parse_placeholder(parser, token):
     params = {}
 
     # try to parse to an endblock
-    import copy
-    p = copy.deepcopy(parser) # do a deep copy to avoid to change the state of the parser
+    parser_copy = copy.deepcopy(parser) # do a deep copy to avoid to change the state of the parser
     try:
-        nodelist = p.parse(('endplaceholder',))
+        nodelist = parser_copy.parse(('endplaceholder',))
     except:
         pass
     else:
@@ -136,7 +136,7 @@ class PlaceholderNode(template.Node):
         self.as_varname = as_varname
         self.section = section
         self.shared = shared
-        self.nodelist=nodelist
+        self.nodelist = nodelist
 
         self.found_in_block = None
 

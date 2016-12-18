@@ -155,15 +155,29 @@ This is an example list of different possible syntaxes for this template tag::
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 
+Placeholders as blocks
+=============================
+
+Placeholders can also be rendered as template blocks. The content of the placeholder is then available as the `content`
+variable::
+
+    {% placeholder "title" with TextIntput %}
+        {% if content %}
+            <h1>Welcome: {{ content }}</h1>
+        {% endif %}
+    {% endplaceholder %}
+
+
 Image placeholder
 =================
 
 There is a special placeholder for images::
 
-    {% imageplaceholder "body image" as imgsrc %}
-    {% if imgsrc %}
-        <img src="{{ MEDIA_URL }}{{ imgsrc }}" alt=""/>
-    {% endif %}
+    {% imageplaceholder "body image" %}
+        {% if content %}
+            <img src="{{ MEDIA_URL }}{{ content }}" alt=""/>
+        {% endif %}
+    {% endplaceholder %}
 
 A file upload field will appears into the page admin interface.
 
@@ -174,9 +188,10 @@ File placeholder
 There is also a more general placeholder for files::
 
     {% fileplaceholder uploaded_file as filesrc %}
-    {% if filesrc %}
-        <a href="{{ MEDIA_URL }}{{ filesrc }}">Download file</a>
-    {% endif %}
+        {% if content %}
+            <a href="{{ MEDIA_URL }}{{ content }}">Download file</a>
+        {% endif %}
+    {% endplaceholder %}
 
 A file upload field will appears into the page admin interface.
 

@@ -34,6 +34,21 @@ def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.
 
     Return a tuple with the name and parameters."""
+    params = {}
+
+    # try to parse to an endblock
+    import copy
+    p = copy.deepcopy(parser) # do a deep copy to avoid to change the state of the parser
+    try:
+        nodelist = p.parse(('endplaceholder',))
+    except:
+        pass
+    else:
+        nodelist = parser.parse(('endplaceholder',))
+        parser.delete_first_token()
+        params['nodelist'] = nodelist
+
+
     bits = token.split_contents()
     count = len(bits)
     error_string = '%r tag requires at least one argument' % bits[0]
@@ -44,7 +59,6 @@ def parse_placeholder(parser, token):
     except ValueError:
         name = bits[1]
     remaining = bits[2:]
-    params = {}
     simple_options = ['parsed', 'inherited', 'untranslated', 'shared']
     param_options = ['as', 'on', 'with', 'section']
     all_options = simple_options + param_options
@@ -107,7 +121,7 @@ class PlaceholderNode(template.Node):
     def __init__(
             self, name, page=None, widget=None, parsed=False,
             as_varname=None, inherited=False, untranslated=False,
-            has_revision=True, section=None, shared=False):
+            has_revision=True, section=None, shared=False, nodelist=None):
         """Gather parameters for the `PlaceholderNode`.
 
         These values should be thread safe and don't change between calls."""
@@ -122,6 +136,7 @@ class PlaceholderNode(template.Node):
         self.as_varname = as_varname
         self.section = section
         self.shared = shared
+        self.nodelist=nodelist
 
         self.found_in_block = None
 
@@ -247,6 +262,11 @@ class PlaceholderNode(template.Node):
             lang_fallback)
 
     def get_render_content(self, context):
+        if self.nodelist:
+            with context.push():
+                context['content'] = self.get_content_from_context(context)
+                output = self.nodelist.render(context)
+            return mark_safe(output)
         return mark_safe(self.get_content_from_context(context))
 
     def edit_tag(self):

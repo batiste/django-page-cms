@@ -39,15 +39,12 @@ Because the rendered comment will not result into an HTML node::
         <img src="upload/image.png<!--placeholder:img-->">
     </div>
 
-This will not only not work but will also break the image source in edit mode. Here
-is an imperfect way to fix this problem::
+To fix this issue you can use placeholders as rendering blocks like so::
 
-    {% if request.user.is_staff %}
-        <button>Change image: {% imageplaceholder 'header-image' %}</button>
-    {% endif %}
-    {% page_has_content 'header-image' current_page %}
-        {% imageplaceholder 'header-image' as image %}
-        <img src="{{ MEDIA_URL }}{{ image }}">
-    {% end_page_has_content %}
-
-When the as option is used the special HTML comment is not generated therefore not breaking the source of the image. The solution is not perfect because the image source doesn't get updated automatically.
+    <div>
+        {% imageplaceholder 'img' %}
+            {% if content %}
+                <img src="{{ MEDIA_URL }}{{ content }}" class="img-responsive" alt="">
+            {% endif %}
+        {% endplaceholder %}
+    </div>

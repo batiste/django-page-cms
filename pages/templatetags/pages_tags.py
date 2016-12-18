@@ -516,6 +516,7 @@ def do_placeholder(parser, token):
         {% placeholder teaser on next_page with TextArea parsed %}
     """
     name, params = parse_placeholder(parser, token)
+
     return PlaceholderNode(name, **params)
 register.tag('placeholder', do_placeholder)
 

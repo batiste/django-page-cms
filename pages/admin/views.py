@@ -8,6 +8,8 @@ from pages.phttp import get_language_from_request
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.template import RequestContext
+from django import template
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
 from django import forms
@@ -123,15 +125,16 @@ def get_last_content(request, page_id):
     language_id = request.GET.get('language_id')
     page = get_object_or_404(Page, pk=page_id)
     placeholders = get_placeholders(page.get_template())
+    _template = template.loader.get_template(page.get_template())
     for placeholder in placeholders:
         if placeholder.name == content_type:
-            if placeholder.shared:
-                source_page = None
-            else:
-                source_page = page
-            content = Content.objects.get_content(
-                source_page, language_id, content_type)
-            return HttpResponse(content)
+            context = RequestContext(request, {
+                'current_page': page,
+                'lang': language_id
+            })
+            with context.bind_template(_template.template):
+                content = placeholder.render(context)
+                return HttpResponse(content)
     raise Http404
 
 

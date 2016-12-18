@@ -4,6 +4,7 @@
   border-color: #9ecaed;
   box-shadow: 0 0 10px #9ecaed;
   cursor:pointer;
+  min-height: 6px;
 }
 
 #edit-overlay {

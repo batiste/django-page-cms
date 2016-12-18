@@ -92,21 +92,20 @@
 
     <div class="page-header" id="banner">
         <div class="row">
-          <div class="col-lg-8 col-md-7 col-sm-6">
+          <div class="col-lg-12 col-md-12 col-sm-12">
           {% block header %}
             <h1>{% placeholder 'title' %}</h1>
             <p class="lead">{% placeholder 'lead' %}</p>
-            {% if request.user.is_staff %}
-                <button>Change image: {% imageplaceholder 'header-image' %}</button>
-            {% endif %}
-            {% page_has_content 'header-image' current_page %}
-              {% imageplaceholder 'header-image' as image %}
-              <img src="{{ MEDIA_URL }}{{ image }}" class="img-responsive" alt="">
-            {% end_page_has_content %}
+            <div>
+              {% page_has_content 'header-image' current_page %}
+                {% imageplaceholder 'header-image' %}
+                  {% if content %}
+                    <img src="{{ MEDIA_URL }}{{ content }}" class="img-responsive" alt="">
+                  {% endif %}
+                {% endplaceholder %}
+              {% end_page_has_content %}
+            </div>
           {% endblock %}
-          </div>
-          <div class="col-lg-4 col-md-5 col-sm-6">
-
           </div>
         </div>
     </div>

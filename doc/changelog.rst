@@ -5,6 +5,15 @@
 This file describe new features and incompatibilites between released version of the CMS.
 
 
+Release 1.9.9
+=============
+
+Released the 18th of December 2016.
+
+    * Fix a couple of problems with inline frontend editing
+    * :ref:`Placeholder can now be used as blocks <placeholderasblocks>`
+
+
 Release 1.9.8
 =============
 

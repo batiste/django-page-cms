@@ -155,6 +155,8 @@ This is an example list of different possible syntaxes for this template tag::
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 
+.. _placeholderasblocks:
+
 Placeholders as blocks
 =============================
 

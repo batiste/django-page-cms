@@ -100,13 +100,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.select_option(status, str(Page.DRAFT))
         self.assertEqual(status.get_attribute('value'), str(Page.DRAFT))
 
-        src = self.find_element_by_css_selector(
-            '.field-status'
-        ).find_element_by_tag_name(
-            'img'
-        ).get_attribute('src')
-
-        self.assertTrue(src.endswith('draft.gif'), src)
+        src = self.find_element_by_css_selector('.field-status img [src$="draft.gif"]')
 
     def test_admin_move_page(self):
         self.login()
@@ -128,6 +122,8 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.visit(reverse('admin:pages_page_changelist'))
 
         self.find_element_by_id('page-row-%d' % page_3.id)
+
+        self.browser.implicitly_wait(1)
 
         rows = self.find_elements_by_css_selector('#page-list tbody tr')
         row_1 = rows[0]

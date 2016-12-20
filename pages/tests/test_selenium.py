@@ -106,7 +106,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
             'img'
         ).get_attribute('src')
 
-        self.assertTrue(src.endswith('draft.gif'))
+        self.assertTrue(src.endswith('draft.gif'), src)
 
     def test_admin_move_page(self):
         self.login()

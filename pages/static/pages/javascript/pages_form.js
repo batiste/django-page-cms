@@ -93,15 +93,32 @@ $(function() {
                     $('iframe', formrow)[0].contentWindow.document.getElementsByTagName("body")[0].innerHTML = html;
                 } else {
                     // support for multiple input widget
-                    if($('input, textarea', formrow).length > 1) {
-                      var values = html.split("\\");
-                      $('input, textarea', formrow).each(function(i, e) {
-                         $(e).val(values[i]);
-                      });
-                      return false;
+                    // if($('input, textarea', formrow).length > 1) {
+                    //   var values = html.split("\\");
+                    //   $('input, textarea', formrow).each(function(i, e) {
+                    //        $(e).val(values[i]);
+                    //   });
+                    //   return;
+                    // }
+
+                    // support for File Input
+                    // debugger
+                    var fileinput = $('input[type="file"]', formrow);
+                    if(fileinput.length > 0) {
+                        var revision_name = fileinput.attr('name') + '-revision';
+                        var revision_input = $('[name="' + revision_name + '"]');
+                        if(revision_input.length === 0) {
+                            revision_input = $('<input type="text">');
+                            revision_input.attr('name', revision_name);
+                            select.after(revision_input);
+                        }                        
+                        revision_input.val(html);
+                        return;
                     }
-                    // support for TextInput
+
+                    // support for Text Input
                     $('input', formrow).val(html);
+
                     // support for TextArea
                     var formrow_textarea = $('textarea', formrow).val(html);
                     // support for WYMeditor
@@ -122,7 +139,7 @@ $(function() {
                 }
             });
         }
-        return false;
+        return;
     });
 
     $('.js-confirm-delete').click(function() {

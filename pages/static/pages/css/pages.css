@@ -650,6 +650,18 @@ html[dir=rtl] .module-general .field-status img {
   width:25em;
 }
 
+.grp-change-form .module-content input[type=file],
+.change-form .module-content input[type=file] {
+    padding: 6px 0;
+}
+
+.grp-change-form .module-content input[type=checkbox],
+.change-form .module-content input[type=checkbox] {
+    display: block;
+    font-size: 20px;
+    margin:10px 0;
+}
+
 .grp-change-form .module-content textarea,
 .change-form .module-content textarea {
   width:35em;

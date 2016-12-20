@@ -318,6 +318,10 @@ $(function($) {
         });
 
         $(document).on("mouseup", function(e) {
+            if(down == false) {
+                return;
+            }
+
             // release
             var target_line_id = choosen_line.el.id.split('page-row-')[1];
 

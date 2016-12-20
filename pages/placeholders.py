@@ -345,6 +345,7 @@ class FilePlaceholderNode(PlaceholderNode):
     def save(self, page, language, data, change, extra_data=None):
         if self.shared:
             page = None
+
         if extra_data and 'delete' in extra_data:
             return super(FilePlaceholderNode, self).save(
                 page,
@@ -352,6 +353,16 @@ class FilePlaceholderNode(PlaceholderNode):
                 "",
                 change
             )
+            return
+        if extra_data and 'revision' in extra_data:
+            return super(FilePlaceholderNode, self).save(
+                page,
+                language,
+                extra_data['revision'],
+                change
+            )
+            return
+
         filename = ''
         if change and data:
             # the image URL is posted if not changed

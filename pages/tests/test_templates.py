@@ -441,3 +441,13 @@ class TemplateTestCase(TestCase):
 
         self.assertTrue(elapsed < 50, elapsed)
 
+    def test_block_placeholder(self):
+        """Test block rendering."""
+
+        template = django.template.loader.get_template('block_placeholder.html')
+
+        page = self.new_page({"block_1": "content", "block_2": "content"})
+        context = {'current_page': page, 'request': get_request_mock()}
+        self.assertTrue("block 1:content;" in render(template, context), render(template, context))
+        self.assertTrue("block 2:content;" in render(template, context), render(template, context))
+

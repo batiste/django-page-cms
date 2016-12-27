@@ -191,7 +191,7 @@ File placeholder
 
 There is also a more general placeholder for files::
 
-    {% fileplaceholder uploaded_file as filesrc %}
+    {% fileplaceholder uploaded_file as filesrc block %}
         {% if content %}
             <a href="{{ MEDIA_URL }}{{ content }}">Download file</a>
         {% endif %}

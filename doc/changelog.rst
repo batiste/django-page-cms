@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.10
+================
+
+Released the 27th of December 2016.
+
+    * Fix a performance issue with new placeholder block parsing. :ref:`Placeholder can now be used as blocks <placeholderasblocks>`
+
 
 Release 1.9.9
 =============

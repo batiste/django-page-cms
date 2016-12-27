@@ -98,7 +98,7 @@
             <p class="lead">{% placeholder 'lead' %}</p>
             <div>
               {% page_has_content 'header-image' current_page %}
-                {% imageplaceholder 'header-image' %}
+                {% imageplaceholder 'header-image' block %}
                   {% if content %}
                     <img src="{{ MEDIA_URL }}{{ content }}" class="img-responsive" alt="">
                   {% endif %}

@@ -141,6 +141,23 @@ Template syntax example::
 
     {% placeholder "footer-links" shared %}
 
+
+.. _placeholderasblocks:
+
+The **block** keyword
+-----------------------------
+
+Placeholders can also be rendered as template blocks. The content of the placeholder is then available as the `content`
+variable::
+
+    {% placeholder "title" with TextIntput block %}
+        {% if content %}
+            <h1>Welcome: {{ content }}</h1>
+        {% endif %}
+    {% endplaceholder %}
+
+
+
 Examples of other valid syntaxes
 ------------------------------------
 
@@ -155,27 +172,12 @@ This is an example list of different possible syntaxes for this template tag::
     <div class="my_funky_column">{{ right_column|safe }}</div>
 
 
-.. _placeholderasblocks:
-
-Placeholders as blocks
-=============================
-
-Placeholders can also be rendered as template blocks. The content of the placeholder is then available as the `content`
-variable::
-
-    {% placeholder "title" with TextIntput %}
-        {% if content %}
-            <h1>Welcome: {{ content }}</h1>
-        {% endif %}
-    {% endplaceholder %}
-
-
 Image placeholder
 =================
 
 There is a special placeholder for images::
 
-    {% imageplaceholder "body image" %}
+    {% imageplaceholder "body image" block %}
         {% if content %}
             <img src="{{ MEDIA_URL }}{{ content }}" alt=""/>
         {% endif %}

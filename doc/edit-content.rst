@@ -42,7 +42,7 @@ Because the rendered comment will not result into an HTML node::
 To fix this issue you can use placeholders as rendering blocks like so::
 
     <div>
-        {% imageplaceholder 'img' %}
+        {% imageplaceholder 'img' block %}
             {% if content %}
                 <img src="{{ MEDIA_URL }}{{ content }}" class="img-responsive" alt="">
             {% endif %}

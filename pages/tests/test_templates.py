@@ -415,17 +415,19 @@ class TemplateTestCase(TestCase):
         context = {'current_page': page, 'request': get_request_mock()}
         self.assertTrue("<form" in render(template, context))
 
-    def test_placeholder_section(self):
-        tpl = ("{% load pages_tags %}{% placeholder 'meta_description' section 'SEO Options' %}")
+    def test_slow_placeholder(self):
+        """Test slowness of template parsing."""
+        import datetime
 
-        template = self.get_template_from_string(tpl)
-        found = False
-        for node in template.nodelist:
-            if isinstance(node, PlaceholderNode):
-                found = True
-                self.assertEqual(node.section, 'SEO Options')
-        self.assertTrue(found)
+        start = datetime.datetime.now()
 
-        page = self.new_page({'meta_description': 'foo'})
-        context = {'current_page': page, 'request': get_request_mock()}
-        self.assertTrue("foo" in render(template, context))
+
+        template = django.template.loader.get_template('slow_template_parsing.html')
+        page = self.new_page({'contact': 'hello'})
+        context = {'current_page': page}
+
+        end = datetime.datetime.now()
+        elapsed = (end - start).microseconds / 1000
+
+        self.assertTrue(elapsed < 50, elapsed)
+

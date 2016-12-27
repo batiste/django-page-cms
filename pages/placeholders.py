@@ -37,18 +37,6 @@ def parse_placeholder(parser, token):
     Return a tuple with the name and parameters."""
     params = {}
 
-    # try to parse to an endblock
-    parser_copy = copy.deepcopy(parser) # do a deep copy to avoid to change the state of the parser
-    try:
-        nodelist = parser_copy.parse(('endplaceholder',))
-    except:
-        pass
-    else:
-        nodelist = parser.parse(('endplaceholder',))
-        parser.delete_first_token()
-        params['nodelist'] = nodelist
-
-
     bits = token.split_contents()
     count = len(bits)
     error_string = '%r tag requires at least one argument' % bits[0]
@@ -59,7 +47,7 @@ def parse_placeholder(parser, token):
     except ValueError:
         name = bits[1]
     remaining = bits[2:]
-    simple_options = ['parsed', 'inherited', 'untranslated', 'shared']
+    simple_options = ['parsed', 'inherited', 'untranslated', 'shared', 'block']
     param_options = ['as', 'on', 'with', 'section']
     all_options = simple_options + param_options
     while remaining:
@@ -92,6 +80,12 @@ def parse_placeholder(parser, token):
         elif bit == 'shared':
             params['shared'] = True
             remaining = remaining[1:]
+        elif bit == 'block':
+            remaining = remaining[1:]
+            nodelist = parser.parse(('endplaceholder',))
+            parser.delete_first_token()
+            params['nodelist'] = nodelist
+
     return name, params
 
 

@@ -1,0 +1,540 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-16 15:53+0200\n"
+"PO-Revision-Date: 2016-11-23 12:42+0300\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.10\n"
+
+#: admin/__init__.py:64
+msgid "General"
+msgstr "Genel"
+
+#: admin/__init__.py:193
+msgid "Content"
+msgstr "İçerik"
+
+#: admin/__init__.py:234
+msgid "Default template"
+msgstr "Varsayılan tema"
+
+#: admin/forms.py:37
+msgid "Another page with this slug already exists"
+msgstr "Bu slug ile bir sayfa zaten oluşturulmuş"
+
+#: admin/forms.py:38
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr "Bu slug ile sayfa zaten istenilen yerde oluşturulmuş"
+
+#: admin/forms.py:39
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Bu slug ile alt sayfa istenilen yerde zaten oluşturulmuş."
+
+#: admin/forms.py:40
+msgid "A sibling with this slug already exists"
+msgstr "Bu slug adı ile bir sayfa zaten oluşturulmuş"
+
+#: admin/forms.py:41
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Bu slug ile root içerisinde zaten sayfa oluşturulmuş"
+
+#: admin/forms.py:45
+msgid "Title"
+msgstr "Başlık"
+
+#: admin/forms.py:49
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/forms.py:51
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr "Sayfa oluşturulurken slug benzersiz olmalıdır."
+
+#: admin/forms.py:55
+msgid "Language"
+msgstr "Dil"
+
+#: admin/forms.py:61
+msgid "Template"
+msgstr "Tema"
+
+#: admin/forms.py:66
+msgid "Delegate to application"
+msgstr "Uygulamaya ata"
+
+#: admin/forms.py:71
+msgid "Freeze"
+msgstr "Durdur"
+
+#: admin/forms.py:72
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr "Bu tarihten önce yayınlama. Tarih Biçimi 'Y-m-d H:M:S'"
+
+#: models.py:61 templates/admin/pages/page/menu.html:80
+msgid "Published"
+msgstr "Yayınla"
+
+#: models.py:62 templates/admin/pages/page/menu.html:81
+#: templates/admin/pages/page/menu.html:88
+msgid "Hidden"
+msgstr "Gizle"
+
+#: models.py:63 templates/admin/pages/page/menu.html:79
+#: templates/admin/pages/page/menu.html:86
+msgid "Draft"
+msgstr "Taslak"
+
+#: models.py:72 templates/admin/pages/page/change_list_table.html:14
+msgid "author"
+msgstr "Yazar"
+
+#: models.py:75
+msgid "parent"
+msgstr "Eş"
+
+#: models.py:76 models.py:503
+msgid "creation date"
+msgstr "Oluşturulma tarihi"
+
+#: models.py:78
+msgid "publication date"
+msgstr "Yayınlanma tarihi"
+
+#: models.py:79
+msgid ""
+"When the page should go\n"
+"            live. Status must be \"Published\" for page to go live."
+msgstr ""
+"Sayfayı yayınlamak için\n"
+"        sayfa durumunu 'yayınla' olması gerekiyor."
+
+#: models.py:81
+msgid "publication end date"
+msgstr "yayından kaldırma tarihi"
+
+#: models.py:82
+msgid ""
+"When to expire the page.\n"
+"            Leave empty to never expire."
+msgstr ""
+"Sayfanın yayından kalkmaması için\n"
+"            burayı boş bırakın."
+
+#: models.py:85
+msgid "last modification date"
+msgstr "son düzenlenme tarihi"
+
+#: models.py:87
+msgid "status"
+msgstr "durum"
+
+#: models.py:88 templates/admin/pages/page/change_list_table.html:13
+msgid "template"
+msgstr "tema"
+
+#: models.py:91
+msgid "delegate to"
+msgstr "ata"
+
+#: models.py:94
+msgid "freeze date"
+msgstr "yayından kaldır"
+
+#: models.py:95
+msgid ""
+"Don't publish any content\n"
+"            after this date."
+msgstr ""
+"Bu tarihten önce\n"
+"            yayınlama."
+
+#: models.py:101
+msgid "The site(s) the page is accessible at."
+msgstr "Sayfaya ulaşın"
+
+#: models.py:102
+msgid "sites"
+msgstr "siteler"
+
+#: models.py:119 models.py:501 models.py:519
+msgid "page"
+msgstr "sayfa"
+
+#: models.py:120
+msgid "pages"
+msgstr "sayfalar"
+
+#: models.py:497
+msgid "language"
+msgstr "dil"
+
+#: models.py:498
+msgid "body"
+msgstr "içerik"
+
+#: models.py:499
+msgid "type"
+msgstr "tip"
+
+#: models.py:509
+msgid "content"
+msgstr "içerik"
+
+#: models.py:510
+msgid "contents"
+msgstr "içerikler"
+
+#: models.py:524
+msgid "Aliases"
+msgstr "Takma adlar"
+
+#: placeholders.py:30
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Placeholder %(name)s hata: %(error)s]"
+
+#: placeholders.py:148
+msgid "Note: This field is evaluated as template code."
+msgstr "Not: Bu alan tema kodu olarak ayrılmıştır."
+
+#: placeholders.py:341
+msgid "Your email"
+msgstr "İsminiz"
+
+#: placeholders.py:342
+msgid "Subject"
+msgstr "Başlık"
+
+#: placeholders.py:345
+msgid "Your message"
+msgstr "Mesajınız"
+
+#: placeholders.py:364
+msgid "Your email has been sent. Thank you."
+msgstr ""
+"Mesajınız gönderilmiştir. En kısa zamanda tarafınıza dönüş yapılacaktır."
+
+#: placeholders.py:366
+msgid "An error as occured: your email has not been sent."
+msgstr "Bir sorun oluştu: mesajınız gönderilemedi. Lütfen tekrar deneyiniz."
+
+#: plugins/jsonexport/actions.py:21
+msgid "Export pages as JSON"
+msgstr "Sayfaları JSON olarak dışarı çıkar"
+
+#: plugins/jsonexport/actions.py:46
+msgid "Import some pages from a JSON file"
+msgstr "Sayfaları JSON olarak içeri çıkar"
+
+#: plugins/jsonexport/management/commands/pages_export_json.py:36
+#, python-format
+msgid "Site with id/domain = '%s' not found"
+msgstr "Bu alan adıyla = '%s' site bulunamadı."
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:27
+#, python-format
+msgid "User with username/id/email = '%s' not found"
+msgstr "Bu kullanıcı adı ve şifre ile = '%s' bulunamadı"
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:35
+msgid "Errors encountered while importing JSON"
+msgstr "JSON ile içeri aktarırken hata oluştu"
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:37
+#, python-format
+msgid "%s created."
+msgstr "%s oluşturuldu."
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:37
+#, python-format
+msgid "%s modified."
+msgstr "%s düzenlendi."
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
+msgid "Home"
+msgstr "Anasayfa"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr "Sayfaları içeri aktar"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
+msgid "Import"
+msgstr "İçeri aktar"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
+msgid "Importing pages failed:"
+msgstr "Sayfalar içeri aktarılamadı."
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
+msgid "Import completed."
+msgstr "İçeri aktarma başarılı."
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
+msgid "created"
+msgstr "oluşturuldu"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
+msgid "modified"
+msgstr "düzenlendi"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
+msgid "Return to page list"
+msgstr "Sayfalara geri git"
+
+#: plugins/jsonexport/utils.py:123
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr "'%s' için yönlendirilen sayfa bulunmadı"
+
+#: plugins/jsonexport/utils.py:154
+#, python-format
+msgid "Language '%s' not imported"
+msgstr "İstenilen dil '%s' içeri aktarılamadı"
+
+#: plugins/jsonexport/utils.py:192
+#, python-format
+msgid "Original author '%s' not found"
+msgstr "Yazar '%s' bulunamadı"
+
+#: plugins/jsonexport/utils.py:219
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr "'%s' sayfası için site eklenemedi"
+
+#: plugins/jsonexport/utils.py:274 plugins/jsonexport/utils.py:396
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr "JSON dosyası hatalı: %s"
+
+#: plugins/jsonexport/utils.py:311 plugins/jsonexport/utils.py:433
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr "Desteklenmeyen dosya versiyonu : %s"
+
+#: plugins/jsonexport/utils.py:339 plugins/jsonexport/utils.py:461
+#, python-format
+msgid "%s has no common language with this site"
+msgstr "Bu sitede %s ile uyumlu bir dil yoktur."
+
+#: plugins/jsonexport/utils.py:344 plugins/jsonexport/utils.py:466
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr "'%s' üst sayfaya eklenemediği için uyumlu bir sayfa bulunamadı."
+
+#: plugins/jsonexport/utils.py:348 plugins/jsonexport/utils.py:470
+#, python-format
+msgid "%s uses a template not found on this site: %s"
+msgstr "%s sayfası sitede bulunmayan bir tema kullanıyor: %s"
+
+#: plugins/jsonexport/utils.py:354 plugins/jsonexport/utils.py:476
+#, python-format
+msgid "%s template contents are different than our template: %s"
+msgstr "%s tema içeriği sitede bulunan temadan farklı : %s"
+
+#: templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Düzenle"
+
+#: templates/admin/pages/page/change_form.html:17
+#: templates/admin/pages/page/change_form.html:26
+msgid "View on site"
+msgstr "Sitede göster"
+
+#: templates/admin/pages/page/change_form.html:25
+msgid "History"
+msgstr "Tarih"
+
+#: templates/admin/pages/page/change_list.html:16
+#: templates/pages/examples/index.html:74
+msgid "Search"
+msgstr "Ara"
+
+#: templates/admin/pages/page/change_list.html:18
+msgid "Go"
+msgstr "Git"
+
+#: templates/admin/pages/page/change_list_table.html:9
+#: testproj/documents/models.py:9
+msgid "title"
+msgstr "başlık"
+
+#: templates/admin/pages/page/change_list_table.html:10
+msgid "languages"
+msgstr "diller"
+
+#: templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "son düzenleme"
+
+#: templates/admin/pages/page/change_list_table.html:12
+msgid "published"
+msgstr "yayınlandı"
+
+#: templates/admin/pages/page/change_list_table.html:26
+#: templates/admin/pages/page/menu.html:29
+msgid "move this page"
+msgstr "sayfayı taşı"
+
+#: templates/admin/pages/page/change_list_table.html:27
+#: templates/admin/pages/page/menu.html:41
+msgid "insert above"
+msgstr "yukarıda oluştur"
+
+#: templates/admin/pages/page/change_list_table.html:28
+#: templates/admin/pages/page/menu.html:42
+msgid "insert below"
+msgstr "aşağıda oluştur"
+
+#: templates/admin/pages/page/change_list_table.html:29
+#: templates/admin/pages/page/menu.html:43
+msgid "insert as child"
+msgstr "altsayfa oluştur"
+
+#: templates/admin/pages/page/change_list_table.html:30
+#: templates/admin/pages/page/menu.html:36
+#: templates/admin/pages/page/menu.html:40
+msgid "cancel"
+msgstr "iptal"
+
+#: templates/admin/pages/page/menu.html:20
+msgid "undefined"
+msgstr "tanımlanmamış"
+
+#: templates/admin/pages/page/menu.html:28
+msgid "view this page"
+msgstr "sayfayı görüntüle"
+
+#: templates/admin/pages/page/menu.html:30
+msgid "insert a new page here"
+msgstr "yeni sayfa oluşturun"
+
+#: templates/admin/pages/page/menu.html:32
+msgid "delete this page"
+msgstr "sayfayı silin"
+
+#: templates/admin/pages/page/menu.html:36
+msgid "don&#x27;t move this page"
+msgstr "Bu sayfayı taşınmaz"
+
+#: templates/admin/pages/page/menu.html:40
+msgid "don&#x27;t insert a new page here"
+msgstr "Buraya yeni sayfa oluşturulamaz"
+
+#: templates/admin/pages/page/menu.html:56
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "%(lang)s dilini düzenle"
+
+#: templates/admin/pages/page/menu.html:59
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "%(lang)s dilini oluştur"
+
+#: templates/admin/pages/page/menu.html:66 templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "d/m/Y H:i:s"
+
+#: templates/admin/pages/page/menu.html:87
+msgid "In navigation"
+msgstr "Menüde göster"
+
+#: templates/pages/contact.html:4
+msgid "Send"
+msgstr "Gönder"
+
+#: templates/pages/revisions.html:4
+msgid "Revisions"
+msgstr "Revizyon"
+
+#: templates/pages/traduction_helper.html:4
+msgid "Wanted language has not been translated yet."
+msgstr "İstenen dil henüz çevirilmedi."
+
+#: templates/pages/widgets/languages.html:19
+msgid "Delete this translation"
+msgstr "Bu çeviriyi sil"
+
+#: testproj/documents/models.py:10
+msgid "text"
+msgstr "metin"
+
+#: testproj/test_settings.py:118
+msgid "German"
+msgstr "Almanca"
+
+#: testproj/test_settings.py:119
+msgid "Swiss french"
+msgstr "İsviçre Fransızcası"
+
+#: testproj/test_settings.py:120
+msgid "US English"
+msgstr "American İngilizcesi"
+
+#: testproj/test_settings.py:127
+msgid "French"
+msgstr "Fransızca"
+
+#: testproj/test_settings.py:128
+msgid "Belgium french"
+msgstr "Belçika Fransızcası"
+
+#: testproj/test_settings.py:129
+msgid "Italian"
+msgstr "İtalyanca"
+
+#: urlconf_registry.py:35
+#, python-format
+msgid "The urlconf %s has already been registered."
+msgstr "Urlconf %s zaten kaydedildi."
+
+#: urlconf_registry.py:45
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr "Urlconf %s kaydedilmedi."
+
+#: widgets.py:69
+msgid "Please save the page to show the image field"
+msgstr "Resim alanının görünmesi için lütfen sayfayı kaydedin."
+
+#: widgets.py:73 widgets.py:97
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Dosya: %s<br/>"
+
+#: widgets.py:79
+msgid "Delete image"
+msgstr "Resmi sil"
+
+#: widgets.py:93
+msgid "Please save the page to show the file field"
+msgstr "Dosya alanının görünmesi için lütfen sayfayı kaydedin."
+
+#: widgets.py:103
+msgid "Delete file"
+msgstr "Dosyayı sil"
+
+#: widgets_registry.py:29
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr "Eklenti %s zaten kaydedildi."
+
+#: widgets_registry.py:41
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr "Eklenti %s kaydedilmedi."

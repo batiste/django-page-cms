@@ -18,9 +18,9 @@
             {% endif %}
             <a href="{{ page.id }}/" class="title changelink
             {% if page.pagelink_broken or page.externallink_broken %}broken{% endif %}">
-            {% get_content page "slug" as slug %}
-            {% if slug %}
-                {{ slug }}
+            {% get_content page "title" as title %}
+            {% if title %}
+                {{ title }}
             {% else %}
                 {% trans "undefined" %}
             {% endif %}

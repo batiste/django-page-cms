@@ -263,6 +263,20 @@ class PlaceholderNode(template.Node):
             return mark_safe(output)
         return mark_safe(self.get_content_from_context(context))
 
+    def render_parsed(self, context, content):
+        try:
+            content_template = template.Template(content, name=self.name)
+            new_content = mark_safe(content_template.render(context))
+        except TemplateSyntaxError as error:
+            if global_settings.DEBUG:
+                new_content = PLACEHOLDER_ERROR % {
+                    'name': self.name,
+                    'error': error,
+                }
+            else:
+                new_content = ''
+        return new_content
+
     def edit_tag(self):
         return u"""<!--placeholder ;{};-->""".format(self.name)
 
@@ -278,18 +292,10 @@ class PlaceholderNode(template.Node):
             if not render_edit_tag:
                 return ''
             return self.edit_tag()
+
         if self.parsed:
-            try:
-                t = template.Template(content, name=self.name)
-                content = mark_safe(t.render(context))
-            except TemplateSyntaxError as error:
-                if global_settings.DEBUG:
-                    content = PLACEHOLDER_ERROR % {
-                        'name': self.name,
-                        'error': error,
-                    }
-                else:
-                    content = ''
+            content = self.render_parsed(context, content)
+
         if self.as_varname is None:
             if not render_edit_tag:
                 return content

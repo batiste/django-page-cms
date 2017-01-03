@@ -1,3 +1,14 @@
+{% load static admin_urls %}
+<div id="page-edit-bar">
+  <a href="{% url 'admin:logout' %}" class="btn btn-default">Logout</a>
+  <a href="{% url "admin:pages_page_change" current_page.id %}" class="btn btn-default">Edit in admin</a>
+  {% if request.COOKIES.enable_edit_mode %}
+    <button id="page-disable-edit" class="btn btn-primary">Disable Edit Mode</button>
+  {% else %}
+    <button id="page-enable-edit" class="btn btn-warning">Enable Edit Mode</button>
+  {% endif %}
+</div>
+
 <div id="edit-overlay" style="display:none">
   <form class="form-group" action="" method="post" target="post-iframe" enctype="multipart/form-data">
   {% csrf_token %}
@@ -8,6 +19,8 @@
 </div>
 
 <iframe id="post-iframe" name="post-iframe"></iframe>
+
+<script src='{% static "pages/javascript/pages.js" %}'></script>
 
 <script>
   var plc = $("*").contents().filter(function(){
@@ -27,6 +40,16 @@
   $(document).on('click', '#undo-edit', function(e) {
     e.preventDefault();
     overlay.hide();
+  });
+  
+  $(document).on('click', '#page-enable-edit', function(e) {
+    pages.cookie('enable_edit_mode', 'enabled');
+    window.location.reload();
+  });
+
+  $(document).on('click', '#page-disable-edit', function(e) {
+    pages.cookie('enable_edit_mode', null);
+    window.location.reload();
   });
 
   $(document).on('click', '#save-edit', function(e) {

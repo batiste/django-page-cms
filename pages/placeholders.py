@@ -285,7 +285,7 @@ class PlaceholderNode(template.Node):
         content = self.get_render_content(context)
         request = context.get('request')
         render_edit_tag = False
-        if request and request.user.is_staff:
+        if request and request.user.is_staff and request.COOKIES.get('enable_edit_mode'):
             render_edit_tag = True
 
         if not content:

@@ -443,6 +443,8 @@ class LoadEditNode(template.Node):
         template_name = context.get('template_name')
         placeholders = get_placeholders(template_name)
         page = context.get('current_page')
+        if not page:
+            return ''
         lang = context.get('lang', pages_settings.PAGE_DEFAULT_LANGUAGE)
         form = forms.Form()
         for p in placeholders:
@@ -453,6 +455,7 @@ class LoadEditNode(template.Node):
         template = get_template('pages/inline-edit.html')
         with context.push():
             context['form'] = form
+            context['edit_enabled'] = request.COOKIES.get('enable_edit_mode')
             content = template.render(context)
 
         return content

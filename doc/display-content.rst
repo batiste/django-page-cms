@@ -3,7 +3,9 @@ Display page's content in templates
 ===================================
 
 Gerbi CMS provide several template tags to extract data from the CMS.
-To use these tags in your templates you must load them first::
+To use these tags in your templates you must load them first:
+
+.. code-block:: html+django
 
     {% load pages_tags %}
 
@@ -14,15 +16,21 @@ To use these tags in your templates you must load them first::
 get_content
 -----------
 
-Store a content type from a page into a context variable that you can reuse after::
+Store a content type from a page into a context variable that you can reuse after:
+
+.. code-block:: html+django
 
     {% get_content current_page "title" as content %}
 
-You can also use the slug of a page::
+You can also use the slug of a page:
+
+.. code-block:: html+django
 
     {% get_content "my-page-slug" "title" as content %}
 
-You can also use the id of a page::
+You can also use the id of a page:
+
+.. code-block:: html+django
 
     {% get_content 10 "title" as content %}
 
@@ -33,7 +41,9 @@ You can also use the id of a page::
 show_content
 ------------
 
-Output the content of a page directly within the template::
+Output the content of a page directly within the template:
+
+.. code-block:: html+django
 
     {% show_content current_page "title" %}
 
@@ -48,13 +58,17 @@ Conditional tag that only renders its nodes if the page
 has content for a particular content type. By default the
 current page is used.
 
-Syntax::
+Syntax:
+
+.. code-block:: html+django
 
     {% page_has_content <content_type> [<page var name>] %}
         ...
     {% end page_has_content %}
 
-Example::
+Example:
+
+.. code-block:: html+django
 
     {% page_has_content 'header-image' %}
         <img src="{{ MEDIA_URL }}{% imageplaceholder 'header-image' %}">
@@ -65,7 +79,9 @@ get_page
 ------------
 
 Retrieve a Page object and store it into a context variable that you can reuse after. Here is
-an example of the use of this template tag to display a list of news::
+an example of the use of this template tag to display a list of news:
+
+.. code-block:: html+django
 
     <h2>Latest news</h2>
     {% get_page "news" as news_page %}
@@ -88,7 +104,9 @@ get_pages_with_tag
 ---------------------
 
 Retrieve a Pages objects with given tag and store it into a context variable that you can reuse after. Here is
-an example of the use of this template tag to display a list of footer pages::
+an example of the use of this template tag to display a list of footer pages:
+
+.. code-block:: html+django
 
     <h2>Footer</h2>
     {% get_pages_with_tag "footer" as footer_pages %}
@@ -104,7 +122,9 @@ show_absolute_url
 -------------------
 
 This tag show the absolute url of a page. The difference with the `Page.get_url_path` method is
-that the template knows which language is used within the context and display the URL accordingly::
+that the template knows which language is used within the context and display the URL accordingly:
+
+.. code-block:: html+django
 
     {% show_absolute_url current_page %}
 

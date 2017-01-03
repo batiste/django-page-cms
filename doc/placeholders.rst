@@ -12,15 +12,19 @@ For each placeholder you will get a corresponding field appearing automaticaly
 in the administration interface. You can make as many templates as you want, even
 use the template inheritance: this CMS administration interface will still behave as intended.
 
-The syntax for a placeholder tag is the following::
+The syntax for a placeholder tag is the following:
 
-    {% placeholder "<name>" [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
+.. code-block:: html+django
+
+  {% placeholder "<name>" [on <page>] [with <widget>] [parsed] [inherited] [as <varname>] %}
 
 
 Enable the placeholder tags
 =============================
 
-The required syntax to load placeholder tags is the following::
+The required syntax to load placeholder tags is the following:
+
+.. code-block:: html+django
 
     {% load pages_tags %}
 
@@ -37,7 +41,7 @@ to get the content of the placeholder.
 
 Template syntax example
 
-.. code:: django
+.. code-block:: html+django
 
     {% placeholder "main menu" on root_page %}
 
@@ -57,7 +61,9 @@ the CMS will use the the widget of your choice. Widgets need to be registered be
 
     register_widget(NewWidget)
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% placeholder "body" with NewWidget %}
 
@@ -75,7 +81,9 @@ The **as** option
 If you use the option **as** the content of the placeholder content will not be displayed:
 a variable of your choice will be defined within the template's context.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% placeholder "image" as image_src %}
     <img src="{{ img_src }}" alt=""/>
@@ -86,7 +94,9 @@ The **section** option
 The **section** option is used to group placeholders into a section in the admin interface.
 A section is collapsed by default and hides the fields.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     <meta name="description" content="{% placeholder "meta_description" section "SEO" %}" />
     <meta name="description" content="{% placeholder "meta_keywords" section "SEO" %}" />
@@ -103,7 +113,9 @@ will be evaluated as Django template, within the current context.
 Each placeholder with the **parsed** keyword will also have
 a note in the admin interface noting its ability to be evaluated as template.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% placeholder "special content" parsed %}
 
@@ -114,7 +126,9 @@ If you add the keyword **inherited** the placeholder's content displayed
 on the frontend will be retrieved from the closest parent. But only if there is no
 content for the current page.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% placeholder "right column" inherited %}
 
@@ -125,7 +139,9 @@ If you add the keyword **untranslated** the placeholder's content
 will be the same whatever language your use. It's especialy useful for an image
 placeholder that should remain the same in every language.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% imageplaceholder "logo" untranslated %}
 
@@ -137,7 +153,9 @@ will be the same for all the pages. In effect the placeholder is
 not linked to any page and editing it change
 its content in all pages.
 
-Template syntax example::
+Template syntax example:
+
+.. code-block:: html+django
 
     {% placeholder "footer-links" shared %}
 
@@ -148,7 +166,9 @@ The **block** keyword
 -----------------------------
 
 Placeholders can also be rendered as template blocks. The content of the placeholder is then available as the `content`
-variable::
+variable:
+
+.. code-block:: html+django
 
     {% placeholder "title" with TextIntput block %}
         {% if content %}
@@ -162,7 +182,9 @@ Examples of other valid syntaxes
 ------------------------------------
 
 You can off course combine any of those syntaxes to your convenience.
-This is an example list of different possible syntaxes for this template tag::
+This is an example list of different possible syntaxes for this template tag:
+
+.. code-block:: html+django
 
     {% placeholder "title" with TextIntput %}
     {% placeholder "logo" untranslated on root_page %}
@@ -175,7 +197,9 @@ This is an example list of different possible syntaxes for this template tag::
 Image placeholder
 =================
 
-There is a special placeholder for images::
+There is a special placeholder for images:
+
+.. code-block:: html+django
 
     {% imageplaceholder "body image" block %}
         {% if content %}
@@ -189,7 +213,9 @@ A file upload field will appears into the page admin interface.
 File placeholder
 ================
 
-There is also a more general placeholder for files::
+There is also a more general placeholder for files:
+
+.. code-block:: html+django
 
     {% fileplaceholder uploaded_file as filesrc block %}
         {% if content %}
@@ -204,7 +230,9 @@ A file upload field will appears into the page admin interface.
 Markdown placeholder
 =====================
 
-If you want to write in the MarkDown format there is a MarkDown placeholder::
+If you want to write in the MarkDown format there is a MarkDown placeholder:
+
+.. code-block:: html+django
 
     {% markdownplaceholder mark %}
 
@@ -212,15 +240,17 @@ If you want to write in the MarkDown format there is a MarkDown placeholder::
     
     You will have to install the Markdown library
 
-    .. code:: shell
+    .. code-block:: shell
 
-        pip install Markdown
+        $ pip install Markdown
 
 
 Contact placeholder
 ===================
 
-If you want to include a simple contact form in your page, there is a contact placeholder::
+If you want to include a simple contact form in your page, there is a contact placeholder:
+
+.. code-block:: html+django
 
     {% contactplaceholder "contact" %}
 
@@ -264,7 +294,9 @@ you can simply subclass the :class:`PlaceholderNode <pages.placeholders.Placehol
         return ContactFormPlaceholderNode(name, **params)
     register.tag('contactplaceholder', do_contactplaceholder)
 
-And use it in your templates as a normal placeholder::
+And use it in your templates as a normal placeholder:
+
+.. code-block:: html+django
 
     {% contactplaceholder contact %}
 
@@ -300,7 +332,9 @@ without subclassing it, you can just you create a valid Django Widget that take 
     register_widget(CustomTextarea)
 
 Create a file named `widgets.py` (or whathever you want) somewhere in one of your project's application.
-and then you can simply use the placeholder syntax::
+and then you can simply use the placeholder syntax:
+
+.. code-block:: html+django
 
     {% placeholder custom_widget_example with CustomTextarea %}
 
@@ -324,35 +358,45 @@ Placeholder could be rendered with different widgets
 TextInput
 ---------
 
-A simple line input::
+A simple line input:
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with TextInput %}
 
 Textarea
 --------
 
-A multi line input::
+A multi line input:
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with Textarea %}
 
 AdminTextInput
 --------------
 
-A simple line input with Django admin CSS styling (better for larger input fields)::
+A simple line input with Django admin CSS styling (better for larger input fields):
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with AdminTextInputWidget %}
 
 AdminTextarea
 -------------
 
-A multi line input with Django admin CSS styling::
+A multi line input with Django admin CSS styling:
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with AdminTextareaWidget %}
 
 FileBrowseInput
 ---------------
 
-A file browsing widget::
+A file browsing widget:
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with FileBrowseInput %}
 
@@ -363,7 +407,9 @@ A file browsing widget::
 RichTextarea
 ------------
 
-A simple Rich Text Area Editor based on jQuery::
+A simple Rich Text Area Editor based on jQuery:
+
+.. code-block:: html+django
 
     {% placeholder "<name>" with RichTextarea %}
 

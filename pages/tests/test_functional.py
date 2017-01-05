@@ -169,7 +169,6 @@ class FunctionnalTestCase(TestCase):
     def test_edit_page(self):
         """Test that a page can edited via the admin."""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post(reverse('admin:pages_page_add'), page_data)
         self.assertRedirects(response, changelist_url)
@@ -253,7 +252,6 @@ class FunctionnalTestCase(TestCase):
         """Test post a page with different languages
         and test that the admin views works correctly."""
         c = self.get_admin_client()
-        user = c.login(username='batiste', password='b')
 
         # test that the client language setting is used in add page admin
         c.cookies["django_language"] = 'de'
@@ -319,7 +317,6 @@ class FunctionnalTestCase(TestCase):
     def test_revision(self):
         """Test that a page can edited several times."""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         response = c.post(add_url, page_data)
         page = Page.objects.all()[0]
@@ -349,7 +346,6 @@ class FunctionnalTestCase(TestCase):
         the admin
         """
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['template'] = 'pages/examples/nice.html'
         response = c.post(add_url, page_data)
@@ -365,7 +361,6 @@ class FunctionnalTestCase(TestCase):
         """
         self.set_setting("PAGE_UNIQUE_SLUG_REQUIRED", False)
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
 
         page_data = self.get_new_page_data()
         page_data['title'] = 'parent title'
@@ -402,7 +397,6 @@ class FunctionnalTestCase(TestCase):
     def test_page_admin_view(self):
         """Test page admin view"""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page-1'
         response = c.post(add_url, page_data)
@@ -441,7 +435,6 @@ class FunctionnalTestCase(TestCase):
         """Test page aliasing system"""
 
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
 
         # create some pages
         page_data = self.get_new_page_data()
@@ -499,7 +492,6 @@ class FunctionnalTestCase(TestCase):
     def test_page_valid_targets(self):
         """Test page valid_targets method"""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
         response = c.post(add_url, page_data)
@@ -518,7 +510,6 @@ class FunctionnalTestCase(TestCase):
     def test_ajax_language(self):
         """Test that language is working properly"""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         # Activate a language other than settings.LANGUAGE_CODE
         response = c.post('/i18n/setlang/', {'language':'fr-ch' })
         try:
@@ -582,7 +573,6 @@ class FunctionnalTestCase(TestCase):
         Test that the default view can only return the context
         """
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
@@ -604,7 +594,6 @@ class FunctionnalTestCase(TestCase):
         using the admin interface
         """
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'root'
 
@@ -686,7 +675,6 @@ class FunctionnalTestCase(TestCase):
         Test that the navigation tree works properly with mptt.
         """
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         response = c.post(add_url, page_data)
@@ -875,7 +863,6 @@ class FunctionnalTestCase(TestCase):
     def test_fileinput_in_admin(self):
         """Test that a page can edited via the admin."""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
 
         page = self.new_page(content={'slug': 'just-a-test', 'file':'some file'})
         page.template = 'pages/tests/fileinput.html'
@@ -888,7 +875,6 @@ class FunctionnalTestCase(TestCase):
     def test_redirect_old_slug(self):
         """Test that a page redirect to new slug."""
         c = self.get_admin_client()
-        c.login(username='batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         response = c.post(reverse('admin:pages_page_add'), page_data)

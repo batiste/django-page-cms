@@ -51,7 +51,7 @@ class PageManager(TreeManager):
 
         :param site_id: specify the id of the site object to filter with.
         """
-        if settings.PAGE_USE_SITE_ID:
+        if global_settings.PAGE_USE_SITE_ID:
             if not site_id:
                 site_id = global_settings.SITE_ID
             return self.filter(sites=site_id)

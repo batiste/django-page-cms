@@ -197,61 +197,57 @@ class FunctionnalTestCase(TestCase):
             return
 
         # this is necessary to make the test pass
-        setattr(settings, "SITE_ID", 2)
+        with self.settings(SITE_ID=2):
+            c = self.get_admin_client()
+            page_data = self.get_new_page_data()
+            page_data["sites"] = [2]
+            response = c.post(add_url, page_data)
+            self.assertRedirects(response, changelist_url)
 
-        c = self.get_admin_client()
-        c.login(username='batiste', password='b')
-        page_data = self.get_new_page_data()
-        page_data["sites"] = [2]
-        response = c.post(add_url, page_data)
-        self.assertRedirects(response, changelist_url)
+            page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+            self.assertEqual(page.sites.count(), 1)
+            self.assertEqual(page.sites.all()[0].id, 2)
 
-        page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
-        self.assertEqual(page.sites.count(), 1)
-        self.assertEqual(page.sites.all()[0].id, 2)
+            page_data = self.get_new_page_data()
+            page_data["sites"] = [3]
+            response = c.post(add_url, page_data)
+            self.assertRedirects(response, changelist_url)
 
-        page_data = self.get_new_page_data()
-        page_data["sites"] = [3]
-        response = c.post(add_url, page_data)
-        self.assertRedirects(response, changelist_url)
+            # we cannot get a slug that doesn't exist
+            content = Content.objects.get_content_slug_by_slug("this doesn't exist")
+            self.assertEqual(content, None)
 
-        # we cannot get a slug that doesn't exist
-        content = Content.objects.get_content_slug_by_slug("this doesn't exist")
-        self.assertEqual(content, None)
+            # we cannot get the data posted on another site
+            content = Content.objects.get_content_slug_by_slug(page_data['slug'])
+            self.assertEqual(content, None)
 
-        # we cannot get the data posted on another site
-        content = Content.objects.get_content_slug_by_slug(page_data['slug'])
-        self.assertEqual(content, None)
+        with self.settings(SITE_ID=3):
+            page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
+            self.assertEqual(page.sites.count(), 1)
+            self.assertEqual(page.sites.all()[0].id, 3)
 
-        setattr(settings, "SITE_ID", 3)
-        page = Content.objects.get_content_slug_by_slug(page_data['slug']).page
-        self.assertEqual(page.sites.count(), 1)
-        self.assertEqual(page.sites.all()[0].id, 3)
+            # with param
+            self.assertEqual(Page.objects.on_site(2).count(), 1)
+            self.assertEqual(Page.objects.on_site(3).count(), 1)
 
-        # with param
-        self.assertEqual(Page.objects.on_site(2).count(), 1)
-        self.assertEqual(Page.objects.on_site(3).count(), 1)
+            # without param
+            self.assertEqual(Page.objects.on_site().count(), 1)
 
-        # without param
-        self.assertEqual(Page.objects.on_site().count(), 1)
-        setattr(settings, "SITE_ID", 2)
-        self.assertEqual(Page.objects.on_site().count(), 1)
+        with self.settings(SITE_ID=2):
+            self.assertEqual(Page.objects.on_site().count(), 1)
 
-        page_data = self.get_new_page_data()
-        page_data["sites"] = [2, 3]
-        response = c.post(add_url, page_data)
-        self.assertRedirects(response, changelist_url)
+            page_data = self.get_new_page_data()
+            page_data["sites"] = [2, 3]
+            response = c.post(add_url, page_data)
+            self.assertRedirects(response, changelist_url)
 
-        self.assertEqual(Page.objects.on_site(3).count(), 2)
-        self.assertEqual(Page.objects.on_site(2).count(), 2)
-        self.assertEqual(Page.objects.on_site().count(), 2)
+            self.assertEqual(Page.objects.on_site(3).count(), 2)
+            self.assertEqual(Page.objects.on_site(2).count(), 2)
+            self.assertEqual(Page.objects.on_site().count(), 2)
 
-        setattr(pages_settings, "PAGE_USE_SITE_ID", False)
-
-        # we should get everything
-        self.assertEqual(Page.objects.on_site().count(), 3)
-
-        setattr(settings, "SITE_ID", 1)
+        with self.settings(PAGE_USE_SITE_ID=False):
+            # we should get everything
+            self.assertEqual(Page.objects.on_site().count(), 3)
 
     def test_languages(self):
         """Test post a page with different languages

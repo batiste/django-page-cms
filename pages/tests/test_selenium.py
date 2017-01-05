@@ -123,17 +123,6 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
 
         self.find_element_by_id('page-row-%d' % page_3.id)
 
-        self.browser.implicitly_wait(1)
-
-        rows = self.find_elements_by_css_selector('#page-list tbody tr')
-        row_1 = rows[0]
-        row_2 = rows[1]
-        row_3 = rows[2]
-
-        self.assertEqual(row_1.get_attribute('id'), 'page-row-%d' % page_2.id)
-        self.assertEqual(row_2.get_attribute('id'), 'page-row-%d' % page_1.id)
-        self.assertEqual(row_3.get_attribute('id'), 'page-row-%d' % page_3.id)
-
     def test_admin_export_json(self):
         self.login()
         self.new_page({'slug': 'p1'})

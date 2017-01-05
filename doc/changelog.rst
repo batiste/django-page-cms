@@ -4,6 +4,16 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+
+Release 1.9.11
+================
+
+Released the 5th of January 2017.
+
+    * Improve the frontend edit mode with an edit bar on the top left of the page so you can disable
+      the edit mode if necessary.
+
+
 Release 1.9.10
 ================
 

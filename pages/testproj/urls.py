@@ -1,5 +1,5 @@
 
-from django.conf.urls import url, include, patterns
+from django.conf.urls import url, include
 from django.conf.urls import handler404, handler500
 from django.contrib import admin
 from django.conf import settings
@@ -27,10 +27,3 @@ urlpatterns = [
     url(r'^sitemap2\.xml$', sitemap,
         {'sitemaps': {'pages':MultiLanguagePageSitemap}})
 ]
-
-#if settings.DEBUG:
-#    urlpatterns += patterns('',
-#        # Trick for Django to support static files
-#        # (security hole: only for Dev environement! remove this on Prod!!!)
-#        (r'', include('staticfiles.urls')),
-#    )

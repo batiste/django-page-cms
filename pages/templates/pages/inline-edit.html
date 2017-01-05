@@ -43,12 +43,12 @@
   });
   
   $(document).on('click', '#page-enable-edit', function(e) {
-    pages.cookie('enable_edit_mode', 'enabled');
+    pages.cookie('enable_edit_mode', 'enabled', {path: '/'});
     window.location.reload();
   });
 
   $(document).on('click', '#page-disable-edit', function(e) {
-    pages.cookie('enable_edit_mode', null);
+    pages.cookie('enable_edit_mode', null, {path: '/'});
     window.location.reload();
   });
 

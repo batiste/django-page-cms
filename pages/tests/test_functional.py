@@ -513,7 +513,7 @@ class FunctionnalTestCase(TestCase):
 
         root_page = Content.objects.get_content_slug_by_slug('root').page
         self.assertEqual(len(root_page.valid_targets()), 0)
-        self.assertEqual(str(c1.valid_targets()), "[<Page: root>]")
+        self.assertQuerysetEqual(c1.valid_targets(), ['<Page: root>'])
 
     def test_ajax_language(self):
         """Test that language is working properly"""
@@ -550,8 +550,8 @@ class FunctionnalTestCase(TestCase):
 
         child_2 = Content.objects.get_content_slug_by_slug('child-2').page
 
-        self.assertEqual(str(Page.objects.all()),
-            "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+        self.assertQuerysetEqual(Page.objects.all(),
+            ['<Page: root>', '<Page: child-2>', '<Page: child-1>'])
 
         """
         The relevant bit, fixed by rev 501: the response issued by a move
@@ -625,23 +625,23 @@ class FunctionnalTestCase(TestCase):
 
         child_2 = Content.objects.get_content_slug_by_slug('child-2').page
 
-        self.assertEqual(str(Page.objects.all()),
-            "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+        self.assertQuerysetEqual(Page.objects.all(),
+            ['<Page: root>', '<Page: child-2>', '<Page: child-1>'])
         # move page 1 in the first position
         move_url = reverse("admin:page-move-page", args=[child_1.id])
         response = c.post(move_url,
             {'position':'first-child', 'target':root_page.id})
 
-        self.assertEqual(str(Page.objects.all()),
-            "[<Page: root>, <Page: child-1>, <Page: child-2>]")
+        self.assertQuerysetEqual(Page.objects.all(),
+            ['<Page: root>', '<Page: child-1>', '<Page: child-2>'])
 
         # move page 2 in the first position
         move_url = reverse("admin:page-move-page", args=[child_2.id])
         response = c.post(move_url, 
             {'position': 'left', 'target': child_1.id})
 
-        self.assertEqual(str(Page.objects.all()),
-            "[<Page: root>, <Page: child-2>, <Page: child-1>]")
+        self.assertQuerysetEqual(Page.objects.all(),
+            ['<Page: root>', '<Page: child-2>', '<Page: child-1>'])
 
         # try to create a sibling with the same slug, via left, right
         from pages import settings as pages_settings
@@ -694,8 +694,8 @@ class FunctionnalTestCase(TestCase):
         response = c.post(add_url, page_data)
         page_data['slug'] = 'page3'
         response = c.post(add_url, page_data)
-        self.assertEqual(str(Page.objects.navigation()),
-            "[<Page: page1>, <Page: page2>, <Page: page3>]")
+        self.assertQuerysetEqual(Page.objects.navigation(),
+            ['<Page: page1>', '<Page: page2>', '<Page: page3>'])
 
         p1 = Content.objects.get_content_slug_by_slug('page1').page
         p2 = Content.objects.get_content_slug_by_slug('page2').page
@@ -704,14 +704,14 @@ class FunctionnalTestCase(TestCase):
         p2.move_to(p1, 'left')
         p2.save()
 
-        self.assertEqual(str(Page.objects.navigation()),
-            "[<Page: page2>, <Page: page1>, <Page: page3>]")
+        self.assertQuerysetEqual(Page.objects.navigation(),
+            ['<Page: page2>', '<Page: page1>', '<Page: page3>'])
 
         p3.move_to(p2, 'left')
         p3.save()
 
-        self.assertEqual(str(Page.objects.navigation()),
-            "[<Page: page3>, <Page: page2>, <Page: page1>]")
+        self.assertQuerysetEqual(Page.objects.navigation(),
+            ['<Page: page3>', '<Page: page2>', '<Page: page1>'])
 
         p1 = Content.objects.get_content_slug_by_slug('page1').page
         p2 = Content.objects.get_content_slug_by_slug('page2').page
@@ -720,14 +720,14 @@ class FunctionnalTestCase(TestCase):
         p3.move_to(p1, 'first-child')
         p2.move_to(p1, 'first-child')
 
-        self.assertEqual(str(Page.objects.navigation()),
-            "[<Page: page1>]")
+        self.assertQuerysetEqual(Page.objects.navigation(),
+            ['<Page: page1>'])
 
         p3 = Content.objects.get_content_slug_by_slug('page3').page
         p3.move_to(p1, 'left')
 
-        self.assertEqual(str(Page.objects.navigation()),
-            "[<Page: page3>, <Page: page1>]")
+        self.assertQuerysetEqual(Page.objects.navigation(),
+            ['<Page: page3>', '<Page: page1>'])
 
     def test_page_redirect_to_url(self):
         """Test page redirected to external url."""

@@ -244,9 +244,9 @@ class FunctionnalTestCase(TestCase):
             self.assertEqual(Page.objects.on_site(2).count(), 2)
             self.assertEqual(Page.objects.on_site().count(), 2)
 
-        with self.settings(PAGE_USE_SITE_ID=False):
-            # we should get everything
-            self.assertEqual(Page.objects.on_site().count(), 3)
+        self.set_setting('PAGE_USE_SITE_ID', False)
+        # we should get everything
+        self.assertEqual(Page.objects.on_site().count(), 3)
 
     def test_languages(self):
         """Test post a page with different languages

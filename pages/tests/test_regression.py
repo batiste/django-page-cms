@@ -28,7 +28,6 @@ class RegressionTestCase(TestCase):
         """
         self.set_setting("PAGE_SHOW_START_DATE", True)
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
@@ -46,7 +45,6 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=97
         """
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         # create a page for the example otherwise you will get a Http404 error
@@ -87,7 +85,6 @@ class RegressionTestCase(TestCase):
         """Test bug 162
         http://code.google.com/p/django-page-cms/issues/detail?id=162"""
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'test-162-title'
         page_data['slug'] = 'test-162-slug'
@@ -102,7 +99,6 @@ class RegressionTestCase(TestCase):
         """Test bug 167
         http://code.google.com/p/django-page-cms/issues/detail?id=172"""
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['title'] = 'title-en-us'
         page_data['slug'] = 'slug'
@@ -156,7 +152,6 @@ class RegressionTestCase(TestCase):
 
     def test_bug_156(self):
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data()
         page_data['slug'] = 'page1'
         page_data['title'] = 'title &amp;'
@@ -168,7 +163,6 @@ class RegressionTestCase(TestCase):
 
     def test_bug_181(self):
         c = self.get_admin_client()
-        c.login(username= 'batiste', password='b')
         page_data = self.get_new_page_data(draft=True)
         page_data['slug'] = 'page1'
 

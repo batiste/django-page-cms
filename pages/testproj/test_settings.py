@@ -186,6 +186,9 @@ COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 PAGE_ENABLE_TESTS = True
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.SHA1PasswordHasher'
+]
 
 try:
     from local_settings import *

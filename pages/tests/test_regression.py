@@ -285,7 +285,7 @@ class RegressionTestCase(TestCase):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         fakefile = SimpleUploadedFile(name=u"АБВГДЕЖ.pdf", content=six.b('bytes'))
-        filename = get_filename(page, placeholder, fakefile)
+        filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertTrue(fakefile.name.lower() in filename)
         self.assertTrue("page_%d" % page.id in filename)
         self.assertTrue(placeholder.name in filename)

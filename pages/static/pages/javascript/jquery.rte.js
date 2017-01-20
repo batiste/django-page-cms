@@ -9,7 +9,7 @@
 $(function () {
 
 
-jQuery.fn.rte = function(css_url, media_url) {
+jQuery.fn.rte = function(css_url, static_url) {
 
     if(document.designMode || document.contentEditable) {
         $(this).each( function(){
@@ -22,7 +22,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         iframe.contentWindow.focus();
         try{
             iframe.contentWindow.document.execCommand(command, false, option);
-        }catch(e){console.log(e);}
+        } catch(e){console.log(e);}
         iframe.contentWindow.focus();
     }
 
@@ -74,7 +74,10 @@ jQuery.fn.rte = function(css_url, media_url) {
         // Mozilla need this to display caret
         if($.trim(content)==='')
             content = '<br>';
-        var doc = "<html><head>"+css+"</head><body class='frameBody'>"+content+"</body></html>";
+        var scripts = "<script src='"+static_url+"javascript/jquery.js'></script><script src='" + 
+            static_url+"javascript/iframe.rte.js'></script>";
+
+        var doc = "<html><head>"+css+scripts+"</head><body id='frameBody'>"+content+"</body></html>";
         tryEnableDesignMode(iframe, doc, function() {
             $("#toolbar-"+iframe.title).remove();
             $(iframe).before(toolbar(iframe));
@@ -83,7 +86,10 @@ jQuery.fn.rte = function(css_url, media_url) {
     }
 
     function disableDesignMode(iframe, submit) {
-        var content = iframe.contentWindow.document.getElementsByTagName("body")[0].innerHTML;
+        var attr = $(iframe.contentWindow.document.getElementById("attributes"));
+        attr.remove();
+        var content = iframe.contentWindow.document.getElementById("frameBody").innerHTML;
+        
         var textarea;
         if(submit === true) {
             textarea = $('<input type="hidden" />');
@@ -153,6 +159,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         });
 
         var oldDismissRelatedLookupPopup = window.dismissRelatedLookupPopup;
+        var oldDismissAddRelatedObjectPopup = window.dismissAddRelatedObjectPopup;
 
         function insertHTML(img) {
           var id = "rand" + Math.random();
@@ -160,6 +167,7 @@ jQuery.fn.rte = function(css_url, media_url) {
           img = "<img width='200' src='" + img + "' id=" + id + ">";
 
           if(document.all) {
+            alert(this);
             var range = doc.selection.createRange();
             range.pasteHTML(img);
             range.collapse(false);
@@ -171,19 +179,20 @@ jQuery.fn.rte = function(css_url, media_url) {
         };
 
         function dismissRelatedLookupPopup(win, chosenId) {
-            $.get('../../' + chosenId + '/media-url/', function(response) {
-                console.log(response);
+            $.get('/admin/pages/page/' + chosenId + '/media-url/', function(response) {
                 var img = insertHTML(response);
             });
             win.close();
             window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;
+            window.dismissAddRelatedObjectPopup = oldDismissAddRelatedObjectPopup;
         }
 
         function showMediaAdminPopup() {
             var name = 'mediaWindowSelect';
-            var href = '../../../media/?_to_field=id&_popup=1';
+            var href = '/admin/pages/media/?_to_field=id&_popup=1';
             window.dismissRelatedLookupPopup = dismissRelatedLookupPopup;
-            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes,toolbar=yes,location=yes');
+            window.dismissAddRelatedObjectPopup = dismissRelatedLookupPopup;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
             win.focus();
             return false;
         }

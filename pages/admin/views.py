@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Pages admin views"""
 from pages import settings
-from django.conf import settings as django_settings
 from pages.models import Page, Content, Media
 from pages.utils import get_placeholders
 from pages.phttp import get_language_from_request

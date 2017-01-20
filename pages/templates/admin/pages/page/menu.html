@@ -9,7 +9,6 @@
     <td class="selection-cell action-checkbox-column"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
     <th class="title-cell">
         <div class="title-cell-container" style="margin-{{ LANGUAGE_BIDI|yesno:"right,left" }}:{{ page.margin_level }}em">
-        <a href='/admin/pages/media/?_to_field=id' class='related-lookup' id='lookup_id_page' title='Recherche'>HELLO<i class='fa fa-file-image-o' aria-hidden='true'></i></a>
             {% if page.children.count %}
                 <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                     <span class="expand">+</span>

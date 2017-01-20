@@ -378,8 +378,8 @@ except AlreadyRegistered:
 
 
 class MediaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'url', 'title', 'creation_date', 'description', 'extension')
-    list_display_links = ('id', 'url', 'title')
+    list_display = ('image', 'title', 'creation_date', 'description', 'extension')
+    list_display_links = ('image', 'title', )
 
 try:
     admin.site.register(Media, MediaAdmin)

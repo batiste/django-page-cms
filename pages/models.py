@@ -580,6 +580,11 @@ class Media(models.Model):
     creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=get_now)
 
+    def image(self):
+        return u'<img width="60" src="%s" />' % os.path.join(settings.PAGES_MEDIA_URL, self.url.name)
+    image.short_description = _('Thumbnail')
+    image.allow_tags = True
+
     class Meta:
         verbose_name_plural = _('Medias')
 

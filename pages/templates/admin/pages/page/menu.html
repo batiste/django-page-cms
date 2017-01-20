@@ -9,11 +9,12 @@
     <td class="selection-cell action-checkbox-column"><input class="action-select" type="checkbox" name="_selected_action" value="{{ page.id }}"/></td>
     <th class="title-cell">
         <div class="title-cell-container" style="margin-{{ LANGUAGE_BIDI|yesno:"right,left" }}:{{ page.margin_level }}em">
+        <a href='/admin/pages/media/?_to_field=id' class='related-lookup' id='lookup_id_page' title='Recherche'>HELLO<i class='fa fa-file-image-o' aria-hidden='true'></i></a>
             {% if page.children.count %}
                 <a href="#" class="expand-collapse {% if expanded %}expanded{% endif %}" id="c{{ page.id }}">
                     <span class="expand">+</span>
                     <span class="collapse">-</span>
-                    <img class="expand-loading" src="{{ PAGES_MEDIA_URL }}images/loading.gif" alt="loading" />
+                    <img class="expand-loading" src="{{ PAGES_STATIC_URL }}images/loading.gif" alt="loading" />
                 </a>
             {% endif %}
             <a href="{{ page.id }}/" class="title changelink
@@ -25,7 +26,7 @@
                 {% trans "undefined" %}
             {% endif %}
             {% if page.redirect_to or page.redirect_to_url %}
-            <img class="redirected" src="{{ PAGES_MEDIA_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
+            <img class="redirected" src="{{ PAGES_STATIC_URL }}images/icons/redirect.gif" alt="redirected" />{% endif %}</a>
 
             <span class="message"></span>
 
@@ -73,11 +74,11 @@
     {% if can_publish %}
         <td class="publish-cell">
             {% ifequal page.status page.DRAFT %}
-                <img src="{{ PAGES_MEDIA_URL }}images/icons/draft.gif" alt="draft" />
+                <img src="{{ PAGES_STATIC_URL }}images/icons/draft.gif" alt="draft" />
             {% else %}{% ifequal page.status page.PUBLISHED %}
-                <img src="{{ PAGES_MEDIA_URL }}images/icons/published.gif" alt="published" />
+                <img src="{{ PAGES_STATIC_URL }}images/icons/published.gif" alt="published" />
             {% else %}
-                <img src="{{ PAGES_MEDIA_URL }}images/icons/hidden.gif" alt="hidden"/>
+                <img src="{{ PAGES_STATIC_URL }}images/icons/hidden.gif" alt="hidden"/>
             {% endifequal %}{% endifequal %}
             &nbsp;
             <select class="publish-select" name="select-status-{{ page.id }}">

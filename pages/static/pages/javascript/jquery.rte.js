@@ -7,6 +7,8 @@
 
 // define the rte light plugin
 $(function () {
+
+
 jQuery.fn.rte = function(css_url, media_url) {
 
     if(document.designMode || document.contentEditable) {
@@ -121,6 +123,7 @@ jQuery.fn.rte = function(css_url, media_url) {
                 <a href='#' class='unorderedlist'><i class='fa fa-list-ul' aria-hidden='true'></i></a>\
                 <a href='#' class='link'><i class='fa fa-link' aria-hidden='true'></i></a>\
                 <a href='#' class='image'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
+                <a href='#' class='image-lookup'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
                 <a href='#' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
             </p></div></div>");
         $('select', tb).change(function(){
@@ -141,13 +144,55 @@ jQuery.fn.rte = function(css_url, media_url) {
                 formatText(iframe, 'CreateLink', p);
             return false; 
         });
-        
+
         $('.image', tb).click(function() {
-            var p=prompt("image URL:");
+            var p = prompt("image URL:");
             if(p)
                 formatText(iframe, 'InsertImage', p);
             return false; 
         });
+
+        var oldDismissRelatedLookupPopup = window.dismissRelatedLookupPopup;
+
+        function insertHTML(img) {
+          var id = "rand" + Math.random();
+          var doc = iframe.contentWindow.document;
+          img = "<img width='200' src='" + img + "' id=" + id + ">";
+
+          if(document.all) {
+            var range = doc.selection.createRange();
+            range.pasteHTML(img);
+            range.collapse(false);
+            range.select();
+          } else {
+            doc.execCommand("insertHTML", false, img);
+          }
+          return doc.getElementById(id);
+        };
+
+        function dismissRelatedLookupPopup(win, chosenId) {
+            $.get('../../' + chosenId + '/media-url/', function(response) {
+                console.log(response);
+                var img = insertHTML(response);
+            });
+            win.close();
+            window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;
+        }
+
+        function showMediaAdminPopup() {
+            var name = 'mediaWindowSelect';
+            var href = '../../../media/?_to_field=id&_popup=1';
+            window.dismissRelatedLookupPopup = dismissRelatedLookupPopup;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes,toolbar=yes,location=yes');
+            win.focus();
+            return false;
+        }
+
+         $('.image-lookup', tb).click(function(e) {
+             e.preventDefault();
+             showMediaAdminPopup();
+             return false;
+         });
         
         $('.disable', tb).click(function() {
             var txt = disableDesignMode(iframe);

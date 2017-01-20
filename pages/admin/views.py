@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Pages admin views"""
 from pages import settings
-from pages.models import Page, Content
+from django.conf import settings as django_settings
+from pages.models import Page, Content, Media
 from pages.utils import get_placeholders
 from pages.phttp import get_language_from_request
 
@@ -226,3 +227,10 @@ def sub_menu(request, page_id):
         'pages': pages,
         'page_languages': page_languages,
     })
+
+import os
+@staff_member_required
+def get_media_url(request, media_id):
+    """Get media URL."""
+    media = Media.objects.get(id=media_id)
+    return HttpResponse(os.path.join(settings.PAGES_MEDIA_URL, media.url.name))

@@ -9,7 +9,7 @@
 $(function () {
 
 
-jQuery.fn.rte = function(css_url, static_url) {
+jQuery.fn.rte = function(static_url) {
 
     if(document.designMode || document.contentEditable) {
         $(this).each( function(){
@@ -67,9 +67,8 @@ jQuery.fn.rte = function(css_url, static_url) {
             iframe.title = textarea.attr('name');
         textarea.after(iframe);
         var css = "";
-        if(css_url) {
-            css = "<link type='text/css' rel='stylesheet' href='"+css_url+"' />";
-        }
+        css = "<link type='text/css' rel='stylesheet' href='"+static_url+"css/font-awesome.min.css' />";
+        css = css + "<link type='text/css' rel='stylesheet' href='"+static_url+"css/rte.css' />";
         var content = textarea.val();
         // Mozilla need this to display caret
         if($.trim(content)==='')

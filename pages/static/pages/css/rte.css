@@ -65,14 +65,20 @@ form .rte-toolbar p {
 
 #frameBody #attributes label {
     display:block;
+    margin-bottom:3px;
 }
 
 #frameBody #attributes input {
     width:6em;
 }
 
-#frameBody img {
-    pointer:cursor;
+#frameBody #attributes label span {
+    width:4em;
+    display: inline-block;
+}
+
+#frameBody img, #frameBody #remove {
+    cursor:pointer;
 }
 
 

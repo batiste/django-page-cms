@@ -167,18 +167,16 @@ PAGE_CONTENT_REVISION_EXCLUDE_LIST = getattr(settings,
     'PAGE_CONTENT_REVISION_EXCLUDE_LIST', ()
 )
 
-# URL that handles pages media and uses <STATIC_URL>/pages by default.
-# TODO: the name of this setting is confusing. Useless setting.
 PAGES_MEDIA_URL = get_setting('PAGES_MEDIA_URL')
 if not PAGES_MEDIA_URL:
-    media_url = get_setting('MEDIA_URL', raise_error=True)
+    media_url = get_setting('PAGES_MEDIA_URL', 'MEDIA_URL', raise_error=True)
     PAGES_MEDIA_URL = str(media_url)
 
 PAGES_STATIC_URL = get_setting('PAGES_STATIC_URL')
 if not PAGES_STATIC_URL:
-    media_url = get_setting('STATIC_URL', raise_error=True)
-    PAGES_STATIC_URL = str(media_url) + 'pages/'
-
+    static_url = get_setting('PAGES_STATIC_URL', 'STATIC_URL', raise_error=True)
+    static_url = static_url + 'pages/'
+    PAGES_STATIC_URL = str(static_url)
 
 
 # Hide the slug's of the first root page ie: ``/home/`` becomes ``/``

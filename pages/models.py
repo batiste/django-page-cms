@@ -581,7 +581,16 @@ class Media(models.Model):
             default=get_now)
 
     def image(self):
-        return u'<img width="60" src="%s" />' % os.path.join(settings.PAGES_MEDIA_URL, self.url.name)
+        if self.extension in ['png', 'jpg', 'jpeg']:
+            return u'<img width="60" src="%s" />' % os.path.join(
+                settings.PAGES_MEDIA_URL, self.url.name)
+        if self.extension == 'pdf':
+            return u'<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
+        if self.extension in ['doc', 'docx']:
+            return u'<i class="fa fa-file-word-o" aria-hidden="true"></i>'
+        if self.extension in ['zip', 'gzip', 'rar']:
+            return u'<i class="fa fa-file-archive-o" aria-hidden="true"></i>    '
+        return u'<i class="fa fa-file-o" aria-hidden="true"></i>'
     image.short_description = _('Thumbnail')
     image.allow_tags = True
 
@@ -591,7 +600,7 @@ class Media(models.Model):
     def save(self, *args, **kwargs):
         parts = self.url.name.split('.')
         if len(parts) > 1:
-            self.extension = parts[-1]
+            self.extension = parts[-1].lower()
         if not self.title:
             parts = self.url.name.split('/')
             self.title = parts[-1]

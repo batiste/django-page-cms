@@ -161,26 +161,29 @@ jQuery.fn.rte = function(static_url) {
         var oldDismissRelatedLookupPopup = window.dismissRelatedLookupPopup;
         var oldDismissAddRelatedObjectPopup = window.dismissAddRelatedObjectPopup;
 
-        function insertHTML(img) {
+        function insertHTML(url) {
           var id = "rand" + Math.random();
           var doc = iframe.contentWindow.document;
-          img = "<img width='200' src='" + img + "' id=" + id + ">";
-
+          if(url.match(/(jpeg|jpg|png)$/)) {
+            html = "<img width='200' src='" + url + "' id=" + id + ">";
+          } else {
+            html = "<a href='" + url + "' id=" + id + ">"+url+"</a>";
+          }
+          
           if(document.all) {
-            alert(this);
             var range = doc.selection.createRange();
-            range.pasteHTML(img);
+            range.pasteHTML(html);
             range.collapse(false);
             range.select();
           } else {
-            doc.execCommand("insertHTML", false, img);
+            doc.execCommand("insertHTML", false, html);
           }
           return doc.getElementById(id);
         };
 
         function dismissRelatedLookupPopup(win, chosenId) {
             $.get('/admin/pages/page/' + chosenId + '/media-url/', function(response) {
-                var img = insertHTML(response);
+                insertHTML(response);
             });
             win.close();
             window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;

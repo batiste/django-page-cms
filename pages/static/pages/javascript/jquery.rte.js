@@ -127,10 +127,11 @@ jQuery.fn.rte = function(static_url) {
             <p>\
                 <a href='#' class='unorderedlist'><i class='fa fa-list-ul' aria-hidden='true'></i></a>\
                 <a href='#' class='link'><i class='fa fa-link' aria-hidden='true'></i></a>\
-                <a href='#' class='image'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
-                <a href='#' class='image-lookup'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
-                <a href='#' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
+                <a href='#' title='insert image from the media library' class='image-lookup'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
+                <a href='#' title='insert external image' class='image'><i class='fa fa-external-link-square' aria-hidden='true'></i></a>\
+                <a href='#' title='disable edit' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
             </p></div></div>");
+
         $('select', tb).change(function(){
             var index = this.selectedIndex;
             if( index!=0 ) {
@@ -227,8 +228,11 @@ jQuery.fn.rte = function(static_url) {
         iframeDoc.keyup(function() {
             setSelectedType(getSelectionElement(iframe), select);
             var body = $('body', iframeDoc);
-            if(body.scrollTop()>0)
-                iframe.height = Math.min(350, parseInt(iframe.height)+body.scrollTop());
+            var bodyHeight = $(iframeDoc[0].body).height();
+            if(body.scrollTop() > 0) {
+                var new_height = Math.min(400, Math.max(200, bodyHeight+16));
+                $(iframe).css('min-height', new_height);
+            }
             return true;
         });
         

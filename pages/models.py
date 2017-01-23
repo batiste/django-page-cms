@@ -240,7 +240,6 @@ class Page(MPTTModel):
         from pages.managers import fake_page
         shared = [p for p in placeholders if p.shared]
         for share in shared:
-            print(share.ctype)
             fake_page.invalidate(share.ctype)
 
         # delete content cache, frozen or not

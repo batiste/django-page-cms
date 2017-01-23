@@ -65,10 +65,10 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 _TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.request",
-    "django.core.context_processors.media",
+    "django.template.context_processors.i18n",
+    "django.template.context_processors.debug",
+    "django.template.context_processors.request",
+    "django.template.context_processors.media",
     "pages.context_processors.media",
 )
 

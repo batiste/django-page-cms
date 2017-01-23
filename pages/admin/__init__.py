@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Page Admin module."""
 from pages import settings
-from pages.models import Page, Content, PageAlias
+from pages.models import Page, Content, PageAlias, Media
 from pages.phttp import get_language_from_request, get_template_from_request
 from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
@@ -22,8 +22,16 @@ else:
     from django.views.i18n import null_javascript_catalog as javascript_catalog
 
 
+extra_actions_registery = []
+def add_page_action(action):
+    if action not in extra_actions_registery:
+        extra_actions_registery.append(action)
+
+
 class PageAdmin(admin.ModelAdmin):
     """Page Admin class."""
+
+    actions = extra_actions_registery
 
     # these mandatory fields are not versioned
     mandatory_placeholders = ('title', 'slug')
@@ -65,12 +73,12 @@ class PageAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': [join(settings.PAGES_MEDIA_URL, path) for path in (
+            'all': [join(settings.PAGES_STATIC_URL, path) for path in (
                 'css/rte.css',
                 'css/pages.css'
             )]
         }
-        js = [join(settings.PAGES_MEDIA_URL, path) for path in (
+        js = [join(settings.PAGES_STATIC_URL, path) for path in (
             'javascript/jquery.js',
             'javascript/jquery.rte.js',
             'javascript/pages.js',
@@ -79,11 +87,6 @@ class PageAdmin(admin.ModelAdmin):
             'javascript/jquery.query-2.1.7.js',
             'javascript/iframeResizer.min.js',
         )]
-
-    @classmethod
-    def add_action(cls, method):
-        if method not in cls.actions:
-            cls.actions.append(method)
 
     def get_urls(self):
         urls = super(PageAdmin, self).get_urls()
@@ -109,6 +112,8 @@ class PageAdmin(admin.ModelAdmin):
                 views.move_page, name='page-move-page'),
             url(r'^(?P<page_id>[0-9]+)/change-status/$',
                 views.change_status, name='page-change-status'),
+            url(r'^(?P<media_id>[0-9]+)/media-url/$',
+                views.get_media_url, name='get-media-url'),
         ]
 
         return pages_urls + urls
@@ -355,20 +360,28 @@ try:
 except AlreadyRegistered:
     pass
 
-
 class ContentAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'language', 'page')
     list_filter = ('page',)
     search_fields = ('body',)
 
-#admin.site.register(Content, ContentAdmin)
-
 
 class AliasAdmin(admin.ModelAdmin):
     list_display = ('page', 'url',)
     list_editable = ('url',)
+    raw_id_fields = ['page']
 
 try:
     admin.site.register(PageAlias, AliasAdmin)
+except AlreadyRegistered:
+    pass
+
+
+class MediaAdmin(admin.ModelAdmin):
+    list_display = ('image', 'title', 'creation_date', 'description', 'extension')
+    list_display_links = ('image', 'title', )
+
+try:
+    admin.site.register(Media, MediaAdmin)
 except AlreadyRegistered:
     pass

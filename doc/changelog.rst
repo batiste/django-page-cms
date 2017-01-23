@@ -4,6 +4,24 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.13
+================
+
+Released the 23rd of January 2017.
+
+    * Added a Media model for the new media library
+    * Added a way to insert images from the media library into the basic Rich Text Editor
+    * File placeholders now create a new media for each user upload
+
+
+Release 1.9.12
+================
+
+Released the 5th of January 2017.
+
+    * Improve the frontend edit mode with an edit bar on the top left of the page so you can disable
+      the edit mode if necessary.
+
 
 Release 1.9.11
 ================

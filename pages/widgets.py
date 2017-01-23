@@ -2,7 +2,7 @@
 """Django CMS come with a set of ready to use widgets that you can enable
 in the admin via a placeholder tag in your template."""
 
-from pages.settings import PAGES_MEDIA_URL
+from pages.settings import PAGES_MEDIA_URL, PAGES_STATIC_URL
 from pages.settings import PAGE_LANGUAGES
 from pages.models import Page
 from pages.widgets_registry import register_widget
@@ -28,12 +28,12 @@ register_widget(AdminTextareaWidget)
 class RichTextarea(Textarea):
     """A RichTextarea widget."""
     class Media:
-        js = [join(PAGES_MEDIA_URL, path) for path in (
+        js = [join(PAGES_STATIC_URL, path) for path in (
             'javascript/jquery.js',
             'javascript/jquery.rte.js'
         )]
         css = {
-            'all': [join(PAGES_MEDIA_URL, path) for path in (
+            'all': [join(PAGES_STATIC_URL, path) for path in (
                 'css/rte.css',
                 'css/font-awesome.min.css'
             )]
@@ -48,7 +48,7 @@ class RichTextarea(Textarea):
         rendered = super(RichTextarea, self).render(name, value, attrs)
         context = {
             'name': name,
-            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
+            'PAGES_STATIC_URL': PAGES_STATIC_URL,
         }
         return rendered + mark_safe(render_to_string(
             'pages/widgets/richtextarea.html', context))

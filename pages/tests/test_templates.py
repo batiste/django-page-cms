@@ -354,7 +354,7 @@ class TemplateTestCase(TestCase):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         fakefile = SimpleUploadedFile(name=u"some {}[]@$%*()+myfile.pdf", content=six.b('bytes'))
-        filename = get_filename(page, placeholder, fakefile)
+        filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertTrue('some-myfile.pdf' in filename)
         self.assertTrue("page_%d" % page.id in filename)
         self.assertTrue(placeholder.name in filename)
@@ -363,7 +363,7 @@ class TemplateTestCase(TestCase):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
         fakefile = SimpleUploadedFile(name=u"hello<script>world", content=six.b('bytes'))
-        filename = get_filename(page, placeholder, fakefile)
+        filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertNotIn('<', filename)
 
     def test_json_placeholder(self):

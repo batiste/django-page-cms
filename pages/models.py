@@ -5,6 +5,7 @@ from pages.utils import get_placeholders, normalize_url, get_now
 from pages.managers import PageManager, ContentManager
 from pages.managers import PageAliasManager
 from pages import settings
+from pages.utils import slugify
 # checks
 from pages import checks
 
@@ -19,6 +20,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from mptt.models import MPTTModel
 import uuid
+import os
 
 PAGE_CONTENT_DICT_KEY = ContentManager.PAGE_CONTENT_DICT_KEY
 
@@ -549,3 +551,62 @@ class PageAlias(models.Model):
 
     def __str__(self):
         return "{0} :: {1}".format(self.url, self.page.get_complete_slug())
+
+
+def media_filename(instance, filename):
+    avoid_collision = uuid.uuid4().hex[:8]
+    name_parts = filename.split('.')
+    if len(name_parts) > 1:
+        name = slugify('.'.join(name_parts[:-1]), allow_unicode=True)
+        ext = slugify(name_parts[-1])
+        name = name + '.' + ext
+    else:
+        name = slugify(data.name)
+    filename = os.path.join(
+        settings.PAGE_UPLOAD_ROOT,
+        'medias',
+        name
+    )
+    return filename
+
+
+@python_2_unicode_compatible
+class Media(models.Model):
+    """Media model :class:`Media <pages.models.Media>`"""
+    title = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    url = models.FileField(upload_to=media_filename)
+    extension = models.CharField(max_length=32, blank=True, editable=False)
+    creation_date = models.DateTimeField(_('creation date'), editable=False,
+            default=get_now)
+
+    def image(self):
+        if self.extension in ['png', 'jpg', 'jpeg']:
+            return u'<img width="60" src="%s" />' % os.path.join(
+                settings.PAGES_MEDIA_URL, self.url.name)
+        if self.extension == 'pdf':
+            return u'<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
+        if self.extension in ['doc', 'docx']:
+            return u'<i class="fa fa-file-word-o" aria-hidden="true"></i>'
+        if self.extension in ['zip', 'gzip', 'rar']:
+            return u'<i class="fa fa-file-archive-o" aria-hidden="true"></i>    '
+        return u'<i class="fa fa-file-o" aria-hidden="true"></i>'
+    image.short_description = _('Thumbnail')
+    image.allow_tags = True
+
+    class Meta:
+        verbose_name_plural = _('Medias')
+
+    def save(self, *args, **kwargs):
+        parts = self.url.name.split('.')
+        if len(parts) > 1:
+            self.extension = parts[-1].lower()
+        if not self.title:
+            parts = self.url.name.split('/')
+            self.title = parts[-1]
+
+        super(Media, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.url.name
+

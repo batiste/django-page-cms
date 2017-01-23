@@ -28,6 +28,12 @@ django-page-cms
 
 This Django CMS enables you to create and administrate hierarchical pages in a simple and powerful way.
 
+For a quick demo.
+
+  $ pip install django-page-cms[full]; gerbi --create mywebsite
+
+More informations
+
   * `Install <http://django-page-cms.readthedocs.io/en/latest/installation.html>`_
   * `Full documentation <http://django-page-cms.readthedocs.io/en/latest/>`_
   * `How to contribute <doc/contributions.rst>`_

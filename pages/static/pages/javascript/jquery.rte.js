@@ -7,7 +7,9 @@
 
 // define the rte light plugin
 $(function () {
-jQuery.fn.rte = function(css_url, media_url) {
+
+
+jQuery.fn.rte = function(static_url) {
 
     if(document.designMode || document.contentEditable) {
         $(this).each( function(){
@@ -20,7 +22,7 @@ jQuery.fn.rte = function(css_url, media_url) {
         iframe.contentWindow.focus();
         try{
             iframe.contentWindow.document.execCommand(command, false, option);
-        }catch(e){console.log(e);}
+        } catch(e){console.log(e);}
         iframe.contentWindow.focus();
     }
 
@@ -65,14 +67,16 @@ jQuery.fn.rte = function(css_url, media_url) {
             iframe.title = textarea.attr('name');
         textarea.after(iframe);
         var css = "";
-        if(css_url) {
-            css = "<link type='text/css' rel='stylesheet' href='"+css_url+"' />";
-        }
+        css = "<link type='text/css' rel='stylesheet' href='"+static_url+"css/font-awesome.min.css' />";
+        css = css + "<link type='text/css' rel='stylesheet' href='"+static_url+"css/rte.css' />";
         var content = textarea.val();
         // Mozilla need this to display caret
         if($.trim(content)==='')
             content = '<br>';
-        var doc = "<html><head>"+css+"</head><body class='frameBody'>"+content+"</body></html>";
+        var scripts = "<script src='"+static_url+"javascript/jquery.js'></script><script src='" + 
+            static_url+"javascript/iframe.rte.js'></script>";
+
+        var doc = "<html><head>"+css+scripts+"</head><body id='frameBody'>"+content+"</body></html>";
         tryEnableDesignMode(iframe, doc, function() {
             $("#toolbar-"+iframe.title).remove();
             $(iframe).before(toolbar(iframe));
@@ -81,7 +85,10 @@ jQuery.fn.rte = function(css_url, media_url) {
     }
 
     function disableDesignMode(iframe, submit) {
-        var content = iframe.contentWindow.document.getElementsByTagName("body")[0].innerHTML;
+        var attr = $(iframe.contentWindow.document.getElementById("attributes"));
+        attr.remove();
+        var content = iframe.contentWindow.document.getElementById("frameBody").innerHTML;
+        
         var textarea;
         if(submit === true) {
             textarea = $('<input type="hidden" />');
@@ -120,9 +127,11 @@ jQuery.fn.rte = function(css_url, media_url) {
             <p>\
                 <a href='#' class='unorderedlist'><i class='fa fa-list-ul' aria-hidden='true'></i></a>\
                 <a href='#' class='link'><i class='fa fa-link' aria-hidden='true'></i></a>\
-                <a href='#' class='image'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
-                <a href='#' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
+                <a href='#' title='insert image from the media library' class='image-lookup'><i class='fa fa-file-image-o' aria-hidden='true'></i></a>\
+                <a href='#' title='insert external image' class='image'><i class='fa fa-external-link-square' aria-hidden='true'></i></a>\
+                <a href='#' title='disable edit' class='disable'><i class='fa fa-code' aria-hidden='true'></i></a>\
             </p></div></div>");
+
         $('select', tb).change(function(){
             var index = this.selectedIndex;
             if( index!=0 ) {
@@ -141,13 +150,61 @@ jQuery.fn.rte = function(css_url, media_url) {
                 formatText(iframe, 'CreateLink', p);
             return false; 
         });
-        
+
         $('.image', tb).click(function() {
-            var p=prompt("image URL:");
+            var p = prompt("image URL:");
             if(p)
                 formatText(iframe, 'InsertImage', p);
             return false; 
         });
+
+        var oldDismissRelatedLookupPopup = window.dismissRelatedLookupPopup;
+        var oldDismissAddRelatedObjectPopup = window.dismissAddRelatedObjectPopup;
+
+        function insertHTML(url) {
+          var id = "rand" + Math.random();
+          var doc = iframe.contentWindow.document;
+          if(url.match(/(jpeg|jpg|png)$/)) {
+            html = "<img width='200' src='" + url + "' id=" + id + ">";
+          } else {
+            html = "<a href='" + url + "' id=" + id + ">"+url+"</a>";
+          }
+          
+          if(document.all) {
+            var range = doc.selection.createRange();
+            range.pasteHTML(html);
+            range.collapse(false);
+            range.select();
+          } else {
+            doc.execCommand("insertHTML", false, html);
+          }
+          return doc.getElementById(id);
+        };
+
+        function dismissRelatedLookupPopup(win, chosenId) {
+            $.get('/admin/pages/page/' + chosenId + '/media-url/', function(response) {
+                insertHTML(response);
+            });
+            win.close();
+            window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;
+            window.dismissAddRelatedObjectPopup = oldDismissAddRelatedObjectPopup;
+        }
+
+        function showMediaAdminPopup() {
+            var name = 'mediaWindowSelect';
+            var href = '/admin/pages/media/?_to_field=id&_popup=1';
+            window.dismissRelatedLookupPopup = dismissRelatedLookupPopup;
+            window.dismissAddRelatedObjectPopup = dismissRelatedLookupPopup;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+            win.focus();
+            return false;
+        }
+
+         $('.image-lookup', tb).click(function(e) {
+             e.preventDefault();
+             showMediaAdminPopup();
+             return false;
+         });
         
         $('.disable', tb).click(function() {
             var txt = disableDesignMode(iframe);
@@ -174,8 +231,11 @@ jQuery.fn.rte = function(css_url, media_url) {
         iframeDoc.keyup(function() {
             setSelectedType(getSelectionElement(iframe), select);
             var body = $('body', iframeDoc);
-            if(body.scrollTop()>0)
-                iframe.height = Math.min(350, parseInt(iframe.height)+body.scrollTop());
+            var bodyHeight = $(iframeDoc[0].body).height();
+            if(body.scrollTop() > 0) {
+                var new_height = Math.min(400, Math.max(200, bodyHeight+16));
+                $(iframe).css('min-height', new_height);
+            }
             return true;
         });
         

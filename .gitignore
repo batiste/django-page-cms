@@ -3,6 +3,7 @@ tagging/
 build/
 coverage/
 dist/
+whoosh_index/
 example/media/
 example/collect-static/
 django_page_cms.egg-info/

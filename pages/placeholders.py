@@ -1,7 +1,7 @@
 """Placeholder module, that's where the smart things happen."""
 from pages.widgets_registry import get_widget
 from pages import settings
-from pages.models import Content
+from pages.models import Content, Media
 from pages.widgets import ImageInput, FileInput
 from pages.utils import slugify
 
@@ -24,6 +24,7 @@ import os
 import time
 import six
 import copy
+import uuid
 
 logging.basicConfig()
 logger = logging.getLogger("pages")
@@ -307,10 +308,14 @@ class PlaceholderNode(template.Node):
         return "<Placeholder Node: %s>" % self.name
 
 
-def get_filename(page, placeholder, data):
+def get_filename(page, content_type, data):
     """
-    Generate a stable filename using the orinal filename.
+    Generate a stable filename using the original filename of the type.
+
+
     """
+    avoid_collision = uuid.uuid4().hex[:8]
+
     name_parts = data.name.split('.')
     if len(name_parts) > 1:
         name = slugify('.'.join(name_parts[:-1]), allow_unicode=True)
@@ -321,7 +326,7 @@ def get_filename(page, placeholder, data):
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'page_' + str(page.id),
-        placeholder.ctype + '-' + str(time.time()) + '-' + name
+        content_type + '-' + avoid_collision + '-' + name
     )
     return filename
 
@@ -369,8 +374,10 @@ class FilePlaceholderNode(PlaceholderNode):
             if not isinstance(data, UploadedFile):
                 return
 
-            filename = get_filename(page, self, data)
+            filename = get_filename(page, self.ctype, data)
             filename = default_storage.save(filename, data)
+            media = Media(url=filename)
+            media.save()
             return super(FilePlaceholderNode, self).save(
                 page,
                 language,

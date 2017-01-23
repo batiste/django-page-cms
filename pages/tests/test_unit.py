@@ -369,7 +369,7 @@ class UnitTestCase(TestCase):
         req = get_request_mock()
         page1 = self.new_page(content={'slug': 'page1', 'title': 'hello', 'status': 'published'})
         page1.save()
-        self.set_setting("PAGES_MEDIA_URL", "test_request_context")
+        self.set_setting("PAGES_STATIC_URL", "test_request_context")
         self.assertContains(details(req, path='/'), "test_request_context")
 
     @override_settings(PAGE_TAGGING=True)

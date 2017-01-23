@@ -32,6 +32,7 @@ Features
     (content area) in admin by adding placeholders tags into page templates.
   * Django admin application integration.
   * Multilingual support.
+  * Inline editing.
   * Media Library.
   * Revisions.
   * Plugin for page content export and import in JSON files within the admin interface

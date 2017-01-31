@@ -49,6 +49,7 @@ class RichTextarea(Textarea):
         context = {
             'name': name,
             'PAGES_STATIC_URL': PAGES_STATIC_URL,
+            'PAGES_MEDIA_URL': PAGES_MEDIA_URL,
         }
         return rendered + mark_safe(render_to_string(
             'pages/widgets/richtextarea.html', context))
@@ -56,6 +57,52 @@ class RichTextarea(Textarea):
 
 register_widget(RichTextarea)
 
+
+insert_image_link = '''
+<br>
+<button title='insert image from the media library' class='image-lookup-{name}'>
+    From media library
+</button>
+<input name="{name}-selected" id="{name}-selected" type="hidden">
+<span id="{name}-selected-value">
+</span>
+
+<br><label for="{name}-delete">
+<input name="{name}-delete" style="display:inline-block" id="{name}-delete" type="checkbox" value="true"> {del_msg}
+</label>
+<br style="clear:both">
+
+
+<script>
+$(function(){{
+    function dismissRelatedLookupPopup(win, chosenId) {{
+        $.get('/admin/pages/page/' + chosenId + '/media-url/', function(response) {{
+            console.log(response);
+            $('#{name}-selected').val(response);
+            $('#{name}-selected-value').text(response);
+        }});
+        win.close();
+        window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;
+        window.dismissAddRelatedObjectPopup = oldDismissAddRelatedObjectPopup;
+    }}
+    function showMediaAdminPopup() {{
+        var name = 'mediaWindowSelect';
+        var href = '/admin/pages/media/?_to_field=id&_popup=1';
+        window.dismissRelatedLookupPopup = dismissRelatedLookupPopup;
+        window.dismissAddRelatedObjectPopup = dismissRelatedLookupPopup;
+        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }}
+    $('.image-lookup-{name}').click(function(e) {{
+        e.preventDefault();
+        showMediaAdminPopup();
+        return false;
+    }});
+}});
+
+</script>
+'''
 
 class FileInput(DFileInput):
 
@@ -71,15 +118,16 @@ class FileInput(DFileInput):
         if not self.page:
             field_content = self.please_save_msg
         else:
-            field_content = ''
+            field_content = '<div style="padding-left:170px">'
             if value:
                 field_content += _('Current file: %s<br/>') % value
+                field_content += '<hr>'
             field_content += super(FileInput, self).render(name, attrs)
-            if value:
-                field_content += '''<br><label for="%s-delete">%s</label>
-                    <input name="%s-delete" id="%s-delete"
-                    type="checkbox" value="true">
-                    ''' % (name, self.delete_msg, name, name)
+            field_content += insert_image_link.format(
+                name=name, 
+                del_msg=self.delete_msg,
+                value=value)
+            field_content += '</div>'
         return mark_safe(field_content)
 register_widget(FileInput)
 

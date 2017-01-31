@@ -9,7 +9,7 @@
 $(function () {
 
 
-jQuery.fn.rte = function(static_url) {
+jQuery.fn.rte = function(static_url, media_url) {
 
     if(document.designMode || document.contentEditable) {
         $(this).each( function(){
@@ -183,7 +183,7 @@ jQuery.fn.rte = function(static_url) {
 
         function dismissRelatedLookupPopup(win, chosenId) {
             $.get('/admin/pages/page/' + chosenId + '/media-url/', function(response) {
-                insertHTML(response);
+                insertHTML(media_url + response);
             });
             win.close();
             window.dismissRelatedLookupPopup = oldDismissRelatedLookupPopup;

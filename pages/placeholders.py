@@ -367,6 +367,14 @@ class FilePlaceholderNode(PlaceholderNode):
                 change
             )
             return
+        if extra_data and 'selected' in extra_data and extra_data['selected']:
+            return super(FilePlaceholderNode, self).save(
+                page,
+                language,
+                extra_data['selected'],
+                change
+            )
+            return
 
         filename = ''
         if change and data:

@@ -232,4 +232,4 @@ import os
 def get_media_url(request, media_id):
     """Get media URL."""
     media = Media.objects.get(id=media_id)
-    return HttpResponse(os.path.join(settings.PAGES_MEDIA_URL, media.url.name))
+    return HttpResponse(media.url.name)

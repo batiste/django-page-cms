@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-16 15:53+0200\n"
+"POT-Creation-Date: 2017-02-19 23:52+0300\n"
 "PO-Revision-Date: 2015-07-29 14:19+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
 "Language-Team: Slovak (http://www.transifex.com/projects/p/django-page-cms-1/"
@@ -18,47 +18,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: admin/__init__.py:64
+#: admin/__init__.py:68
 msgid "General"
 msgstr "Všeobecné"
 
-#: admin/__init__.py:193
+#: admin/__init__.py:203
 msgid "Content"
 msgstr "Obsah"
 
-#: admin/__init__.py:234
+#: admin/__init__.py:244
 msgid "Default template"
 msgstr "Štandardná šablóna"
 
-#: admin/forms.py:37
+#: admin/forms.py:16
 msgid "Another page with this slug already exists"
 msgstr "Už existuje iná stránka s touto skratkou"
 
-#: admin/forms.py:38
+#: admin/forms.py:17
 msgid "A sibling with this slug already exists at the targeted position"
 msgstr "Už existuje susedná stránka s takouto skratkou na cieľovej pozícii"
 
-#: admin/forms.py:39
+#: admin/forms.py:18
 msgid "A child with this slug already exists at the targeted position"
 msgstr "Už existuje podstránka s takouto skratkou na cieľovej pozícii"
 
-#: admin/forms.py:40
+#: admin/forms.py:19
 msgid "A sibling with this slug already exists"
 msgstr "Už existuje susedná stránka s takouto skratkou"
 
-#: admin/forms.py:41
+#: admin/forms.py:20
 msgid "A sibling with this slug already exists at the root level"
 msgstr "Už existuje susedná stránka s takouto skratkou na najvyššej úrovni"
 
-#: admin/forms.py:45
+#: admin/forms.py:85
 msgid "Title"
 msgstr "Titulok"
 
-#: admin/forms.py:49
+#: admin/forms.py:89
 msgid "Slug"
 msgstr "Skratka"
 
-#: admin/forms.py:51
+#: admin/forms.py:91
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
@@ -66,57 +66,57 @@ msgstr ""
 "Táto skratka sa použije na vytvorenie URL stránky, musí byť unikátna medzi "
 "stránkami na rovnakej úrovni."
 
-#: admin/forms.py:55
+#: admin/forms.py:95
 msgid "Language"
 msgstr "Jazyk"
 
-#: admin/forms.py:61
+#: admin/forms.py:101
 msgid "Template"
 msgstr "Šablóna"
 
-#: admin/forms.py:66
+#: admin/forms.py:106
 msgid "Delegate to application"
 msgstr "Delegovať na aplikáciu"
 
-#: admin/forms.py:71
+#: admin/forms.py:111
 msgid "Freeze"
 msgstr "Zmraziť"
 
-#: admin/forms.py:72
+#: admin/forms.py:112
 msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
 msgstr "Nepublikovať žiaden obsah po tomto dátume. Formát je 'Y-m-d H:M:S'"
 
-#: models.py:61 templates/admin/pages/page/menu.html:80
+#: models.py:65 templates/admin/pages/page/menu.html:85
 msgid "Published"
 msgstr "Publikované"
 
-#: models.py:62 templates/admin/pages/page/menu.html:81
-#: templates/admin/pages/page/menu.html:88
+#: models.py:66 templates/admin/pages/page/menu.html:86
+#: templates/admin/pages/page/menu.html:93
 msgid "Hidden"
 msgstr "Skryté"
 
-#: models.py:63 templates/admin/pages/page/menu.html:79
-#: templates/admin/pages/page/menu.html:86
+#: models.py:67 templates/admin/pages/page/menu.html:84
+#: templates/admin/pages/page/menu.html:91
 msgid "Draft"
 msgstr "Koncept"
 
-#: models.py:72 templates/admin/pages/page/change_list_table.html:14
+#: models.py:80 templates/admin/pages/page/change_list_table.html:14
 msgid "author"
 msgstr "autor"
 
-#: models.py:75
+#: models.py:83
 msgid "parent"
 msgstr "rodič"
 
-#: models.py:76 models.py:503
+#: models.py:84 models.py:522 models.py:579
 msgid "creation date"
 msgstr "dátum vytvorenia"
 
-#: models.py:78
+#: models.py:86
 msgid "publication date"
 msgstr "dátum publikácie"
 
-#: models.py:79
+#: models.py:87
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
@@ -125,11 +125,11 @@ msgstr ""
 "            spustená. Status musí byť nastavený na \"Plublikovaný\", aby sa "
 "stránka zobrazila."
 
-#: models.py:81
+#: models.py:89
 msgid "publication end date"
 msgstr "dátum ukončenia publikácie"
 
-#: models.py:82
+#: models.py:90
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
@@ -137,27 +137,27 @@ msgstr ""
 "Zadajte, kedy má stránka expirovať.\n"
 "            Ponechajte prázdne, ak stránka nemá expirovať."
 
-#: models.py:85
+#: models.py:93
 msgid "last modification date"
 msgstr "dátum poslednej modifikácie"
 
-#: models.py:87
+#: models.py:95
 msgid "status"
 msgstr "status"
 
-#: models.py:88 templates/admin/pages/page/change_list_table.html:13
+#: models.py:96 templates/admin/pages/page/change_list_table.html:13
 msgid "template"
 msgstr "šablóna"
 
-#: models.py:91
+#: models.py:99
 msgid "delegate to"
 msgstr "delegovať na"
 
-#: models.py:94
+#: models.py:102
 msgid "freeze date"
 msgstr "dátum zmrazenia"
 
-#: models.py:95
+#: models.py:103
 msgid ""
 "Don't publish any content\n"
 "            after this date."
@@ -165,76 +165,92 @@ msgstr ""
 "Nepublikovať žiaden obsah\n"
 "            po tomto dátume."
 
-#: models.py:101
+#: models.py:109
 msgid "The site(s) the page is accessible at."
 msgstr "Web(y), na ktorej je dostupná stránka."
 
-#: models.py:102
+#: models.py:110
 msgid "sites"
 msgstr "weby"
 
-#: models.py:119 models.py:501 models.py:519
+#: models.py:112
+msgid "redirect to url"
+msgstr ""
+
+#: models.py:115
+msgid "redirect to"
+msgstr ""
+
+#: models.py:127 models.py:519 models.py:539
 msgid "page"
 msgstr "stránka"
 
-#: models.py:120
+#: models.py:128
 msgid "pages"
 msgstr "stránky"
 
-#: models.py:497
+#: models.py:514
 msgid "language"
 msgstr "jazyk"
 
-#: models.py:498
+#: models.py:515
 msgid "body"
 msgstr "telo"
 
-#: models.py:499
+#: models.py:517
 msgid "type"
 msgstr "typ"
 
-#: models.py:509
+#: models.py:528
 msgid "content"
 msgstr "obsah"
 
-#: models.py:510
+#: models.py:529
 msgid "contents"
 msgstr "obsahové časti"
 
-#: models.py:524
+#: models.py:544
 msgid "Aliases"
 msgstr "Aliasy"
 
-#: placeholders.py:30
+#: models.py:593
+msgid "Thumbnail"
+msgstr ""
+
+#: models.py:597
+msgid "Medias"
+msgstr ""
+
+#: placeholders.py:32
 #, python-format
 msgid "[Placeholder %(name)s had syntax error: %(error)s]"
 msgstr "[Placeholder %(name)s obsahuje syntaktickú chybu: %(error)s]"
 
-#: placeholders.py:148
+#: placeholders.py:167
 msgid "Note: This field is evaluated as template code."
 msgstr "Pozor: Toto pole je interpretované ako kód šablóny."
 
-#: placeholders.py:341
+#: placeholders.py:418
 msgid "Your email"
 msgstr "Váš email"
 
-#: placeholders.py:342
+#: placeholders.py:420
 msgid "Subject"
 msgstr "Predmet"
 
-#: placeholders.py:345
+#: placeholders.py:422
 msgid "Your message"
 msgstr "Vaša správa"
 
-#: placeholders.py:364
+#: placeholders.py:441
 msgid "Your email has been sent. Thank you."
 msgstr "Váš email bol odoslaný. Ďakujeme."
 
-#: placeholders.py:366
+#: placeholders.py:443
 msgid "An error as occured: your email has not been sent."
 msgstr "Nastala chyba: Váš email nebol odoslaný."
 
-#: plugins/jsonexport/actions.py:21
+#: plugins/jsonexport/actions.py:20
 msgid "Export pages as JSON"
 msgstr ""
 
@@ -247,21 +263,21 @@ msgstr ""
 msgid "Site with id/domain = '%s' not found"
 msgstr ""
 
-#: plugins/jsonexport/management/commands/pages_import_json.py:27
+#: plugins/jsonexport/management/commands/pages_import_json.py:28
 #, python-format
 msgid "User with username/id/email = '%s' not found"
 msgstr ""
 
-#: plugins/jsonexport/management/commands/pages_import_json.py:35
+#: plugins/jsonexport/management/commands/pages_import_json.py:36
 msgid "Errors encountered while importing JSON"
 msgstr ""
 
-#: plugins/jsonexport/management/commands/pages_import_json.py:37
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
 #, python-format
 msgid "%s created."
 msgstr ""
 
-#: plugins/jsonexport/management/commands/pages_import_json.py:37
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
 #, python-format
 msgid "%s modified."
 msgstr ""
@@ -298,54 +314,54 @@ msgstr ""
 msgid "Return to page list"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:123
+#: plugins/jsonexport/utils.py:126
 #, python-format
 msgid "Could not find page for redirect-to field '%s'"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:154
+#: plugins/jsonexport/utils.py:157
 #, python-format
 msgid "Language '%s' not imported"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:192
+#: plugins/jsonexport/utils.py:186
 #, python-format
 msgid "Original author '%s' not found"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:219
+#: plugins/jsonexport/utils.py:224
 #, python-format
 msgid "Could not add site '%s' to page"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:274 plugins/jsonexport/utils.py:396
+#: plugins/jsonexport/utils.py:280
 #, python-format
 msgid "JSON file is invalid: %s"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:311 plugins/jsonexport/utils.py:433
+#: plugins/jsonexport/utils.py:317
 #, python-format
 msgid "Unsupported file version: %s"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:339 plugins/jsonexport/utils.py:461
+#: plugins/jsonexport/utils.py:345
 #, python-format
 msgid "%s has no common language with this site"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:344 plugins/jsonexport/utils.py:466
+#: plugins/jsonexport/utils.py:350
 #, python-format
 msgid ""
 "%s did not include its parent page and a matching one was not found on this "
 "site"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:348 plugins/jsonexport/utils.py:470
+#: plugins/jsonexport/utils.py:354
 #, python-format
 msgid "%s uses a template not found on this site: %s"
 msgstr ""
 
-#: plugins/jsonexport/utils.py:354 plugins/jsonexport/utils.py:476
+#: plugins/jsonexport/utils.py:360
 #, python-format
 msgid "%s template contents are different than our template: %s"
 msgstr ""
@@ -354,26 +370,25 @@ msgstr ""
 msgid "Edit"
 msgstr "Upraviť"
 
-#: templates/admin/pages/page/change_form.html:17
-#: templates/admin/pages/page/change_form.html:26
-msgid "View on site"
-msgstr "Pozrieť na stránke"
-
-#: templates/admin/pages/page/change_form.html:25
+#: templates/admin/pages/page/change_form.html:19
 msgid "History"
 msgstr ""
 
-#: templates/admin/pages/page/change_list.html:16
+#: templates/admin/pages/page/change_form.html:20
+msgid "View on site"
+msgstr "Pozrieť na stránke"
+
+#: templates/admin/pages/page/change_list.html:18
 #: templates/pages/examples/index.html:74
 msgid "Search"
 msgstr "Hľadať"
 
-#: templates/admin/pages/page/change_list.html:18
+#: templates/admin/pages/page/change_list.html:20
 msgid "Go"
 msgstr "Prejsť"
 
 #: templates/admin/pages/page/change_list_table.html:9
-#: testproj/documents/models.py:9
+#: testproj/documents/models.py:10
 msgid "title"
 msgstr "titulok"
 
@@ -389,71 +404,66 @@ msgstr "naposledy modifikované"
 msgid "published"
 msgstr "publikované"
 
-#: templates/admin/pages/page/change_list_table.html:26
-#: templates/admin/pages/page/menu.html:29
-msgid "move this page"
-msgstr "presunúť stránku"
-
-#: templates/admin/pages/page/change_list_table.html:27
-#: templates/admin/pages/page/menu.html:41
-msgid "insert above"
-msgstr "vložiť nad"
-
-#: templates/admin/pages/page/change_list_table.html:28
-#: templates/admin/pages/page/menu.html:42
-msgid "insert below"
-msgstr "vložiť pod"
-
-#: templates/admin/pages/page/change_list_table.html:29
-#: templates/admin/pages/page/menu.html:43
-msgid "insert as child"
-msgstr "vložiť ako potomka"
-
-#: templates/admin/pages/page/change_list_table.html:30
-#: templates/admin/pages/page/menu.html:36
-#: templates/admin/pages/page/menu.html:40
-msgid "cancel"
-msgstr "zrušiť"
-
-#: templates/admin/pages/page/menu.html:20
+#: templates/admin/pages/page/menu.html:25
 msgid "undefined"
 msgstr ""
 
-#: templates/admin/pages/page/menu.html:28
+#: templates/admin/pages/page/menu.html:33
 msgid "view this page"
 msgstr "zobraziť stránku"
 
-#: templates/admin/pages/page/menu.html:30
+#: templates/admin/pages/page/menu.html:34
+msgid "move this page"
+msgstr "presunúť stránku"
+
+#: templates/admin/pages/page/menu.html:35
 msgid "insert a new page here"
 msgstr "vložiť novú stránku tu"
 
-#: templates/admin/pages/page/menu.html:32
+#: templates/admin/pages/page/menu.html:37
 msgid "delete this page"
 msgstr "vymazať túto stránku"
 
-#: templates/admin/pages/page/menu.html:36
+#: templates/admin/pages/page/menu.html:41
 msgid "don&#x27;t move this page"
 msgstr "nepresúvať túto stránku"
 
-#: templates/admin/pages/page/menu.html:40
+#: templates/admin/pages/page/menu.html:41
+#: templates/admin/pages/page/menu.html:45
+msgid "cancel"
+msgstr "zrušiť"
+
+#: templates/admin/pages/page/menu.html:45
 msgid "don&#x27;t insert a new page here"
 msgstr "nevkladať novú stránku tu"
 
-#: templates/admin/pages/page/menu.html:56
+#: templates/admin/pages/page/menu.html:46
+msgid "insert above"
+msgstr "vložiť nad"
+
+#: templates/admin/pages/page/menu.html:47
+msgid "insert below"
+msgstr "vložiť pod"
+
+#: templates/admin/pages/page/menu.html:48
+msgid "insert as child"
+msgstr "vložiť ako potomka"
+
+#: templates/admin/pages/page/menu.html:61
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "upraviť %(lang)s preklad"
 
-#: templates/admin/pages/page/menu.html:59
+#: templates/admin/pages/page/menu.html:64
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "vytvoriť %(lang)s preklad"
 
-#: templates/admin/pages/page/menu.html:66 templates/pages/revisions.html:6
+#: templates/admin/pages/page/menu.html:71 templates/pages/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr "j. N Y, H:i"
 
-#: templates/admin/pages/page/menu.html:87
+#: templates/admin/pages/page/menu.html:92
 msgid "In navigation"
 msgstr "V navigácii"
 
@@ -473,71 +483,71 @@ msgstr "Požadovaný jazyk nebol ešte preložený."
 msgid "Delete this translation"
 msgstr "Zmazať tento preklad"
 
-#: testproj/documents/models.py:10
+#: testproj/documents/models.py:11
 msgid "text"
 msgstr ""
 
-#: testproj/test_settings.py:118
+#: testproj/test_settings.py:119
 msgid "German"
 msgstr ""
 
-#: testproj/test_settings.py:119
+#: testproj/test_settings.py:120
 msgid "Swiss french"
 msgstr ""
 
-#: testproj/test_settings.py:120
+#: testproj/test_settings.py:121
 msgid "US English"
 msgstr ""
 
-#: testproj/test_settings.py:127
+#: testproj/test_settings.py:128
 msgid "French"
 msgstr ""
 
-#: testproj/test_settings.py:128
+#: testproj/test_settings.py:129
 msgid "Belgium french"
 msgstr ""
 
-#: testproj/test_settings.py:129
+#: testproj/test_settings.py:130
 msgid "Italian"
 msgstr ""
 
-#: urlconf_registry.py:35
+#: urlconf_registry.py:36
 #, python-format
 msgid "The urlconf %s has already been registered."
 msgstr ""
 
-#: urlconf_registry.py:45
+#: urlconf_registry.py:46
 #, python-format
 msgid "The urlconf %s has not been registered."
 msgstr ""
 
-#: widgets.py:69
-msgid "Please save the page to show the image field"
-msgstr "Uložte prosím stránku pre zobrazenie poľa s obrázkom"
+#: widgets.py:114
+msgid "Please save the page to show the file field"
+msgstr "Uložte prosím stránku pre zobrazenie poľa so súborom"
 
-#: widgets.py:73 widgets.py:97
+#: widgets.py:115
+msgid "Delete file"
+msgstr "Zmazať súbor"
+
+#: widgets.py:123
 #, python-format
 msgid "Current file: %s<br/>"
 msgstr "Aktuálny súbor: %s<br />"
 
-#: widgets.py:79
+#: widgets.py:137
+msgid "Please save the page to show the image field"
+msgstr "Uložte prosím stránku pre zobrazenie poľa s obrázkom"
+
+#: widgets.py:138
 msgid "Delete image"
 msgstr "Zmazať obrázok"
 
-#: widgets.py:93
-msgid "Please save the page to show the file field"
-msgstr "Uložte prosím stránku pre zobrazenie poľa so súborom"
-
-#: widgets.py:103
-msgid "Delete file"
-msgstr "Zmazať súbor"
-
-#: widgets_registry.py:29
+#: widgets_registry.py:30
 #, python-format
 msgid "The widget %s has already been registered."
 msgstr ""
 
-#: widgets_registry.py:41
+#: widgets_registry.py:42
 #, python-format
 msgid "The widget %s has not been registered."
 msgstr ""

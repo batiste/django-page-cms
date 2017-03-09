@@ -222,6 +222,16 @@ class RegressionTestCase(TestCase):
             'fr'
         )
 
+    def test_placeholder_need_iterable_nodelist_attr(self):
+        """Should have a iterable nodelist."""
+        from pages.placeholders import PlaceholderNode
+        page = self.new_page()
+        placeholder = PlaceholderNode('test itrable', page=page)
+        try:
+           _ = (e for e in placeholder.nodelist)
+        except TypeError:
+           assert(False, 'is not iterable')
+
     def test_placeholder_name_space_bug_with_template(self):
         """
         Template space test

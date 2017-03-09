@@ -109,10 +109,10 @@ class Page(MPTTModel):
             help_text=_('The site(s) the page is accessible at.'),
             verbose_name=_('sites'))
 
-    redirect_to_url = models.CharField(max_length=200, null=True, blank=True)
+    redirect_to_url = models.CharField(_('redirect to url'), max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
-        related_name='redirected_pages')
+        related_name='redirected_pages', verbose_name=_('redirect to'))
 
     # Managers
     objects = PageManager()
@@ -608,4 +608,3 @@ class Media(models.Model):
 
     def __str__(self):
         return self.url.name
-

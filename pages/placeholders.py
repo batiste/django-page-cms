@@ -131,7 +131,7 @@ class PlaceholderNode(template.Node):
         self.as_varname = as_varname
         self.section = section
         self.shared = shared
-        self.nodelist = nodelist
+        self.nodelist = nodelist or [] # should be an iterable
 
         self.found_in_block = None
 

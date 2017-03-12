@@ -125,7 +125,7 @@ a.popup:hover .help,
 }
 
 #page-table-dnd {
-    border-collapse: collapse; 
+    border-collapse: collapse;
 }
 
 #page-table-dnd td, #page-table-dnd th {
@@ -496,6 +496,11 @@ html[dir=rtl] .change-form .sidebar {
     float:right;
     margin-left:1em;
     margin-right: 0;
+}
+
+.change-form .placeholder-fileinput {
+  padding-left:170px;
+  display:block;
 }
 
 .change-form .sidebar .revisions {

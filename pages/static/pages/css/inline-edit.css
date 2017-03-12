@@ -16,6 +16,7 @@
   position:absolute;
   background-color:#fff;
   box-shadow: 0 0 10px #9ecaed;
+  padding:10px;
 }
 #edit-overlay form>p {
   display:none;
@@ -31,14 +32,7 @@
   margin:6px;
 }
 #edit-overlay form label {
-  position: absolute;
-  margin-top:-32px;
-  height:26px;
-  padding:4px 8px;
-  background: #fff;
-  border:1px solid #9ecaed;
-  border-bottom:0;
-  box-shadow: -1px -1px 3px #9ecaed;
+
 }
 #post-iframe {
   display:none;

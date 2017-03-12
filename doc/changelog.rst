@@ -4,6 +4,14 @@
 
 This file describe new features and incompatibilites between released version of the CMS.
 
+Release 1.9.17
+================
+
+Released the 9th of March 2017.
+
+    * There was an issue with Django-compressor and placeholders that needed fixing
+      https://github.com/django-compressor/django-compressor/pull/825
+
 
 Release 1.9.15
 ================
@@ -119,7 +127,7 @@ Release 1.9.1
 
 Released the 12th of June 2016.
 
-    * A new keyword section on the placeholer has been added to create groups 
+    * A new keyword section on the placeholer has been added to create groups
       in the admin
     * Language fallback for empty page placeholders in the admin was enabeled
       and causing possible weirdness

@@ -118,16 +118,16 @@ class FileInput(DFileInput):
         if not self.page:
             field_content = self.please_save_msg
         else:
-            field_content = '<div style="padding-left:170px">'
+            field_content = '<span class="placeholder-fileinput">'
             if value:
                 field_content += _('Current file: %s<br/>') % value
                 field_content += '<hr>'
             field_content += super(FileInput, self).render(name, attrs)
             field_content += insert_image_link.format(
-                name=name, 
+                name=name,
                 del_msg=self.delete_msg,
                 value=value)
-            field_content += '</div>'
+            field_content += '</span>'
         return mark_safe(field_content)
 register_widget(FileInput)
 

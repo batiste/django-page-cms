@@ -5,6 +5,14 @@
 This file describe new features and incompatibilites between released version of the CMS.
 
 
+Release 1.9.15
+================
+
+Released the 7th of February 2017.
+
+    * FilePlaceholder can use Media
+
+
 Release 1.9.14
 ================
 

@@ -36,7 +36,7 @@ url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
 install_requires = [
-    'Django>=1.8,<1.11',
+    'Django>=1.8,<2',
     'django-mptt>=0.8.3',
     'django-taggit>=0.18.1',
     'Pillow>=3.2.0',
@@ -108,6 +108,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: JavaScript',
         'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],

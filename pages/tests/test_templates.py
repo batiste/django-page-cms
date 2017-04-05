@@ -10,13 +10,16 @@ import django
 import six
 import datetime
 
-from django.template import Template, Context, TemplateSyntaxError
+from django.template import Context, Template, TemplateSyntaxError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
 
 def render(template, context):
-    return template.render(Context(context))
+    try:
+        return template.render(context)
+    except AttributeError:
+        return template.render(Context(context))
 
 
 class TemplateTestCase(TestCase):

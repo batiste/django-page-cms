@@ -16,7 +16,7 @@
   <button style="float:right" id="undo-edit">Undo</button>
   {% for field in form %}
     <div class="inline-edit-field">
-    <label for="id_{{ field.name }}">field.name</label>
+    <label for="id_{{ field.name }}">{{ field.name }}</label>
     {{ field }}
     </div>
   {% endfor %}

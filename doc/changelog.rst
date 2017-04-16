@@ -2,7 +2,14 @@
  Changelog
 ============
 
-This file describe new features and incompatibilites between released version of the CMS.
+This file describe new features and incompatibilities between released version of the CMS.
+
+Release 1.9.18
+================
+
+Released the 16th of April 2017.
+
+    *
 
 Release 1.9.17
 ================
@@ -18,7 +25,7 @@ Release 1.9.15
 
 Released the 7th of February 2017.
 
-    * FilePlaceholder can use Media
+    * Bugfix for Django 1.11
 
 
 Release 1.9.14

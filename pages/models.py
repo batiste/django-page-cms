@@ -1,5 +1,7 @@
 """Django page CMS ``models``."""
 
+from __future__ import unicode_literals
+
 from pages.cache import cache
 from pages.utils import get_placeholders, normalize_url, get_now
 from pages.managers import PageManager, ContentManager

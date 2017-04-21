@@ -456,7 +456,7 @@ class LoadEditNode(template.Node):
         with context.push():
             context['form'] = form
             context['edit_enabled'] = request.COOKIES.get('enable_edit_mode')
-            content = template.render(context)
+            content = template.render(context.flatten())
 
         return content
 

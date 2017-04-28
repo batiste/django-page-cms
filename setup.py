@@ -85,6 +85,7 @@ setup(
     author_email=pages.__contact__,
     url=pages.__homepage__,
     license=pages.__license__,
+    keywords=pages.__keywords__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
     install_requires=install_requires,

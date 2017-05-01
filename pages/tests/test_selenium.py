@@ -84,6 +84,7 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.click("input[type='submit']")
 
     def tearDown(self):
+        self.browser.close()
         self.browser.quit()
         super(SeleniumTestCase, self).tearDown()
 

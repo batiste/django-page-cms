@@ -159,7 +159,6 @@ TEMPLATES = [
 PAGE_TEMPLATES = (
     ('pages/examples/nice.html', 'nice one'),
     ('pages/examples/cool.html', 'cool one'),
-    ('pages/examples/editor.html', 'raw editor'),
     ('pages/tests/untranslated.html', 'untranslated'),
 )
 

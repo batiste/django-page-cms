@@ -13,6 +13,7 @@ import datetime
 from django.template import Context, Template, TemplateSyntaxError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 def render(template, context):
@@ -453,4 +454,28 @@ class TemplateTestCase(TestCase):
         context = {'current_page': page, 'request': get_request_mock()}
         self.assertTrue("block 1:content;" in render(template, context), render(template, context))
         self.assertTrue("block 2:content;" in render(template, context), render(template, context))
+
+    def test_pages_edit_init(self):
+        """Test initializing page edit"""
+        tpl = "{% load pages_tags %}{% pages_edit_init %}"
+        user = User.objects.create_user(username='user', email='a@example.com', password='secret')
+        request = get_request_mock()
+        request.user = user
+
+        template = self.get_template_from_string(tpl)
+
+        # Test accessing by non-staff user
+        self.assertEqual(render(template, context=Context({'request': request})), '')
+
+        request.user.is_staff = True
+        # Test not using the tag on a cms page
+        self.assertEqual(render(template, context=Context({
+            'request': request, 'template_name': 'foo.html'
+        })), '')
+
+        # Test regular
+        page = self.new_page({'slug': 'page1'})
+        self.assertNotEqual(render(template, context=Context({
+            'request': request, 'template_name': 'pages/examples/cool.html', 'current_page': page
+        })), '')
 

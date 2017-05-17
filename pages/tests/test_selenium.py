@@ -84,7 +84,12 @@ class SeleniumTestCase(TestCase, LiveServerTestCase):
         self.click("input[type='submit']")
 
     def tearDown(self):
-        self.browser.quit()
+        self.browser.close()
+        try:
+            self.browser.quit()
+        except OSError:
+            # http://stackoverflow.com/questions/42705674/python-selenium-phantomjs-quit-error
+            pass
         super(SeleniumTestCase, self).tearDown()
 
     def url_change(self, id):

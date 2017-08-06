@@ -510,8 +510,8 @@ class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,
     for a particular language"""
 
-    # languages could have five characters : Brazilian Portuguese is pt-br
-    language = models.CharField(_('language'), max_length=5, blank=False)
+    # languages could have seven characters : Simplified Chinese is zh-hans
+    language = models.CharField(_('language'), max_length=7, blank=False)
     body = models.TextField(_('body'), blank=True)
     type = models.CharField(
         _('type'), max_length=100, blank=False,

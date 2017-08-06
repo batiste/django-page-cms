@@ -58,7 +58,7 @@ class RichTextarea(Textarea):
 register_widget(RichTextarea)
 
 
-insert_image_link = '''
+insert_image_link = u'''
 <br>
 <button title='insert image from the media library' class='image-lookup-{name}'>
     From media library

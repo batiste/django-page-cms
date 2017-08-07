@@ -1,316 +1,549 @@
-# django-page-cms in Danish.
-# django-page-cms på Dansk.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Michael Lind Mortensen <illio@cs.au.dk>, 2009.
 #
-#, fuzzy
+# Translators:
+# Michael Lind Mortensen <illio@cs.au.dk>, 2009
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-13 02:29+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2017-02-19 23:52+0300\n"
+"PO-Revision-Date: 2015-07-29 14:19+0000\n"
+"Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/django-page-cms-1/"
+"language/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: models.py:40
+#: admin/__init__.py:68
+msgid "General"
+msgstr "Generelt"
+
+#: admin/__init__.py:203
+msgid "Content"
+msgstr "Indhold"
+
+#: admin/__init__.py:244
+msgid "Default template"
+msgstr "Standardskabelon"
+
+#: admin/forms.py:16
+msgid "Another page with this slug already exists"
+msgstr "En anden side med dette slug eksisterer allerede"
+
+#: admin/forms.py:17
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr ""
+
+#: admin/forms.py:18
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Et barn med denne slug eksisterer allerede på den ønskede position"
+
+#: admin/forms.py:19
+msgid "A sibling with this slug already exists"
+msgstr ""
+
+#: admin/forms.py:20
+msgid "A sibling with this slug already exists at the root level"
+msgstr ""
+
+#: admin/forms.py:85
+msgid "Title"
+msgstr "Titel"
+
+#: admin/forms.py:89
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/forms.py:91
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr ""
+"Dette slug vil blive brugt til at skabe em side-url. Den skal være unik i "
+"forhold til de andre sider på samme niveau."
+
+#: admin/forms.py:95
+msgid "Language"
+msgstr "Sprog"
+
+#: admin/forms.py:101
+msgid "Template"
+msgstr "Skabelon"
+
+#: admin/forms.py:106
+msgid "Delegate to application"
+msgstr ""
+
+#: admin/forms.py:111
+msgid "Freeze"
+msgstr ""
+
+#: admin/forms.py:112
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr ""
+
+#: models.py:65 templates/admin/pages/page/menu.html:85
 msgid "Published"
 msgstr "Offentliggjort"
 
-#: models.py:41 templates/admin/pages/page/menu.html:58
+#: models.py:66 templates/admin/pages/page/menu.html:86
+#: templates/admin/pages/page/menu.html:93
 msgid "Hidden"
 msgstr "Skjult"
 
-#: models.py:42 templates/admin/pages/page/menu.html:56
+#: models.py:67 templates/admin/pages/page/menu.html:84
+#: templates/admin/pages/page/menu.html:91
 msgid "Draft"
 msgstr "Kladde"
 
-#: models.py:51 templates/admin/pages/page/change_list_table.html:9
+#: models.py:80 templates/admin/pages/page/change_list_table.html:14
 msgid "author"
 msgstr "forfatter"
 
-#: models.py:53
+#: models.py:83
 msgid "parent"
 msgstr "forældre"
 
-#: models.py:54 models.py:302
+#: models.py:84 models.py:522 models.py:579
 msgid "creation date"
 msgstr "skabelsesdato"
 
-#: models.py:56
+#: models.py:86
 msgid "publication date"
 msgstr "offentliggørelsesdato"
 
-#: models.py:57
+#: models.py:87
 msgid ""
-"When the page should go live.\n"
-"            Status must be \"Published\" for page to go live."
+"When the page should go\n"
+"            live. Status must be \"Published\" for page to go live."
 msgstr ""
-"Hvornår siden skal gøres tilgængelig online.\n"
-"	     Status skal være \"Offentliggjort\" for at en side kan gøres tilgængelig online."
 
-#: models.py:59
+#: models.py:89
 msgid "publication end date"
 msgstr "offentliggørelses-slutdato"
 
-#: models.py:60
+#: models.py:90
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
 msgstr ""
 "Hvornår siden skal udløbe.\n"
-"	     Efterlad tom for at indikere ingen udløb."
+"\t     Efterlad tom for at indikere ingen udløb."
 
-#: models.py:63
+#: models.py:93
 msgid "last modification date"
 msgstr "sidste ændringsdato"
 
-#: models.py:65
+#: models.py:95
 msgid "status"
 msgstr "status"
 
-#: models.py:66 templates/admin/pages/page/change_list_table.html:8
+#: models.py:96 templates/admin/pages/page/change_list_table.html:13
 msgid "template"
 msgstr "skabelon"
 
-#: models.py:71
+#: models.py:99
+msgid "delegate to"
+msgstr ""
+
+#: models.py:102
+msgid "freeze date"
+msgstr ""
+
+#: models.py:103
+msgid ""
+"Don't publish any content\n"
+"            after this date."
+msgstr ""
+
+#: models.py:109
 msgid "The site(s) the page is accessible at."
 msgstr "Websiderne siden er tilgængelig hos."
 
-#: models.py:72
+#: models.py:110
 msgid "sites"
 msgstr "websider"
 
-#: models.py:86 models.py:279 models.py:300 admin/__init__.py:354
+#: models.py:112
+msgid "redirect to url"
+msgstr ""
+
+#: models.py:115
+msgid "redirect to"
+msgstr ""
+
+#: models.py:127 models.py:519 models.py:539
 msgid "page"
 msgstr "side"
 
-#: models.py:87
+#: models.py:128
 msgid "pages"
 msgstr "sider"
 
-#: models.py:274
-msgid "All"
-msgstr "Alle"
-
-#: models.py:275
-msgid "This page only"
-msgstr "Kun denne side"
-
-#: models.py:276
-msgid "This page and all children"
-msgstr "Denne side og alle dets børn"
-
-#: models.py:280
-msgid "user"
-msgstr "bruger"
-
-#: models.py:281 models.py:299
-msgid "type"
-msgstr "type"
-
-#: models.py:286
-msgid "page permission"
-msgstr "siderettighed"
-
-#: models.py:287
-msgid "page permissions"
-msgstr "siderettigheder"
-
-#: models.py:297
+#: models.py:514
 msgid "language"
 msgstr "sprog"
 
-#: models.py:298
+#: models.py:515
 msgid "body"
 msgstr "krop"
 
-#: models.py:308
+#: models.py:517
+msgid "type"
+msgstr "type"
+
+#: models.py:528
 msgid "content"
 msgstr "indhold"
 
-#: models.py:309
+#: models.py:529
 msgid "contents"
 msgstr "indholdet"
 
-#: admin/__init__.py:54
-msgid "General"
-msgstr "Generelt"
+#: models.py:544
+msgid "Aliases"
+msgstr ""
 
-#: admin/__init__.py:58
-msgid "Options"
-msgstr "Indstillinger"
+#: models.py:593
+msgid "Thumbnail"
+msgstr ""
 
-#: admin/__init__.py:194
-msgid "Content"
-msgstr "Indhold"
+#: models.py:597
+msgid "Medias"
+msgstr ""
 
-#: admin/__init__.py:206
-msgid "Create a new linked "
-msgstr "Skab en ny forbundet."
+#: placeholders.py:32
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Placeholder %(name)s har syntaksfejl: %(error)s]"
 
-#: admin/__init__.py:248 admin/forms.py:17
-msgid "Slug"
-msgstr "Slug"
-
-#: admin/__init__.py:254
-msgid "Default template"
-msgstr "Standardskabelon"
-
-#: admin/__init__.py:285
+#: placeholders.py:167
 msgid "Note: This field is evaluated as template code."
 msgstr "Obs: Dette felt evalueres som skabelonkode."
 
-#: admin/forms.py:13
-msgid "Title"
-msgstr "Titel"
-
-#: admin/forms.py:19
-msgid ""
-"The slug will be used to create the page URL, it must be unique among the "
-"other pages of the same level."
+#: placeholders.py:418
+msgid "Your email"
 msgstr ""
-"Dette slug vil blive brugt til at skabe em side-url. Den skal være unik i forhold til de "
-"andre sider på samme niveau."
 
-#: admin/forms.py:22
-msgid "Language"
-msgstr "Sprog"
+#: placeholders.py:420
+msgid "Subject"
+msgstr ""
 
-#: admin/forms.py:27
-msgid "Template"
-msgstr "Skabelon"
+#: placeholders.py:422
+msgid "Your message"
+msgstr ""
 
-#: admin/forms.py:52 admin/forms.py:54
-msgid "Another page with this slug already exists"
-msgstr "En anden side med dette slug eksisterer allerede"
+#: placeholders.py:441
+msgid "Your email has been sent. Thank you."
+msgstr ""
 
-#: admin/forms.py:62 admin/forms.py:76
-msgid "A sibiling with this slug already exists at the root level"
-msgstr "En søskend med denne slug eksisterer allerede på rodniveauet."
+#: placeholders.py:443
+msgid "An error as occured: your email has not been sent."
+msgstr ""
 
-#: admin/forms.py:66
-msgid "A sibiling with this slug already exists at the targeted position"
-msgstr "En søskend med denne slug eksisterer allerede på den ønskede position"
+#: plugins/jsonexport/actions.py:20
+msgid "Export pages as JSON"
+msgstr ""
 
-#: admin/forms.py:69
-msgid "A child with this slug already exists at the targeted position"
-msgstr "Et barn med denne slug eksisterer allerede på den ønskede position"
+#: plugins/jsonexport/actions.py:46
+msgid "Import some pages from a JSON file"
+msgstr ""
 
-#: admin/forms.py:73
-msgid "A sibiling with this slug already exists"
-msgstr "En søskend med denne slug eksisterer allerede"
+#: plugins/jsonexport/management/commands/pages_export_json.py:36
+#, python-format
+msgid "Site with id/domain = '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:28
+#, python-format
+msgid "User with username/id/email = '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:36
+msgid "Errors encountered while importing JSON"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s created."
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s modified."
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
+msgid "Home"
+msgstr "Hjem"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
+msgid "Import"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
+msgid "Importing pages failed:"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
+msgid "Import completed."
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
+msgid "created"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
+msgid "modified"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
+msgid "Return to page list"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:126
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:157
+#, python-format
+msgid "Language '%s' not imported"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:186
+#, python-format
+msgid "Original author '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:224
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:280
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:317
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:345
+#, python-format
+msgid "%s has no common language with this site"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:350
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:354
+#, python-format
+msgid "%s uses a template not found on this site: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:360
+#, python-format
+msgid "%s template contents are different than our template: %s"
+msgstr ""
 
 #: templates/admin/pages/page/change_form.html:4
 msgid "Edit"
 msgstr "Rediger"
 
-#: templates/admin/pages/page/change_form.html:17
+#: templates/admin/pages/page/change_form.html:19
+msgid "History"
+msgstr ""
+
+#: templates/admin/pages/page/change_form.html:20
 msgid "View on site"
 msgstr "Vis på siden"
 
-#: templates/admin/pages/page/change_form.html:30
-msgid "Translation helper"
-msgstr "Oversættelseshjælper"
+#: templates/admin/pages/page/change_list.html:18
+#: templates/pages/examples/index.html:74
+msgid "Search"
+msgstr ""
 
-#: templates/admin/pages/page/change_form.html:32
-#: templates/admin/pages/page/includes/fieldset.html:19
-msgid "Language:"
-msgstr "Sprog:"
+#: templates/admin/pages/page/change_list.html:20
+msgid "Go"
+msgstr ""
 
-#: templates/admin/pages/page/change_list.html:4
-msgid "List of pages"
-msgstr "Liste af sider"
-
-#: templates/admin/pages/page/change_list.html:10
-msgid "Home"
-msgstr "Hjem"
-
-#: templates/admin/pages/page/change_list.html:30
-#, python-format
-msgid "Add %(name)s"
-msgstr "Tilføj %(name)s"
-
-#: templates/admin/pages/page/change_list_table.html:5
+#: templates/admin/pages/page/change_list_table.html:9
+#: testproj/documents/models.py:10
 msgid "title"
 msgstr "titel"
 
-#: templates/admin/pages/page/change_list_table.html:6
+#: templates/admin/pages/page/change_list_table.html:10
 msgid "languages"
 msgstr "sprog"
 
-#: templates/admin/pages/page/change_list_table.html:7
+#: templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr ""
+
+#: templates/admin/pages/page/change_list_table.html:12
 msgid "published"
 msgstr "offentliggjort"
 
-#: templates/admin/pages/page/menu.html:18
+#: templates/admin/pages/page/menu.html:25
+msgid "undefined"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:33
 msgid "view this page"
 msgstr "vis denne side"
 
-#: templates/admin/pages/page/menu.html:19
+#: templates/admin/pages/page/menu.html:34
 msgid "move this page"
 msgstr "flyt denne side"
 
-#: templates/admin/pages/page/menu.html:20
+#: templates/admin/pages/page/menu.html:35
 msgid "insert a new page here"
 msgstr "indsæt en ny side her"
 
-#: templates/admin/pages/page/menu.html:21
+#: templates/admin/pages/page/menu.html:37
 msgid "delete this page"
 msgstr "slet denne side"
 
-#: templates/admin/pages/page/menu.html:22
+#: templates/admin/pages/page/menu.html:41
 msgid "don&#x27;t move this page"
 msgstr "flyt ikke denne side"
 
-#: templates/admin/pages/page/menu.html:22
-#: templates/admin/pages/page/menu.html:26
+#: templates/admin/pages/page/menu.html:41
+#: templates/admin/pages/page/menu.html:45
 msgid "cancel"
 msgstr "annullér"
 
-#: templates/admin/pages/page/menu.html:26
+#: templates/admin/pages/page/menu.html:45
 msgid "don&#x27;t insert a new page here"
 msgstr "indsæt ikke en ny side her"
 
-#: templates/admin/pages/page/menu.html:27
+#: templates/admin/pages/page/menu.html:46
 msgid "insert above"
 msgstr "indsæt over"
 
-#: templates/admin/pages/page/menu.html:28
+#: templates/admin/pages/page/menu.html:47
 msgid "insert below"
 msgstr "indsæt under"
 
-#: templates/admin/pages/page/menu.html:29
+#: templates/admin/pages/page/menu.html:48
 msgid "insert as child"
 msgstr "indsæt som barn"
 
-#: templates/admin/pages/page/menu.html:38
+#: templates/admin/pages/page/menu.html:61
 #, python-format
 msgid "edit %(lang)s translation"
 msgstr "rediger %(lang)s oversættelse"
 
-#: templates/admin/pages/page/menu.html:40
+#: templates/admin/pages/page/menu.html:64
 #, python-format
 msgid "create %(lang)s translation"
 msgstr "skab %(lang)s oversættelse"
 
-#: templates/admin/pages/page/menu.html:57
+#: templates/admin/pages/page/menu.html:71 templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: templates/admin/pages/page/menu.html:92
 msgid "In navigation"
 msgstr "I navigation"
 
-#: templates/pages/revisions.html:6
-msgid "DATETIME_FORMAT"
-msgstr "DATETIME_FORMAT"
+#: templates/pages/contact.html:4
+msgid "Send"
+msgstr ""
+
+#: templates/pages/revisions.html:4
+msgid "Revisions"
+msgstr ""
 
 #: templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Ønskede sprog er ikke blevet oversat endnu."
 
-#: templatetags/pages_tags.py:17
+#: templates/pages/widgets/languages.html:19
+msgid "Delete this translation"
+msgstr ""
+
+#: testproj/documents/models.py:11
+msgid "text"
+msgstr ""
+
+#: testproj/test_settings.py:119
+msgid "German"
+msgstr ""
+
+#: testproj/test_settings.py:120
+msgid "Swiss french"
+msgstr ""
+
+#: testproj/test_settings.py:121
+msgid "US English"
+msgstr ""
+
+#: testproj/test_settings.py:128
+msgid "French"
+msgstr ""
+
+#: testproj/test_settings.py:129
+msgid "Belgium french"
+msgstr ""
+
+#: testproj/test_settings.py:130
+msgid "Italian"
+msgstr ""
+
+#: urlconf_registry.py:36
 #, python-format
-msgid "[Placeholder %(name)s had syntax error: %(error)s]"
-msgstr "[Placeholder %(name)s har syntaksfejl: %(error)s]"
+msgid "The urlconf %s has already been registered."
+msgstr ""
+
+#: urlconf_registry.py:46
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr ""
+
+#: widgets.py:114
+msgid "Please save the page to show the file field"
+msgstr ""
+
+#: widgets.py:115
+msgid "Delete file"
+msgstr ""
+
+#: widgets.py:123
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr ""
+
+#: widgets.py:137
+msgid "Please save the page to show the image field"
+msgstr ""
+
+#: widgets.py:138
+msgid "Delete image"
+msgstr ""
+
+#: widgets_registry.py:30
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr ""
+
+#: widgets_registry.py:42
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr ""

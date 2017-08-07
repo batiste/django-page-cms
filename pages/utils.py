@@ -1,91 +1,123 @@
 # -*- coding: utf-8 -*-
 """A collection of functions for Page CMS"""
-from pages import settings
-from pages.http import get_request_mock, get_language_from_request
-
-from django.conf import settings as django_settings
-from django.template import TemplateDoesNotExist
-from django.template import loader, Context, RequestContext
-from django.core.cache import cache
 
 import re
+import unicodedata
 
-def get_context_mock():
-    """return a mockup dictionnary to use in get_placeholders."""
-    context = {'current_page':None}
-    if settings.PAGE_EXTRA_CONTEXT:
-        context.update(settings.PAGE_EXTRA_CONTEXT())
-    return context
+from django.conf import settings as django_settings
+from django.utils import timezone
+from django.template import Context
+from django import template
+from django.utils.encoding import force_text
+from django.utils.safestring import SafeText, mark_safe
+from django.utils.functional import allow_lazy
+from django.utils import six
+
+from datetime import datetime
+
+dummy_context = Context()
+
+
+def get_now():
+    if django_settings.USE_TZ:
+        return datetime.utcnow().replace(tzinfo=timezone.utc)
+    else:
+        return datetime.now()
+
 
 def get_placeholders(template_name):
     """Return a list of PlaceholderNode found in the given template.
 
     :param template_name: the name of the template file
     """
+    dummy_context.template = template.Template("")
     try:
-        temp = loader.get_template(template_name)
-    except TemplateDoesNotExist:
+        temp_wrapper = template.loader.get_template(template_name)
+    except template.TemplateDoesNotExist:
         return []
-        
-    request = get_request_mock()
-    context = get_context_mock()
-    # I need to render the template in order to extract
-    # placeholder tags
-    temp.render(RequestContext(request, context))
+
     plist, blist = [], []
+    temp = temp_wrapper.template
     _placeholders_recursif(temp.nodelist, plist, blist)
-    return plist
+
+    previous = {}
+    block_to_remove = []
+    for block in blist:
+        if block.name in previous:
+            if not hasattr(block, 'has_super_var'):
+                block_to_remove.append(previous[block.name])
+        previous[block.name] = block
+
+    def keep(p):
+        return p.found_in_block not in block_to_remove
+
+    placeholders = [p for p in plist if keep(p)]
+    names = []
+    pfiltered = []
+    for p in placeholders:
+        if p.ctype not in names:
+            pfiltered.append(p)
+            names.append(p.ctype)
+
+    return pfiltered
+
 
 def _placeholders_recursif(nodelist, plist, blist):
     """Recursively search into a template node list for PlaceholderNode
     node."""
-    # I needed to import make this lazy import to make the doc compile
+    # I needed to do this lazy import to compile the documentation
     from django.template.loader_tags import BlockNode
-    
+
+    if len(blist):
+        block = blist[-1]
+    else:
+        block = None
+
     for node in nodelist:
 
-        # extends node
+        if isinstance(node, BlockNode):
+            if node not in blist:
+                blist.append(node)
+            if not block:
+                block = node
+
+        if block:
+            if isinstance(node, template.base.VariableNode):
+                if(node.filter_expression.var.var == u'block.super'):
+                    block.has_super_var = True
+
+        # extends node?
         if hasattr(node, 'parent_name'):
-            _placeholders_recursif(node.get_parent(Context()).nodelist,
-                                                        plist, blist)
-        # include node
-        elif hasattr(node, 'template'):
+            # I do not know why I did this... but the tests are guarding it
+            dummy_context2 = Context()
+            dummy_context2.template = template.Template("")
+            _placeholders_recursif(node.get_parent(dummy_context2).nodelist,
+                                   plist, blist)
+        # include node?
+        elif hasattr(node, 'template') and hasattr(node.template, 'nodelist'):
             _placeholders_recursif(node.template.nodelist, plist, blist)
 
-        # It's a placeholder
+        # Is it a placeholder?
         if hasattr(node, 'page') and hasattr(node, 'parsed') and \
-                hasattr(node, 'as_varname') and hasattr(node, 'name'):
-            already_in_plist = False
-            for placeholder in plist:
-                if placeholder.name == node.name:
-                    already_in_plist = True
-            if not already_in_plist:
-                if len(blist):
-                    node.found_in_block = blist[len(blist)-1]
-                plist.append(node)
-            node.render(Context())
+                hasattr(node, 'as_varname') and hasattr(node, 'name') \
+                and hasattr(node, 'section'):
+            if block:
+                node.found_in_block = block
+            plist.append(node)
+            node.render(dummy_context)
 
         for key in ('nodelist', 'nodelist_true', 'nodelist_false'):
-            if isinstance(node, BlockNode):
-                # delete placeholders found in a block of the same name
-                for index, pl in enumerate(plist):
-                    if pl.found_in_block and \
-                            pl.found_in_block.name == node.name \
-                            and pl.found_in_block != node:
-                        del plist[index]
-                blist.append(node)
-            
+
             if hasattr(node, key):
                 try:
                     _placeholders_recursif(getattr(node, key), plist, blist)
                 except:
                     pass
-            if isinstance(node, BlockNode):
-                blist.pop()
+
 
 def normalize_url(url):
     """Return a normalized url with trailing and without leading slash.
-     
+
      >>> normalize_url(None)
      '/'
      >>> normalize_url('/')
@@ -97,44 +129,30 @@ def normalize_url(url):
      >>> normalize_url('/foo/bar/')
      '/foo/bar'
     """
-    if not url or len(url)==0:
+    if not url or len(url) == 0:
         return '/'
     if not url.startswith('/'):
         url = '/' + url
-    if len(url)>1 and url.endswith('/'):
-        url = url[0:len(url)-1]
+    if len(url) > 1 and url.endswith('/'):
+        url = url[0:len(url) - 1]
     return url
 
-PAGE_CLASS_ID_REGEX = re.compile('page_([0-9]+)')
 
-def filter_link(content, page, language, content_type):
-    """Transform the HTML link href to point to the targeted page
-    absolute URL.
-
-     >>> filter_link('<a class="page_1">hello</a>', page, 'en-us', body)
-     '<a href="/pages/page-1" class="page_1">hello</a>'
+def slugify(value, allow_unicode=False):
     """
-    if not settings.PAGE_LINK_FILTER:
-        return content
-    if content_type in ('title', 'slug'):
-        return content
-    from BeautifulSoup import BeautifulSoup
-    tree = BeautifulSoup(content)
-    tags = tree.findAll('a')
-    if len(tags) == 0:
-        return content
-    for tag in tags:
-        tag_class = tag.get('class', False)
-        if tag_class:
-            # find page link with class 'page_ID'
-            result = PAGE_CLASS_ID_REGEX.search(content)
-            if result and result.group:
-                try:
-                    # TODO: try the cache before fetching the Page object
-                    from pages.models import Page
-                    target_page = Page.objects.get(pk=int(result.group(1)))
-                    tag['href'] = target_page.get_url_path(language)
-                except Page.DoesNotExist:
-                    cache.set(Page.PAGE_BROKEN_LINK_KEY % page.id, True)
-                    tag['class'] = 'pagelink_broken'
-    return unicode(tree)
+    Convert to ASCII if 'allow_unicode' is False. Convert spaces to hyphens.
+    Remove characters that aren't alphanumerics, underscores, or hyphens.
+    Convert to lowercase. Also strip leading and trailing whitespace.
+    Copyright: https://docs.djangoproject.com/en/1.9/_modules/django/utils/text/#slugify
+    TODO: replace after stopping support for Django 1.8
+    """
+    value = force_text(value)
+    if allow_unicode:
+        value = unicodedata.normalize('NFKC', value)
+        value = re.sub('[^\w\s-]', '', value, flags=re.U).strip().lower()
+        return mark_safe(re.sub('[-\s]+', '-', value, flags=re.U))
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    return mark_safe(re.sub('[-\s]+', '-', value))
+
+slugify = allow_lazy(slugify, six.text_type, SafeText)

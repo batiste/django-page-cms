@@ -1,17 +1,17 @@
-{% load i18n pages_tags %}
+{% load i18n pages_tags staticfiles %}
 
 <table cellspacing="0" id="page-table-dnd">
     <thead>
         <tr>
-            <th>
-                <input id="action-toggle" type="checkbox" style="display: inline;"/>
+            <th scope="col" class="action-checkbox-column">
+                <div class="text"><span><input id="action-toggle" type="checkbox" style="display: inline-block;" /></span></div>
             </th>
-            <th class="title-cell">{% trans "title" %}</th>
-            <th class="language-cell">{% trans "languages" %}</th>
-            <th class="last-modification-cell">{% trans "last modification" %}</th>
-            <th class="publish-cell">{% trans "published" %}</th>
-            <th class="template-cell">{% trans "template" %}</th>
-            <th class="author-cell">{% trans "author" %}</th>
+            <th class="title-cell" scope="col"><div class="text"><span>{% trans "title" %}</span></div></th>
+            <th class="language-cell" scope="col"><div class="text"><span>{% trans "languages" %}</span></div></th>
+            <th class="last-modification-cell" scope="col"><div class="text"><span>{% trans "last modification" %}</span></div></th>
+            <th><div class="text"><span>{% trans "published" %}</span></div></th>
+            <th class="template-cell" scope="col"><div class="text"><span>{% trans "template" %}</span></div></th>
+            <th class="author-cell" scope="col"><div class="text"><span>{% trans "author" %}</span></div></th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +20,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="drag-indicator moved-page-title"></div>
 
 <script type="text/javascript">
 $(document).ready(function() {

@@ -1,0 +1,3 @@
+# Read the docs loves `requirements.txt` files.
+
+.[docs]

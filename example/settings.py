@@ -1,25 +1,30 @@
 # -*- coding: utf-8 -*-
 # Django settings for cms project.
 import os
-PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
-CACHE_BACKEND = 'locmem:///'
+CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'cms.db'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+# AUTH_PROFILE_MODULE = 'profiles.Profile'
+LOGGING_CONFIG = None
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'cms.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -28,23 +33,28 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
 
-MEDIA_ROOT = STATIC_ROOT = os.path.join(PROJECT_DIR, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'media', 'static')
-STATIC_URL = MEDIA_URL + 'static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'collect-static/')
+STATIC_URL = '/static/'
 
-# Absolute path to the directory that holds pages media.
-# PAGES_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'pages', 'media', 'pages')
-# Absolute path to the directory that holds media.
-ADMIN_MEDIA_ROOT = os.path.join(STATIC_ROOT, 'admin_media')
-ADMIN_MEDIA_PREFIX = '/admin_media/'
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    # os.path.join(PROJECT_DIR, 'bootstrap'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
@@ -52,24 +62,26 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    # this syntax is deprecated with django 1.2
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-    # could help
-    'django.template.loaders.eggs.load_template_source',
+
+_TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.template.context_processors.i18n",
+    "django.template.context_processors.debug",
+    "django.template.context_processors.request",
+    "django.template.context_processors.media",
+    "pages.context_processors.media",
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.request",
-    "django.core.context_processors.media",
-    "pages.context_processors.media",
-    #"staticfiles.context_processors.static_url",
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(PROJECT_DIR, 'templates')],
+        'OPTIONS': {
+            'context_processors': _TEMPLATE_CONTEXT_PROCESSORS
+        },
+    },
+]
 
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -78,52 +90,42 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'example.urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR, 'templates'),
-)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    },
+    # please use memcached in production
+    'pages': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'somewhere-safe'
+    }
+}
 
-CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
-
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.staticfiles',
+    # 'grappelli',
     'django.contrib.admin',
     'django.contrib.sites',
-    'documents',
-    'tagging',
     'pages',
+    'pages.plugins.jsonexport',
+    'pages.plugins.pofiles',
     'mptt',
-    'staticfiles',
-    #'tinymce',
-    # disabled to make "setup.py test" to work properly
-    #'south',
+    'rest_framework',
+    # 'ckeditor', # if commented a fallback widget will be used
+    'haystack'
+]
 
-    # these 2 package don't create any dependecies
-    'authority',
-    # haystack change coverage score report by importing modules
-    #'haystack',
-)
-
-PAGE_TINYMCE = False
-PAGE_TAGGING = True
-
-PAGE_CONNECTED_MODELS = [{
-    'model':'documents.models.Document',
-    'form':'documents.models.DocumentForm',
-    'options':{
-            'extra': 3,
-            'max_num': 10,
-        },
-},]
+PAGE_TAGGING = False
 
 # Default language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -131,7 +133,7 @@ LANGUAGE_CODE = 'en-us'
 
 # This is defined here as a do-nothing function because we can't import
 # django.utils.translation -- that module depends on the settings.
-gettext_noop = lambda s: s
+gettext_noop = lambda s: s  # noqa
 
 # languages you want to translate into the CMS.
 PAGE_LANGUAGES = (
@@ -148,31 +150,27 @@ languages.append(('fr-fr', gettext_noop('French')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
 
-# This enable you to map a language(s) to another one, these languages should
-# be in the LANGUAGES config
-def language_mapping(lang):
-    if lang.startswith('fr'):
-        # serve swiss french for everyone
-        return 'fr-ch'
-    return lang
 
-PAGE_LANGUAGE_MAPPING = language_mapping
-
-PAGE_DEFAULT_TEMPLATE = 'pages/index.html'
+PAGE_DEFAULT_TEMPLATE = 'index.html'
 
 PAGE_TEMPLATES = (
-    ('pages/nice.html', 'nice one'),
-    ('pages/cool.html', 'cool one'),
-    ('pages/editor.html', 'raw editor'),
+    ('index.html', 'Default template'),
 )
 
-PAGE_SANITIZE_USER_INPUT = True
+PAGE_API_ENABLED = True
 
+SITE_ID = 1
 PAGE_USE_SITE_ID = True
 
-HAYSTACK_SITECONF = 'example.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, 'whoosh_index')
+# haystack dev version
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+PAGE_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (
     "pages.migrations.*",
@@ -184,25 +182,40 @@ COVERAGE_EXCLUDE_MODULES = (
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
 
-TEST_RUNNER = 'example.test_runner.run_tests'
+if 'ckeditor' in INSTALLED_APPS:
+    CKEDITOR_UPLOAD_PATH = 'uploads'
 
-#here = os.path.abspath(os.path.dirname(__file__))
-#NOSE_ARGS = [os.path.join(here, os.pardir, "pages", "tests"),
-#            "--cover3-package=pages",
-#            "--cover3-branch",
-#            "--with-coverage3",
-#            "--cover3-html",
-#            "--cover3-exclude=%s" % ",".join(COVERAGE_EXCLUDE_MODULES)]
+    # ##################################
+    # Your ckeditor configurations
+
+    # Docs
+    # http://docs.ckeditor.com/#!/api/CKEDITOR.config
+    #
+    # If some button doesn't show up, it could help to explicitly allow some
+    # content related to the buttons with the allowedContent.
+    # ref. http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
+
+    CKEDITOR_CONFIGS = {
+        'default': {
+            'width': 600,
+            'height': 300,
+            # 'language': 'en', # it not defined, the widget is localized with
+            # the browser default value
+            'toolbar': [
+                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript'],
+                ['Source', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'],
+            ]
+        },
+        'minimal': {
+            'width': 600,
+            'toolbar': [
+                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', '-',
+                 'Link', 'Unlink'],
+            ],
+        },
+    }
 
 try:
-    import test_extensions
+    from local_settings import *  # noqa
 except ImportError:
     pass
-else:
-    INSTALLED_APPS += ("test_extensions", )
-
-try:
-    from local_settings import *
-except ImportError:
-    pass
-

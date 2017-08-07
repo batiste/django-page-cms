@@ -1,0 +1,16 @@
+{% extends "pages/examples/index.html" %}
+{% load pages_tags %}
+
+{% block title %}Cool template{% endblock %}
+
+{% block content %}
+<div style="width:70%">
+    <div>HTML Content editor
+        <div id="fancy-content" class="placeholder">
+            {% fileplaceholder file1  %}
+            {% fileplaceholder file2  %}
+            {% fileplaceholder file3  %}
+        </div>
+    </div>
+</div>
+{% endblock %}

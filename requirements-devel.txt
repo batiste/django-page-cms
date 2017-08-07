@@ -1,0 +1,12 @@
+-e git+https://github.com/django/django@stable/1.11.x#egg=Django
+-e git+https://github.com/django-mptt/django-mptt#egg=django-mptt
+-e git+https://github.com/python-pillow/Pillow#egg=Pillow
+-e git+https://github.com/tqdm/tqdm#egg=tqdm
+-e git+https://github.com/alex/django-taggit#egg=django-taggit
+-e git+https://github.com/kennethreitz/requests#egg=requests
+-e git+https://github.com/django-haystack/django-haystack#egg=django-haystack
+-e git+https://github.com/waylan/Python-Markdown#egg=Markdown
+-e hg+http://bitbucket.org/mchaput/whoosh#egg=Whoosh
+-e git+https://github.com/django-ckeditor/django-ckeditor#egg=django-ckeditor
+-e hg+https://bitbucket.org/izi/polib/#egg=polib
+-e git+https://github.com/tomchristie/django-rest-framework#egg=djangorestframework

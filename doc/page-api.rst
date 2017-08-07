@@ -6,6 +6,13 @@ Page CMS reference API
     :local:
     :depth: 1
 
+The application model
+======================
+
+Gerbi CMS declare rather simple models: :class:`Page <pages.models.Page>`
+:class:`Content <pages.models.Content>` and :class:`PageAlias <pages.models.PageAlias>`.
+
+
 Placeholders
 ============
 
@@ -38,6 +45,12 @@ Page Manager
 .. autoclass:: pages.managers.PageManager
     :members:
     :undoc-members:
+
+Page view
+==========
+
+.. autoclass:: pages.views.Details
+    :members:
 
 Content Model
 =============
@@ -77,13 +90,6 @@ Utils
 Http
 ====
 
-.. automodule:: pages.http
-    :members:
-    :undoc-members:
-
-Admin views
-===========
-
-.. automodule:: pages.admin.views
+.. automodule:: pages.phttp
     :members:
     :undoc-members:

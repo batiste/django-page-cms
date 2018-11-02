@@ -13,7 +13,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings as global_settings
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -77,10 +77,10 @@ class Page(MPTTModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL,
-            verbose_name=_('author'))
+            verbose_name=_('author'), on_delete=models.CASCADE)
 
     parent = models.ForeignKey('self', null=True, blank=True,
-            related_name='children', verbose_name=_('parent'))
+            related_name='children', verbose_name=_('parent'), on_delete=models.SET_NULL)
     creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=get_now)
     publication_date = models.DateTimeField(_('publication date'),
@@ -112,7 +112,7 @@ class Page(MPTTModel):
     redirect_to_url = models.CharField(_('redirect to url'), max_length=200, null=True, blank=True)
 
     redirect_to = models.ForeignKey('self', null=True, blank=True,
-        related_name='redirected_pages', verbose_name=_('redirect to'))
+        related_name='redirected_pages', verbose_name=_('redirect to'), on_delete=models.SET_NULL)
 
     # Managers
     objects = PageManager()
@@ -516,7 +516,8 @@ class Content(models.Model):
     type = models.CharField(
         _('type'), max_length=100, blank=False,
         db_index=True)
-    page = models.ForeignKey(Page, verbose_name=_('page'), null=True)
+    page = models.ForeignKey(Page, verbose_name=_('page'), null=True,
+        on_delete=models.CASCADE)
 
     creation_date = models.DateTimeField(
         _('creation date'), editable=False,
@@ -536,7 +537,7 @@ class Content(models.Model):
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
-        verbose_name=_('page'))
+        verbose_name=_('page'), on_delete=models.CASCADE)
     url = models.CharField(max_length=255, unique=True)
     objects = PageAliasManager()
 

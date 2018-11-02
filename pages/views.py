@@ -7,7 +7,7 @@ from pages.utils import get_placeholders
 
 from django.http import Http404, HttpResponsePermanentRedirect
 from django.contrib.sitemaps import Sitemap
-from django.core.urlresolvers import resolve, Resolver404
+from django.urls import resolve, Resolver404
 from django.utils import translation
 from django.shortcuts import render
 
@@ -170,7 +170,7 @@ class Details(object):
 
     def is_user_staff(self, request):
         """Return True if the user is staff."""
-        return request.user.is_authenticated() and request.user.is_staff
+        return request.user.is_authenticated and request.user.is_staff
 
     def extra_context(self, request, context):
         """Call the PAGE_EXTRA_CONTEXT function if there is one."""

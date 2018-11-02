@@ -69,7 +69,7 @@ _TEMPLATE_CONTEXT_PROCESSORS = (
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',

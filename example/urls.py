@@ -1,6 +1,7 @@
 
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import url
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 
@@ -10,7 +11,7 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     # url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 ]
 
 try:

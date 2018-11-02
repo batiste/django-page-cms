@@ -10,7 +10,7 @@ from pages.views import details
 
 from django.http import Http404
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template import Context
 from django.test.utils import override_settings
 from taggit.models import Tag

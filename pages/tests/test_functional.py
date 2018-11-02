@@ -5,7 +5,7 @@ from pages.tests.testcase import TestCase
 
 import django
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from pages.utils import get_now
 from pages.phttp import get_request_mock
 from pages.views import details

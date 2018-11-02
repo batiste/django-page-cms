@@ -45,9 +45,9 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('author', models.ForeignKey(verbose_name='author', to=settings.AUTH_USER_MODEL)),
-                ('parent', models.ForeignKey(related_name='children', verbose_name='parent', blank=True, to='pages.Page', null=True)),
-                ('redirect_to', models.ForeignKey(related_name='redirected_pages', blank=True, to='pages.Page', null=True)),
+                ('author', models.ForeignKey(verbose_name='author', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('parent', models.ForeignKey(related_name='children', verbose_name='parent', blank=True, to='pages.Page', null=True, on_delete=models.SET_NULL)),
+                ('redirect_to', models.ForeignKey(related_name='redirected_pages', blank=True, to='pages.Page', null=True, on_delete=models.SET_NULL)),
             ],
             options={
                 'ordering': ['tree_id', 'lft'],
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('url', models.CharField(unique=True, max_length=255)),
-                ('page', models.ForeignKey(verbose_name='page', blank=True, to='pages.Page', null=True)),
+                ('page', models.ForeignKey(verbose_name='page', blank=True, to='pages.Page', null=True, on_delete=models.SET_NULL)),
             ],
             options={
                 'verbose_name_plural': 'Aliases',
@@ -71,6 +71,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='content',
             name='page',
-            field=models.ForeignKey(verbose_name='page', to='pages.Page'),
+            field=models.ForeignKey(verbose_name='page', to='pages.Page', on_delete=models.CASCADE),
         ),
     ]

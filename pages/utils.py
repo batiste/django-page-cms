@@ -10,7 +10,6 @@ from django.template import Context
 from django import template
 from django.utils.encoding import force_text
 from django.utils.safestring import SafeText, mark_safe
-from django.utils.functional import allow_lazy
 from django.utils import six
 
 from datetime import datetime
@@ -154,5 +153,3 @@ def slugify(value, allow_unicode=False):
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
     value = re.sub('[^\w\s-]', '', value).strip().lower()
     return mark_safe(re.sub('[-\s]+', '-', value))
-
-slugify = allow_lazy(slugify, six.text_type, SafeText)

@@ -4,7 +4,7 @@ from django.template import Context
 from django.template import TemplateDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import loader
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from pages.placeholders import PlaceholderNode, get_filename
 from pages.utils import get_placeholders
 from pages.phttp import get_request_mock

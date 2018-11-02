@@ -5,11 +5,11 @@ from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template import TemplateDoesNotExist, Engine
 from django.contrib.sites.models import Site
 from importlib import import_module
-from django.core.urlresolvers import clear_url_caches
+from django.urls import clear_url_caches
 from six.moves import reload_module
 
 

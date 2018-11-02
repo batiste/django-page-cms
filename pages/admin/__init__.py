@@ -16,11 +16,6 @@ from django.utils.encoding import force_text
 from django.conf import settings as global_settings
 from django.http import HttpResponseRedirect, Http404
 from django.contrib.admin.sites import AlreadyRegistered
-if global_settings.USE_I18N:
-    from django.views.i18n import javascript_catalog
-else:
-    from django.views.i18n import null_javascript_catalog as javascript_catalog
-
 
 extra_actions_registery = []
 def add_page_action(action):
@@ -117,16 +112,6 @@ class PageAdmin(admin.ModelAdmin):
         ]
 
         return pages_urls + urls
-
-
-    def i18n_javascript(self, request):
-        """Displays the i18n JavaScript that the Django admin
-        requires.
-
-        This takes into account the ``USE_I18N`` setting. If it's set to False, the
-        generated JavaScript will be leaner and faster.
-        """
-        return javascript_catalog(request, packages='pages')
 
     def save_model(self, request, page, form, change):
         """Move the page in the tree if necessary and save every

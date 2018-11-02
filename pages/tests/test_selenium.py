@@ -3,7 +3,7 @@
 from unittest import SkipTest
 
 from django.contrib import auth
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import LiveServerTestCase
 from pages import settings
 from pages.models import Page

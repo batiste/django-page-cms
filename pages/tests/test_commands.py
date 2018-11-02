@@ -6,7 +6,22 @@ from django.core.management import call_command
 from django.test import LiveServerTestCase
 import json
 
-class CommandTestCase(TestCase, LiveServerTestCase):
+from django.test.testcases import LiveServerThread, QuietWSGIRequestHandler
+from django.core.servers.basehttp import WSGIServer
+
+class LiveServerSingleThread(LiveServerThread):
+    """Runs a single threaded server rather than multi threaded. Reverts https://github.com/django/django/pull/7832"""
+
+    def _create_server(self):
+        return WSGIServer((self.host, self.port), QuietWSGIRequestHandler, allow_reuse_address=False)
+
+
+class LiveServerSingleThreadedTestCase(LiveServerTestCase):
+    "A thin sub-class which only sets the single-threaded server as a class"
+    server_thread_class = LiveServerSingleThread
+
+
+class CommandTestCase(TestCase, LiveServerSingleThreadedTestCase):
     """Django page CMS command tests suite class."""
 
     def test_pull(self):

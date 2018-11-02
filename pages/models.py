@@ -19,6 +19,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 from mptt.models import MPTTModel
+from mptt.fields import TreeForeignKey
 import uuid
 import os
 
@@ -79,8 +80,8 @@ class Page(MPTTModel):
     author = models.ForeignKey(django_settings.AUTH_USER_MODEL,
             verbose_name=_('author'), on_delete=models.CASCADE)
 
-    parent = models.ForeignKey('self', null=True, blank=True,
-            related_name='children', verbose_name=_('parent'), on_delete=models.SET_NULL)
+    parent = TreeForeignKey('self', null=True, blank=True,
+            related_name='children', verbose_name=_('parent'), on_delete=models.CASCADE)
     creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=get_now)
     publication_date = models.DateTimeField(_('publication date'),

@@ -5,12 +5,10 @@ from pages import settings as pages_settings
 from pages.testproj import test_settings
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from django.urls import reverse, clear_url_caches
 from django.template import TemplateDoesNotExist, Engine
 from django.contrib.sites.models import Site
-from importlib import import_module
-from django.urls import clear_url_caches
-from six.moves import reload_module
+from importlib import import_module, reload
 
 
 class MockRequest:
@@ -105,8 +103,8 @@ class TestCase(TestCase):
                 reload(import_module(url_conf))
             except:
                 pass
-        reload_module(import_module('pages.urls'))
-        reload_module(import_module('pages.testproj.urls'))
+        reload(import_module('pages.urls'))
+        reload(import_module('pages.testproj.urls'))
         clear_url_caches()
 
     def get_new_page_data(self, draft=False):

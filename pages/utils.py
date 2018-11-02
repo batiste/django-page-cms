@@ -10,7 +10,6 @@ from django.template import Context
 from django import template
 from django.utils.encoding import force_text
 from django.utils.safestring import SafeText, mark_safe
-from django.utils import six
 
 from datetime import datetime
 

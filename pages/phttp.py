@@ -21,7 +21,7 @@ def get_request_mock():
 
     request = factory.get('/')
     # Apply request middleware
-    for middleware_method in basehandler._request_middleware:
+    for middleware_method in basehandler._view_middleware:
         # LocaleMiddleware should never be applied a second time because
         # it would broke the current real request language
         if 'LocaleMiddleware' not in str(middleware_method.__self__.__class__):

@@ -11,7 +11,7 @@ class Document(models.Model):
     text = models.TextField(_('text'), blank=True)
 
     # the foreign key _must_ be called page
-    page = models.ForeignKey(Page)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
 
 class DocumentForm(ModelForm):

@@ -4,12 +4,13 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
-Release 1.9.18
+Release 2.0.0
 ================
 
-Released the 16th of April 2017.
+Released the second of November 2018.
 
-    *
+    * Migrate to Django 2.1.X
+    * Removal of get_pages_with_tag
 
 Release 1.9.17
 ================

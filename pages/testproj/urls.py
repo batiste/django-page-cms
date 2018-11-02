@@ -17,7 +17,7 @@ urlpatterns = [
     # this is only used to enable the reverse url to work with documents
     url(r'^pages/(?P<path>.*)', include('pages.testproj.documents.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     # make tests fail if a backend is not present on the system
     #(r'^search/', include('haystack.urls')),
 

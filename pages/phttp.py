@@ -6,26 +6,19 @@ LANGUAGE_KEYS = [key for (key, value) in settings.PAGE_LANGUAGES]
 
 
 def get_request_mock():
-    """Build a ``request`` mock up that is used in to render
-    the templates in the most fidel environement as possible.
-
-    This fonction is used in the get_placeholders method to
-    render the input template and search for the placeholder
-    within.
-    """
+    """Build a ``request`` mock up for tests"""
     from django.test.client import RequestFactory
     from django.core.handlers.base import BaseHandler
     factory = RequestFactory()
-    basehandler = BaseHandler()
-    basehandler.load_middleware()
 
     request = factory.get('/')
-    # Apply request middleware
-    for middleware_method in basehandler._request_middleware:
-        # LocaleMiddleware should never be applied a second time because
-        # it would broke the current real request language
-        if 'LocaleMiddleware' not in str(middleware_method.__self__.__class__):
-            middleware_method(request)
+    
+    class FakeUser():
+        is_authenticated = False
+        is_staff = False
+
+    request.user = FakeUser()
+    request.session = {}
 
     return request
 

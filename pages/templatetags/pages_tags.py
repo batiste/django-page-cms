@@ -600,22 +600,6 @@ def language_content_up_to_date(page, language):
 
 register.filter(language_content_up_to_date)
 
-
-@register.assignment_tag
-def get_pages_with_tag(tag):
-    """
-    Return Pages with given tag
-
-    Syntax::
-
-        {% get_pages_with_tag <tag name> as <varname> %}
-
-    Example use::
-        {% get_pages_with_tag "footer" as pages %}
-    """
-    return Page.objects.filter(tags__name__in=[tag])
-
-
 def do_page_has_content(parser, token):
     """
     Conditional tag that only renders its nodes if the page

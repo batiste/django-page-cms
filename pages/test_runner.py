@@ -3,7 +3,6 @@ import sys
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pages.testproj.test_settings")
 current_dirname = os.path.dirname(__file__)
-#sys.path.insert(0, current_dirname)
 sys.path.insert(0, os.path.join(current_dirname, '..'))
 
 import django

@@ -11,7 +11,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.template import RequestContext
 from django import template
 from django.views.decorators.csrf import csrf_exempt
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django import forms
 from pages.managers import fake_page
 

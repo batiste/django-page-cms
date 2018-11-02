@@ -19,13 +19,12 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.db'
+        'NAME': 'test.db',
+        'OPTIONS': {
+            'timeout': 10,
+        }
     }
 }
-
-# We still want to be ale to test with 1.1.X
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'test.db'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -69,7 +68,7 @@ _TEMPLATE_CONTEXT_PROCESSORS = (
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',

@@ -15,7 +15,7 @@ class Command(APICommand):
 
         page_list = requests.get(self.host, auth=self.auth, timeout=5)
         if page_list.status_code != 200:
-            raise ValueError(page_list.status_code)
+            self.http_error(response)
         data = json.loads(page_list.text)
         
         if not os.path.exists(os.path.dirname(self.filename)):

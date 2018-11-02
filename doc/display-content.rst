@@ -100,24 +100,6 @@ an example of the use of this template tag to display a list of news:
 
     You can use either the slug, or the id of the page.
 
-get_pages_with_tag
----------------------
-
-Retrieve a Pages objects with given tag and store it into a context variable that you can reuse after. Here is
-an example of the use of this template tag to display a list of footer pages:
-
-.. code-block:: html+django
-
-    <h2>Footer</h2>
-    {% get_pages_with_tag "footer" as footer_pages %}
-    <ul>
-    {% for page in footer_pages %}
-        <li>
-            <a href="{{ page.url }}">{{ page.title }}</a>
-        </li>
-    {% endfor %}
-    </ul>
-
 show_absolute_url
 -------------------
 

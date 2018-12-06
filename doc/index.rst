@@ -16,6 +16,11 @@ the :doc:`Installation section </installation>`. To get source code with git use
     $ git clone git://github.com/batiste/django-page-cms.git django-page-cms
 
 
+Build the documentation from cloned repo
+==========================================
+
+    $ pip install .[docs]
+    $ python setup.py build_sphinx
 
 Table of content
 ======================================

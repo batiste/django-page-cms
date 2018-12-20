@@ -4,6 +4,13 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+Release 2.0.1
+================
+
+Released the 20th of December 2018.
+
+    * Fix allow tags in media section so there is an image preview
+
 Release 2.0.0
 ================
 

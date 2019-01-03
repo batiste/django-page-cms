@@ -8,6 +8,21 @@ Django-pages-cms offers various template tags which can be used to create a site
 .. contents::
     :local:
 
+pages_navigation variable
+===========================
+
+By default the variable `pages_navigation` will be available within
+all of the CMS pages. `pages_navigation` is a list of Pages obtained
+by calling the `get_navigation` method on the `Details` class based view
+of the CMS::
+
+    def get_navigation(self, request, path, lang):
+      """Get the pages that are at the root level."""
+      return Page.objects.navigation().order_by("tree_id")
+
+You can subclass the `Details` class based view to change
+this behaviour.
+
 pages_menu
 ==========
 

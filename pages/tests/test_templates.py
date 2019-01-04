@@ -7,7 +7,6 @@ from pages.templatetags.pages_tags import get_page_from_string_or_id
 from pages.phttp import get_request_mock
 
 import django
-import six
 import datetime
 
 from django.template import Context, Template, TemplateSyntaxError
@@ -357,7 +356,7 @@ class TemplateTestCase(TestCase):
     def test_get_filename(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        fakefile = SimpleUploadedFile(name=u"some {}[]@$%*()+myfile.pdf", content=six.b('bytes'))
+        fakefile = SimpleUploadedFile(name=u"some {}[]@$%*()+myfile.pdf", content=b'blop')
         filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertTrue('some-myfile.pdf' in filename)
         self.assertTrue("page_%d" % page.id in filename)
@@ -366,7 +365,7 @@ class TemplateTestCase(TestCase):
     def test_get_filename_edge_case(self):
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        fakefile = SimpleUploadedFile(name=u"hello<script>world", content=six.b('bytes'))
+        fakefile = SimpleUploadedFile(name=u"hello<script>world", content=b'blop')
         filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertNotIn('<', filename)
 

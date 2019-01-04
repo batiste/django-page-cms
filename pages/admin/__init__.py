@@ -9,6 +9,7 @@ from pages.admin.forms import make_form
 from pages.admin import views
 
 from os.path import join
+import urllib
 from collections import defaultdict
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -277,7 +278,6 @@ class PageAdmin(admin.ModelAdmin):
             else:
                 addlanguage = False
             if addlanguage:
-                from six.moves import urllib
                 splitted = list(urllib.parse.urlparse(response.url))
                 query = urllib.parse.parse_qs(splitted[4])
                 query['language'] = language

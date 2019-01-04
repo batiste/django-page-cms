@@ -10,7 +10,6 @@ from pages.utils import get_placeholders
 from pages.phttp import get_request_mock
 
 import django
-import six
 
 from pages.models import Page, Content
 from pages.tests.testcase import TestCase
@@ -294,7 +293,7 @@ class RegressionTestCase(TestCase):
         """Problem with encoding file names"""
         placeholder = PlaceholderNode("placeholdername")
         page = self.new_page({'slug': 'page1'})
-        fakefile = SimpleUploadedFile(name=u"АБВГДЕЖ.pdf", content=six.b('bytes'))
+        fakefile = SimpleUploadedFile(name=u"АБВГДЕЖ.pdf", content=b'blop')
         filename = get_filename(page, placeholder.ctype, fakefile)
         self.assertTrue(fakefile.name.lower() in filename)
         self.assertTrue("page_%d" % page.id in filename)

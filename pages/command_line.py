@@ -4,7 +4,6 @@ import os
 import shutil
 import stat
 from subprocess import call
-from six.moves import input
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXAMPLE_DIR = os.path.join(PROJECT_DIR, 'example')
 

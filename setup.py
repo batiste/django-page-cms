@@ -41,7 +41,6 @@ install_requires = [
     'django-taggit>=0.18.1',
     'Pillow>=3.2.0',
     'requests>=2.9.0',
-    'six>=1.10.0',
     'tqdm>=4.4.1',
 ]
 

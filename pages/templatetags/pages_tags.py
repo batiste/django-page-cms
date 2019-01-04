@@ -15,8 +15,7 @@ from pages.placeholders import (
 )
 from pages.placeholders import ContactPlaceholderNode, MarkdownPlaceholderNode
 from pages.placeholders import JsonPlaceholderNode, parse_placeholder
-from six.moves import urllib
-import six
+import urllib
 from pages.utils import get_placeholders
 
 
@@ -29,7 +28,7 @@ def get_page_from_string_or_id(page_string, lang=None):
         return Page.objects.get(pk=int(page_string))
     # if we have a string coming from some templates templates
     if (isinstance(page_string, SafeText) or
-            isinstance(page_string, six.string_types)):
+            isinstance(page_string, str)):
         if page_string.isdigit():
             return Page.objects.get(pk=int(page_string))
         return Page.objects.from_path(page_string, lang)

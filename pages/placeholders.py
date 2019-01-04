@@ -22,7 +22,6 @@ from django.core.files.uploadedfile import UploadedFile
 import logging
 import os
 import time
-import six
 import copy
 import uuid
 
@@ -138,8 +137,7 @@ class PlaceholderNode(template.Node):
     def get_widget(self, page, language, fallback=Textarea):
         """Given the name of a placeholder return a `Widget` subclass
         like Textarea or TextInput."""
-        is_str = isinstance(self.widget, six.string_types)
-        if is_str:
+        if isinstance(self.widget, str):
             widget = get_widget(self.widget)
         else:
             widget = self.widget

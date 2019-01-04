@@ -15,7 +15,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.conf import settings as global_settings
-from django.utils.encoding import python_2_unicode_compatible
 
 
 from mptt.models import MPTTModel
@@ -29,7 +28,6 @@ if settings.PAGE_USE_SITE_ID:
     from django.contrib.sites.models import Site
 
 
-@python_2_unicode_compatible
 class Page(MPTTModel):
     """
     This model contain the status, dates, author, template.
@@ -182,7 +180,7 @@ class Page(MPTTModel):
 
     def get_children(self):
         """Cache superclass result"""
-        key = self.CHILDREN_KEY % self.id
+        key = self.CHILDREN_KEY % self.pk
         #children = cache.get(key, None)
         # if children is None:
         children = super(Page, self).get_children()
@@ -191,7 +189,7 @@ class Page(MPTTModel):
 
     def published_children(self):
         """Return a :class:`QuerySet` of published children page"""
-        key = self.PUB_CHILDREN_KEY % self.id
+        key = self.PUB_CHILDREN_KEY % self.pk
         #children = cache.get(key, None)
         # if children is None:
         children = Page.objects.filter_published(self.get_children()).all()
@@ -219,10 +217,10 @@ class Page(MPTTModel):
     def invalidate(self):
         """Invalidate cached data for this page."""
 
-        cache.delete(self.PAGE_LANGUAGES_KEY % (self.id))
+        cache.delete(self.PAGE_LANGUAGES_KEY % (self.pk))
         cache.delete('PAGE_FIRST_ROOT_ID')
-        cache.delete(self.CHILDREN_KEY % self.id)
-        cache.delete(self.PUB_CHILDREN_KEY % self.id)
+        cache.delete(self.CHILDREN_KEY % self.pk)
+        cache.delete(self.PUB_CHILDREN_KEY % self.pk)
         # XXX: Should this have a depth limit?
         if self.parent_id:
             self.parent.invalidate()
@@ -248,13 +246,13 @@ class Page(MPTTModel):
             # frozen
             cache.delete(
                 PAGE_CONTENT_DICT_KEY %
-                (self.id, name, 1))
+                (self.pk, name, 1))
             # not frozen
             cache.delete(
                 PAGE_CONTENT_DICT_KEY %
-                (self.id, name, 0))
+                (self.pk, name, 0))
 
-        cache.delete(self.PAGE_URL_KEY % (self.id))
+        cache.delete(self.PAGE_URL_KEY % (self.pk))
 
     def get_languages(self):
         """
@@ -262,7 +260,7 @@ class Page(MPTTModel):
         """
         if self._languages:
             return self._languages
-        self._languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.id))
+        self._languages = cache.get(self.PAGE_LANGUAGES_KEY % (self.pk))
         if self._languages is not None:
             return self._languages
 
@@ -271,13 +269,13 @@ class Page(MPTTModel):
             type="slug").values('language')]
         # remove duplicates
         languages = sorted(set(languages))
-        cache.set(self.PAGE_LANGUAGES_KEY % (self.id), languages)
+        cache.set(self.PAGE_LANGUAGES_KEY % (self.pk), languages)
         self._languages = languages
         return languages
 
     def is_first_root(self):
         """Return ``True`` if this page is the first root pages."""
-        parent_cache_key = 'PARENT_FOR_%d' % self.id
+        parent_cache_key = 'PARENT_FOR_%d' % self.pk
         has_parent = cache.get(parent_cache_key, None)
         if has_parent is None:
             has_parent = not not self.parent
@@ -289,7 +287,7 @@ class Page(MPTTModel):
             return self._is_first_root
         first_root_id = cache.get('PAGE_FIRST_ROOT_ID')
         if first_root_id is not None:
-            self._is_first_root = first_root_id == self.id
+            self._is_first_root = first_root_id == self.pk
             return self._is_first_root
         try:
             first_root_id = Page.objects.root().values('id')[0]['id']
@@ -297,7 +295,7 @@ class Page(MPTTModel):
             first_root_id = None
         if first_root_id is not None:
             cache.set('PAGE_FIRST_ROOT_ID', first_root_id)
-        self._is_first_root = self.id == first_root_id
+        self._is_first_root = self.pk == first_root_id
         return self._is_first_root
 
     def get_template(self):
@@ -339,7 +337,7 @@ class Page(MPTTModel):
 
         :param perms: the level of permission of the concerned user.
         """
-        exclude_list = [self.id]
+        exclude_list = [self.pk]
         for p in self.get_descendants():
             exclude_list.append(p.id)
         return Page.objects.exclude(id__in=exclude_list)
@@ -431,7 +429,7 @@ class Page(MPTTModel):
         if self._complete_slug and language in self._complete_slug:
             return self._complete_slug[language]
 
-        self._complete_slug = cache.get(self.PAGE_URL_KEY % (self.id))
+        self._complete_slug = cache.get(self.PAGE_URL_KEY % (self.pk))
         if self._complete_slug is None:
             self._complete_slug = {}
         elif language in self._complete_slug:
@@ -442,7 +440,7 @@ class Page(MPTTModel):
         else:
             url = '%s' % self.slug(language)
 
-        key = self.ANCESTORS_KEY % self.id
+        key = self.ANCESTORS_KEY % self.pk
         ancestors = cache.get(key, None)
         if ancestors is None:
             ancestors = self.get_ancestors(ascending=True)
@@ -452,7 +450,7 @@ class Page(MPTTModel):
             url = ancestor.slug(language) + '/' + url
 
         self._complete_slug[language] = url
-        cache.set(self.PAGE_URL_KEY % (self.id), self._complete_slug)
+        cache.set(self.PAGE_URL_KEY % (self.pk), self._complete_slug)
         return url
 
     def slug_with_level(self, language=None):
@@ -475,7 +473,7 @@ class Page(MPTTModel):
 
         slug = self.get_content(language, 'slug', language_fallback=fallback)
         if slug == '':
-            return "Page {0}".format(self.id)
+            return "Page {0}".format(self.pk)
 
         return slug
 
@@ -500,13 +498,12 @@ class Page(MPTTModel):
 
     def __str__(self):
         """Representation of the page, saved or not."""
-        if self.id:
+        if self.pk:
             # without ID a slug cannot be retrieved
             return self.slug()
         return "Page without id"
 
 
-@python_2_unicode_compatible
 class Content(models.Model):
     """A block of content, tied to a :class:`Page <pages.models.Page>`,
     for a particular language"""
@@ -534,7 +531,6 @@ class Content(models.Model):
         return u"{0} :: {1}".format(self.page.slug(), self.body[0:15])
 
 
-@python_2_unicode_compatible
 class PageAlias(models.Model):
     """URL alias for a :class:`Page <pages.models.Page>`"""
     page = models.ForeignKey(Page, null=True, blank=True,
@@ -562,7 +558,7 @@ def media_filename(instance, filename):
         ext = slugify(name_parts[-1])
         name = name + '.' + ext
     else:
-        name = slugify(data.name)
+        name = slugify(filename)
     filename = os.path.join(
         settings.PAGE_UPLOAD_ROOT,
         'medias',
@@ -571,7 +567,6 @@ def media_filename(instance, filename):
     return filename
 
 
-@python_2_unicode_compatible
 class Media(models.Model):
     """Media model :class:`Media <pages.models.Media>`"""
     title = models.CharField(max_length=255, blank=True)

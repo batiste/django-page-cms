@@ -31,7 +31,7 @@ $(function() {
     // Set the publication status
     var status_select = $('#id_status');
     var opt = ({ 0: 'draft', 1: 'published', 2: 'expired', 3: 'hidden' })[status_select.val()];
-    var img = $('<img src="'+static_url+'pages/images/icons/'+opt+'.gif" alt="'+opt+'" />').insertAfter(status_select);
+    var img = $('<img src="'+static_url+'pages/images/icons/'+opt+'.svg" alt="'+opt+'" />').insertAfter(status_select);
     // disable ajax post if page not already created (add view)
     var change_status = (typeof(add_form) !== 'undefined' && add_form) ? 0 : 1;
 

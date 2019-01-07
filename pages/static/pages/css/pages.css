@@ -201,7 +201,7 @@ html[dir=rtl] .change-list-pages tbody .title-cell .title {
     background: none;
 }
 .change-list-pages tbody .title-cell .title:hover {
-    background: url(../images/icons/edit.gif) right 0.2em no-repeat;
+    background: url(../images/icons/edit.svg) right 0.2em no-repeat;
 }
 html[dir=rtl] .change-list-pages tbody .title-cell .title:hover {
     background-position: left 0.2em;
@@ -273,21 +273,18 @@ html[dir=rtl] .change-list-pages .actions-pages a {
     display: none;
 }
 .change-list-pages .actions-pages a.viewlink {
-    background-image: url(../images/icons/icons.gif);
-    background-position: -2px -72px;
+    background-image: url(../images/icons/view.svg);
 }
 .change-list-pages .actions-pages a.movelink {
-    background-image: url(../images/icons/icons.gif);
-    background-position: -2px -60px;
+    background-image: url(../images/icons/sort.svg);
+    background-position: -0px -13px;
     cursor: all-scroll;
 }
 .change-list-pages .actions-pages a.deletelink {
-    background-image: url(../images/icons/icons.gif);
-    background-position: -2px -12px;
+    background-image: url(../images/icons/delete.svg);
 }
 .change-list-pages .actions-pages a.addlink {
-    background-image: url(../images/icons/icons.gif);
-    background-position: -2px 0px;
+    background-image: url(../images/icons/add.svg);
 }
 .change-list-pages .pagelink-broken {
     float: left;
@@ -435,7 +432,7 @@ html[dir=rtl] .change-list-pages .insert {
     background: none;
 }
 .change-list-pages .language-cell .changelink:hover {
-    background: url(../images/icons/edit.gif) right 0.2em no-repeat;
+    background: url(../images/icons/edit.svg) right 0.2em no-repeat;
 }
 .change-list-pages .language-cell .addlang {
     color: #ccc;
@@ -459,8 +456,8 @@ html[dir=rtl] .change-list-pages .insert {
     padding: 5px 10px;
 }
 .change-list-pages .publish-cell img {
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
 }
 .change-list-pages .publish-cell .publish-select {
     margin: 2px;
@@ -579,8 +576,8 @@ html[dir=rtl] .change-form .sidebar {
 }
 
 .module-general .status img, .module-general .field-status img {
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     margin-left:4px;
 }
 

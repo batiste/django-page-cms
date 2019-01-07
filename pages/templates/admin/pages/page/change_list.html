@@ -11,13 +11,13 @@
 {% block bodyclass %}{{ block.super }} change-list-pages{% endblock %}
 
 {% block result_list %}
-<div id="toolbar">
+<div id="toolbar" class="actions">
 <form id="changelist-search" action="" method="post">
     {% csrf_token %}
     <div>
-        <label for="searchbar"><img src="{% static "pages/img/icon_searchbox.png" %}" alt="{% trans "Search" %}" /></label>
-        <input type="text" size="25" name="q" value="{{q}}" id="searchbar" />
-        <input type="submit" name="g" value="{% trans "Go" %}" />
+        <label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="{% trans "Search" %}" /></label>
+        <input type="text" size="40" name="q" value="{{ q }}" id="searchbar" />
+        <button type="submit" class="button" name="g">{% trans 'Search' %}</button>
     </div>
 </form>
 </div>

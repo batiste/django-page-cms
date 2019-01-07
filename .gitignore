@@ -18,3 +18,4 @@ screenshot_*
 *~
 .tox
 ghostdriver.log
+.vscode/

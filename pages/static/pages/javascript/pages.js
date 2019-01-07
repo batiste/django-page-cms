@@ -113,13 +113,13 @@ pages.update_published_icon = function (url, select, img, change_status) {
         }
         $.post(url+'change-status/', {'status':$(select).val()}, function(val) {
             img.attr({
-                'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.gif'),
+                'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.svg'),
                 'alt': select_val
             });
         });
     } else {
         img.attr({
-            'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.gif'),
+            'src': img.attr('src').replace('loading.gif', 'icons/'+select_val+'.svg'),
             'alt': select_val
         });
     }

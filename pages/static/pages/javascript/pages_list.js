@@ -263,7 +263,7 @@ $(function($) {
             if(down) {
               move_y = start_y - e.pageY;
               // we have a drag an drop
-              if(Math.abs(move_y) > 8 && !drag_initiated) {
+              if(Math.abs(move_y) > 12 && !drag_initiated) {
                 indicator = $(".drag-indicator");
                 indicator.show();
                 $(".moved-page-title").text(line.find(".title").text());
@@ -318,7 +318,7 @@ $(function($) {
         });
 
         $(document).on("mouseup", function(e) {
-            if(down == false) {
+            if(down == false || !choosen_line) {
                 return;
             }
 

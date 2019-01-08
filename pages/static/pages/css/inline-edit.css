@@ -18,12 +18,15 @@
   box-shadow: 0 0 10px #9ecaed;
   padding:10px;
 }
+
 #edit-overlay form>p {
   display:none;
 }
+
 #edit-overlay input, #edit-overlay textarea {
   width:80%;
 }
+
 #edit-overlay button {
   margin-left:4px;
 }
@@ -31,15 +34,21 @@
 #edit-overlay form {
   margin:6px;
 }
+
 #edit-overlay form label {
 
 }
+
 #post-iframe {
   display:none;
 }
+
 #page-edit-bar {
-   position: fixed;
-   top:10px;
-   right:10px;
-   z-index:2000;
+  background-color: #fff;
+  box-shadow: 0 4px 8px #bbb;
+  padding: 8px;
+  bottom: 10px;
+  left: calc(50% - 150px);
+  position: fixed;
+  z-index:2000;
 }

@@ -10,30 +10,27 @@ By delegating the rendering of a page to another application, you will
 be able to use customized views and still get all the CMS variables
 to render a proper navigation.
 
-First you need a `urls.py` file that you can register to the CMS. It might look like this::
+First you need a `urls.py` file that you can register to the CMS. This file might look like this::
 
-    from django.conf.urls.defaults import *
+    from django.conf.urls import url
     from pages.testproj.documents.views import document_view
 
-    urlpatterns = patterns('',
+    urlpatterns = [
         url(r'^doc-(?P<document_id>[0-9]+)$', document_view, name='document_details'),
         url(r'^$', document_view, name='document_root'),
-    )
+    ]
 
 .. note::
 
-    The CMS will pass the keyword arguments `current_page` and `pages_navigation` to the view
+    The CMS will pass the keyword arguments `current_page`, `pages_navigation` and `lang` to the view
 
-Then you need to register the urlconf module of your application to use it
-within the admin interface. Put this code in you urls.py `before` admin.autodiscover(). Here is an example for a document application.::
+Then you need to register the urlconf module with the CMS to use it
+within the admin interface. Here is an example for a document application.::
 
     from pages.urlconf_registry import register_urlconf
 
     register_urlconf('Documents', 'pages.testproj.documents.urls',
         label='Display documents')
-
-    # this need to be executed after the registry happened.
-    admin.autodiscover()
 
 As soon as you have registered your `urls.py`, a new field will appear in the page administration.
 Choose the `Display documents`. The view used to render this page on the frontend
@@ -46,7 +43,8 @@ is now choosen by `pages.testproj.documents.urls`.
 
 .. note::
 
-    If you want to have the reverse URLs with your delegated application, you will need to include your URLs into your main urls.py, eg::
+    If you want to have the reverse URLs with your delegated application, 
+    you will need to include your URLs into your main urls.py, eg::
 
         (r'^pages/', include('pages.urls')),
         ...
@@ -54,12 +52,11 @@ is now choosen by `pages.testproj.documents.urls`.
 
 Here is an example of a valid view from the documents application::
 
-    from django.shortcuts import render_to_response
-    from django.template import RequestContext
+    from django.shortcuts import render
     from pages.testproj.documents.models import Document
 
     def document_view(request, *args, **kwargs):
-        context = RequestContext(request, kwargs)
+        context = dict(kwargs)
         if kwargs.get('current_page', False):
             documents = Document.objects.filter(page=kwargs['current_page'])
             context['documents'] = documents
@@ -67,7 +64,7 @@ Here is an example of a valid view from the documents application::
             document = Document.objects.get(pk=int(kwargs['document_id']))
             context['document'] = document
         context['in_document_view'] = True
-        return render_to_response('pages/examples/index.html', context)
+        return render(request, 'pages/examples/index.html', context)
 
 The `document_view` will receive a bunch of extra parameters related to the CMS:
 

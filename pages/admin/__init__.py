@@ -7,6 +7,7 @@ from pages.utils import get_placeholders
 from pages.templatetags.pages_tags import PlaceholderNode
 from pages.admin.forms import make_form
 from pages.admin import views
+from pages.urlconf_registry import registry
 
 from os.path import join
 import urllib
@@ -53,10 +54,8 @@ class PageAdmin(admin.ModelAdmin):
     if settings.PAGE_SHOW_START_DATE:
         general_fields.insert(insert_point, 'publication_date')
 
-    from pages.urlconf_registry import registry
-    if(len(registry)):
-        general_fields.append('delegate_to')
-        insert_point = general_fields.index('status') + 1
+    general_fields.append('delegate_to')
+    insert_point = general_fields.index('status') + 1
 
     page_templates = settings.get_page_templates()
 
@@ -168,6 +167,8 @@ class PageAdmin(admin.ModelAdmin):
             general_module['fields'].remove('freeze_date')
         if not request.user.has_perm('pages.can_publish'):
             general_module['fields'].remove('status')
+        if not len(registry):
+            general_module['fields'].remove('delegate_to')
 
         default_fieldsets[0][1] = general_module
 

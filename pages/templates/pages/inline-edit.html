@@ -25,6 +25,7 @@
 
 <iframe id="post-iframe" name="post-iframe"></iframe>
 
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src='{% static "pages/javascript/pages.js" %}'></script>
 
 <script>
@@ -38,6 +39,11 @@
     $(el.parentNode).attr('data-placeholder-name', el.nodeValue.split(";")[1]);
     $(el).remove();
   });
+
+  $(document.body).addClass('pages-cms-edit-mode');
+  {% if request.COOKIES.enable_edit_mode %}
+    $(document.body).addClass('pages-cms-edit-mode--enabled');
+  {% endif %}
 
   var overlay = $("#edit-overlay");
   var name, page_id, lang, element;

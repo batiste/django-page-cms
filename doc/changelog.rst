@@ -4,6 +4,20 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+Release 2.0.3
+================
+
+Released the 8th of January 2019.
+
+    * First 3rd party delegation
+
+Release 2.0.2
+================
+
+Released the 7th of January 2019.
+
+    * Update admin icons to use SVG
+
 Release 2.0.1
 ================
 

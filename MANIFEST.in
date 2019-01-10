@@ -14,6 +14,7 @@ recursive-include example *
 recursive-include example/templates *
 recursive-include example *.html
 recursive-include pages/templates *
+recursive-include pages/plugins/jsonexport/templates *
 recursive-include pages/static *
 recursive-include pages/locale *
 recursive-include pages/fixtures *

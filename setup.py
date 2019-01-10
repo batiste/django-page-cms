@@ -28,6 +28,9 @@ for directory in os.walk('pages/locale'):
 for directory in os.walk('pages/fixtures'):
     data_dirs.append(directory[0][6:] + '/*.*')
 
+for directory in os.walk('pages/plugins/jsonexport/templates'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
 example_dirs = []
 for directory in os.walk('example/templates'):
     example_dirs.append(directory[0][8:] + '/*.*')

@@ -489,7 +489,7 @@ msgid "German"
 msgstr "Almanca"
 
 #: testproj/test_settings.py:120
-msgid "Swiss french"
+msgid "Français"
 msgstr "İsviçre Fransızcası"
 
 #: testproj/test_settings.py:121

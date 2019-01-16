@@ -1,9 +1,8 @@
-{% load pages_tags %}
+{% load pages_tags static i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ language }}">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,142 +12,87 @@
 
     <title>{% placeholder 'title' %}</title>
 
-    <!-- Paper theme -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" integrity="sha384-awusxf8AUojygHf2+joICySzB780jVvQaVCAt1clU3QsyAitLGul28Qxb2r1e5g+" crossorigin="anonymous">
-    <style>
-    body {
-      margin-top:60px;
-    }
-    footer {
-      margin-top:20px;
-      padding-top:20px;
-      border-top: 1px solid #eeeeee;
-    }
-
-    </style>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
     {% pages_edit_media %}
-
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="{% static "cms/main.css" %}" rel="stylesheet">
+    <link href="{% static "cms/blog.css" %}" rel="stylesheet">
 </head>
 
 <body>
+  <div class="navbar shadow-sm">
+    <div class="container d-flex flex-column flex-md-row align-items-center bg-white">
+      <h5 class="my-0 mr-md-0 font-weight-normal">
+        <a href="/{{ lang }}/"><img src="https://django-page-cms.readthedocs.io/en/latest/_static/gerbi.png"></a>
+      </h5>
+      <nav class="my-2 my-md-0 mr-md-3">
+        {% for page in pages_navigation %}
+          <a href="{% show_absolute_url page %}" class="p-2 text-dark{% ifequal page.id current_page.id %} font-weight-bolder{% endifequal %}">
+            {% show_content page "title" %}
+          </a>
+        {% endfor %}
+      </nav>
+      <div class="nav-actions">
+        {% include "language-selector.html" %}
+        <a class="btn btn-primary" href="/admin/">{% trans "Login" %}</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    {% block header %}
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">{% placeholder "title" %}</h1>
+      <p class="lead">{% placeholder "lead" with Textarea %}</p>
+    </div>
+    {% endblock %}
 
-    <!-- Navigation -->
+    <div>
+    {% block content %}
+      {% placeholder "content" with RichTextarea %}
+    {% endblock %}
+    </div>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Gerbi CMS</a>
+    
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <img class="mb-2" src="https://django-page-cms.readthedocs.io/en/latest/_static/gerbi.png" alt="" height="24">
+          <small class="d-block mb-3 text-muted">&copy; 2017-2019</small>
         </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            {% for page in pages_navigation %}
-            <li {% ifequal page.id current_page.id %}class="active"{% endifequal %}>
-                {% if page.published_children %}
-                    <a href="{{ page.get_absolute_url }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% show_content page "title" %} <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                    {% for child in page.published_children %}
-                        <li><a href="{{ child.get_absolute_url }}">
-                        {% show_content child "title" %}
-                        </a>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                {% else %}
-                <a href="{{ page.get_absolute_url }}">
-                  {% show_content page "title" %}
-                </a>
-                {% endif %}
-            </li>
-            {% endfor %}
-            <li>
-      <form class="navbar-form navbar-left" role="search" action="/search/">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request.GET.q }}">
-        </div>
-      </form>
-        </li>
+        <div class="col-6 col-md">
+          <h5>Features</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Cool stuff</a></li>
+            <li><a class="text-muted" href="#">Random feature</a></li>
+            <li><a class="text-muted" href="#">Team feature</a></li>
+            <li><a class="text-muted" href="#">Stuff for developers</a></li>
+            <li><a class="text-muted" href="#">Another one</a></li>
+            <li><a class="text-muted" href="#">Last time</a></li>
           </ul>
         </div>
-
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Resource</a></li>
+            <li><a class="text-muted" href="#">Resource name</a></li>
+            <li><a class="text-muted" href="#">Another resource</a></li>
+            <li><a class="text-muted" href="#">Final resource</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>About</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Team</a></li>
+            <li><a class="text-muted" href="#">Locations</a></li>
+            <li><a class="text-muted" href="#">Privacy</a></li>
+            <li><a class="text-muted" href="#">Terms</a></li>
+          </ul>
+        </div>
       </div>
-    </nav>
-
-    <div class="container">
-
-    <div class="page-header" id="banner">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-          {% block header %}
-            <h1>{% placeholder 'title' %}</h1>
-            <p class="lead">{% placeholder 'lead' %}</p>
-            <div>
-              {% page_has_content 'header-image' current_page %}
-                {% imageplaceholder 'header-image' block %}
-                  {% if content %}
-                    <img src="{{ MEDIA_URL }}{{ content }}" class="img-responsive" alt="">
-                  {% endif %}
-                {% endplaceholder %}
-              {% end_page_has_content %}
-            </div>
-          {% endblock %}
-          </div>
-        </div>
-    </div>
-
-    <div id="content">
-        <div class="row">
-          <div class="col-lg-12">
-          {% block content %}
-            {% placeholder 'content' with RichTextarea %}
-          {% endblock %}
-          </div>
-        </div>
-    </div>
-
-    <footer>
-        <div class="row">
-          <div class="col-lg-12">
-            {% placeholder 'footer' shared with RichTextarea %}
-          </div>
-          
-          <div class="col-lg-12">
-            <ul class="list-unstyled">
-              <li class="pull-right"><a href="#top">Back to top</a></li>
-              <li><a href="https://github.com/batiste/django-page-cms/">GitHub</a></li>
-              <li><a href="https://github.com/batiste/django-page-cms/issues">Support</a></li>
-              <li>Theme by <a href="http://thomaspark.co" rel="nofollow">Thomas Park</a></li>
-            </ul>
-          </div>
-        </div>
     </footer>
-
-    </div>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
-    </script>
-
-    {% pages_edit_init %}
-
+  </div>
+  {% pages_edit_init %}
 </body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </html>

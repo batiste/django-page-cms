@@ -68,8 +68,8 @@ A list tuples that defines the languages that pages can be translated into::
 
     PAGE_LANGUAGES = (
         ('zh-cn', gettext_noop('Chinese Simplified')),
-        ('fr-ch', gettext_noop('Swiss french')),
-        ('en-us', gettext_noop('US English')),
+        ('fr', gettext_noop('Français')),
+        ('en', gettext_noop('US English')),
     )
 
 
@@ -80,7 +80,7 @@ Defines which language should be used by default.  If
 ``PAGE_DEFAULT_LANGUAGE`` not specified, then project's
 ``settings.LANGUAGE_CODE`` is used::
 
-    LANGUAGE_CODE = 'en-us'
+    LANGUAGE_CODE = 'en'
 
 PAGE_LANGUAGE_MAPPING
 ==================================
@@ -104,8 +104,8 @@ Enable that behavior here by assigning the following function to the
     # here is all the languages supported by the CMS
     PAGE_LANGUAGES = (
         ('de', gettext_noop('German')),
-        ('fr-fr', gettext_noop('Swiss french')),
-        ('en-us', gettext_noop('US English')),
+        ('fr-fr', gettext_noop('Français')),
+        ('en', gettext_noop('US English')),
     )
 
     # copy PAGE_LANGUAGES

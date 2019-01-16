@@ -488,7 +488,7 @@ msgid "German"
 msgstr "Duits"
 
 #: testproj/test_settings.py:120
-msgid "Swiss french"
+msgid "Français"
 msgstr "Zwitsers frans"
 
 #: testproj/test_settings.py:121

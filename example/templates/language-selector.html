@@ -1,0 +1,15 @@
+<div class="language-selector" tabindex=0>
+  {% for plang in PAGE_LANGUAGES %}
+    {% if lang == plang.0 %}
+      {{ plang.1 }}
+    {% endif %}
+  {% endfor %}
+  <span class="arrow-down" style="display: inline-block; height: 5px;"></span>
+  <div class='language-selector-choices'>
+    {% for plang in PAGE_LANGUAGES %}
+      {% if lang != plang.0 %}
+      <a href="/{{ plang.0 }}">{{ plang.1 }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

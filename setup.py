@@ -54,6 +54,7 @@ extra = [
     'Markdown>=2.6.6',
     'polib>=1.0.7',
     'Whoosh>=2.7.4',
+    'sorl-thumbnail>=12.5.0',
 ]
 
 tests_require = [

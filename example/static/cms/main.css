@@ -1,0 +1,57 @@
+body, input, select {
+  color: #000;
+  font-family: "Avenir-Book", Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65em;
+}
+
+.navbar-form {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+nav {
+  display: flex;
+}
+
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #000;
+}
+
+a, a:hover {
+  color: #0786f0;
+}
+
+.language-selector-choices {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 4px 6px #bbb;
+  padding: 10px;
+  margin-left: -12px;
+  display: none;
+}
+
+.language-selector-choices a {
+  padding: 6px;
+  display: block;
+}
+
+.language-selector:hover .language-selector-choices,
+.language-selector:focus .language-selector-choices
+ {
+  display: block;
+}
+
+.language-selector {
+  margin-right: 24px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}

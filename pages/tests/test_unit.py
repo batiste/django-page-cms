@@ -136,14 +136,14 @@ class UnitTestCase(TestCase):
             [page1.id, page2.id]
         )
 
-        Content(page=page1, language='en-us', type='slug', body='test2').save()
+        Content(page=page1, language='en', type='slug', body='test2').save()
 
         self.assertEqual(
             Content.objects.get_page_ids_by_slug('test1'),
             [page1.id, page2.id]
         )
 
-        Content(page=page1, language='en-us', type='slug', body='test1').save()
+        Content(page=page1, language='en', type='slug', body='test1').save()
 
         self.assertEqual(
             Content.objects.get_page_ids_by_slug('test1'),
@@ -156,19 +156,19 @@ class UnitTestCase(TestCase):
         unaccepted language is used.
         """
         class Req():
-            LANGUAGE_CODE = 'en-us'
+            LANGUAGE_CODE = 'en'
             GET = {}
         request = Req()
         self.assertEqual(
-            get_language_from_request(request), 'en-us')
+            get_language_from_request(request), 'en')
 
         request.LANGUAGE_CODE = 'dont'
         self.assertEqual(
-            get_language_from_request(request), 'en-us')
+            get_language_from_request(request), 'en')
 
-        request.LANGUAGE_CODE = 'fr-ch'
+        request.LANGUAGE_CODE = 'fr'
         self.assertEqual(
-            get_language_from_request(request), 'fr-ch')
+            get_language_from_request(request), 'fr')
 
     def test_default_view_with_language_prefix(self):
         """
@@ -186,7 +186,7 @@ class UnitTestCase(TestCase):
 
         self.assertEqual(page1.get_url_path(),
             reverse('pages-details-by-path', args=[],
-            kwargs={'lang': 'en-us', 'path': 'page1'})
+            kwargs={'lang': 'en', 'path': 'page1'})
         )
 
         self.assertEqual(details(req, page1.get_url_path(),
@@ -222,14 +222,14 @@ class UnitTestCase(TestCase):
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", True)
         self.assertEqual(page1.get_url_path(),
             reverse('pages-details-by-path', args=[],
-            kwargs={'lang': 'en-us', 'path': ''})
+            kwargs={'lang': 'en', 'path': ''})
         )
 
         self.set_setting("PAGE_HIDE_ROOT_SLUG", False)
         page1.invalidate()
         self.assertEqual(page1.get_url_path(),
             reverse('pages-details-by-path', args=[],
-            kwargs={'lang': 'en-us', 'path': 'page1'})
+            kwargs={'lang': 'en', 'path': 'page1'})
         )
 
         self.set_setting("PAGE_USE_LANGUAGE_PREFIX", False)
@@ -244,10 +244,10 @@ class UnitTestCase(TestCase):
         """
         page1 = self.new_page(content={'slug': 'page1'})
         self.set_setting("PAGE_CONTENT_REVISION_DEPTH", 3)
-        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev1')
-        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev2')
-        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev3')
-        Content.objects.create_content_if_changed(page1, 'en-us', 'rev-test', 'rev4')
+        Content.objects.create_content_if_changed(page1, 'en', 'rev-test', 'rev1')
+        Content.objects.create_content_if_changed(page1, 'en', 'rev-test', 'rev2')
+        Content.objects.create_content_if_changed(page1, 'en', 'rev-test', 'rev3')
+        Content.objects.create_content_if_changed(page1, 'en', 'rev-test', 'rev4')
         self.assertEqual(Content.objects.filter(type='rev-test').count(), 3)
         self.assertEqual(
             Content.objects.filter(type='rev-test').latest('creation_date').body,
@@ -259,9 +259,9 @@ class UnitTestCase(TestCase):
         """
         page1 = self.new_page(content={'slug': 'page1'})
         page1.save()
-        c = Content.objects.create_content_if_changed(page1, 'en-us', 'body', 'test')
+        c = Content.objects.create_content_if_changed(page1, 'en', 'body', 'test')
         self.assertEqual(
-            page1.content_by_language(language='en-us'),
+            page1.content_by_language(language='en'),
             [c]
         )
 
@@ -281,19 +281,19 @@ class UnitTestCase(TestCase):
         self.assertTrue(page1.get_children(), [page2])
 
         self.assertEqual(
-            Page.objects.from_path('wrong/path/page2', 'en-us'),
+            Page.objects.from_path('wrong/path/page2', 'en'),
             page2
         )
 
         self.set_setting("PAGE_USE_STRICT_URL", True)
 
         self.assertEqual(
-            Page.objects.from_path('wrong/path/page2', 'en-us'),
+            Page.objects.from_path('wrong/path/page2', 'en'),
             None
         )
 
         self.assertEqual(
-            Page.objects.from_path('page1/page2', 'en-us'),
+            Page.objects.from_path('page1/page2', 'en'),
             page2
         )
 
@@ -329,7 +329,7 @@ class UnitTestCase(TestCase):
         page2.invalidate()
 
         def _get_context_page(path):
-            return details(req, path, 'en-us')
+            return details(req, path, 'en')
         self.assertEqual(_get_context_page('/').status_code, 200)
         self.assertEqual(_get_context_page('/page1/').status_code, 200)
         self.assertEqual(_get_context_page('/page1/').status_code, 200)

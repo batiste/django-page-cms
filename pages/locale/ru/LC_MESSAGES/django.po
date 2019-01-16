@@ -493,7 +493,7 @@ msgid "German"
 msgstr "Немецкий"
 
 #: testproj/test_settings.py:120
-msgid "Swiss french"
+msgid "Français"
 msgstr "Швейцарский французский"
 
 #: testproj/test_settings.py:121

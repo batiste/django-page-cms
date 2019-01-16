@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 'get_latest_by': 'publication_date',
                 'verbose_name': 'page',
                 'verbose_name_plural': 'pages',
-                'permissions': [('can_freeze', 'Can freeze page'), ('can_publish', 'Can publish page'), ('can_manage_de', 'Manage German'), ('can_manage_fr_ch', 'Manage Swiss french'), ('can_manage_en_us', 'Manage US English')],
+                'permissions': [('can_freeze', 'Can freeze page'), ('can_publish', 'Can publish page'), ('can_manage_de', 'Manage German'), ('can_manage_fr_ch', 'Manage Français'), ('can_manage_en_us', 'Manage US English')],
             },
         ),
         migrations.CreateModel(

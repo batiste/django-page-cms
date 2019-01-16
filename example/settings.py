@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Django settings for cms project.
+# Django settings for CMS project.
 import os
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -13,7 +13,6 @@ CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 
 MANAGERS = ADMINS
 
-# AUTH_PROFILE_MODULE = 'profiles.Profile'
 LOGGING_CONFIG = None
 
 DATABASES = {
@@ -40,15 +39,12 @@ USE_I18N = True
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# this is for production
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'collect-static/')
 STATIC_URL = '/static/'
 
-# Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    # os.path.join(PROJECT_DIR, 'bootstrap'),
+  os.path.join(PROJECT_DIR, 'static/'),
 )
 
 STATICFILES_FINDERS = (
@@ -59,9 +55,7 @@ STATICFILES_FINDERS = (
 
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, 'fixtures')]
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
-
+SECRET_KEY = 'WARNING: set a proper secure key before going to production'
 
 _TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -94,7 +88,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'example.urls'
+ROOT_URLCONF = 'urls'
 
 CACHES = {
     'default': {
@@ -113,23 +107,24 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    # 'grappelli',
-    'django.contrib.admin',
-    'django.contrib.sites',
+    'django.contrib.humanize',
+    'taggit',
+    'sorl.thumbnail',
     'pages',
     'pages.plugins.jsonexport',
     'pages.plugins.pofiles',
     'mptt',
     'rest_framework',
-    # 'ckeditor', # if commented a fallback widget will be used
-    'haystack'
+    'haystack',
+    'django.contrib.admin',
+    'django.contrib.sites',
 ]
 
-PAGE_TAGGING = False
+PAGE_TAGGING = True
 
 # Default language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 # This is defined here as a do-nothing function because we can't import
 # django.utils.translation -- that module depends on the settings.
@@ -137,24 +132,29 @@ gettext_noop = lambda s: s  # noqa
 
 # languages you want to translate into the CMS.
 PAGE_LANGUAGES = (
-    ('de', gettext_noop('German')),
-    ('fr-ch', gettext_noop('Swiss french')),
-    ('en-us', gettext_noop('US English')),
+    ('en', gettext_noop('English')),
+    ('de', gettext_noop('Deutsch')),
+    ('fr', gettext_noop('Français')),
 )
+
+PAGE_USE_LANGUAGE_PREFIX = True
+
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.50', '127.0.0.1']
 
 # You should add here all language you want to accept as valid client
 # language. By default we copy the PAGE_LANGUAGES constant and add some other
 # similar languages.
 languages = list(PAGE_LANGUAGES)
-languages.append(('fr-fr', gettext_noop('French')))
+languages.append(('fr', gettext_noop('Français')))
 languages.append(('fr-be', gettext_noop('Belgium french')))
 LANGUAGES = languages
-
 
 PAGE_DEFAULT_TEMPLATE = 'index.html'
 
 PAGE_TEMPLATES = (
     ('index.html', 'Default template'),
+    ('blog-post.html', 'Blog post'),
+    ('blog-home.html', 'Blog home'),
 )
 
 PAGE_API_ENABLED = True
@@ -181,39 +181,6 @@ COVERAGE_EXCLUDE_MODULES = (
 )
 COVERAGE_HTML_REPORT = True
 COVERAGE_BRANCH_COVERAGE = False
-
-if 'ckeditor' in INSTALLED_APPS:
-    CKEDITOR_UPLOAD_PATH = 'uploads'
-
-    # ##################################
-    # Your ckeditor configurations
-
-    # Docs
-    # http://docs.ckeditor.com/#!/api/CKEDITOR.config
-    #
-    # If some button doesn't show up, it could help to explicitly allow some
-    # content related to the buttons with the allowedContent.
-    # ref. http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules
-
-    CKEDITOR_CONFIGS = {
-        'default': {
-            'width': 600,
-            'height': 300,
-            # 'language': 'en', # it not defined, the widget is localized with
-            # the browser default value
-            'toolbar': [
-                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript'],
-                ['Source', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'],
-            ]
-        },
-        'minimal': {
-            'width': 600,
-            'toolbar': [
-                ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', '-',
-                 'Link', 'Unlink'],
-            ],
-        },
-    }
 
 try:
     from local_settings import *  # noqa

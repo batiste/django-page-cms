@@ -27,17 +27,17 @@ class Error404Expected(Exception):
     pass
 
 
-def new_page(content={'title': 'test-page', 'slug': 'test-page-slug'}, 
-        parent=None, language='en-us', template='pages/examples/index.html'):
+def new_page(content={'title': 'test-page', 'slug': 'test-page-slug'},
+        parent=None, delegate_to=None, language='en', template='pages/examples/index.html'):
     author = get_user_model().objects.all()[0]
     page = Page.objects.create(author=author, status=Page.PUBLISHED,
-        template=template, parent=parent)
+        template=template, parent=parent, delegate_to=delegate_to)
     if pages_settings.PAGE_USE_SITE_ID:
         page.sites.add(Site.objects.get(id=1))
     # necessary to clear old URL cache
     page.invalidate()
     for key, value in list(content.items()):
-        Content(page=page, language='en-us', type=key, body=value).save()
+        Content(page=page, language='en', type=key, body=value).save()
     return page
 
 
@@ -111,7 +111,7 @@ class TestCase(TestCase):
         """Helper method for creating page datas"""
         page_data = {
             'title': 'test page %d' % self.counter,
-            'slug': 'test-page-%d' % self.counter, 'language': 'en-us',
+            'slug': 'test-page-%d' % self.counter, 'language': 'en',
             'sites': [1], 'status': Page.DRAFT if draft else Page.PUBLISHED,
             # used to disable an error with connected models
             'document_set-TOTAL_FORMS': 0, 'document_set-INITIAL_FORMS': 0,

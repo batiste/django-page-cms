@@ -107,7 +107,7 @@ INSTALLED_APPS = (
 
 # Default language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 # This is defined here as a do-nothing function because we can't import
 # django.utils.translation -- that module depends on the settings.
@@ -116,8 +116,8 @@ gettext_noop = lambda s: s
 # languages you want to translate into the CMS.
 PAGE_LANGUAGES = (
     ('de', gettext_noop('German')),
-    ('fr-ch', gettext_noop('Swiss french')),
-    ('en-us', gettext_noop('US English')),
+    ('fr', gettext_noop('Français')),
+    ('en', gettext_noop('US English')),
 )
 
 # You should add here all language you want to accept as valid client
@@ -133,8 +133,8 @@ LANGUAGES = languages
 # be in the LANGUAGES config
 def language_mapping(lang):
     if lang.startswith('fr'):
-        # serve swiss french for everyone
-        return 'fr-ch'
+        # serve Français for everyone
+        return 'fr'
     return lang
 
 PAGE_LANGUAGE_MAPPING = language_mapping

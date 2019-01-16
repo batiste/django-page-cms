@@ -181,7 +181,7 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, changelist_url)
         page = Page.objects.get(id=page.id)
         self.assertEqual(page.title(), 'changed title')
-        body = Content.objects.get_content(page, 'en-us', 'body')
+        body = Content.objects.get_content(page, 'en', 'body')
         self.assertEqual(body, 'changed body')
 
     def test_site_framework(self):
@@ -258,9 +258,9 @@ class FunctionnalTestCase(TestCase):
         response = c.get(add_url)
 
         self.assertContains(response, 'value="de"')
-        c.cookies["django_language"] = 'fr-ch'
+        c.cookies["django_language"] = 'fr'
         response = c.get(add_url)
-        self.assertContains(response, 'value="fr-ch"')
+        self.assertContains(response, 'value="fr"')
 
         page_data = self.get_new_page_data()
         page_data["title"] = 'english title'
@@ -268,10 +268,10 @@ class FunctionnalTestCase(TestCase):
         self.assertRedirects(response, changelist_url)
 
         page = Page.objects.all()[0]
-        self.assertEqual(page.get_languages(), ['en-us'])
+        self.assertEqual(page.get_languages(), ['en'])
 
         # test the language cache
-        self.assertEqual(page.get_languages(), ['en-us'])
+        self.assertEqual(page.get_languages(), ['en'])
 
         # this test only works in version superior of 1.0.2
         django_version =  django.get_version().rsplit()[0].split('.')
@@ -284,7 +284,7 @@ class FunctionnalTestCase(TestCase):
             self.assertContains(response, 'value="de"')
 
         # add a french version of the same page
-        page_data["language"] = 'fr-ch'
+        page_data["language"] = 'fr'
         page_data["title"] = 'french title'
         response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         self.assertRedirects(response, changelist_url)
@@ -293,17 +293,17 @@ class FunctionnalTestCase(TestCase):
         # I cannot find a way of setting the accept-language HTTP
         # header so I used django_language cookie instead
         c = self.get_admin_client()
-        c.cookies["django_language"] = 'en-us'
+        c.cookies["django_language"] = 'en'
         response = c.get(page.get_url_path())
         self.assertContains(response, 'english title')
-        self.assertContains(response, 'lang="en-us"')
+        self.assertContains(response, 'lang="en"')
         self.assertNotContains(response, 'french title')
 
         c = self.get_admin_client()
-        c.cookies["django_language"] = 'fr-ch'
+        c.cookies["django_language"] = 'fr'
         response = c.get(page.get_url_path())
         self.assertContains(response, 'french title')
-        self.assertContains(response, 'lang="fr-ch"')
+        self.assertContains(response, 'lang="fr"')
 
         self.assertNotContains(response, 'english title')
 
@@ -312,7 +312,7 @@ class FunctionnalTestCase(TestCase):
         c.cookies["django_language"] = 'fr-fr'
         response = c.get(page.get_url_path())
         self.assertContains(response, 'french title')
-        self.assertContains(response, 'lang="fr-ch"')
+        self.assertContains(response, 'lang="fr"')
 
     def test_revision(self):
         """Test that a page can edited several times."""
@@ -323,13 +323,13 @@ class FunctionnalTestCase(TestCase):
 
         page_data['body'] = 'changed body'
         response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'),
             'changed body')
 
         page_data['body'] = 'changed body 2'
         response = c.post(reverse("admin:pages_page_change", args=[page.id]), page_data)
         page.invalidate()
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'),
             'changed body 2')
 
         response = c.get(page.get_url_path())
@@ -337,7 +337,7 @@ class FunctionnalTestCase(TestCase):
 
         self.set_setting("PAGE_CONTENT_REVISION", False)
 
-        self.assertEqual(Content.objects.get_content(page, 'en-us', 'body'),
+        self.assertEqual(Content.objects.get_content(page, 'en', 'body'),
             'changed body 2')
 
     def test_placeholder(self):
@@ -407,12 +407,12 @@ class FunctionnalTestCase(TestCase):
         page = Content.objects.get_content_slug_by_slug('page-1').page
         self.assertEqual(page.status, Page.DRAFT)
 
-        url = reverse("admin:page-modify-content", args=[page.id, "title", "en-us"])
+        url = reverse("admin:page-modify-content", args=[page.id, "title", "en"])
         response = c.post(url, {'content': 'test content'})
         self.assertEqual(page.title(), 'test content')
 
         # TODO: realy test these methods
-        url = reverse("admin:page-traduction", args=[page.id, "en-us"])
+        url = reverse("admin:page-traduction", args=[page.id, "en"])
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -427,7 +427,7 @@ class FunctionnalTestCase(TestCase):
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
 
-        url = reverse("admin:page-delete-content", args=[page.id, "en-us"])
+        url = reverse("admin:page-delete-content", args=[page.id, "en"])
         response = c.get(url)
         self.assertEqual(response.status_code, 302)
 
@@ -511,12 +511,12 @@ class FunctionnalTestCase(TestCase):
         """Test that language is working properly"""
         c = self.get_admin_client()
         # Activate a language other than settings.LANGUAGE_CODE
-        response = c.post('/i18n/setlang/', {'language':'fr-ch' })
+        response = c.post('/i18n/setlang/', {'language':'fr' })
         try:
             from django.utils.translation import LANGUAGE_SESSION_KEY
         except ImportError:
             LANGUAGE_SESSION_KEY = 'django_language'
-        self.assertEqual(c.session.get(LANGUAGE_SESSION_KEY, False), 'fr-ch')
+        self.assertEqual(c.session.get(LANGUAGE_SESSION_KEY, False), 'fr')
 
         # Make sure we're in french
         response = c.get(changelist_url)
@@ -809,7 +809,7 @@ class FunctionnalTestCase(TestCase):
 
         page = Page.objects.from_path('untranslated', None)
         self.assertEqual(
-            Content.objects.get_content(page, 'en-us', 'untrans'),
+            Content.objects.get_content(page, 'en', 'untrans'),
             unstranslated_string
         )
 
@@ -847,7 +847,7 @@ class FunctionnalTestCase(TestCase):
         c = self.get_admin_client()
         page1 = self.new_page(content={'slug': 'english-slug'})
         page1.save()
-        Content(page=page1, language='fr-ch', type='slug',
+        Content(page=page1, language='fr', type='slug',
             body='french-slug').save()
 
         response = c.get('/sitemap.xml')
@@ -889,7 +889,7 @@ class FunctionnalTestCase(TestCase):
         req = get_request_mock()
 
         def _get_context_page(path):
-            return details(req, path, 'en-us')
+            return details(req, path, 'en')
 
         self.assertEqual(_get_context_page('/pages/page1/').status_code, 200)
 

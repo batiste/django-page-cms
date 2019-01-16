@@ -31,7 +31,7 @@ class TemplateTestCase(TestCase):
         p1 = self.new_page(content={'inher': 'parent-content'})
         p2 = self.new_page()
         template = django.template.loader.get_template('pages/tests/test7.html')
-        context = {'current_page': p2, 'lang': 'en-us'}
+        context = {'current_page': p2, 'lang': 'en'}
         self.assertEqual(render(template, context), '')
 
         p2.move_to(p1, position='first-child')
@@ -49,7 +49,7 @@ class TemplateTestCase(TestCase):
     def test_placeholder_all_syntaxes(self):
         """Test placeholder syntaxes."""
         page = self.new_page()
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
 
         pl1 = """{% load pages_tags %}{% placeholder title as hello %}"""
         template = self.get_template_from_string(pl1)
@@ -67,7 +67,7 @@ class TemplateTestCase(TestCase):
         setattr(settings, "DEBUG", True)
 
         page = self.new_page({'wrong': '{% wrong %}'})
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
 
         pl2 = """{% load pages_tags %}{% placeholder wrong parsed %}"""
         template = self.get_template_from_string(pl2)
@@ -106,16 +106,16 @@ class TemplateTestCase(TestCase):
     def test_placeholder_quoted_name(self):
         """Test placeholder name with quotes."""
         page = self.new_page()
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
         placeholder = PlaceholderNode("test name")
-        placeholder.save(page, 'en-us', 'some random value', False)
+        placeholder.save(page, 'en', 'some random value', False)
 
         pl1 = """{% load pages_tags %}{% placeholder "test name" as hello %}{{ hello }}"""
         template = self.get_template_from_string(pl1)
         self.assertEqual(render(template, context), 'some random value')
 
         placeholder = PlaceholderNode("with accent éàè")
-        placeholder.save(page, 'en-us', 'some random value', False)
+        placeholder.save(page, 'en', 'some random value', False)
 
         pl1 = """{% load pages_tags %}{% placeholder "with accent éàè" as hello %}{{ hello }}"""
         template = self.get_template_from_string(pl1)
@@ -126,13 +126,13 @@ class TemplateTestCase(TestCase):
         setattr(settings, "DEBUG", True)
         page = self.new_page({'title': '<b>{{ "hello"|capfirst }}</b>'})
         page.save()
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
         pl_parsed = """{% load pages_tags %}{% placeholder title parsed %}"""
         template = self.get_template_from_string(pl_parsed)
         self.assertEqual(render(template, context), '<b>Hello</b>')
         setattr(settings, "DEBUG", False)
         page = self.new_page({'title': '<b>{{ "hello"|wrong_filter }}</b>'})
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
         self.assertEqual(render(template, context), '')
 
     def test_placeholder_untranslated_content(self):
@@ -140,20 +140,20 @@ class TemplateTestCase(TestCase):
         self.set_setting("PAGE_USE_SITE_ID", False)
         page = self.new_page(content={})
         placeholder = PlaceholderNode('untrans', page='p', untranslated=True)
-        placeholder.save(page, 'fr-ch', 'test-content', True)
-        placeholder.save(page, 'en-us', 'test-content', True)
+        placeholder.save(page, 'fr', 'test-content', True)
+        placeholder.save(page, 'en', 'test-content', True)
         self.assertEqual(len(Content.objects.all()), 1)
-        self.assertEqual(Content.objects.all()[0].language, 'en-us')
+        self.assertEqual(Content.objects.all()[0].language, 'en')
 
         placeholder = PlaceholderNode('untrans', page='p', untranslated=False)
-        placeholder.save(page, 'fr-ch', 'test-content', True)
+        placeholder.save(page, 'fr', 'test-content', True)
         self.assertEqual(len(Content.objects.all()), 2)
 
         # test the syntax
         page = self.new_page()
         template = django.template.loader.get_template(
                 'pages/tests/untranslated.html')
-        context = {'current_page': page, 'lang': 'en-us'}
+        context = {'current_page': page, 'lang': 'en'}
         self.assertEqual(render(template, context), '')
 
     def test_get_content_tag(self):
@@ -165,7 +165,7 @@ class TemplateTestCase(TestCase):
 
         context = {'page': page}
         template = Template('{% load pages_tags %}'
-                            '{% get_content page "title" "en-us" as content %}'
+                            '{% get_content page "title" "en" as content %}'
                             '{{ content }}')
         self.assertEqual(render(template, context), page_data['title'])
         template = Template('{% load pages_tags %}'
@@ -180,10 +180,10 @@ class TemplateTestCase(TestCase):
         """
         page_data = {'title': 'test', 'slug': 'english'}
         page = self.new_page(page_data)
-        Content(page=page, language='fr-ch', type='title', body='french').save()
-        Content(page=page, language='fr-ch', type='slug', body='french').save()
-        self.assertEqual(page.slug(language='fr-ch'), 'french')
-        self.assertEqual(page.slug(language='en-us'), 'english')
+        Content(page=page, language='fr', type='title', body='french').save()
+        Content(page=page, language='fr', type='slug', body='french').save()
+        self.assertEqual(page.slug(language='fr'), 'french')
+        self.assertEqual(page.slug(language='en'), 'english')
 
         # default
         context = {'page': page}
@@ -200,7 +200,7 @@ class TemplateTestCase(TestCase):
         self.assertEqual(render(template, context), 'french')
 
         # english specified
-        context = {'page': page, 'lang': 'en-us'}
+        context = {'page': page, 'lang': 'en'}
         template = Template('{% load pages_tags %}'
                             '{% get_content page "slug" as content %}'
                             '{{ content }}')
@@ -215,9 +215,9 @@ class TemplateTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = {'page': page, 'lang': 'en-us', 'path': '/page-1/'}
+        context = {'page': page, 'lang': 'en', 'path': '/page-1/'}
         template = Template('{% load pages_tags %}'
-                            '{% show_content page "title" "en-us" %}')
+                            '{% show_content page "title" "en" %}')
         self.assertEqual(render(template, context), page_data['title'])
         template = Template('{% load pages_tags %}'
                             '{% show_content page "title" %}')
@@ -232,7 +232,7 @@ class TemplateTestCase(TestCase):
         # cleanup the cache from previous tests
         page.invalidate()
 
-        context = {'page': page, 'lang': 'en-us', 'path': '/page-1/'}
+        context = {'page': page, 'lang': 'en', 'path': '/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% pages_siblings_menu page %}')
         render(template, context)
@@ -249,7 +249,7 @@ class TemplateTestCase(TestCase):
         # TODO: need fixing
         request = MockRequest()
         request.COOKIES['tree_expanded'] = "%d,10,20" % page.id
-        context = {'page': page, 'lang': 'en-us', 'path': '/page-1/'}
+        context = {'page': page, 'lang': 'en', 'path': '/page-1/'}
         template = Template('{% load pages_tags %}'
                             '{% pages_admin_menu page %}')
         render(template, context)
@@ -260,21 +260,21 @@ class TemplateTestCase(TestCase):
         """
         page_data = {'title': 'english', 'slug': 'english'}
         page = self.new_page(page_data)
-        Content(page=page, language='fr-ch', type='title', body='french').save()
-        Content(page=page, language='fr-ch', type='slug', body='french').save()
+        Content(page=page, language='fr', type='title', body='french').save()
+        Content(page=page, language='fr', type='slug', body='french').save()
 
-        self.assertEqual(page.get_url_path(language='fr-ch'),
+        self.assertEqual(page.get_url_path(language='fr'),
             self.get_page_url('french'))
-        self.assertEqual(page.get_url_path(language='en-us'),
+        self.assertEqual(page.get_url_path(language='en'),
             self.get_page_url('english'))
 
         context = {'page': page}
         template = Template('{% load pages_tags %}'
-                            '{% show_absolute_url page "en-us" %}')
+                            '{% show_absolute_url page "en" %}')
         self.assertEqual(render(template, context),
             self.get_page_url('english'))
         template = Template('{% load pages_tags %}'
-                            '{% show_absolute_url page "fr-ch" %}')
+                            '{% show_absolute_url page "fr" %}')
         self.assertEqual(render(template, context),
             self.get_page_url('french'))
 
@@ -283,7 +283,7 @@ class TemplateTestCase(TestCase):
         page = self.new_page({'slug': 'test'})
         self.assertEqual(get_page_from_string_or_id(str(page.id)), page)
 
-        content = Content(page=page, language='en-us', type='test_id',
+        content = Content(page=page, language='en', type='test_id',
             body=page.id)
         content.save()
         context = {'current_page': page}

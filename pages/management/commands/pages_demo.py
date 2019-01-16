@@ -37,6 +37,25 @@ class Command(BaseCommand):
             'title': 'Hat', 'slug': 'hat', 'lead': 'Fedora for elegance', 'content': lorem},
             parent=prod_page,
             template='index.html')
+        blog = new_page(content={
+            'title': 'Blog', 'slug': 'blog', 'lead': 'Blog example', 'content': lorem},
+            template='blog-home.html', delegate_to='blog')
+        new_page(content={
+            'title': 'Blog post 1', 'slug': 'blog-post-1', 'lead': 'Blog post example', 'content': lorem},
+            parent=blog,
+            template='blog-post.html')
+        new_page(content={
+            'title': 'Blog post 2', 'slug': 'blog-post-2', 'lead': 'Blog post example', 'content': lorem},
+            parent=blog,
+            template='blog-post.html')
+        new_page(content={
+            'title': 'Blog post 3', 'slug': 'blog-post-3', 'lead': 'Blog post example', 'content': lorem},
+            parent=blog,
+            template='blog-post.html')
+        new_page(content={
+            'title': 'Blog post 4', 'slug': 'blog-post-4', 'lead': 'Blog post example', 'content': lorem},
+            parent=blog,
+            template='blog-post.html')
         new_page(content={
             'title': 'Contact', 'slug': 'contact', 
             'lead': 'Contact us at gerbi@example.com', 'content':lorem

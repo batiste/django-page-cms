@@ -1,0 +1,32 @@
+{% load pages_tags static i18n humanize thumbnail %}
+<div class="card mb-4 shadow-sm">
+  <a class="blog-lead-image" href="{% show_absolute_url page %}">
+    {% get_content page "lead-image" as image %}
+    {% if image %}
+      {% thumbnail image "320x240" crop="center" as img %}
+        <img src="{{ img.url }}">
+      {% endthumbnail %}
+    {% else %}
+      <!-- no image for this post -->
+    {% endif %}
+  </a>
+  <div class="card-body">
+    <a href="{% show_absolute_url page %}">
+      <h3 class="my-0 font-weight-normal">{% show_content page "title" %}</h3>
+    </a>
+    <p>{% show_content page "lead" %}</p>
+    {% if forloop.first %}
+      {% get_content page "content" as content %}
+      <p class="d-none d-lg-block">{{ content | striptags | safe | truncatechars:220 }}</p>
+    {% endif %}
+    <p class="blog-meta">Published {{ page.creation_date | naturalday }}
+      {% if page.tags.count %}
+        in the categories: 
+        {% for tag in page.tags.all %}
+          <a href="/{{ lang }}/blog/category/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% endif %}
+      by {{ page.author.first_name }} {{ page.author.last_name }}
+    </p>
+  </div>
+</div>

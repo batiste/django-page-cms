@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% load pages_tags static i18n humanize %}
+
+{% block header %}
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center blog-post">
+  <h1 class="display-4">{% placeholder "title" %}</h1>
+  <p class="lead">{% placeholder "lead" with Textarea %}</p>
+  <p class="blog-meta">Published {{ current_page.creation_date | naturalday }}
+      {% if current_page.tags.count %}
+        in the categories: 
+        {% for tag in current_page.tags.all %}
+          <a href="/{{ lang }}/blog/category/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% endif %}
+      by {{ current_page.author.first_name }} {{ current_page.author.last_name }}
+    </p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="blog-post">
+  <div class="blog-lead-image">
+    {% imageplaceholder 'lead-image' block %}
+      {% if content %}
+        <img src="{{ MEDIA_URL }}{{ content }}" alt="">
+      {% endif %}
+    {% endplaceholder %}
+  </div>
+
+  <div>
+    {% placeholder "content" with RichTextarea %}
+  </div>
+</div>
+{% endblock %}

@@ -103,7 +103,7 @@ class RegressionTestCase(TestCase):
         page_data['slug'] = 'slug'
         response = c.post(add_url, page_data)
         page = Content.objects.get_content_slug_by_slug('slug').page
-        Content(page=page, type='title', language='fr-ch',
+        Content(page=page, type='title', language='fr',
             body="title-fr-ch").save()
 
         request = get_request_mock()
@@ -111,7 +111,7 @@ class RegressionTestCase(TestCase):
         render = temp.render({'page':page})
         self.assertTrue('title-en-us' in render)
 
-        render = temp.render({'page':page, 'lang':'fr-ch'})
+        render = temp.render({'page':page, 'lang':'fr'})
         self.assertTrue('title-fr-ch' in render)
 
 
@@ -133,19 +133,19 @@ class RegressionTestCase(TestCase):
         """Language fallback doesn't work properly."""
         page = self.create_new_page()
 
-        c = Content(page=page, type='new_type', body='toto', language='en-us')
+        c = Content(page=page, type='new_type', body='toto', language='en')
         c.save()
 
         self.assertEqual(
-            Content.objects.get_content(page, 'en-us', 'new_type'),
+            Content.objects.get_content(page, 'en', 'new_type'),
             'toto'
         )
         self.assertEqual(
-            Content.objects.get_content(page, 'fr-ch', 'new_type'),
+            Content.objects.get_content(page, 'fr', 'new_type'),
             ''
         )
         self.assertEqual(
-            Content.objects.get_content(page, 'fr-ch', 'new_type', True),
+            Content.objects.get_content(page, 'fr', 'new_type', True),
             'toto'
         )
 
@@ -157,7 +157,7 @@ class RegressionTestCase(TestCase):
         response = c.post(add_url, page_data)
         page1 = Content.objects.get_content_slug_by_slug('page1').page
         page1.invalidate()
-        c = Content.objects.get_content(page1, 'en-us', 'title')
+        c = Content.objects.get_content(page1, 'en', 'title')
         self.assertEqual(c, page_data['title'])
 
     def test_bug_181(self):
@@ -203,10 +203,10 @@ class RegressionTestCase(TestCase):
         from pages.placeholders import PlaceholderNode
         page = self.new_page()
         placeholder = PlaceholderNode('test', page=page)
-        placeholder.save(page, 'fr-ch', 'fr', True)
-        placeholder.save(page, 'en-us', 'en', True)
+        placeholder.save(page, 'fr', 'fr', True)
+        placeholder.save(page, 'en', 'en', True)
         self.assertEqual(
-            Content.objects.get_content(page, 'fr-ch', 'test'),
+            Content.objects.get_content(page, 'fr', 'test'),
             'fr'
         )
 
@@ -215,9 +215,9 @@ class RegressionTestCase(TestCase):
         from pages.placeholders import PlaceholderNode
         page = self.new_page()
         placeholder = PlaceholderNode('test space', page=page)
-        placeholder.save(page, 'fr-ch', 'fr', True)
+        placeholder.save(page, 'fr', 'fr', True)
         self.assertEqual(
-            Content.objects.get_content(page, 'fr-ch', placeholder.ctype),
+            Content.objects.get_content(page, 'fr', placeholder.ctype),
             'fr'
         )
 
@@ -238,8 +238,8 @@ class RegressionTestCase(TestCase):
         from pages.placeholders import PlaceholderNode
         page = self.new_page()
         placeholder = PlaceholderNode('hello world', page=page)
-        placeholder.save(page, 'fr-ch', 'hello!', True)
-        context = Context({'current_page': page, 'lang':'fr-ch'})
+        placeholder.save(page, 'fr', 'hello!', True)
+        context = Context({'current_page': page, 'lang':'fr'})
         pl1 = """{% load pages_tags %}{% placeholder "hello world" %}"""
         template = self.get_template_from_string(pl1)
         self.assertEqual(template.render(context), 'hello!')
@@ -250,7 +250,7 @@ class RegressionTestCase(TestCase):
         http://code.google.com/p/django-page-cms/issues/detail?id=209
         """
         page = self.new_page()
-        context = Context({'current_page': page, 'lang':'en-us'})
+        context = Context({'current_page': page, 'lang':'en'})
 
         pl1 = """{% load pages_tags %}{% pages_dynamic_tree_menu "wrong-slug" %}"""
         template = self.get_template_from_string(pl1)
@@ -262,7 +262,7 @@ class RegressionTestCase(TestCase):
         """
         p1 = self.new_page(content={'slug':'test', 'one':'one', 'two': 'two'})
         template = django.template.loader.get_template('pages/tests/extends.html')
-        context = {'current_page': p1, 'lang':'en-us'}
+        context = {'current_page': p1, 'lang':'en'}
         renderer = template.render(context)
         self.assertTrue('one' in renderer)
         self.assertTrue('two' in renderer)
@@ -302,7 +302,7 @@ class RegressionTestCase(TestCase):
     def test_str_method(self):
         """Problem with encoding __str__ method"""
         page = self.new_page({'title': u'АБВГДЕЖ'})
-        content = Content(page=page, type='title', language='fr-ch',
+        content = Content(page=page, type='title', language='fr',
             body=u"АБВГДЕЖ")
         content.save()
         try:

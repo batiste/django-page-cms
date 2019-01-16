@@ -97,8 +97,8 @@ PAGE_CONTENT_REVISION_DEPTH = getattr(settings,
 #
 # PAGE_LANGUAGES = (
 #    ('zh-cn', gettext_noop('Chinese Simplified')),
-#    ('fr-ch', gettext_noop('Swiss french')),
-#    ('en-us', gettext_noop('US English')),
+#    ('fr', gettext_noop('Français')),
+#    ('en', gettext_noop('US English')),
 #)
 
 PAGE_LANGUAGES = get_setting('PAGE_LANGUAGES', raise_error=True)

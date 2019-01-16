@@ -4,6 +4,16 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+
+Release 2.0.3
+================
+
+Released the 16th of January 2019.
+
+    * Update the example application to contain a blog 
+      example application using the delegation.
+    * Update gerbi command line to contain the blog
+
 Release 2.0.3
 ================
 

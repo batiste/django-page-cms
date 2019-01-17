@@ -35,6 +35,9 @@ example_dirs = []
 for directory in os.walk('example/templates'):
     example_dirs.append(directory[0][8:] + '/*.*')
 
+for directory in os.walk('example/static'):
+    example_dirs.append(directory[0][8:] + '/*.*')
+
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 

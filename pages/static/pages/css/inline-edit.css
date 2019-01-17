@@ -24,19 +24,33 @@
 }
 
 #edit-overlay input, #edit-overlay textarea {
-  width:80%;
+  width: 80%;
 }
 
 #edit-overlay button {
   margin-left:4px;
 }
 
+#edit-overlay input[type=file] {
+  border-width: 0;
+  padding-left: 4px;  
+}
+
 #edit-overlay form {
   margin:6px;
 }
 
-#edit-overlay form label {
+#edit-overlay label, #edit-overlay button {
+  margin-bottom: .5rem;
+}
 
+#edit-overlay form label {
+  display: flex;
+  align-items: center;
+}
+
+#edit-overlay input[type=checkbox] {
+  width: 2em;
 }
 
 #post-iframe {

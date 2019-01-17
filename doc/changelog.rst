@@ -4,12 +4,12 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
-
-Release 2.0.3
+Release 2.0.6
 ================
 
-Released the 16th of January 2019.
+Released the 17th of January 2019.
 
+    * Improved inline editor CSS
     * Update the example application to contain a blog 
       example application using the delegation.
     * Update gerbi command line to contain the blog

@@ -11,7 +11,7 @@ Released the 17th of January 2019.
 
     * Improved inline editor CSS
     * Update the example application to contain a blog 
-      example application using the delegation.
+      example application using the 3rd party delegation feature.
     * Update gerbi command line to contain the blog
 
 Release 2.0.3

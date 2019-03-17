@@ -19,7 +19,7 @@ Release 2.0.3
 
 Released the 8th of January 2019.
 
-    * First 3rd party delegation
+    * Fix 3rd party delegation (was broken after Django 2.0)
 
 Release 2.0.2
 ================

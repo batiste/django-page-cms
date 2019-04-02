@@ -123,10 +123,10 @@ Delegate the page rendering to another application
 Subclass the default view
 -----------------------------
 
-This CMS view is a class based view. This means is is easy
-to override some default behavior. For example if you want to inject
+This CMS use a class based view. It is therefor easy
+to override the default behavior of this view. For example if you want to inject
 additional context information into all the pages templates you can override
-th method extra_context::
+the method extra_context::
 
 
     from pages.views import Details
@@ -143,19 +143,21 @@ th method extra_context::
 For your view to be used in place of the CMS one, you simply need
 to point to it with something similar to this::
 
-    from django.conf.urls.defaults import url, include, patterns
+    from django.conf.urls import url
     from YOUR_APP.views import details
     from pages import page_settings
 
+    urlpatterns = []
+
     if page_settings.PAGE_USE_LANGUAGE_PREFIX:
-        urlpatterns = patterns('',
+        urlpatterns += [
             url(r'^(?P<lang>[-\w]+)/(?P<path>.*)$', details,
                 name='pages-details-by-path')
-        )
+        ]
     else:
-        urlpatterns = patterns('',
+        urlpatterns += [
             url(r'^(?P<path>.*)$', details, name='pages-details-by-path')
-        )
+        ]
 
 .. note::
 

@@ -1,4 +1,5 @@
 dist: xenial
+sudo: false
 
 language: python
 
@@ -7,6 +8,11 @@ python:
   - "3.6"
   - "3.7"
   - "3.8-dev"
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - python: "3.8-dev"
 
 install:
   - "pip install coveralls tox tox-travis"

@@ -18,14 +18,8 @@ class PageTestSuiteRunner(DiscoverRunner):
         results = DiscoverRunner.run_tests(self, test_labels, extra_tests)
         sys.exit(results)
 
-def build_suite():
-    runner = PageTestSuiteRunner()
-    runner.setup_test_environment()
-    runner.setup_databases()
-    return runner.build_suite(test_labels=('pages',), extra_tests=None)
-
 if __name__ == '__main__':
-    runner = PageTestSuiteRunner(failfast=False)
+    runner = PageTestSuiteRunner(failfast=True)
     if len(sys.argv) > 1:
         runner.run_tests(test_labels=(sys.argv[1], ))
     else:

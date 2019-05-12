@@ -42,18 +42,18 @@ url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
 install_requires = [
-    'Django>=2.1.3,<3',
-    'django-mptt>=0.10.0',
+    'Django>=2.1.5,<2.2',
+    'django-mptt>=0.9',
     'django-taggit>=1.1.0',
-    'Pillow>=3.4.0',
-    'requests>=2.9.0',
+    'Pillow>=3.2',
+    'requests>=2.20',
     'tqdm>=4.4.1',
 ]
 
 extra = [
     'django-ckeditor>=5.0.3',
-    'django-haystack>=2.8.0',
-    'djangorestframework>=3.9.4',
+    'django-haystack>=2.8',
+    'djangorestframework>=3.8',
     'Markdown>=2.6.6',
     'polib>=1.0.7',
     'Whoosh>=2.7.4',

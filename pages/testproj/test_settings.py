@@ -59,6 +59,7 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 _TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
     "django.template.context_processors.i18n",
     "django.template.context_processors.debug",
     "django.template.context_processors.request",
@@ -90,6 +91,7 @@ CACHE_BACKEND = "locmem:///?timeout=300&max_entries=6000"
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',

@@ -1,4 +1,4 @@
--e git+https://github.com/django/django@stable/2.1.x#egg=Django
+-e git+https://github.com/django/django@master#egg=Django
 -e git+https://github.com/django-mptt/django-mptt#egg=django-mptt
 -e git+https://github.com/python-pillow/Pillow#egg=Pillow
 -e git+https://github.com/tqdm/tqdm#egg=tqdm

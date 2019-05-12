@@ -43,17 +43,17 @@ download_url = url_schema % (package_name, package_name, pages.__version__)
 
 install_requires = [
     'Django>=2.1.3,<3',
-    'django-mptt>=0.8.3',
-    'django-taggit>=0.18.1',
-    'Pillow>=3.2.0',
+    'django-mptt>=0.10.0',
+    'django-taggit>=1.1.0',
+    'Pillow>=3.4.0',
     'requests>=2.9.0',
     'tqdm>=4.4.1',
 ]
 
 extra = [
     'django-ckeditor>=5.0.3',
-    'django-haystack>=2.5.0',
-    'djangorestframework>=3.3.2',
+    'django-haystack>=2.8.0',
+    'djangorestframework>=3.9.4',
     'Markdown>=2.6.6',
     'polib>=1.0.7',
     'Whoosh>=2.7.4',

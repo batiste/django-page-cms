@@ -1,21 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-19 23:52+0300\n"
-"PO-Revision-Date: 2017-02-19 23:53+0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: tr\n"
+"PO-Revision-Date: 2019-09-23 11:12+0000\n"
+"Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/batiste/django-page-cms-1/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: admin/__init__.py:68
 msgid "General"
@@ -117,9 +117,7 @@ msgstr "Yayınlanma tarihi"
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
-msgstr ""
-"Sayfayı yayınlamak için\n"
-"        sayfa durumunu 'yayınla' olması gerekiyor."
+msgstr "Sayfayı yayınlamak için\n        sayfa durumunu 'yayınla' olması gerekiyor."
 
 #: models.py:89
 msgid "publication end date"
@@ -129,9 +127,7 @@ msgstr "yayından kaldırma tarihi"
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr ""
-"Sayfanın yayından kalkmaması için\n"
-"            burayı boş bırakın."
+msgstr "Sayfanın yayından kalkmaması için\n            burayı boş bırakın."
 
 #: models.py:93
 msgid "last modification date"
@@ -157,9 +153,7 @@ msgstr "yayından kaldır"
 msgid ""
 "Don't publish any content\n"
 "            after this date."
-msgstr ""
-"Bu tarihten önce\n"
-"            yayınlama."
+msgstr "Bu tarihten önce\n            yayınlama."
 
 #: models.py:109
 msgid "The site(s) the page is accessible at."
@@ -171,11 +165,11 @@ msgstr "siteler"
 
 #: models.py:112
 msgid "redirect to url"
-msgstr "url yönlendir"
+msgstr ""
 
 #: models.py:115
 msgid "redirect to"
-msgstr "yönlendir"
+msgstr ""
 
 #: models.py:127 models.py:519 models.py:539
 msgid "page"
@@ -211,11 +205,11 @@ msgstr "Takma adlar"
 
 #: models.py:593
 msgid "Thumbnail"
-msgstr "Küçük Resim"
+msgstr ""
 
 #: models.py:597
 msgid "Medias"
-msgstr "Medya"
+msgstr ""
 
 #: placeholders.py:32
 #, python-format
@@ -240,8 +234,7 @@ msgstr "Mesajınız"
 
 #: placeholders.py:441
 msgid "Your email has been sent. Thank you."
-msgstr ""
-"Mesajınız gönderilmiştir. En kısa zamanda tarafınıza dönüş yapılacaktır."
+msgstr "Mesajınız gönderilmiştir. En kısa zamanda tarafınıza dönüş yapılacaktır."
 
 #: placeholders.py:443
 msgid "An error as occured: your email has not been sent."
@@ -490,7 +483,7 @@ msgstr "Almanca"
 
 #: testproj/test_settings.py:120
 msgid "Français"
-msgstr "İsviçre Fransızcası"
+msgstr ""
 
 #: testproj/test_settings.py:121
 msgid "US English"

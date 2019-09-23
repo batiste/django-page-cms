@@ -1,7 +1,8 @@
 mptt/
 tagging/
 build/
-coverage/
+coverage
+.coverage
 dist/
 whoosh_index/
 example/media/

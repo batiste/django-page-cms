@@ -1,22 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-19 23:52+0300\n"
-"PO-Revision-Date: 2015-07-29 14:19+0000\n"
+"PO-Revision-Date: 2019-09-23 11:12+0000\n"
 "Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/django-page-cms-1/"
-"language/sk/)\n"
-"Language: sk\n"
+"Language-Team: Slovak (http://www.transifex.com/batiste/django-page-cms-1/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #: admin/__init__.py:68
 msgid "General"
@@ -62,9 +61,7 @@ msgstr "Skratka"
 msgid ""
 "The slug will be used to create the page URL, it must be unique among the "
 "other pages of the same level."
-msgstr ""
-"Táto skratka sa použije na vytvorenie URL stránky, musí byť unikátna medzi "
-"stránkami na rovnakej úrovni."
+msgstr "Táto skratka sa použije na vytvorenie URL stránky, musí byť unikátna medzi stránkami na rovnakej úrovni."
 
 #: admin/forms.py:95
 msgid "Language"
@@ -120,10 +117,7 @@ msgstr "dátum publikácie"
 msgid ""
 "When the page should go\n"
 "            live. Status must be \"Published\" for page to go live."
-msgstr ""
-"Zadajte, kedy má byť stránka\n"
-"            spustená. Status musí byť nastavený na \"Plublikovaný\", aby sa "
-"stránka zobrazila."
+msgstr "Zadajte, kedy má byť stránka\n            spustená. Status musí byť nastavený na \"Plublikovaný\", aby sa stránka zobrazila."
 
 #: models.py:89
 msgid "publication end date"
@@ -133,9 +127,7 @@ msgstr "dátum ukončenia publikácie"
 msgid ""
 "When to expire the page.\n"
 "            Leave empty to never expire."
-msgstr ""
-"Zadajte, kedy má stránka expirovať.\n"
-"            Ponechajte prázdne, ak stránka nemá expirovať."
+msgstr "Zadajte, kedy má stránka expirovať.\n            Ponechajte prázdne, ak stránka nemá expirovať."
 
 #: models.py:93
 msgid "last modification date"
@@ -161,9 +153,7 @@ msgstr "dátum zmrazenia"
 msgid ""
 "Don't publish any content\n"
 "            after this date."
-msgstr ""
-"Nepublikovať žiaden obsah\n"
-"            po tomto dátume."
+msgstr "Nepublikovať žiaden obsah\n            po tomto dátume."
 
 #: models.py:109
 msgid "The site(s) the page is accessible at."

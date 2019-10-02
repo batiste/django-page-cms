@@ -63,6 +63,7 @@ _TEMPLATE_CONTEXT_PROCESSORS = (
     "django.template.context_processors.debug",
     "django.template.context_processors.request",
     "django.template.context_processors.media",
+    "django.contrib.messages.context_processors.messages",
     "pages.context_processors.media",
 )
 
@@ -116,6 +117,7 @@ INSTALLED_APPS = [
     'mptt',
     'rest_framework',
     'haystack',
+    'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.sites',
 ]

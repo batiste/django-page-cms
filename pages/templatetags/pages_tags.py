@@ -140,7 +140,8 @@ def pages_admin_menu(context, page):
     request = context.get('request', None)
 
     expanded = False
-    if request and "tree_expanded" in request.COOKIES and not 'q' in context:
+    has_query = 'q' in context and context['q']
+    if request and "tree_expanded" in request.COOKIES and not has_query:
         cookie_string = urllib.parse.unquote(request.COOKIES['tree_expanded'])
         if cookie_string:
             ids = [

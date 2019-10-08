@@ -279,7 +279,7 @@ $(function($) {
                     return;
                   }
                   lines_position.push(
-                    {el:el, pos:possible_target.position(), h:possible_target.height()}
+                    {el:el, pos:possible_target.offset(), h:possible_target.height()}
                   );
                 });
               }

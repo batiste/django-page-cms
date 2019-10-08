@@ -200,7 +200,7 @@ $(function($) {
     // let's start event delegation
     changelist.click(function (e) {
         var target = $(e.target);
-        var link = target.closest('a').andSelf().filter('a');
+        var link = target.closest('a').addBack().filter('a');
 
         if (!target.hasClass('help') && link.length) {
             // Toggles a previous action to come back to the initial state

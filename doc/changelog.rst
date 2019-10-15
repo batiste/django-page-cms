@@ -4,6 +4,11 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+Release 2.0.7
+================
+
+    * Bug fixes in admin drag and drop and cookie handling
+
 Release 2.0.6
 ================
 

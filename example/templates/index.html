@@ -6,7 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- {% trans "SEO Options" %} -->
+    <!-- {% trans "meta description" %} -->
     <meta name="description" content="{% placeholder "meta_description" section "SEO Options" %}">
+    <!-- {% trans "meta keywords" %} -->
     <meta name="description" content="{% placeholder "meta_keywords" section "SEO Options" %}" />
     <meta name="author" content="">
 
@@ -38,22 +41,24 @@
       </div>
     </div>
   </div>
-  
+
   <div class="container">
     {% block header %}
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
       <h1 class="display-4">{% placeholder "title" %}</h1>
+      <!-- {% trans "lead" %} -->
       <p class="lead">{% placeholder "lead" with Textarea %}</p>
     </div>
     {% endblock %}
 
     <div>
     {% block content %}
+      <!-- {% trans "content" %} -->
       {% placeholder "content" with RichTextarea %}
     {% endblock %}
     </div>
 
-    
+
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
       <div class="row">
         <div class="col-12 col-md">

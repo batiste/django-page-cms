@@ -166,7 +166,6 @@ class PlaceholderNode(template.Node):
         else:
             help_text = ''
         widget = self.get_widget(page, language)
-        print(self.ctype)
         label = _(self.name.replace("_", " ")).capitalize()
         return self.field(
             widget=widget, initial=initial, label=label,

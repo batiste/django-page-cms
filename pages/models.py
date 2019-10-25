@@ -83,11 +83,11 @@ class Page(MPTTModel):
     creation_date = models.DateTimeField(_('creation date'), editable=False,
             default=get_now)
     publication_date = models.DateTimeField(_('publication date'),
-            null=True, blank=True, help_text=_('When the page should go '
-            'live. Status must be "Published" for page to go live.'))
+            null=True, blank=True, help_text=_('''When the page should go '''
+            '''live. Status must be "Published" for page to go live.'''))
     publication_end_date = models.DateTimeField(_('publication end date'),
-            null=True, blank=True, help_text=_('When to expire the page. '
-            'Leave empty to never expire.'))
+            null=True, blank=True, help_text=_('''When to expire the page. '''
+            '''Leave empty to never expire.'''))
 
     last_modification_date = models.DateTimeField(_('last modification date'))
 
@@ -99,8 +99,8 @@ class Page(MPTTModel):
             blank=True)
 
     freeze_date = models.DateTimeField(_('freeze date'),
-            null=True, blank=True, help_text=_("Don't publish any content "
-            "after this date."))
+            null=True, blank=True, help_text=_('''Don't publish any content '''
+            '''after this date.'''))
 
     if settings.PAGE_USE_SITE_ID:
         sites = models.ManyToManyField(Site,

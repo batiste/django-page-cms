@@ -9,3 +9,5 @@ __docformat__ = "restructuredtext"
 __doc__ = 'A tree based Django CMS application'
 __license__ = 'BSD'
 __keywords__ = ['django', 'cms']
+
+default_app_config = 'pages.app_config.BasicCmsConfig'

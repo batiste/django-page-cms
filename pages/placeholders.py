@@ -166,8 +166,9 @@ class PlaceholderNode(template.Node):
         else:
             help_text = ''
         widget = self.get_widget(page, language)
+        label = _(self.name.replace("_", " ")).capitalize()
         return self.field(
-            widget=widget, initial=initial,
+            widget=widget, initial=initial, label=label,
             help_text=help_text, required=False)
 
     def save(self, page, language, data, change, extra_data=None):

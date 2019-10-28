@@ -351,14 +351,16 @@ def validate_pages_json_data(d, preferred_lang):
                 " one was not found on this site") % (slug,))
 
         if p['template'] not in valid_templates:
-            errors.append(_("%s uses a template not found on this site: %s")
-                % (slug, p['template']))
+            errors.append(_("%(page)s uses a template not found on this "
+                "site: %(template)s")
+                % ({"page": slug, "template": p['template']}))
             continue
 
         if set(p.ctype for p in get_placeholders(p['template']) if
                 p.ctype not in ('title', 'slug')) != set(p['content'].keys()):
-            errors.append(_("%s template contents are different than our "
-                "template: %s") % (slug, p['template']))
+            errors.append(_("%(page)s template contents are different than our "
+                "template: %(template)s")
+                % ({"page": slug, "template": p['template']}))
             continue
 
     return errors

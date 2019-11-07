@@ -27,9 +27,13 @@ This Django CMS enables you to create and administrate hierarchical pages in a s
 
 For a quick demo.
 
+.. code:: bash
+
   $ pip install django-page-cms[full]; gerbi --create mywebsite
 
 Or with docker
+
+.. code:: bash
 
   $ docker-compose up
   $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser

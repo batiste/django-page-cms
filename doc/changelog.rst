@@ -4,6 +4,11 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+Release 2.0.8
+================
+
+    * New translations, and docker compose examples
+
 Release 2.0.7
 ================
 

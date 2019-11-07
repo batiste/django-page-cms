@@ -183,7 +183,7 @@ class PageAdmin(admin.ModelAdmin):
 
         additional_fieldsets = []
         for title, fieldset in section_placeholder_fieldsets.items():
-            additional_fieldsets.append((title, {
+            additional_fieldsets.append((_(title), {
                 'fields': fieldset,
                 'classes': ('module-content collapse grp-collapse grp-closed',),
             }))

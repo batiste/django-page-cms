@@ -29,6 +29,11 @@ For a quick demo.
 
   $ pip install django-page-cms[full]; gerbi --create mywebsite
 
+Or with docker
+
+  $ docker-compose up
+  $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
+
 More informations
 
   * `Install <http://django-page-cms.readthedocs.io/en/latest/installation.html>`_

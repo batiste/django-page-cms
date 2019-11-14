@@ -4,6 +4,11 @@
 
 This file describe new features and incompatibilities between released version of the CMS.
 
+Release 2.0.10
+================
+
+    * Mangage.py command needs python 3
+
 Release 2.0.9
 ================
 

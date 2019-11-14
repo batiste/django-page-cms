@@ -21,7 +21,7 @@ Copy and paste this command in your virtual environnement and you should get a r
 
 Then visit http://127.0.0.1:8000/
 
-Or use docker
+Or use docker::
 
     $ docker-compose up
     $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser

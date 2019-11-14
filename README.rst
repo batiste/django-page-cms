@@ -29,7 +29,7 @@ For a quick demo.
 
 .. code:: bash
 
-  $ pip install -I django-page-cms[full]; gerbi --create mywebsite
+  $ pip3 install -I django-page-cms[full]; gerbi --create mywebsite
 
 Or with docker
 

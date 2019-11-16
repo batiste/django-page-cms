@@ -37,16 +37,22 @@ Or with docker
 
   $ docker-compose up
   
-If you are logged in with github docker repository:: bash
+If you are logged in with github docker repository
+
+.. code:: bash
 
    $ docker login docker.pkg.github.com -u USERNAME -p TOKEN
    $ docker-compose -f docker-compose-fast.yaml up
    
-Create a super user account:: bash
+Create a super user account
+
+.. code:: bash
 
    $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
    
-Create a demo website:: bash
+Create a demo website
+
+.. code:: bash
 
    $ docker exec -it django-page-cms_web_1  python example/manage.py pages_demo
 

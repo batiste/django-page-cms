@@ -35,7 +35,7 @@ Or with docker
 
 .. code:: bash
 
-  $ docker-compose -f docker-compose-fast.yaml up
+  $ docker-compose -f docker-compose.yaml up
   $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
 
 More informations

@@ -35,8 +35,26 @@ Or with docker
 
 .. code:: bash
 
-  $ docker-compose -f docker-compose-fast.yaml up
-  $ docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
+  docker-compose up
+  
+If you are logged in with github docker repository
+
+.. code:: bash
+
+   docker login docker.pkg.github.com -u USERNAME -p TOKEN
+   docker-compose -f docker-compose-fast.yaml up
+   
+Create a super user account
+
+.. code:: bash
+
+   docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
+   
+Create a demo website
+
+.. code:: bash
+
+   docker exec -it django-page-cms_web_1  python example/manage.py pages_demo
 
 More informations
 

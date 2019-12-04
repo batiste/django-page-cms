@@ -1,4 +1,5 @@
 mptt/
+venv/
 tagging/
 build/
 coverage

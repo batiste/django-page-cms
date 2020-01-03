@@ -5,6 +5,9 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 
+# https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
+# ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '[::1]']
+
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -140,8 +143,6 @@ PAGE_LANGUAGES = (
 )
 
 PAGE_USE_LANGUAGE_PREFIX = True
-
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.50', '127.0.0.1']
 
 # You should add here all language you want to accept as valid client
 # language. By default we copy the PAGE_LANGUAGES constant and add some other

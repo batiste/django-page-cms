@@ -6,7 +6,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEBUG = True
 
 # https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
-# ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '[::1]']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '[::1]']
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

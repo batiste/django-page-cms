@@ -6,7 +6,10 @@ from django.conf import settings
 from django.utils.text import unescape_string_literal
 from django import forms
 from django.template.loader import get_template
-from django.contrib.staticfiles.templatetags.staticfiles import static
+try:
+    from django.templatetags.static import static
+except ImportError:
+    from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from pages import settings as pages_settings
 from pages.models import Content, Page

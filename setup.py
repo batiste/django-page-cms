@@ -78,10 +78,6 @@ extras_require = {
     'tests': install_requires + extra + tests_require,
 }
 
-dependency_links = [
-    'git+ssh://git@github.com/django-haystack/django-haystack.git@42f53cda9a770ff7daf2ff792cbcab5cd843e2a7#egg=django-haystack'
-]
-
 setup(
     name=package_name,
     test_suite='pages.test_runner.build_suite',
@@ -97,7 +93,6 @@ setup(
     install_requires=install_requires,
     extras_require=extras_require,
     tests_require=tests_require,
-    dependency_links=dependency_links,
     packages=find_packages(),
     # very important for the binary distribution to include the templates.
     package_data={'pages': data_dirs, 'example': example_dirs},

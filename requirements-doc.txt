@@ -1,5 +1,6 @@
 # Read the docs loves `requirements.txt` files.
 Django==3.0.3
 six==1.14.0
+django-page-cms==2.0.11
 
 .[docs]

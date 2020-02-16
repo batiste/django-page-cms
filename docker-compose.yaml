@@ -19,3 +19,9 @@ services:
     command: bash -c "python pages/test_runner.py"
     depends_on:
       - db
+
+  build-doc:
+    build: .
+    command: >
+      bash -c "pip install .[docs]
+      && python setup.py build_sphinx"

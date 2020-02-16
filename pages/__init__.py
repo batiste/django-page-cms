@@ -11,3 +11,4 @@ __license__ = 'BSD'
 __keywords__ = ['django', 'cms']
 
 default_app_config = 'pages.app_config.BasicCmsConfig'
+

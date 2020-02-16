@@ -33,8 +33,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-page-cms'
-copyright = u'2009, Batiste Bieler'
+project = 'django-page-cms'
+copyright = '2009, Batiste Bieler'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -168,8 +168,7 @@ htmlhelp_basename = 'django-page-cmsdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'django-page-cms.tex', ur'django-page-cms Documentation',
-   ur'Batiste Bieler', 'manual'),
+  ('index', 'django-page-cms.tex', 'django-page-cms Documentation', 'Batiste Bieler', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

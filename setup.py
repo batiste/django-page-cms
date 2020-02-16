@@ -66,7 +66,7 @@ tests_require = [
 ]
 
 docs_require = [
-    'Sphinx',
+    'Sphinx>=2.4.0',
     'sphinx-better-theme',
     'Sphinx-PyPI-upload',
 ]

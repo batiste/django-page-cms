@@ -119,7 +119,8 @@ INSTALLED_APPS = [
     'pages.plugins.pofiles',
     'mptt',
     'rest_framework',
-    'haystack',
+    # prevent doc to build
+    # 'haystack',
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.sites',

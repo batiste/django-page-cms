@@ -44,19 +44,19 @@ If you are logged in with github docker repository
   docker login docker.pkg.github.com -u USERNAME -p TOKEN
   docker-compose -f docker-compose-fast.yaml up web
    
-Create a super user account
+To create a super user account
 
 .. code:: bash
 
   docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
    
-Create a demo website
+To create a demo website
 
 .. code:: bash
 
   docker exec -it django-page-cms_web_1  python example/manage.py pages_demo
 
-Run tests with docker
+To run tests with docker
 
 .. code:: bash
 
@@ -77,4 +77,12 @@ Each page can have a different template with different placeholders.
 .. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/admin-screenshot-1.png
     :width: 350px
     :align: center
+
+Those placeholder can also be edited inline
+
+.. image:: https://github.com/batiste/django-page-cms/raw/master/doc/images/inline-edit.png
+    :width: 350px
+    :align: center
+
+
 

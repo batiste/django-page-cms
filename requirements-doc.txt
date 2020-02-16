@@ -1,3 +1,5 @@
 # Read the docs loves `requirements.txt` files.
+Django==3.0.3
+six==1.14.0
 
 .[docs]

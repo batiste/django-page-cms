@@ -5,7 +5,7 @@
 
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% static "admin/js/urlify.js" %}"></script>
-<script type="text/javascript">var static_url = "{% static "" %}";</script>
+<script type="text/javascript">var static_url = "{% get_static_prefix %}";</script>
 {% endblock %}
 
 {% block content %}

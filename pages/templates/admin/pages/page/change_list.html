@@ -5,7 +5,7 @@
 {% block coltype %}flex{% endblock %}
 
 {% block extrahead %}{{ block.super }}
-<script type="text/javascript">var static_url = "{% static "" %}";</script>
+<script type="text/javascript">var static_url = "{% get_static_prefix %}";</script>
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} change-list-pages{% endblock %}

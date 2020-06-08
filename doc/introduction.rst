@@ -55,8 +55,8 @@ Features
 Dependencies & Compatibility
 ============================
 
-  * Django 2.0
-  * Python 3.5, 3.6
+  * Django 2.0 or 3.0
+  * Python 3.6, 3.7, 3.8
   * `django-mptt <https://github.com/django-mptt/django-mptt>`_ is needed
   * `django-taggit if needed <https://github.com/alex/django-taggit>`_ (if PAGE_TAGGING = True)
   * `django-haystack if needed <http://haystacksearch.org/>`_

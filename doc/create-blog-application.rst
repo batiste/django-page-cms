@@ -22,7 +22,7 @@ Step 2: Create the views
 
 Open you newly created `blog/views.py` file and create 2 views. One for the 
 category view and another for the Blog's index.
-We are using the `taggit` to handle the categories, this way a Blog can be in 
+We are using the `django-taggit` application to handle the categories, this way a Blog Post can be included 
 several categories.
 
 .. code-block:: python

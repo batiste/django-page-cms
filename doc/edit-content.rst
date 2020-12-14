@@ -11,6 +11,7 @@ To activate the feature on your frontend you need to add 2 tags inside your temp
 
 .. code-block:: html+django
 
+    {% load pages_tags static i18n %}
     <html>
         <head>
             ...

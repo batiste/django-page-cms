@@ -168,7 +168,7 @@ the categories:
       {% endblock %}
 
 Finaly the last one is for the Blog Post itself. You could have different Blog Post templates
-but for now we only need one:
+but for now we only need one, let's call it `blog-post.html`:
 
 .. code-block:: html+django
 
@@ -207,8 +207,8 @@ but for now we only need one:
     </div>
     {% endblock %}
 
-To finish thigs up you need to allow those templates to be selected 
-by the CMS, add them to your `PAGE_TEMPLATES` settings:
+To finish things up you need to allow those 2 templates to be selected 
+by the CMS. Add them to your `PAGE_TEMPLATES` setting:
 
 .. code-block:: python
 

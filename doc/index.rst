@@ -34,6 +34,7 @@ Table of content
     edit-content.rst
     navigation-template-tags.rst
 
+    create-blog-application
     3rd-party-apps.rst
     commands.rst
 

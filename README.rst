@@ -2,10 +2,6 @@
 django-page-cms
 ===============
 
-.. image:: https://badges.gitter.im/django-page-cms/Lobby.svg
-   :alt: Join the chat at https://gitter.im/django-page-cms/Lobby
-   :target: https://gitter.im/django-page-cms/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
 .. image:: https://travis-ci.org/batiste/django-page-cms.svg?branch=master
   :target: https://travis-ci.org/batiste/django-page-cms
 

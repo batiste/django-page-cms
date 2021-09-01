@@ -21,12 +21,12 @@ polib==1.1.0
 pylint==2.4.4
 pyparsing==2.4.6
 pytz==2019.3
-requests==2.22.0
+requests==2.26.0
 six==1.14.0
 sorl-thumbnail==12.6.3
 sqlparse==0.3.0
 tqdm==4.42.1
 typed-ast==1.4.1
-urllib3==1.26.5
+urllib3==1.26.6
 Whoosh==2.7.4
 wrapt==1.11.2

@@ -896,4 +896,4 @@ class FunctionnalTestCase(TestCase):
         # Activate redirect
         self.set_setting("PAGE_REDIRECT_OLD_SLUG", True)
         self.assertEqual(_get_context_page('/pages/page1/').status_code, 301)
-        self.assertEqual(_get_context_page('/pages/page1/')._headers['location'][1], '/pages/page2')
+        self.assertEqual(_get_context_page('/pages/page1/').headers['location'][1], '/pages/page2')

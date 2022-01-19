@@ -4,13 +4,13 @@ Placeholders template tag
 
 .. contents::
 
-The placeholder template tag is what make Gerbi CMS special. The workflow
+The placeholder template tag is what make Gerbi CMS flexible. The workflow
 is that you design your template first according to the page design.
-Then you put placeholder tag where you want dynamic content.
-
-For each placeholder you will get a corresponding field appearing automaticaly
-in the administration interface. You can make as many templates as you want, even
-use the template inheritance: this CMS administration interface will still behave as intended.
+Then you put placeholder tag where you want dynamic content to be.
+For each placeholder added you will get a corresponding field
+in the administration interface so you can insert dynamic content.
+You can make as many templates as you want, and even
+use the template inheritance.
 
 The syntax for a placeholder tag is the following:
 
@@ -35,9 +35,13 @@ Detailed explanations on placeholder options
 the **on** option
 ------------------
 
+The **on** is provided to indicate the name
+of this page where the placeholder needs to get its content from.
+
 If the **on** option is omitted the CMS will automatically
-take the current page (by using the `current_page` context variable)
+use the current page (by using the `current_page` context variable)
 to get the content of the placeholder.
+
 
 Template syntax example
 
@@ -72,7 +76,7 @@ Template syntax example:
     :ref:`Details about how to create a new Widget for a placeholder <changing-widget>` .
     
 .. note::
-
+    
     This CMS is shipped with :ref:`a list of useful widgets <placeholder-widgets-list>` .
 
 The **as** option
@@ -109,7 +113,7 @@ The **parsed** keyword
 -----------------------
 
 If you add the keyword **parsed** the content of the placeholder
-will be evaluated as Django template, within the current context.
+will be evaluated as a Django template within the current context.
 Each placeholder with the **parsed** keyword will also have
 a note in the admin interface noting its ability to be evaluated as template.
 
@@ -136,7 +140,7 @@ The **untranslated** keyword
 -----------------------------
 
 If you add the keyword **untranslated** the placeholder's content
-will be the same whatever language your use. It's especialy useful for an image
+will be the same whatever language you use. It's especialy useful for an image
 placeholder that should remain the same in every language.
 
 Template syntax example:

@@ -278,7 +278,7 @@ class UnitTestCase(TestCase):
         page2.save()
 
         page1 = Page.objects.get(id=page1.id)
-        self.assertEqual(page1.get_children(), [page2])
+        self.assertEqual(list(page1.get_children()), [page2])
 
         self.assertEqual(
             Page.objects.from_path('wrong/path/page2', 'en'),

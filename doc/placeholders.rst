@@ -108,6 +108,7 @@ Template syntax example:
 You will get
 
 .. image:: images/section.png
+   :width: 600
 
 The **parsed** keyword
 -----------------------

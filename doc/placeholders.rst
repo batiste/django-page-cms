@@ -407,7 +407,7 @@ A file browsing widget:
 
 .. note::
 
-    The following django application needs to be installed: http://code.google.com/p/django-filebrowser/
+    The following django application needs to be installed: https://github.com/sehmaschine/django-filebrowser
 
 RichTextarea
 ------------

@@ -36,7 +36,7 @@ the **on** option
 ------------------
 
 The **on** is provided to indicate the name
-of this page where the placeholder needs to get its content from.
+of the page from which this placeholder should to get its content.
 
 If the **on** option is omitted the CMS will automatically
 use the current page (by using the `current_page` context variable)

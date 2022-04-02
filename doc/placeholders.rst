@@ -54,8 +54,8 @@ the **with** option
 
 The **with** option is used to change a placeholder widget within the administration interface.
 
-By default the CMS will use a simple `TextInput` widget. But with the **with** option
-the CMS will use the the widget of your choice. Widgets need to be registered before you can use them in the CMS::
+By default the CMS will use a simple `TextInput` widget. By using the **with** option
+you can change the widget to use. Widgets need to be registered before you can use them in the CMS::
 
     from pages.widgets_registry import register_widget
     from django.forms import TextInput

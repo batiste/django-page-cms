@@ -25,32 +25,27 @@ Or with docker
 
 .. code:: bash
 
-  docker-compose up web
-  
-If you are logged in with github docker repository
-
-.. code:: bash
-
-  docker login docker.pkg.github.com -u USERNAME -p TOKEN
-  docker-compose -f docker-compose-fast.yaml up web
+  docker compose up fast
+  # or if you want to build it yourself
+  docker compose up web
    
 To create a super user account
 
 .. code:: bash
 
-  docker exec -it django-page-cms_web_1  python example/manage.py createsuperuser
+  docker compose run fast python example/manage.py createsuperuser
    
 To create a demo website
 
 .. code:: bash
 
-  docker exec -it django-page-cms_web_1  python example/manage.py pages_demo
+ docker compose run fast python example/manage.py pages_demo
 
 To run tests with docker
 
 .. code:: bash
 
-  docker-compose up run-test
+  docker compose run run-test
 
 More informations
 

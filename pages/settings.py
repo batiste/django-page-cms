@@ -4,7 +4,7 @@ application when the project ``settings`` module does not contain
 the appropriate settings."""
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-import collections
+import collections.abc
 
 url = 'http://packages.python.org/django-page-cms/settings-list.html#%s'
 
@@ -52,7 +52,7 @@ def get_page_templates():
     """The callable that is used by the CMS."""
     PAGE_TEMPLATES = get_setting('PAGE_TEMPLATES',
         default_value=())
-    if isinstance(PAGE_TEMPLATES, collections.Callable):
+    if isinstance(PAGE_TEMPLATES, collections.abc.Callable):
         return PAGE_TEMPLATES()
     else:
         return PAGE_TEMPLATES

@@ -13,7 +13,7 @@ from os.path import join
 import urllib
 from collections import defaultdict
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.encoding import force_text
 from django.conf import settings as global_settings
 from django.http import HttpResponseRedirect, Http404
@@ -85,29 +85,29 @@ class PageAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(PageAdmin, self).get_urls()
-        from django.conf.urls import url
+        from django.conf.urls import re_path
 
         pages_urls = [
-            url(r'^$', self.list_pages, name='page-changelist'),
-            url(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
+            re_path(r'^$', self.list_pages, name='page-changelist'),
+            re_path(r'^(?P<page_id>[0-9]+)/traduction/(?P<language_id>[-\w]+)/$',
                 views.traduction, name='page-traduction'),
-            url(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',
+            re_path(r'^(?P<page_id>[0-9]+)/get-content/(?P<content_id>[0-9]+)/$',
                 views.get_content, name='page-get-content'),
-            url(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_type>[-\w]+)/(?P<language_id>[-\w]+)/$',
+            re_path(r'^(?P<page_id>[0-9]+)/modify-content/(?P<content_type>[-\w]+)/(?P<language_id>[-\w]+)/$',
                 views.modify_content, name='page-modify-content'),
-            url(r'^(?P<page_id>[0-9]+)/modify-placeholder/$',
+            re_path(r'^(?P<page_id>[0-9]+)/modify-placeholder/$',
                 views.modify_placeholder, name='page-modify-placeholder'),
-            url(r'^(?P<page_id>[0-9]+)/get-last-content/$',
+            re_path(r'^(?P<page_id>[0-9]+)/get-last-content/$',
                 views.get_last_content, name='page-get-last-content'),
-            url(r'^(?P<page_id>[0-9]+)/delete-content/(?P<language_id>[-\w]+)/$',
+            re_path(r'^(?P<page_id>[0-9]+)/delete-content/(?P<language_id>[-\w]+)/$',
                 views.delete_content, name='page-delete-content'),
-            url(r'^(?P<page_id>[0-9]+)/sub-menu/$',
+            re_path(r'^(?P<page_id>[0-9]+)/sub-menu/$',
                 views.sub_menu, name='page-sub-menu'),
-            url(r'^(?P<page_id>[0-9]+)/move-page/$',
+            re_path(r'^(?P<page_id>[0-9]+)/move-page/$',
                 views.move_page, name='page-move-page'),
-            url(r'^(?P<page_id>[0-9]+)/change-status/$',
+            re_path(r'^(?P<page_id>[0-9]+)/change-status/$',
                 views.change_status, name='page-change-status'),
-            url(r'^(?P<media_id>[0-9]+)/media-url/$',
+            re_path(r'^(?P<media_id>[0-9]+)/media-url/$',
                 views.get_media_url, name='get-media-url'),
         ]
 

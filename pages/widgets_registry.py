@@ -1,5 +1,5 @@
 """Django page CMS widget registry."""
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 __all__ = ('register_widget',)
 

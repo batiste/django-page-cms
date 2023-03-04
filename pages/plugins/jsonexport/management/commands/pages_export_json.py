@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.core.management.base import BaseCommand, CommandError
 from pages.plugins.jsonexport.utils import (pages_to_json,
     monkeypatch_remove_pages_site_restrictions)

@@ -13,7 +13,7 @@ from django.core.files.storage import default_storage
 from django.forms import Textarea, ImageField, CharField, FileField
 from django.forms import TextInput
 from django.conf import settings as global_settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.utils.text import unescape_string_literal
 from django.template.loader import render_to_string

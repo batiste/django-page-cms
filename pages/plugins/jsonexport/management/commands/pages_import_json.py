@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from pages.plugins.jsonexport.utils import (json_to_pages,

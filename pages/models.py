@@ -11,7 +11,7 @@ from pages import checks
 
 from django.db import models
 from django.conf import settings as django_settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.conf import settings as global_settings

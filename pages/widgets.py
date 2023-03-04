@@ -15,7 +15,7 @@ from django.contrib.admin.widgets import AdminTextInputWidget
 from django.contrib.admin.widgets import AdminTextareaWidget
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from os.path import join
 

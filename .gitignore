@@ -1,5 +1,6 @@
 mptt/
 venv/
+.venv/
 tagging/
 build/
 coverage

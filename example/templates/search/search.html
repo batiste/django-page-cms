@@ -7,6 +7,36 @@
 
 {% block content %}
     <form method="get" action=".">
+
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Search">
+                </td>
+            </tr>
+        </table>
+    
+        <!-- Begin faceting. -->
+        <h2>By tags</h2>{{facets.fields}}
+    
+        <div>
+            <dl>
+                {% if facets.fields.tags %}
+                    <dt>Tags</dt>
+                    {# Provide only the top 5 tags #}
+                    {% for tag in facets.fields.tags|slice:":5" %}
+                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=author_exact:{{ author.0|urlencode }}">{{ tag.0 }}</a> ({{ tag.1 }})</dd>
+                    {% endfor %}
+                {% else %}
+                    <p>No tag facets.</p>
+                {% endif %}
+            </dl>
+        </div>
+        <!-- End faceting -->
+
+
         {% if query %}
             <ul>
             {% for result in page.object_list %}

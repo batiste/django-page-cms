@@ -3,7 +3,10 @@
 from pages.models import Page
 from pages import settings
 
-from haystack.indexes import SearchIndex, CharField, DateTimeField, Indexable
+from haystack.indexes import SearchIndex, CharField, DateTimeField, Indexable, MultiValueField
+
+PAGE_TAGGING = getattr(settings, 'PAGE_TAGGING', False)
+
 
 # This is obsolete if you use haystack 2.0, use the HAYSTACK_SIGNAL_PROCESSOR
 # setting instead
@@ -40,6 +43,8 @@ else:
         title = CharField(model_attr='title')
         url = CharField(model_attr='get_absolute_url')
         publication_date = DateTimeField(model_attr='publication_date')
+        if PAGE_TAGGING:
+            tags = MultiValueField(model_attr='tags', faceted=True)
 
         def index_queryset(self, using=None):
             """Used when the entire index for model is updated."""

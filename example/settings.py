@@ -145,6 +145,8 @@ PAGE_LANGUAGES = (
 
 PAGE_USE_LANGUAGE_PREFIX = True
 
+PAGE_AUTOMATIC_SLUG_RENAMING = True
+
 # You should add here all language you want to accept as valid client
 # language. By default we copy the PAGE_LANGUAGES constant and add some other
 # similar languages.

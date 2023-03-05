@@ -1,15 +1,20 @@
-asgiref==3.2.10
+#asgiref==3.2.10
 astroid==2.3.3
 certifi==2022.12.7
 chardet==3.0.4
-Django==3.1.14
+Django==3.2.18
 django-ckeditor==5.9.0
-django-haystack==2.8.1
+# django-haystack==2.8.1
+django-haystack==3.2.1
+pysolr
 django-js-asset==1.2.2
-django-mptt==0.11.0
+# django-mptt==0.11.0
+django-mptt==0.14.0
 django-page-cms==2.0.11
-django-taggit==1.2.0
-djangorestframework==3.11.2
+# django-taggit==1.2.0
+django-taggit==3.1.0
+# djangorestframework==3.11.2
+djangorestframework==3.12.4
 idna==2.8
 isort==4.3.21
 lazy-object-proxy==1.4.3
@@ -23,10 +28,11 @@ pyparsing==2.4.6
 pytz==2019.3
 requests==2.26.0
 six==1.14.0
-sorl-thumbnail==12.6.3
+sorl-thumbnail==12.9.0
 sqlparse==0.3.0
 tqdm==4.42.1
-typed-ast==1.4.1
+typed-ast==1.5.4
 urllib3==1.26.6
 Whoosh==2.7.4
 wrapt==1.11.2
+psycopg2-binary

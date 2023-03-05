@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
 from blog import views
-from django.urls import include, path, re_path
+from django.urls import include, path
 
 urlpatterns = [
-  url(r'^category/(?P<tag_id>[0-9]+)$', views.category_view, name='blog_category_view'),
-  url(r'^$', views.blog_index, name='blog_index')
+  re_path(r'^category/(?P<tag_id>[0-9]+)$', views.category_view, name='blog_category_view'),
+  re_path(r'^$', views.blog_index, name='blog_index')
 ]

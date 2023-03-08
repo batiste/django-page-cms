@@ -39,7 +39,7 @@
 
         {% if query %}
             <ul>
-            {% for result in page.object_list %}
+            {% for result in page_obj.object_list %}
                 <li>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}
                     </a>

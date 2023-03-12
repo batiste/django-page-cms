@@ -85,7 +85,7 @@ class PageAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(PageAdmin, self).get_urls()
-        from django.conf.urls import re_path
+        from django.urls import re_path
 
         pages_urls = [
             re_path(r'^$', self.list_pages, name='page-changelist'),

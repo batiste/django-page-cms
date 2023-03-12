@@ -1,6 +1,6 @@
 """Django page CMS urls module."""
 
-from django.conf.urls import re_path
+from django.urls import re_path
 from pages import views
 from pages import settings
 

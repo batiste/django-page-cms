@@ -3,7 +3,7 @@
     <input id="id_language" name="language" type="hidden" value="{{ value }}" />
     <ul>
     {% for lang in page_languages %}
-        {% ifequal value lang.0 %}
+        {% if value == lang.0 %}
             <li><span class="current">{{ lang.0 }}</span></li>
         {% else %}
             {% if page|has_content_in:lang.0 %}
@@ -11,7 +11,7 @@
             {% else %}
                 <li><a class="addlink js-confirm-change" href="?language={{ lang.0 }}">{{ lang.0 }}</a></li>
             {% endif %}
-        {% endifequal %}
+        {% endif %}
     {% endfor %}
     </ul>
     {% if page|has_content_in:value %}

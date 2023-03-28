@@ -72,25 +72,25 @@
     </td>
     {% if can_publish %}
         <td class="publish-cell">
-            {% ifequal page.status page.DRAFT %}
+            {% if page.status == page.DRAFT %}
                 <img src="{{ PAGES_STATIC_URL }}images/icons/draft.svg" alt="draft" />
-            {% else %}{% ifequal page.status page.PUBLISHED %}
+            {% else %}{% if page.status == page.PUBLISHED %}
                 <img src="{{ PAGES_STATIC_URL }}images/icons/published.svg" alt="published" />
             {% else %}
                 <img src="{{ PAGES_STATIC_URL }}images/icons/hidden.svg" alt="hidden"/>
-            {% endifequal %}{% endifequal %}
+            {% endif %}{% endif %}
             &nbsp;
             <select class="publish-select" name="select-status-{{ page.id }}">
-                <option value="0" {% ifequal page.status page.DRAFT %}selected="selected"{% endifequal %}>{% trans "Draft" %}</option>
-                <option value="1" {% ifequal page.status page.PUBLISHED %}selected="selected"{% endifequal %}>{% trans "Published" %}</option>
-                <option value="3" {% ifequal page.status page.HIDDEN %}selected="selected"{% endifequal %}>{% trans "Hidden" %}</option>
+                <option value="0" {% if page.status == page.DRAFT %}selected="selected"{% endif %}>{% trans "Draft" %}</option>
+                <option value="1" {% if page.status == page.PUBLISHED %}selected="selected"{% endif %}>{% trans "Published" %}</option>
+                <option value="3" {% if page.status == page.HIDDEN %}selected="selected"{% endif %}>{% trans "Hidden" %}</option>
             </select>
         </td>
     {% else %}
         <td>
-            {% ifequal page.status page.DRAFT %}{% trans "Draft" %}{% endifequal %}
-            {% ifequal page.status page.PUBLISHED %}{% trans "In navigation" %}{% endifequal %}
-            {% ifequal page.status page.HIDDEN %}{% trans "Hidden" %}{% endifequal %}
+            {% if page.status == page.DRAFT %}{% trans "Draft" %}{% endif %}
+            {% if page.status == page.PUBLISHED %}{% trans "In navigation" %}{% endif %}
+            {% if page.status == page.HIDDEN %}{% trans "Hidden" %}{% endif %}
         </td>
     {% endif %}
     <td class="template-cell">

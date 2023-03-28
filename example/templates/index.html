@@ -30,7 +30,7 @@
       </h5>
       <nav class="my-2 my-md-0 mr-md-3">
         {% for page in pages_navigation %}
-          <a href="{% show_absolute_url page %}" class="p-2 text-dark{% ifequal page.id current_page.id %} font-weight-bolder{% endifequal %}">
+          <a href="{% show_absolute_url page %}" class="p-2 text-dark{% if page.id == current_page.id %} font-weight-bolder{% endif %}">
             {% show_content page "title" %}
           </a>
         {% endfor %}

@@ -52,6 +52,10 @@ else:
 
         def get_model(self):
             return Page
+        
+        def prepare_tags(self, object):
+            """on render les tags taggit"""
+            return [tag.name for tag in object.tags.all()]
 
         def should_update(self, instance, **kwargs):
             return instance.status == Page.PUBLISHED

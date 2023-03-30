@@ -111,6 +111,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: JavaScript',
         'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],

@@ -1,6 +1,6 @@
 #asgiref==3.2.10
 astroid==2.3.3
-certifi==2022.12.7
+certifi==2024.2.2
 chardet==3.0.4
 Django==3.2.18
 django-ckeditor==5.9.0
@@ -26,10 +26,10 @@ polib==1.1.0
 pylint==2.4.4
 pyparsing==2.4.6
 pytz==2019.3
-requests==2.26.0
+requests==2.31.0
 six==1.14.0
-sorl-thumbnail==12.9.0
-sqlparse==0.3.0
+sorl-thumbnail==12.10.0
+sqlparse==0.4.4
 tqdm==4.42.1
 typed-ast==1.5.4
 urllib3==1.26.6

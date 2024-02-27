@@ -3,15 +3,14 @@
 
 import re
 import unicodedata
+from datetime import datetime
 
-from django.conf import settings as django_settings
-from django.utils import timezone
-from django.template import Context
 from django import template
+from django.conf import settings as django_settings
+from django.template import Context
+from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.safestring import SafeText, mark_safe
-
-from datetime import datetime
 
 dummy_context = Context()
 
@@ -87,10 +86,12 @@ def _placeholders_recursif(nodelist, plist, blist):
         # extends node?
         if hasattr(node, 'parent_name'):
             # I do not know why I did this... but the tests are guarding it
-            dummy_context2 = Context()
-            dummy_context2.template = template.Template("")
-            _placeholders_recursif(node.get_parent(dummy_context2).nodelist,
-                                   plist, blist)
+            # on considère que si le template termine par ".html" alors ce n'est PAS un template variable mais fixé
+            if node.parent_name.token.endswith(".html"):
+                dummy_context2 = Context()
+                dummy_context2.template = template.Template("")
+                _placeholders_recursif(node.get_parent(dummy_context2).nodelist,
+                                    plist, blist)
         # include node?
         elif hasattr(node, 'template') and hasattr(node.template, 'nodelist'):
             _placeholders_recursif(node.template.nodelist, plist, blist)

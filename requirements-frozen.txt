@@ -2,7 +2,7 @@
 astroid==2.3.3
 certifi==2024.2.2
 chardet==3.0.4
-Django==3.2.18
+Django==4.2.10
 django-ckeditor==5.9.0
 # django-haystack==2.8.1
 django-haystack==3.2.1
@@ -10,11 +10,10 @@ pysolr
 django-js-asset==1.2.2
 # django-mptt==0.11.0
 django-mptt==0.14.0
-django-page-cms==2.0.11
+# django-page-cms==2.0.11
 # django-taggit==1.2.0
 django-taggit==3.1.0
-# djangorestframework==3.11.2
-djangorestframework==3.12.4
+djangorestframework==3.14.0
 idna==2.8
 isort==4.3.21
 lazy-object-proxy==1.4.3

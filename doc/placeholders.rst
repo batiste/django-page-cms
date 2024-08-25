@@ -89,7 +89,7 @@ Template syntax example:
 
 .. code-block:: html+django
 
-    {% placeholder "image" as image_src %}
+    {% placeholder "image" as img_src %}
     <img src="{{ img_src }}" alt=""/>
 
 The **section** option

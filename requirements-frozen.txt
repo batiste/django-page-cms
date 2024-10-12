@@ -2,7 +2,7 @@ asgiref==3.2.10
 astroid==2.3.3
 certifi==2023.7.22
 chardet==3.0.4
-Django==3.1.14
+Django==4.2.16
 django-ckeditor==5.9.0
 django-haystack==2.8.1
 django-js-asset==1.2.2

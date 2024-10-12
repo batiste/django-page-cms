@@ -21,7 +21,7 @@ polib==1.1.0
 pylint==2.4.4
 pyparsing==2.4.6
 pytz==2019.3
-requests==2.31.0
+requests==2.32.2
 six==1.14.0
 sorl-thumbnail==12.6.3
 sqlparse==0.4.4

@@ -1,4 +1,4 @@
 # Read the docs loves `requirements.txt` files.
-Django==3.1.14
+Django==4.2.16
 
 .[docs]

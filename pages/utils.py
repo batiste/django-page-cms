@@ -17,7 +17,7 @@ dummy_context = Context()
 
 def get_now():
     if django_settings.USE_TZ:
-        return datetime.utcnow().replace(tzinfo=timezone.utc)
+        return timezone.now()
     else:
         return datetime.now()
 

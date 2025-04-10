@@ -23,7 +23,7 @@ error_dict = {
 def automatic_slug_renaming(slug, is_slug_safe):
     """Helper to add numbers to slugs"""
 
-    if not isinstance(is_slug_safe, collections.Callable):
+    if not isinstance(is_slug_safe, collections.abc.Callable):
         raise TypeError('is_slug_safe must be callable')
 
     if is_slug_safe(slug):

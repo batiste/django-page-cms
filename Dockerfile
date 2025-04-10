@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.12-slim
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
@@ -8,4 +8,4 @@ COPY ./doc /code/doc
 COPY README.rst /code/
 COPY requirements-frozen.txt /code/
 COPY setup.py /code/
-RUN pip install -r requirements-frozen.txt
+RUN pip install .[full]

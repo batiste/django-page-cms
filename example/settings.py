@@ -174,6 +174,13 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'LOCATION': os.path.join(PROJECT_DIR, 'media'),
+    }
+}
+
 PAGE_REAL_TIME_SEARCH = False
 
 COVERAGE_EXCLUDE_MODULES = (

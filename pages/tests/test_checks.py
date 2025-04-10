@@ -19,7 +19,7 @@ class PageTemplatesLoadingCheckTestCase(TestCase):
         with self.settings(PAGE_TEMPLATES=[('pages/contact.html', 'bas')]):
             errors = page_templates_loading_check([])
 
-        self.assertEquals(errors, [])
+        self.assertEqual(errors, [])
 
     def test_template_syntax_error_is_not_silenced(self):
         with self.settings(PAGE_TEMPLATES=[('syntax_error.html', 'fail')]):

@@ -1,7 +1,7 @@
 asgiref==3.8.1
 certifi==2025.1.31
 charset-normalizer==3.4.1
-Django==3.2.25
+Django==4.2.21
 django-ckeditor==6.7.2
 django-haystack==3.3.0
 django-js-asset==2.2.0

@@ -139,7 +139,6 @@ def get_last_content(request, page_id):
 
 
 @staff_member_required
-@csrf_exempt
 def delete_content(request, page_id, language_id):
     page = get_object_or_404(Page, pk=page_id)
     perm = request.user.has_perm('pages.delete_page')

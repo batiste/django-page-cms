@@ -148,13 +148,7 @@ def delete_content(request, page_id, language_id):
     for c in Content.objects.filter(page=page, language=language_id):
         c.delete()
 
-    destination = request.POST.get(
-        'next',
-        request.META.get(
-            'HTTP_REFERER',
-            reverse("admin:pages_page_change", args=[page_id])
-        )
-    )
+    destination = reverse("admin:pages_page_change", args=[page_id])
     return HttpResponseRedirect(destination)
 
 

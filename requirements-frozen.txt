@@ -19,5 +19,5 @@ requests==2.32.3
 sorl-thumbnail==12.11.0
 sqlparse==0.5.3
 tqdm==4.67.1
-urllib3==2.3.0
+urllib3==2.6.3
 Whoosh==2.7.4

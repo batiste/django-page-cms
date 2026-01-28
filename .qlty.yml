@@ -1,3 +1,3 @@
 analysis:
   exclude:
-    - "pages/static/pages/javascript**"
+    - "pages/static/pages/javascript/**"

@@ -40,7 +40,7 @@ exclude_patterns = [
   "**/templates/**",
   "**/testdata/**",
   "**/vendor/**",
-  "pages/static/pages/javascript/**"
+  "**/javascript/**"
 ]
 
 test_patterns = [

@@ -116,60 +116,59 @@ def make_form(model_, placeholders):
         )
 
         def clean_slug(self):
-            """Handle move action on the pages"""
-
+            """Handle move action on the pages with reduced complexity."""
             slug = slugify(self.cleaned_data['slug'])
-            target = self.data.get('target', None)
-            position = self.data.get('position', None)
-
-            # this enforce a unique slug for every page
+            
+            # 1. Handle Automatic Renaming
             if settings.PAGE_AUTOMATIC_SLUG_RENAMING:
-                def is_slug_safe(slug):
-                    content = Content.objects.get_content_slug_by_slug(slug)
-                    if content is None:
-                        return True
-                    if self.instance.id:
-                        if content.page.id == self.instance.id:
-                            return True
-                    else:
-                        return False
+                return self._handle_automatic_renaming(slug)
 
-                return automatic_slug_renaming(slug, is_slug_safe)
-
+            # 2. Handle Global Uniqueness Requirement
             if settings.PAGE_UNIQUE_SLUG_REQUIRED:
-                # We can return here as not futher checks
-                # are necessary
                 return unique_slug_required(self, slug)
 
+            # 3. Handle Contextual Validation (Siblings/Children)
+            self._validate_slug_context(slug)
+            
+            return slug
+
+        def _handle_automatic_renaming(self, slug):
+            def is_slug_safe(candidate_slug):
+                content = Content.objects.get_content_slug_by_slug(candidate_slug)
+                if content is None:
+                    return True
+                return self.instance.id and content.page.id == self.instance.id
+
+            return automatic_slug_renaming(slug, is_slug_safe)
+
+        def _validate_slug_context(self, slug):
+            """Validates slug uniqueness against siblings or children."""
+            target_id = self.data.get('target')
+            position = self.data.get('position')
             intersects_sites = intersect_sites_method(self)
 
-            if not settings.PAGE_UNIQUE_SLUG_REQUIRED:
-                if target and position:
-                    target = Page.objects.get(pk=target)
-                    if position in ['right', 'left']:
-                        slugs = [sibling.slug() for sibling in
-                                target.get_siblings()
-                                if intersects_sites(sibling)]
-                        slugs.append(target.slug())
-                        if slug in slugs:
-                            raise forms.ValidationError(error_dict['sibling_position_error'])
-                    if position == 'first-child':
-                        if slug in [sibling.slug() for sibling in
-                                    target.get_children()
-                                    if intersects_sites(sibling)]:
-                            raise forms.ValidationError(error_dict['child_error'])
+            # Validation logic for Move actions
+            if target_id and position:
+                target = Page.objects.get(pk=target_id)
+                if position in ['right', 'left']:
+                    others = list(target.get_siblings()) + [target]
+                    if any(slug == s.slug() for s in others if intersects_sites(s)):
+                        raise forms.ValidationError(error_dict['sibling_position_error'])
+                
+                elif position == 'first-child':
+                    if any(slug == c.slug() for c in target.get_children() if intersects_sites(c)):
+                        raise forms.ValidationError(error_dict['child_error'])
+            
+            # Validation logic for standard Save/Update
+            else:
+                if self.instance.id:
+                    siblings = self.instance.get_siblings().exclude(id=self.instance.id)
+                    error_key = 'sibling_error'
                 else:
-                    if self.instance.id:
-                        if (slug in [sibling.slug() for sibling in
-                            self.instance.get_siblings().exclude(
-                                id=self.instance.id
-                            ) if intersects_sites(sibling)]):
-                            raise forms.ValidationError(error_dict['sibling_error'])
-                    else:
-                        if slug in [sibling.slug() for sibling in
-                                    Page.objects.root()
-                                    if intersects_sites(sibling)]:
-                            raise forms.ValidationError(error_dict['sibling_root_error'])
-            return slug
+                    siblings = Page.objects.root()
+                    error_key = 'sibling_root_error'
+                    
+                if any(slug == s.slug() for s in siblings if intersects_sites(s)):
+                    raise forms.ValidationError(error_dict[error_key])
 
     return PageForm

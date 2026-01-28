@@ -21,3 +21,5 @@ screenshot_*
 .tox
 ghostdriver.log
 .vscode/
+.qlty/configs
+.qlty/configs/*

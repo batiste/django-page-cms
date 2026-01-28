@@ -35,56 +35,33 @@ def parse_placeholder(parser, token):
     """Parse the `PlaceholderNode` parameters.
 
     Return a tuple with the name and parameters."""
-    params = {}
-
-    bits = token.split_contents()
-    count = len(bits)
-    error_string = '%r tag requires at least one argument' % bits[0]
-    if count <= 1:
-        raise TemplateSyntaxError(error_string)
+    bits = iter(token.split_contents())
+    tag_name = next(bits)  # Skip the first bit (the tag name)
     try:
-        name = unescape_string_literal(bits[1])
-    except ValueError:
-        name = bits[1]
-    remaining = bits[2:]
-    simple_options = ['parsed', 'inherited', 'untranslated', 'shared', 'block']
-    param_options = ['as', 'on', 'with', 'section']
-    all_options = simple_options + param_options
-    while remaining:
-        bit = remaining[0]
-        if bit not in all_options:
-            raise TemplateSyntaxError(
-                "%r is not an correct option for a placeholder" % bit)
-        if bit in param_options:
-            if len(remaining) < 2:
-                raise TemplateSyntaxError(
-                    "Placeholder option '%s' need a parameter" % bit)
-            if bit == 'as':
-                params['as_varname'] = remaining[1]
-            if bit == 'with':
-                params['widget'] = remaining[1]
-            if bit == 'on':
-                params['page'] = remaining[1]
-            if bit == 'section':
-                params['section'] = unescape_string_literal(remaining[1])
-            remaining = remaining[2:]
-        elif bit == 'parsed':
-            params['parsed'] = True
-            remaining = remaining[1:]
-        elif bit == 'inherited':
-            params['inherited'] = True
-            remaining = remaining[1:]
-        elif bit == 'untranslated':
-            params['untranslated'] = True
-            remaining = remaining[1:]
-        elif bit == 'shared':
-            params['shared'] = True
-            remaining = remaining[1:]
+        raw_name = next(bits)
+        name = unescape_string_literal(raw_name) if raw_name.startswith(('"', "'")) else raw_name
+    except StopIteration:
+        raise TemplateSyntaxError(f"{tag_name!r} tag requires at least one argument")
+    params = {}
+    # Map simple flags to their param keys
+    FLAGS = {'parsed', 'inherited', 'untranslated', 'shared'}
+    # Map complex options to their param keys
+    OPTIONS = {'as': 'as_varname', 'with': 'widget', 'on': 'page', 'section': 'section'}
+
+    for bit in bits:
+        if bit in FLAGS:
+            params[bit] = True
+        elif bit in OPTIONS:
+            try:
+                val = next(bits)
+                params[OPTIONS[bit]] = unescape_string_literal(val) if bit == 'section' else val
+            except StopIteration:
+                raise TemplateSyntaxError(f"Placeholder option {bit!r} needs a parameter")
         elif bit == 'block':
-            remaining = remaining[1:]
-            nodelist = parser.parse(('endplaceholder',))
+            params['nodelist'] = parser.parse(('endplaceholder',))
             parser.delete_first_token()
-            params['nodelist'] = nodelist
+        else:
+            raise TemplateSyntaxError(f"{bit!r} is not a correct option for a placeholder")
 
     return name, params
 

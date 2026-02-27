@@ -1,0 +1,10 @@
+{% load pages_tags %}
+{% placeholder "block 1" block %}
+{% if content %}
+block 1:{{ content }};
+{% endif %}
+{% endplaceholder %}
+
+{% placeholder "block 2" block %}
+block 2:{{ content }};
+{% endplaceholder %}

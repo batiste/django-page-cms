@@ -1,0 +1,693 @@
+/* specific CSS for the django page admin application */
+
+
+/* general =========================================== */
+
+a:focus {
+    outline: none;
+}
+
+
+/* clearfix =========================================== */
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+.clearfix {
+    display: inline-block;
+}
+html[xmlns] .clearfix {
+    display: block;
+}
+* html .clearfix {
+    height: 1%;
+}
+
+
+/* help popups =========================================== */
+
+a.popup,
+.popup a {
+    position: relative;
+}
+a.popup .help,
+.popup a .help {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: -24px;
+    padding: 2px 4px;
+    border: 1px solid #888;
+    font-size: 10px !important;
+    line-height: 12px;
+    font-weight: normal;
+    color: #333;
+    background: #ffb;
+    white-space: nowrap;
+    text-transform: none;
+    cursor: default;
+}
+a.popup:hover .help,
+.popup a:hover .help {
+    display: block;
+}
+
+
+/* auto-complete =========================================== */
+
+.ac_results {
+    padding: 0px;
+    border: 1px solid #ccc;
+    background-color: white;
+    overflow: hidden;
+    z-index: 99999;
+}
+.ac_results ul {
+    width: 100%;
+    list-style-position: outside;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.ac_results li {
+    margin: 0px;
+    padding: 2px 4px;
+    cursor: default;
+    display: block;
+    /*
+    if width will be 100% horizontal scrollbar will apear
+    when scroll mode will be used
+    */
+    /*width: 100%;*/
+    font: menu;
+    font-size: 11px;
+    /*
+    it is very important, if line-height not setted or setted
+    in relative units scroll will be broken in firefox
+    */
+    line-height: 14px;
+    overflow: hidden;
+}
+.ac_loading {
+    background: white url('../images/loading.gif') right center no-repeat;
+}
+.ac_odd {
+    background-color: #eee;
+}
+.ac_over {
+    background-color: #999;
+    color: white;
+}
+
+
+/* change-list page =========================================== */
+
+/* Grappelli has fixed actions so we don't need twice */
+#grp-changelist .grp-changelist-actions {
+    display: none;
+}
+
+/* Table-wide */
+.change-list-pages tbody tr:hover {
+    background: #f0f2f8;
+}
+.change-list-pages tbody tr.highlighted {
+    background: #ffb;
+}
+
+#changelist {
+    position: static;
+}
+
+#page-table-dnd {
+    border-collapse: collapse;
+}
+
+#page-table-dnd td, #page-table-dnd th {
+    border-bottom: 2px solid transparent;
+    border-top: 3px solid transparent;
+    margin:0 2px;
+}
+
+#page-table-dnd .target-insert-left td, #page-table-dnd .target-insert-left th {
+    border-top: 3px solid #79aec8;
+}
+
+#page-table-dnd .target-insert-right td, #page-table-dnd .target-insert-right th {
+    border-bottom: 3px solid #79aec8;
+}
+
+#page-table-dnd .target-insert-first-child {
+    outline: 3px solid #79aec8;
+}
+
+.drag-indicator {
+    position:absolute;
+    display:none;
+    background:#ffb;
+    border:1px #999 solid;
+    padding:8px 10px;
+    border-radius: 3px;
+    cursor:crosshair;
+    padding-left:20px;
+    background-color: #609ab6;
+    color:#fff;
+}
+
+/* Title cell theader */
+.change-list-pages thead .title-cell {
+    padding: 5px 10px;
+}
+
+.change-list-pages .title-cell .message {
+    /* improve behavior with drag-drop */
+    position:absolute;
+}
+
+.change-list-pages .selection-cell {
+    /* improve behavior with drag-drop */
+    /*width:22px;*/
+}
+
+/* Title cell tbody */
+.change-list-pages tbody .title-cell-container {
+    position: relative;
+    text-align: left;
+    font-weight: bold;
+    height: 100%;
+    padding-right: 150px;
+}
+html[dir=rtl] .change-list-pages tbody .title-cell-container {
+    text-align: right;
+    padding-right: 0;
+    padding-left:150px;
+}
+
+.change-list-pages tbody .title-cell .title {
+    float: left;
+    margin: 0 0 0 20px;
+    padding: 0 14px 0 0;
+    background: none;
+}
+html[dir=rtl] .change-list-pages tbody .title-cell .title {
+    float: right;
+    margin: 0 20px 0 0;
+    padding: 0 0 0 14px;
+    background: none;
+}
+.change-list-pages tbody .title-cell .title:hover {
+    background: url(../images/icons/edit.svg) right 0.2em no-repeat;
+}
+html[dir=rtl] .change-list-pages tbody .title-cell .title:hover {
+    background-position: left 0.2em;
+}
+/* Expand-collapse link */
+.change-list-pages .expand-collapse {
+    position: absolute;
+    left: 4px; top: 1px;
+    font-family: monospace;
+    font-size: 16px;
+}
+html[dir=rtl] .change-list-pages .expand-collapse  {
+    left: auto; right:4px;
+}
+
+#change-page-content {
+  margin-left:320px;
+}
+
+.change-list-pages .expand,
+.change-list-pages .expanded .collapse,
+.change-list-pages .loading .expand-loading {
+    display: block;
+}
+.change-list-pages .collapse,
+.change-list-pages .expanded .expand,
+.change-list-pages .loading .expand,
+.change-list-pages .loading .collapse,
+.change-list-pages .expand-loading {
+    display: none;
+}
+.change-list-pages .expand-loading {
+    position: relative;
+    top: -2px;
+    left: -4px;
+}
+
+/* Actions */
+#page-list .actions-pages {
+    position: absolute;
+    right: -5px;
+    top: 0;
+    margin: 0;
+}
+html[dir=rtl] #page-list .actions-pages {
+    right:auto;
+    left:-5px;
+}
+.change-list-pages .actions-pages a {
+    float: left;
+    width: 15px;
+    height: 14px;
+    padding: 0;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    opacity: 0.5; filter: alpha(opacity=50);
+}
+html[dir=rtl] .change-list-pages .actions-pages a {
+    float: right;
+    margin-left: 5px;
+    margin-right:0;
+}
+.change-list-pages .actions-pages a:hover,
+.change-list-pages tr:hover .actions-pages a {
+    opacity: 1; filter: alpha(opacity=100);
+}
+.change-list-pages .insert-add .actions-pages a,
+.change-list-pages .insert-move .actions-pages a {
+    display: none;
+}
+.change-list-pages .actions-pages a.viewlink {
+    background-image: url(../images/icons/view.svg);
+}
+.change-list-pages .actions-pages a.movelink {
+    background-image: url(../images/icons/sort.svg);
+    background-position: -0px -13px;
+    cursor: all-scroll;
+}
+.change-list-pages .actions-pages a.deletelink {
+    background-image: url(../images/icons/delete.svg);
+}
+.change-list-pages .actions-pages a.addlink {
+    background-image: url(../images/icons/add.svg);
+}
+.change-list-pages .pagelink-broken {
+    float: left;
+    height: 12px;
+    width: 16px;
+    display: block;
+    background: url(../images/icons/icons.gif) no-repeat -2px -98px;
+    text-indent: -9999px;
+    color: red;
+    font-weight: bold;
+    font-size: 80%;
+    margin-left: 16px;
+}
+
+.change-list-pages tbody .title-cell a.broken {
+    margin-left: 3px;
+}
+.change-list-pages .actions-pages a.cancellink {
+    display: none;
+    font-weight: normal;
+    opacity: 1;  filter: alpha(opacity=100);
+}
+.change-list-pages .insert-move .selected .actions-pages a.cancellink {
+    display: block;
+    width: auto;
+    height: auto;
+    padding: 0 10px;
+    background: #FFFFBB; /* IE6 fix */
+}
+
+/* Page Status links */
+.change-list-pages td.publish-cell {
+    vertical-align: middle;
+    width: 200px;
+}
+.change-list-pages .publish-cell span,
+.status span {
+    float: left;
+    height: 12px;
+    width: 12px;
+    display: block;
+    background: url(../images/icons/icons.gif) no-repeat -2px -24px;
+    text-indent: -9999px;
+    margin-top: 6px;
+}
+.change-list-pages .publish-cell span.draft,
+.status span.draft {
+    background-position: -2px -24px;
+}
+.change-list-pages .publish-cell span.published,
+.status span.published {
+    background-position: -2px -48px;
+}
+.change-list-pages .publish-cell span.hidden,
+.status span.hidden {
+    background-position: -2px -36px;
+}
+
+
+/* Move links */
+.change-list-pages .insert {
+    display: none;
+    position: absolute;
+    right: 0; top: -4px;
+    height: 21px; /* IE6 fix */
+}
+html[dir=rtl] .change-list-pages .insert {
+    right:auto;
+    left:0;
+}
+
+.change-list-pages .insertable .insert {
+    display: block;
+}
+.change-list-pages .insert a {
+    float: left;
+    width: 10px; height: 21px;
+    padding: 0 5px;
+    background: url(../images/icons/insert.gif) no-repeat;
+}
+.change-list-pages .insert a.left  {
+    background-position:   5px 0;
+}
+.change-list-pages .insert a.right                            { background-position: -10px 0; }
+.change-list-pages .insert a.first-child                      { background-position: -25px 0; width: 14px; }
+.change-list-pages .insert-add tr:hover .insert a.left,
+.change-list-pages .insert-add .insert a.left:hover           { background-position:   5px -21px; }
+.change-list-pages .insert-add tr:hover .insert a.right,
+.change-list-pages .insert-add .insert a.right:hover          { background-position: -10px -21px; }
+.change-list-pages .insert-add tr:hover .insert a.first-child,
+.change-list-pages .insert-add .insert a.first-child:hover    { background-position: -25px -21px; }
+.change-list-pages .insert-move tr:hover .insert a.left,
+.change-list-pages .insert-move .insert a.left:hover          { background-position:   5px -42px; }
+.change-list-pages .insert-move tr:hover .insert a.right,
+.change-list-pages .insert-move .insert a.right:hover         { background-position: -10px -42px; }
+.change-list-pages .insert-move tr:hover .insert a.first-child,
+.change-list-pages .insert-move .insert a.first-child:hover   { background-position: -25px -42px; }
+.change-list-pages .insert .help {
+    top: -20px;
+}
+.change-list-pages .insert a.cancellink {
+    display: none;
+    font-weight: normal;
+}
+.change-list-pages .insert-add .selected .insert a.cancellink {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 4px 5px;
+    padding: 0 5px;
+    background: none;
+}
+.change-list-pages .insert a.cancellink .help {
+    top: -24px;
+}
+.change-list-pages .insert-loading {
+    position: absolute;
+    left: 0; top: -1px;
+    font-size: 16px;
+}
+
+/* Languages */
+.change-list-pages th.language-cell {
+    padding-right: 10px;
+}
+.change-list-pages .language-cell {
+    width: 1%;
+    white-space: nowrap;
+    padding: 5px 0 5px 10px;
+}
+.change-list-pages .language-cell ul {
+    margin: 0;
+    padding: 0;
+}
+.change-list-pages .language-cell li {
+    display: inline;
+    list-style: none;
+    padding: 0
+}
+.change-list-pages .language-cell .changelink {
+    margin: 0 4px;
+    padding: 0 12px 0 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: none;
+}
+.change-list-pages .language-cell .changelink:hover {
+    background: url(../images/icons/edit.svg) right 0.2em no-repeat;
+}
+.change-list-pages .language-cell .addlang {
+    color: #ccc;
+}
+.change-list-pages .language-cell .addlang:hover {
+    color: #007418;
+    background: url(../images/icons/add.gif) right 0.2em no-repeat;
+}
+
+/* Publication status */
+.change-list-pages .publish-cell {
+    width: 1%;
+    white-space: nowrap;
+    padding: 0 20px 0 10px;
+}
+.change-list-pages .publish-cell .box {
+    width: 130px;
+}
+
+.change-list-pages th.publish-cell {
+    padding: 5px 10px;
+}
+.change-list-pages .publish-cell img {
+    width: 14px;
+    height: 14px;
+}
+.change-list-pages .publish-cell .publish-select {
+    margin: 2px;
+    padding: 1px;
+}
+
+/* Publication status */
+.change-list-pages .template-cell {
+    width: 1%;
+    white-space: nowrap;
+    padding: 5px 10px;
+}
+
+/* autor */
+.change-list-pages .author-cell {
+    width: 1%;
+    white-space: nowrap;
+    padding: 5px 10px;
+}
+
+/* change-form page =========================================== */
+
+/* Global */
+.grp-change-form .sidebar,
+.change-form .sidebar {
+    width: 305px;
+    float: left;
+    display: inline; /* IE6 fix */
+    margin-right: 1em;
+}
+html[dir=rtl] .grp-change-form .sidebar,
+html[dir=rtl] .change-form .sidebar {
+    float:right;
+    margin-left:1em;
+    margin-right: 0;
+}
+
+.change-form .placeholder-fileinput {
+  padding-left:170px;
+  display:block;
+}
+
+.change-form .sidebar .revisions {
+    margin-left: 100px;
+    margin-top: 2px;
+}
+
+.grp-change-form .grp-module:not(.grp-submit-row) {
+    min-width: 0;
+}
+
+.grp-change-form .sidebar label,
+.change-form .sidebar label {
+    width: 90px;
+    line-height: 20px;
+}
+
+.grp-change-form .sidebar input,
+.grp-change-form .sidebar select,
+.change-form .sidebar input,
+.change-form .sidebar select {
+    width: 160px;
+}
+
+.grp-change-form .sidebar p.help,
+.grp-change-form .sidebar .form-row p.help ,
+.change-form .sidebar p.help,
+.change-form .sidebar .form-row p.help {
+    margin-left: 0;
+    padding: 2px 0 0;
+}
+.grp-change-form .sidebar div.description,
+.change-form .sidebar div.description {
+    margin: 5px;
+}
+.grp-change-form .field-box
+.change-form .field-box {
+    position: relative;
+    float: none;
+    margin: 0;
+}
+
+.change-form .field-box {
+    display: block;
+    width:100%;
+    margin-right: 0px;
+}
+
+.change-form .sidebar ul {
+    margin-left:100px;
+    padding:0;
+}
+
+.change-form .sidebar .language_choice_widget {
+    display: inline-block;
+}
+
+.change-form .sidebar .language_choice_widget ul {
+    margin-top:5px;
+}
+
+/* Title */
+.module-general .title label {
+    float: none;
+    padding-top: 0;
+}
+.module-general .title input {
+    width: 248px;
+    font-size: 16px;
+}
+
+/* Status */
+
+.module-general #id_status {
+    width:140px;
+}
+
+.module-general .status img, .module-general .field-status img {
+    width: 14px;
+    height: 14px;
+    margin-left:4px;
+}
+
+html[dir=rtl] .module-general .field-status img {
+    margin-left:0; margin-right:4px;
+}
+
+/* Languages */
+.grp-change-form .language ul,
+.change-form .field-language ul {
+    margin: 0;
+    padding: 3px 0;
+}
+.change-form .field-language li {
+    display: inline;
+    list-style: none;
+    margin: 0;
+    padding: 0
+}
+.grp-change-form .module-options .language .editlink,
+.grp-change-form .module-options .language .addlink,
+.grp-change-form .module-options .language .current,
+.change-form .field-language .editlink,
+.change-form .field-language .addlink,
+.change-form .field-language .current {
+    float: left;
+    display: inline; /* IE6 fix */
+    margin: 0 6px 0 0;
+    padding: 0 12px 0 0;
+    line-height: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: none;
+}
+.grp-change-form .module-options .language .editlink:hover,
+.change-form .language .editlink:hover {
+    background: url(../images/icons/edit.gif) right 0.2em no-repeat;
+}
+.grp-grp-change-form .module-options .language .addlink,
+.change-form .field-language .addlink {
+    color: #ccc;
+}
+.grp-change-form .module-options .language .addlink:hover,
+.change-form .field-language .addlink:hover {
+    color: #007418;
+    background: url(../images/icons/add.gif) right 0.2em no-repeat;
+}
+.grp-change-form .module-options .language .current,
+.change-form .field-language .current {
+    margin-right: 16px;
+    padding: 0 2px;
+    border: 1px solid #888;
+    color: black;
+}
+
+/* Content */
+.grp-change-form .module-content {
+    width: auto;
+    float: none;
+    clear: none;
+}
+
+.grp-change-form .module-content .revisions,
+.change-form .module-content .revisions,
+.change-form .sidebar .revisions {
+    width: 150px;
+    color: #888;
+    background-color: #fff;
+}
+.grp-change-form .module-content input[type=text],
+.change-form .module-content input[type=text] {
+  width:25em;
+}
+
+.grp-change-form .module-content input[type=file],
+.change-form .module-content input[type=file] {
+    padding: 6px 0;
+}
+
+.grp-change-form .module-content input[type=checkbox],
+.change-form .module-content input[type=checkbox] {
+    display: block;
+    font-size: 20px;
+    margin:10px 0;
+}
+
+.grp-change-form .module-content textarea,
+.change-form .module-content textarea {
+  width:35em;
+}
+
+html[dir=rtl] .change-form .module-content .revisions {
+    left: 12px;
+    right: auto;
+}
+.change-form .module-content .wym_skin_django {
+    padding: 0;
+}
+.change-form .module-content .wym_area_top {
+    margin-right: 155px;
+}
+.change-form .module-content .ui-resizable-handle {
+    cursor: s-resize;
+}
+
+.change-form .module-content .header_image_title input {
+    width: 60%;
+}
+
+/* grapelli specific */
+.grp-changelist-actions {
+    overflow: hidden;
+}

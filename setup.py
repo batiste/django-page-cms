@@ -1,46 +1,102 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+import os
 import pages
+
 package_name = 'django-page-cms'
 
-def local_open(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname))
+base = os.path.dirname(__file__)
 
-import os
-templates_dirs = []
+
+def local_open(fname):
+    return open(os.path.join(base, fname), 'r')
+
+
+data_dirs = []
 for directory in os.walk('pages/templates'):
-    templates_dirs.append(directory[0][6:]+'/*.*')
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/media'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/static'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/locale'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/fixtures'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+for directory in os.walk('pages/plugins/jsonexport/templates'):
+    data_dirs.append(directory[0][6:] + '/*.*')
+
+example_dirs = []
+for directory in os.walk('example/templates'):
+    example_dirs.append(directory[0][8:] + '/*.*')
+
+for directory in os.walk('example/static'):
+    example_dirs.append(directory[0][8:] + '/*.*')
 
 url_schema = 'http://pypi.python.org/packages/source/d/%s/%s-%s.tar.gz'
 download_url = url_schema % (package_name, package_name, pages.__version__)
 
+install_requires = [
+    'Django>=2.1.5,<4',
+    'django-mptt>=0.9',
+    'django-taggit>=1.1.0',
+    'Pillow>=3.2',
+    'requests>=2.20',
+    'tqdm>=4.4.1',
+]
+
+extra = [
+    'django-ckeditor>=5.0.3',
+    'django-haystack>=2.8',
+    'djangorestframework>=3.8',
+    'Markdown>=2.6.6',
+    'polib>=1.0.7',
+    'Whoosh>=2.7.4',
+    'sorl-thumbnail>=12.5.0',
+]
+
+tests_require = [
+    'coverage>=4.2.0',
+    'selenium>=3.0.1',
+]
+
+docs_require = [
+    'Sphinx>=2.4.0',
+    'sphinx-better-theme',
+    'Sphinx-PyPI-upload',
+]
+
+extras_require = {
+    'docs': install_requires + extra + docs_require,
+    'extra': extra,
+    'full': install_requires + extra,
+    'tests': install_requires + extra + tests_require,
+}
+
 setup(
     name=package_name,
-    test_suite='example.test_runner.run_tests',
+    test_suite='pages.test_runner.build_suite',
     version=pages.__version__,
     description=pages.__doc__,
     author=pages.__author__,
     author_email=pages.__contact__,
     url=pages.__homepage__,
     license=pages.__license__,
+    keywords=pages.__keywords__,
     long_description=local_open('README.rst').read(),
     download_url=download_url,
-    install_requires=[
-        'BeautifulSoup',
-        'Django',
-        'html5lib>=0.10',
-        'django-tagging>0.2.1', # please use the trunk version of tagging
-        'django-mptt>0.2.1', # please use the trunk version of django mptt
-        'django-authority', # known as django-authority
-        'django-staticfiles',
-        'django-haystack',
-        # necessary for tests
-        'coverage',
-    ],
-    packages=find_packages(exclude=['example', 'example.*']),
+    install_requires=install_requires,
+    extras_require=extras_require,
+    tests_require=tests_require,
+    packages=find_packages(),
     # very important for the binary distribution to include the templates.
-    package_data={'pages': templates_dirs},
-    #include_package_data=True, # include package data under svn source control
+    package_data={'pages': data_dirs, 'example': example_dirs},
+    # include_package_data=True, # include package data under svn source control
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -50,8 +106,14 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Framework :: Django',
-        'Programming Language :: Python :: 2.3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: JavaScript',
-        'Topic :: Internet :: WWW/HTTP :: Site Management',
+        'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],
+    entry_points={
+        'console_scripts': ['gerbi=pages.command_line:main'],
+    }
 )

@@ -1,0 +1,543 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Django page CMS\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-19 23:52+0300\n"
+"PO-Revision-Date: 2019-09-23 11:12+0000\n"
+"Last-Translator: Batiste Bieler <batiste.bieler@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/batiste/django-page-cms-1/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin/__init__.py:68
+msgid "General"
+msgstr "Algemeen"
+
+#: admin/__init__.py:203
+msgid "Content"
+msgstr "Inhoud"
+
+#: admin/__init__.py:244
+msgid "Default template"
+msgstr "Standaard sjabloon"
+
+#: admin/forms.py:16
+msgid "Another page with this slug already exists"
+msgstr "Een pagina met deze slug bestaat al"
+
+#: admin/forms.py:17
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr "Een broer met deze slug bestaat al op de beoogde positie"
+
+#: admin/forms.py:18
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Een child met deze slug bestaat al op de beoogde positie"
+
+#: admin/forms.py:19
+msgid "A sibling with this slug already exists"
+msgstr "Een broer met deze slug bestaat al"
+
+#: admin/forms.py:20
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Een broer met deze slug bestaat al op het hoogste niveau"
+
+#: admin/forms.py:85
+msgid "Title"
+msgstr "Titel"
+
+#: admin/forms.py:89
+msgid "Slug"
+msgstr "Slug"
+
+#: admin/forms.py:91
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr "De slug zal gebruikt worden om een pagina URL aan te maken, het moet uniek zijn onder de andere pagina' op hetzelfde niveau"
+
+#: admin/forms.py:95
+msgid "Language"
+msgstr "Taal"
+
+#: admin/forms.py:101
+msgid "Template"
+msgstr "Sjabloon"
+
+#: admin/forms.py:106
+msgid "Delegate to application"
+msgstr "Laten afhandelen door applicatie"
+
+#: admin/forms.py:111
+msgid "Freeze"
+msgstr "Bevriezen"
+
+#: admin/forms.py:112
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr "Geen enkele content publiceren na deze datum. Het formaat is 'Y-m-d H:M:S'"
+
+#: models.py:65 templates/admin/pages/page/menu.html:85
+msgid "Published"
+msgstr "Gepubliceerd"
+
+#: models.py:66 templates/admin/pages/page/menu.html:86
+#: templates/admin/pages/page/menu.html:93
+msgid "Hidden"
+msgstr "Verborgen"
+
+#: models.py:67 templates/admin/pages/page/menu.html:84
+#: templates/admin/pages/page/menu.html:91
+msgid "Draft"
+msgstr "Concept"
+
+#: models.py:80 templates/admin/pages/page/change_list_table.html:14
+msgid "author"
+msgstr "auteur"
+
+#: models.py:83
+msgid "parent"
+msgstr "parent"
+
+#: models.py:84 models.py:522 models.py:579
+msgid "creation date"
+msgstr "datum aangemaakt"
+
+#: models.py:86
+msgid "publication date"
+msgstr "datum gepubliceerd"
+
+#: models.py:87
+msgid ""
+"When the page should go\n"
+"            live. Status must be \"Published\" for page to go live."
+msgstr "Wanneer de pagina zichtbaar moet worden. Status moet \"Gepubliceerd\" zijn voor pagina's die zichtbaar moeten worden."
+
+#: models.py:89
+msgid "publication end date"
+msgstr "publicatie eind datum"
+
+#: models.py:90
+msgid ""
+"When to expire the page.\n"
+"            Leave empty to never expire."
+msgstr "Wanneer een pagina vervalt. Leeg laten om nooit te laten vervallen"
+
+#: models.py:93
+msgid "last modification date"
+msgstr "laatste wijzigingsdatum"
+
+#: models.py:95
+msgid "status"
+msgstr "status"
+
+#: models.py:96 templates/admin/pages/page/change_list_table.html:13
+msgid "template"
+msgstr "sjabloon"
+
+#: models.py:99
+msgid "delegate to"
+msgstr "afhandelen door"
+
+#: models.py:102
+msgid "freeze date"
+msgstr "datum bevriezen"
+
+#: models.py:103
+msgid ""
+"Don't publish any content\n"
+"            after this date."
+msgstr "Publiceer geen enkele content na deze datum"
+
+#: models.py:109
+msgid "The site(s) the page is accessible at."
+msgstr "De site(s) waarop deze pagina op toegankelijk is"
+
+#: models.py:110
+msgid "sites"
+msgstr "sites"
+
+#: models.py:112
+msgid "redirect to url"
+msgstr ""
+
+#: models.py:115
+msgid "redirect to"
+msgstr ""
+
+#: models.py:127 models.py:519 models.py:539
+msgid "page"
+msgstr "pagina"
+
+#: models.py:128
+msgid "pages"
+msgstr "pagina's"
+
+#: models.py:514
+msgid "language"
+msgstr "taal"
+
+#: models.py:515
+msgid "body"
+msgstr "body"
+
+#: models.py:517
+msgid "type"
+msgstr "type"
+
+#: models.py:528
+msgid "content"
+msgstr "inhoud"
+
+#: models.py:529
+msgid "contents"
+msgstr "inhoud"
+
+#: models.py:544
+msgid "Aliases"
+msgstr "Aliassen"
+
+#: models.py:593
+msgid "Thumbnail"
+msgstr ""
+
+#: models.py:597
+msgid "Medias"
+msgstr ""
+
+#: placeholders.py:32
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Placeholder %(name)s had een syntax error: %(error)s]"
+
+#: placeholders.py:167
+msgid "Note: This field is evaluated as template code."
+msgstr "Opmerking: Dit veld wordt geëvalueerd als sjabloon code"
+
+#: placeholders.py:418
+msgid "Your email"
+msgstr "Uw email"
+
+#: placeholders.py:420
+msgid "Subject"
+msgstr "Onderwer"
+
+#: placeholders.py:422
+msgid "Your message"
+msgstr "Uw bericht"
+
+#: placeholders.py:441
+msgid "Your email has been sent. Thank you."
+msgstr "uw email is verzonden. Dank u."
+
+#: placeholders.py:443
+msgid "An error as occured: your email has not been sent."
+msgstr "Er is een fout opgetreden: uw email is niet verzonden."
+
+#: plugins/jsonexport/actions.py:20
+msgid "Export pages as JSON"
+msgstr ""
+
+#: plugins/jsonexport/actions.py:46
+msgid "Import some pages from a JSON file"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_export_json.py:36
+#, python-format
+msgid "Site with id/domain = '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:28
+#, python-format
+msgid "User with username/id/email = '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:36
+msgid "Errors encountered while importing JSON"
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s created."
+msgstr ""
+
+#: plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s modified."
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
+msgid "Home"
+msgstr "Home"
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
+msgid "Import"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
+msgid "Importing pages failed:"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
+msgid "Import completed."
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
+msgid "created"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
+msgid "modified"
+msgstr ""
+
+#: plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
+msgid "Return to page list"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:126
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:157
+#, python-format
+msgid "Language '%s' not imported"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:186
+#, python-format
+msgid "Original author '%s' not found"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:224
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:280
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:317
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:345
+#, python-format
+msgid "%s has no common language with this site"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:350
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:354
+#, python-format
+msgid "%s uses a template not found on this site: %s"
+msgstr ""
+
+#: plugins/jsonexport/utils.py:360
+#, python-format
+msgid "%s template contents are different than our template: %s"
+msgstr ""
+
+#: templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Bewerken"
+
+#: templates/admin/pages/page/change_form.html:19
+msgid "History"
+msgstr ""
+
+#: templates/admin/pages/page/change_form.html:20
+msgid "View on site"
+msgstr "Bekijken op site"
+
+#: templates/admin/pages/page/change_list.html:18
+#: templates/pages/examples/index.html:74
+msgid "Search"
+msgstr "Zoeken"
+
+#: templates/admin/pages/page/change_list.html:20
+msgid "Go"
+msgstr "Ga"
+
+#: templates/admin/pages/page/change_list_table.html:9
+#: testproj/documents/models.py:10
+msgid "title"
+msgstr "Titel"
+
+#: templates/admin/pages/page/change_list_table.html:10
+msgid "languages"
+msgstr "Talen"
+
+#: templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "Laatste bewerking"
+
+#: templates/admin/pages/page/change_list_table.html:12
+msgid "published"
+msgstr "gepubliceerd"
+
+#: templates/admin/pages/page/menu.html:25
+msgid "undefined"
+msgstr ""
+
+#: templates/admin/pages/page/menu.html:33
+msgid "view this page"
+msgstr "deze pagina bekijken"
+
+#: templates/admin/pages/page/menu.html:34
+msgid "move this page"
+msgstr "deze pagina verplaatsen"
+
+#: templates/admin/pages/page/menu.html:35
+msgid "insert a new page here"
+msgstr "Voeg hier een nieuwe pagina in"
+
+#: templates/admin/pages/page/menu.html:37
+msgid "delete this page"
+msgstr "verwijder deze pagina"
+
+#: templates/admin/pages/page/menu.html:41
+msgid "don&#x27;t move this page"
+msgstr "verplaats deze pagina niet"
+
+#: templates/admin/pages/page/menu.html:41
+#: templates/admin/pages/page/menu.html:45
+msgid "cancel"
+msgstr "annuleren"
+
+#: templates/admin/pages/page/menu.html:45
+msgid "don&#x27;t insert a new page here"
+msgstr "voeg hier geen nieuwe pagina in"
+
+#: templates/admin/pages/page/menu.html:46
+msgid "insert above"
+msgstr "hierboven invoegen"
+
+#: templates/admin/pages/page/menu.html:47
+msgid "insert below"
+msgstr "hieronder invoegen"
+
+#: templates/admin/pages/page/menu.html:48
+msgid "insert as child"
+msgstr "invoegen als een child"
+
+#: templates/admin/pages/page/menu.html:61
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "bewerk %(lang)s vertaling"
+
+#: templates/admin/pages/page/menu.html:64
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "maak %(lang)s vertaling aan"
+
+#: templates/admin/pages/page/menu.html:71 templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: templates/admin/pages/page/menu.html:92
+msgid "In navigation"
+msgstr "In navigatie"
+
+#: templates/pages/contact.html:4
+msgid "Send"
+msgstr "Verzenden"
+
+#: templates/pages/revisions.html:4
+msgid "Revisions"
+msgstr ""
+
+#: templates/pages/traduction_helper.html:4
+msgid "Wanted language has not been translated yet."
+msgstr "De gewenste taal is nog niet vertaald"
+
+#: templates/pages/widgets/languages.html:19
+msgid "Delete this translation"
+msgstr "Verwijder deze vertaling"
+
+#: testproj/documents/models.py:11
+msgid "text"
+msgstr "tekst"
+
+#: testproj/test_settings.py:119
+msgid "German"
+msgstr "Duits"
+
+#: testproj/test_settings.py:120
+msgid "Français"
+msgstr ""
+
+#: testproj/test_settings.py:121
+msgid "US English"
+msgstr "US Engels"
+
+#: testproj/test_settings.py:128
+msgid "French"
+msgstr "Frans"
+
+#: testproj/test_settings.py:129
+msgid "Belgium french"
+msgstr "Belgisch frans"
+
+#: testproj/test_settings.py:130
+msgid "Italian"
+msgstr "Italiaans"
+
+#: urlconf_registry.py:36
+#, python-format
+msgid "The urlconf %s has already been registered."
+msgstr "De urlconf %s is al geregistreerd."
+
+#: urlconf_registry.py:46
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr "De urlconf %s is niet geregistreerd."
+
+#: widgets.py:114
+msgid "Please save the page to show the file field"
+msgstr "Sla de pagina op om het bestandenveld te zien"
+
+#: widgets.py:115
+msgid "Delete file"
+msgstr "Bestand verwijderen"
+
+#: widgets.py:123
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Huidig bestand: %s<br/>"
+
+#: widgets.py:137
+msgid "Please save the page to show the image field"
+msgstr "Sla de pagina op om het plaatje te zien"
+
+#: widgets.py:138
+msgid "Delete image"
+msgstr "Plaatje verwijderen"
+
+#: widgets_registry.py:30
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr "De wdiget %s is al geregistreerd."
+
+#: widgets_registry.py:42
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr "De wdiget %s is niet geregistreerd."

@@ -1,266 +1,581 @@
-#, fuzzy
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: django-page-cms 1.0.2\n"
+"Project-Id-Version: Django page CMS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-23 23:00+0300\n"
-"PO-Revision-Date: 2009-02-23 23:00+0300\n"
-"Last-Translator: Michail Sychev <m.sychev@axion-rti.ru>\n"
-"Language-Team: AXION-RTI localization group <m.sychev@axion-rti.ru>\n"
+"POT-Creation-Date: 2019-10-22 13:23+0000\n"
+"PO-Revision-Date: 2019-10-22 17:02+0300\n"
+"Last-Translator: Sergey Panasenko <sergey.panasenko@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.com/batiste/django-page-cms-1/"
+"language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
-#: models.py:35
-msgid "Draft"
-msgstr "Черновик"
+#: pages/admin/__init__.py:63
+msgid "General"
+msgstr "Главное"
 
-#: models.py:36
+#: pages/admin/__init__.py:190
+msgid "Content"
+msgstr "Содержимое"
+
+#: pages/admin/__init__.py:231
+msgid "Default template"
+msgstr "Шаблон по умолчанию"
+
+#: pages/admin/forms.py:16
+msgid "Another page with this slug already exists"
+msgstr "Другая страница с таким путём существует."
+
+#: pages/admin/forms.py:17
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr "Другая страница с таким slug уже существует в указанной позиции."
+
+#: pages/admin/forms.py:18
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Подчиненная страница с таким slug уже существует в указанной позиции."
+
+#: pages/admin/forms.py:19
+msgid "A sibling with this slug already exists"
+msgstr "Другая страница с таким slug уже существует."
+
+#: pages/admin/forms.py:20
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Другая с таким slug уже существует на верхнем уровне."
+
+#: pages/admin/forms.py:87
+msgid "Title"
+msgstr "Заголовок"
+
+#: pages/admin/forms.py:91
+msgid "Slug"
+msgstr "Slug"
+
+#: pages/admin/forms.py:93
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr ""
+"Slug будет использован в URL страницы, он должен быть уникальным среди "
+"страниц того же уровня."
+
+#: pages/admin/forms.py:97
+msgid "Language"
+msgstr "Язык"
+
+#: pages/admin/forms.py:103
+msgid "Template"
+msgstr "Шаблон"
+
+#: pages/admin/forms.py:108
+msgid "Delegate to application"
+msgstr "Делегировать в приложение"
+
+#: pages/admin/forms.py:113
+msgid "Freeze"
+msgstr "Заморозить"
+
+#: pages/admin/forms.py:114
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr ""
+"Прекратить публикацию содержимого после указанной даты. Формат: ГГГГ-ММ-ДД "
+"ЧЧ:ММ:СС"
+
+#: pages/app_config.py:7
+msgid "Pages"
+msgstr "Страницы"
+
+#: pages/models.py:64 pages/templates/admin/pages/page/menu.html:85
 msgid "Published"
 msgstr "Опубликовано"
 
-#: models.py:37
+#: pages/models.py:65 pages/templates/admin/pages/page/menu.html:86
+#: pages/templates/admin/pages/page/menu.html:93
 msgid "Hidden"
 msgstr "Скрыто"
 
-#: models.py:38
-msgid "author"
-msgstr "Автор"
+#: pages/models.py:66 pages/templates/admin/pages/page/menu.html:84
+#: pages/templates/admin/pages/page/menu.html:91
+msgid "Draft"
+msgstr "Черновик"
 
-#: models.py:39
+#: pages/models.py:79
+#: pages/templates/admin/pages/page/change_list_table.html:14
+msgid "author"
+msgstr "автор"
+
+#: pages/models.py:82
 msgid "parent"
 msgstr "род."
 
-#: models.py:40 models.py:209
+#: pages/models.py:83 pages/models.py:521 pages/models.py:578
 msgid "creation date"
 msgstr "создано"
 
-#: models.py:41
+#: pages/models.py:85
 msgid "publication date"
 msgstr "опубликовано"
 
-#: models.py:41
+#: pages/models.py:86
 msgid ""
 "When the page should go live. Status must be \"Published\" for page to go "
 "live."
 msgstr ""
-"Для отображения на сайте эта страница должна быть опубликована"
+"Когда страница должна стать доступна. Также должен быть выставлен статус "
+"\"Опубликовано\"."
 
-#: models.py:42
+#: pages/models.py:88
 msgid "publication end date"
 msgstr "окончание публикации"
 
-#: models.py:42
+#: pages/models.py:89
 msgid "When to expire the page. Leave empty to never expire."
 msgstr ""
-"Когда страница должна устареть, оставьте пустым для отключения"
+"Когда страница должна устареть. Оставьте пустым, чтобы страница действовала "
+"всегда."
 
-#: models.py:44
+#: pages/models.py:92
+msgid "last modification date"
+msgstr "Дата последнего изменения"
+
+#: pages/models.py:94
 msgid "status"
 msgstr "статус"
 
-#: models.py:45 templates/admin/pages/page/change_list_table.html:9
+#: pages/models.py:95
+#: pages/templates/admin/pages/page/change_list_table.html:13
 msgid "template"
 msgstr "Шаблон"
 
-#: models.py:46
+#: pages/models.py:98
+msgid "delegate to"
+msgstr "делегировать"
+
+#: pages/models.py:101
+msgid "freeze date"
+msgstr "дата заморозки"
+
+#: pages/models.py:102
+msgid "Don't publish any content after this date."
+msgstr "Прекратить публикацию содержимого после указанной даты."
+
+#: pages/models.py:108
 msgid "The site(s) the page is accessible at."
 msgstr "Сайт(ы) на которых доступна эта страница"
 
-#: models.py:46
+#: pages/models.py:109
 msgid "sites"
 msgstr "сайты"
 
-#: models.py:55 models.py:189 models.py:207 admin/__init__.py:268
+#: pages/models.py:111
+msgid "redirect to url"
+msgstr "перенаправление на url"
+
+#: pages/models.py:114
+msgid "redirect to"
+msgstr "перенаправление на"
+
+#: pages/models.py:126 pages/models.py:517 pages/models.py:537
 msgid "page"
 msgstr "страница"
 
-#: models.py:56
+#: pages/models.py:127
 msgid "pages"
 msgstr "страницы"
 
-#: models.py:185
-msgid "All"
-msgstr "Всё"
-
-#: models.py:186
-msgid "This page only"
-msgstr "Только эта страница"
-
-#: models.py:187
-msgid "This page and all childrens"
-msgstr "Эта страница и все подчинённые"
-
-#: models.py:190
-msgid "user"
-msgstr "пользователь"
-
-#: models.py:191 models.py:206
-msgid "type"
-msgstr "тип"
-
-#: models.py:196
-msgid "page permission"
-msgstr "права доступа к странице"
-
-#: models.py:197
-msgid "page permissions"
-msgstr "права доступа к странице"
-
-#: models.py:204
+#: pages/models.py:512
 msgid "language"
 msgstr "язык"
 
-#: models.py:205
+#: pages/models.py:513
 msgid "body"
 msgstr "содержимое"
 
-#: models.py:213 admin/__init__.py:146 admin/__init__.py:147
+#: pages/models.py:515
+msgid "type"
+msgstr "тип"
+
+#: pages/models.py:527
 msgid "content"
 msgstr "содержимое"
 
-#: models.py:214
+#: pages/models.py:528
 msgid "contents"
 msgstr "содержимое"
 
-#: admin/__init__.py:47
-msgid "General"
-msgstr "Главное"
+#: pages/models.py:542
+msgid "alias"
+msgstr "псевдоним"
 
-#: admin/__init__.py:51
-msgid "Options"
-msgstr "Настройки"
+#: pages/models.py:543
+msgid "aliases"
+msgstr "псевдонимы"
 
-#: admin/__init__.py:54
-msgid "Note: This page reloads if you change the selection"
-msgstr "Внимание: Страница будет загружена заново при изменении"
-
-#: admin/__init__.py:184 admin/forms.py:15
-msgid "Slug"
-msgstr "Slug"
-
-#: admin/__init__.py:189
-msgid "Default template"
-msgstr "Шаблон по умолчанию"
-
-#: admin/__init__.py:196
-msgid "Note: This field is evaluated as template code."
-msgstr "Внимание: Это поле интерпретируется как код шаблона."
-
-#: admin/__init__.py:290
-msgid "Page could not been moved."
-msgstr "Страница не может быть передвинута."
-
-#: admin/forms.py:10
-msgid "Title"
-msgstr "Заголовок"
-
-#: admin/forms.py:12
-msgid "The default title"
-msgstr "Standard-Titel"
-
-#: admin/forms.py:17
-msgid "The part of the title that is used in permalinks"
-msgstr "Часть заголовка используемая как постоянная ссылка"
-
-#: admin/forms.py:20
-msgid "Language"
-msgstr "Язык"
-
-#: admin/forms.py:22
-msgid "The current language of the content fields."
-msgstr "Текущий язык полей контента."
-
-#: admin/forms.py:26
-msgid "Template"
-msgstr "Шаблон"
-
-#: admin/forms.py:28
-msgid "The template used to render the content."
-msgstr "Шаблон используемый для отображения контента."
-
-#: admin/forms.py:43 admin/forms.py:45
-msgid "Another page with this slug already exists"
-msgstr "Другая страница с таким путём существует."
-
-#: templates/admin/pages/page/change_form.html:3
-msgid "Change a page"
-msgstr "Изменить страницу"
-
-#: templates/admin/pages/page/change_form.html:16
-msgid "View on site"
-msgstr "Просмотреть на сайте"
-
-#: templates/admin/pages/page/change_form.html:28
-msgid "Translation helper"
-msgstr "Помошник перевода"
-
-#: templates/admin/pages/page/change_form.html:30
-msgid "Language:"
-msgstr "Язык:"
-
-#: templates/admin/pages/page/change_list.html:3
-msgid "List of pages"
-msgstr "Список страниц"
-
-#: templates/admin/pages/page/change_list.html:8
-msgid "Home"
-msgstr "Начало"
-
-#: templates/admin/pages/page/change_list.html:27
-#, python-format
-msgid "Add %(name)s"
-msgstr "Добавить %(name)s"
-
-#: templates/admin/pages/page/change_list_table.html:5
+#: pages/models.py:573
+#: pages/templates/admin/pages/page/change_list_table.html:9
+#: pages/testproj/documents/models.py:10
 msgid "title"
 msgstr "Заголовок"
 
-#: templates/admin/pages/page/change_list_table.html:6
-msgid "quick actions"
-msgstr "Быстрые действия"
+#: pages/models.py:574
+msgid "description"
+msgstr "описание"
 
-#: templates/admin/pages/page/change_list_table.html:7
-msgid "translations"
-msgstr "Переводы"
+#: pages/models.py:575
+msgid "url"
+msgstr "url"
 
-#: templates/admin/pages/page/change_list_table.html:8
+#: pages/models.py:576
+msgid "extension"
+msgstr "расширение"
+
+#: pages/models.py:592
+msgid "Thumbnail"
+msgstr "Иконка"
+
+#: pages/models.py:595
+msgid "media"
+msgstr "медиафайл"
+
+#: pages/models.py:596
+msgid "medias"
+msgstr "медиафайлы"
+
+#: pages/placeholders.py:31
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Ошибка синтаксиса в плейсхолдере %(name)s: %(error)s]"
+
+#: pages/placeholders.py:165
+msgid "Note: This field is evaluated as template code."
+msgstr "Внимание: Это поле интерпретируется как код шаблона."
+
+#: pages/placeholders.py:418
+msgid "Your email"
+msgstr "Ваш e-mail"
+
+#: pages/placeholders.py:420
+msgid "Subject"
+msgstr "Тема"
+
+#: pages/placeholders.py:422
+msgid "Your message"
+msgstr "Ваше сообщение"
+
+#: pages/placeholders.py:441
+msgid "Your email has been sent. Thank you."
+msgstr "Ваше письмо отправлено. Спасибо."
+
+#: pages/placeholders.py:443
+msgid "An error as occured: your email has not been sent."
+msgstr "Произошла ошибка, Ваш e-mail не отправлен."
+
+#: pages/plugins/jsonexport/actions.py:20
+msgid "Export pages as JSON"
+msgstr "Экспортировать страницы как JSON"
+
+#: pages/plugins/jsonexport/actions.py:46
+msgid "Import some pages from a JSON file"
+msgstr "Импортировать несколько страниц из JSON файла"
+
+#: pages/plugins/jsonexport/management/commands/pages_export_json.py:36
+#, python-format
+msgid "Site with id/domain = '%s' not found"
+msgstr "Сайт с  идентификатором или доменом '%s' не найден"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:28
+#, python-format
+msgid "User with username/id/email = '%s' not found"
+msgstr "Пользователь с именем, идентификатором или адресом '%s' не найден"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:36
+msgid "Errors encountered while importing JSON"
+msgstr "Обнаружены ошибки при импорте JSON"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s created."
+msgstr "%s создано."
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s modified."
+msgstr "%s изменено."
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
+msgid "Home"
+msgstr "Начало"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr "Импортировать Страницы"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
+msgid "Import"
+msgstr "Импорт"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
+msgid "Importing pages failed:"
+msgstr "Провал при импорте страниц:"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
+msgid "Import completed."
+msgstr "Импорт завершен."
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
+msgid "created"
+msgstr "создано"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
+msgid "modified"
+msgstr "изменено"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
+msgid "Return to page list"
+msgstr "Вернуться к списку страниц "
+
+#: pages/plugins/jsonexport/utils.py:126
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr "Не найдена страница для перенаправления на поле '%s'"
+
+#: pages/plugins/jsonexport/utils.py:157
+#, python-format
+msgid "Language '%s' not imported"
+msgstr "Язык '%s' не импортирован"
+
+#: pages/plugins/jsonexport/utils.py:186
+#, python-format
+msgid "Original author '%s' not found"
+msgstr "Оригинальный автор \"%s\" не найден"
+
+#: pages/plugins/jsonexport/utils.py:224
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr "Не удалось добавить сайт \"%s\" на страницу"
+
+#: pages/plugins/jsonexport/utils.py:280
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr "Файл JSON поврежден: %s"
+
+#: pages/plugins/jsonexport/utils.py:317
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr "Не поддерживаемая версия файла: %s"
+
+#: pages/plugins/jsonexport/utils.py:345
+#, python-format
+msgid "%s has no common language with this site"
+msgstr "%s не имеет общего языка с этим сайтом"
+
+#: pages/plugins/jsonexport/utils.py:350
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr ""
+"%s не содержит родительскую страницу, и соответствующая страница не была "
+"найдена на этом сайте"
+
+#: pages/plugins/jsonexport/utils.py:354
+#, python-format
+msgid "%(page)s uses a template not found on this site: %(template)s"
+msgstr ""
+" %(page)s использует шаблон, не найденный на этом сайте:  %(template)s"
+
+#: pages/plugins/jsonexport/utils.py:361
+#, python-format
+msgid ""
+"%(page)s template contents are different than our template: %(template)s"
+msgstr ""
+"Содержимое шаблона %(page)s отличается от нашего шаблона: %(template)s"
+
+#: pages/templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Правка"
+
+#: pages/templates/admin/pages/page/change_form.html:19
+msgid "History"
+msgstr "История"
+
+#: pages/templates/admin/pages/page/change_form.html:20
+msgid "View on site"
+msgstr "Просмотреть на сайте"
+
+#: pages/templates/admin/pages/page/change_list.html:18
+#: pages/templates/admin/pages/page/change_list.html:20
+#: pages/templates/pages/examples/index.html:74
+msgid "Search"
+msgstr "Поиск"
+
+#: pages/templates/admin/pages/page/change_list_table.html:10
+msgid "languages"
+msgstr "языки"
+
+#: pages/templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "последнее изменение"
+
+#: pages/templates/admin/pages/page/change_list_table.html:12
 msgid "published"
-msgstr "Опубликовано"
+msgstr "опубликовано"
 
-#: templates/admin/pages/page/change_list_table.html:10
-msgid "creator"
-msgstr "Автор"
+#: pages/templates/admin/pages/page/menu.html:25
+msgid "undefined"
+msgstr "не определено"
 
-#: templates/admin/pages/page/menu.html:18
-msgid "move"
-msgstr "передвинуть"
+#: pages/templates/admin/pages/page/menu.html:33
+msgid "view this page"
+msgstr "смотреть страницу"
 
-#: templates/admin/pages/page/menu.html:19
-msgid "add"
-msgstr "добавить"
+#: pages/templates/admin/pages/page/menu.html:34
+msgid "move this page"
+msgstr "передвинуть страницу"
 
-#: templates/admin/pages/page/menu.html:20
-msgid "view"
-msgstr "просмотреть"
+#: pages/templates/admin/pages/page/menu.html:35
+msgid "insert a new page here"
+msgstr "вставить новую страницу сюда"
 
-#: templates/admin/pages/page/menu.html:21
-msgid "delete"
-msgstr "удалить"
+#: pages/templates/admin/pages/page/menu.html:37
+msgid "delete this page"
+msgstr "удалить страницу"
 
-#: templates/pages/revisions.html:4
-msgid "Revisions"
-msgstr "Ревизии"
+#: pages/templates/admin/pages/page/menu.html:41
+msgid "don&#x27;t move this page"
+msgstr "не передвигать эту страницу"
 
-#: templates/pages/revisions.html:8
+#: pages/templates/admin/pages/page/menu.html:41
+#: pages/templates/admin/pages/page/menu.html:45
+msgid "cancel"
+msgstr "отмена"
+
+#: pages/templates/admin/pages/page/menu.html:45
+msgid "don&#x27;t insert a new page here"
+msgstr "не вставлять сюда новую страницу"
+
+#: pages/templates/admin/pages/page/menu.html:46
+msgid "insert above"
+msgstr "вставить над указанной"
+
+#: pages/templates/admin/pages/page/menu.html:47
+msgid "insert below"
+msgstr "вставить под указанной"
+
+#: pages/templates/admin/pages/page/menu.html:48
+msgid "insert as child"
+msgstr "вставить как подчиненную"
+
+#: pages/templates/admin/pages/page/menu.html:61
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "править перевод %(lang)s"
+
+#: pages/templates/admin/pages/page/menu.html:64
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "создать перевод %(lang)s"
+
+#: pages/templates/admin/pages/page/menu.html:71
+#: pages/templates/pages/revisions.html:6
 msgid "DATETIME_FORMAT"
 msgstr "j. N Y, H:i"
 
-#: templates/pages/traduction_helper.html:4
+#: pages/templates/admin/pages/page/menu.html:92
+msgid "In navigation"
+msgstr "Опубликовано"
+
+#: pages/templates/pages/contact.html:4
+msgid "Send"
+msgstr "Отправить"
+
+#: pages/templates/pages/revisions.html:4
+msgid "Revisions"
+msgstr "Ревизии"
+
+#: pages/templates/pages/traduction_helper.html:4
 msgid "Wanted language has not been translated yet."
 msgstr "Запрошенный язык ещё не был переведён."
 
-#: templatetags/pages_tags.py:14
+#: pages/templates/pages/widgets/languages.html:19
+msgid "Delete this translation"
+msgstr "Удалить этот перевод"
+
+#: pages/testproj/documents/models.py:11
+msgid "text"
+msgstr "Текст"
+
+#: pages/testproj/test_settings.py:120
+msgid "German"
+msgstr "Немецкий"
+
+#: pages/testproj/test_settings.py:121
+msgid "Français"
+msgstr "Французский"
+
+#: pages/testproj/test_settings.py:122
+msgid "US English"
+msgstr "Английский (США)"
+
+#: pages/testproj/test_settings.py:129
+msgid "French"
+msgstr "Французский"
+
+#: pages/testproj/test_settings.py:130
+msgid "Belgium french"
+msgstr "Бельгийский французский"
+
+#: pages/testproj/test_settings.py:131
+msgid "Italian"
+msgstr "Итальянский"
+
+#: pages/urlconf_registry.py:36
 #, python-format
-msgid "[Placeholder %(name)s had syntax error: %(error)s]"
-msgstr "[Ошибка синтаксиса в метке %(name)s: %(error)s]"
+msgid "The urlconf %s has already been registered."
+msgstr "urlconf %s уже зарегистрирован."
+
+#: pages/urlconf_registry.py:46
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr "urlconf %s не зарегистрирован."
+
+#: pages/widgets.py:114
+msgid "Please save the page to show the file field"
+msgstr "Пожалуйста, сохрание страницу для отображения файла"
+
+#: pages/widgets.py:115
+msgid "Delete file"
+msgstr "Удалить файл"
+
+#: pages/widgets.py:123
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Текущий файл: %s<br/>"
+
+#: pages/widgets.py:137
+msgid "Please save the page to show the image field"
+msgstr "Пожалуйста, сохраните страницу для отображения изображения"
+
+#: pages/widgets.py:138
+msgid "Delete image"
+msgstr "Удалить изображение"
+
+#: pages/widgets_registry.py:30
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr "Виджет %s уже зарегистрирован."
+
+#: pages/widgets_registry.py:42
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr "Виджет %s не зарегистрирован."

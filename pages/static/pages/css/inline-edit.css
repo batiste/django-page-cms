@@ -1,0 +1,68 @@
+
+[data-placeholder-name]:hover {
+  outline: none;
+  border-color: #88caed;
+  box-shadow: 0 0 12px #88caed;
+  cursor:pointer;
+}
+
+[data-placeholder-name] {
+  border-color: #9ecaed;
+  box-shadow: 0 0 5px #9ecaed;
+  min-height: 12px;
+}
+
+#edit-overlay {
+  position:absolute;
+  background-color:#fff;
+  box-shadow: 0 0 10px #9ecaed;
+  padding:10px;
+}
+
+#edit-overlay form>p {
+  display:none;
+}
+
+#edit-overlay input, #edit-overlay textarea {
+  width: 80%;
+}
+
+#edit-overlay button {
+  margin-left:4px;
+}
+
+#edit-overlay input[type=file] {
+  border-width: 0;
+  padding-left: 4px;  
+}
+
+#edit-overlay form {
+  margin:6px;
+}
+
+#edit-overlay label, #edit-overlay button {
+  margin-bottom: .5rem;
+}
+
+#edit-overlay form label {
+  display: flex;
+  align-items: center;
+}
+
+#edit-overlay input[type=checkbox] {
+  width: 2em;
+}
+
+#post-iframe {
+  display:none;
+}
+
+#page-edit-bar {
+  background-color: #fff;
+  box-shadow: 0 4px 8px #bbb;
+  padding: 8px;
+  bottom: 10px;
+  left: calc(50% - 150px);
+  position: fixed;
+  z-index:2000;
+}

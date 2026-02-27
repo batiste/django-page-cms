@@ -1,0 +1,23 @@
+{% load i18n %}
+
+
+    please_save_msg = _('Please save the page to show the file field')
+    delete_msg = _('Delete file')
+
+    def render(self, name, value, attrs=None, **kwargs):
+        if not self.page:
+            field_content = self.please_save_msg
+        else:
+            field_content = ''
+            if value:
+                field_content += _('Current file: %s<br/>') % value
+            field_content += super(FileInput, self).render(name, attrs)
+            if value:
+                field_content += '''<br><label for="%s-delete">%s</label>
+                    <input name="%s-delete" id="%s-delete"
+                    type="checkbox" value="true">
+                    ''' % (name, self.delete_msg, name, name)
+
+<input name="{{ field_name }}" type="file">
+<br><label for="{{ field_name }}-delete">{{ field_name }}</label>
+<input name="{{ field_name }}-delete" id="%s-delete" type="checkbox" value="true">

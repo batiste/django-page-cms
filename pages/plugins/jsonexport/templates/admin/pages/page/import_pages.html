@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="../../../">{% trans 'Home' %}</a>
+&rsaquo; <a href="../../">{{ app_label|capfirst|escape }}</a>
+&rsaquo; <a href="../">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; {% trans 'Import Pages' %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<form action="." method="post" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="import_pages_from_json">
+
+    <!-- this is here to avoid returning to the other page -->
+    <input type="hidden" name="_selected_action" value="0">
+    
+    <div class="actions">
+    {% csrf_token %}
+    <label>Import pages: <input type="file" name="json" size="40" /></label>
+    <input type="submit" name="j" value="{% trans "Import" %}" />
+    </div>
+</form>
+
+{% if not nofile %}
+    {% if errors %}
+    <p>{% blocktrans %}Importing pages failed:{% endblocktrans %}</p>
+    <ul>
+        {% for e in errors %}
+        <li>{{ e }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>{% blocktrans %}Import completed.{% endblocktrans %}</p>
+    <ul>
+        {% for page, created, messages in pages_created %}
+        <li>
+            <a href="{{ page.id }}/">{{ page.get_complete_slug }} "{{ page.title }}"</a>
+            {% if created %}
+            {% trans "created" %}
+            {% else %}
+            {% trans "modified" %}
+            {% endif %}
+            {% if messages %}
+            <ul>
+                {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endif %}
+
+<p><a href="../">{% trans "Return to page list" %}</a></p>
+{% endblock %}
+

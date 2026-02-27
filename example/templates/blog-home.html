@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+{% load pages_tags static i18n humanize thumbnail %}
+
+{% block header %}
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">{% placeholder "title" %} {{ category }}</h1>
+  <p class="lead">{% placeholder "lead" with Textarea %}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="card-deck mb-3 text-center blog-home">
+  {% for page in blogs %}
+    {% include "blog-card.html" %}
+  {% endfor %}
+  </div>
+
+  <div class="pagination">
+      <span class="step-links">
+          {% if blogs.has_previous %}
+              <a href="?page=1" class="btn btn-light">&laquo; first</a>
+              <a href="?page={{ blogs.previous_page_number }}" class="btn btn-light">previous</a>
+          {% endif %}
+  
+          <span class="current">
+              Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}.
+          </span>
+  
+          {% if blogs.has_next %}
+              <a href="?page={{ blogs.next_page_number }}" class="btn btn-light">next</a>
+              <a href="?page={{ blogs.paginator.num_pages }}" class="btn btn-light">last &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
+{% endblock %}

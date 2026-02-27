@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+{% block header %}
+<h3>Search results <span class="glyphicon glyphicon-search" aria-hidden="true"></span></h3>
+<p class="lead">For "{{ query }}"</p>
+{% endblock %}
+
+{% block content %}
+    <form method="get" action=".">
+        {% if query %}
+            <ul>
+            {% for result in page.object_list %}
+                <li>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}
+                    </a>
+                    {{ result.object.expose_content }}
+                </li>
+
+            {% empty %}
+                <li>No results found. Did you build the search index? (python manage.py rebuild_index)</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+{% endblock %}

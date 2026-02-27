@@ -1,0 +1,578 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-22 13:23+0000\n"
+"PO-Revision-Date: 2019-10-22 17:46+0300\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Last-Translator: Sergey Panasenko <sergey.panasenko@gmail.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#: pages/admin/__init__.py:63
+msgid "General"
+msgstr "Головне"
+
+#: pages/admin/__init__.py:190
+msgid "Content"
+msgstr "Вміст"
+
+#: pages/admin/__init__.py:231
+msgid "Default template"
+msgstr "Шаблон за замовчуванням"
+
+#: pages/admin/forms.py:16
+msgid "Another page with this slug already exists"
+msgstr "Ще одна сторінка з цим slug вже існує"
+
+#: pages/admin/forms.py:17
+msgid "A sibling with this slug already exists at the targeted position"
+msgstr "Сторінка цього ж рівня з таким slug існує у вказаній позиціі"
+
+#: pages/admin/forms.py:18
+msgid "A child with this slug already exists at the targeted position"
+msgstr "Підлегла сторінка з таким slug вже існує в цій позиціі"
+
+#: pages/admin/forms.py:19
+msgid "A sibling with this slug already exists"
+msgstr "Сторінка цього ж рівня з таким slug вже існує"
+
+#: pages/admin/forms.py:20
+msgid "A sibling with this slug already exists at the root level"
+msgstr "Сторінка цього ж рівня з таким slug вже існує на головному рівні "
+
+#: pages/admin/forms.py:87
+msgid "Title"
+msgstr "Назва"
+
+#: pages/admin/forms.py:91
+msgid "Slug"
+msgstr "Slug"
+
+#: pages/admin/forms.py:93
+msgid ""
+"The slug will be used to create the page URL, it must be unique among the "
+"other pages of the same level."
+msgstr ""
+"Slug буде використаний для створення URL-адреси сторінки, він повинен бути "
+"унікальним серед інших сторінок того ж рівня."
+
+#: pages/admin/forms.py:97
+msgid "Language"
+msgstr "Мова"
+
+#: pages/admin/forms.py:103
+msgid "Template"
+msgstr "Шаблон"
+
+#: pages/admin/forms.py:108
+msgid "Delegate to application"
+msgstr "Делегувати до програми"
+
+#: pages/admin/forms.py:113
+msgid "Freeze"
+msgstr "Заморозити"
+
+#: pages/admin/forms.py:114
+msgid "Don't publish any content after this date. Format is 'Y-m-d H:M:S'"
+msgstr "Припинити публікацію після цієї дати. Формат - \"Y-m-d H: M: S\""
+
+#: pages/app_config.py:7
+msgid "Pages"
+msgstr "Сторінки"
+
+#: pages/models.py:64 pages/templates/admin/pages/page/menu.html:85
+msgid "Published"
+msgstr "Опубліковано"
+
+#: pages/models.py:65 pages/templates/admin/pages/page/menu.html:86
+#: pages/templates/admin/pages/page/menu.html:93
+msgid "Hidden"
+msgstr "Сховано"
+
+#: pages/models.py:66 pages/templates/admin/pages/page/menu.html:84
+#: pages/templates/admin/pages/page/menu.html:91
+msgid "Draft"
+msgstr "Чернетка"
+
+#: pages/models.py:79
+#: pages/templates/admin/pages/page/change_list_table.html:14
+msgid "author"
+msgstr "автор"
+
+#: pages/models.py:82
+msgid "parent"
+msgstr "батько"
+
+#: pages/models.py:83 pages/models.py:521 pages/models.py:578
+msgid "creation date"
+msgstr "дата створення"
+
+#: pages/models.py:85
+msgid "publication date"
+msgstr "дата публікації"
+
+#: pages/models.py:86
+msgid ""
+"When the page should go live. Status must be \"Published\" for page to go "
+"live."
+msgstr ""
+"Коли сторінка повинна виходити наживо. Статус повинен бути \"Опублікований"
+"\", щоб сторінка була доступна наживо."
+
+#: pages/models.py:88
+msgid "publication end date"
+msgstr "дата закінчення публікації"
+
+#: pages/models.py:89
+msgid "When to expire the page. Leave empty to never expire."
+msgstr ""
+"Коли термін дії сторінки закінчується. Залиште порожнім, щоб ніколи не "
+"минув."
+
+#: pages/models.py:92
+msgid "last modification date"
+msgstr "дата останньої модифікації"
+
+#: pages/models.py:94
+msgid "status"
+msgstr "статус"
+
+#: pages/models.py:95
+#: pages/templates/admin/pages/page/change_list_table.html:13
+msgid "template"
+msgstr "шаблон"
+
+#: pages/models.py:98
+msgid "delegate to"
+msgstr "делегувати"
+
+#: pages/models.py:101
+msgid "freeze date"
+msgstr "дата заморожування"
+
+#: pages/models.py:102
+msgid "Don't publish any content after this date."
+msgstr "Не публікувати після цієї дати."
+
+#: pages/models.py:108
+msgid "The site(s) the page is accessible at."
+msgstr "Веб-сайт(и), на якому(ких) доступна сторінка."
+
+#: pages/models.py:109
+msgid "sites"
+msgstr "сайти"
+
+#: pages/models.py:111
+msgid "redirect to url"
+msgstr "переадресація на URL"
+
+#: pages/models.py:114
+msgid "redirect to"
+msgstr "переадресація"
+
+#: pages/models.py:126 pages/models.py:517 pages/models.py:537
+msgid "page"
+msgstr "сторінка"
+
+#: pages/models.py:127
+msgid "pages"
+msgstr "сторінки"
+
+#: pages/models.py:512
+msgid "language"
+msgstr "мова"
+
+#: pages/models.py:513
+msgid "body"
+msgstr "тіло"
+
+#: pages/models.py:515
+msgid "type"
+msgstr "тип"
+
+#: pages/models.py:527
+msgid "content"
+msgstr "вміст"
+
+#: pages/models.py:528
+msgid "contents"
+msgstr "вмісти"
+
+#: pages/models.py:542
+msgid "alias"
+msgstr "псевдонім"
+
+#: pages/models.py:543
+msgid "aliases"
+msgstr "псевдоніми"
+
+#: pages/models.py:573
+#: pages/templates/admin/pages/page/change_list_table.html:9
+#: pages/testproj/documents/models.py:10
+msgid "title"
+msgstr "заголовок"
+
+#: pages/models.py:574
+msgid "description"
+msgstr "опис"
+
+#: pages/models.py:575
+msgid "url"
+msgstr "url"
+
+#: pages/models.py:576
+msgid "extension"
+msgstr "розширення"
+
+#: pages/models.py:592
+msgid "Thumbnail"
+msgstr "Іконка"
+
+#: pages/models.py:595
+msgid "media"
+msgstr "медіафайл"
+
+#: pages/models.py:596
+msgid "medias"
+msgstr "медіафайли"
+
+#: pages/placeholders.py:31
+#, python-format
+msgid "[Placeholder %(name)s had syntax error: %(error)s]"
+msgstr "[Плейсхолдер %(name)s має помилку сінтаксису: %(error)s]"
+
+#: pages/placeholders.py:165
+msgid "Note: This field is evaluated as template code."
+msgstr "Примітка. Це поле оцінюється як код шаблону."
+
+#: pages/placeholders.py:418
+msgid "Your email"
+msgstr "Ваш email"
+
+#: pages/placeholders.py:420
+msgid "Subject"
+msgstr "Тема"
+
+#: pages/placeholders.py:422
+msgid "Your message"
+msgstr "Повідомлення"
+
+#: pages/placeholders.py:441
+msgid "Your email has been sent. Thank you."
+msgstr "Ваш лист було надіслано. Дякую."
+
+#: pages/placeholders.py:443
+msgid "An error as occured: your email has not been sent."
+msgstr "Виникла помилка: ваш лист не надіслано."
+
+#: pages/plugins/jsonexport/actions.py:20
+msgid "Export pages as JSON"
+msgstr "Експортувати сторінки як JSON"
+
+#: pages/plugins/jsonexport/actions.py:46
+msgid "Import some pages from a JSON file"
+msgstr "Імпортувати деякі сторінки з JSON файлу"
+
+#: pages/plugins/jsonexport/management/commands/pages_export_json.py:36
+#, python-format
+msgid "Site with id/domain = '%s' not found"
+msgstr "Сайт з ідентифікатором або доменом '%s' не знайдено"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:28
+#, python-format
+msgid "User with username/id/email = '%s' not found"
+msgstr "Користувача з іменем, ідентифікатором або email '%s' не знайдено"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:36
+msgid "Errors encountered while importing JSON"
+msgstr "Помилки під час імпорту JSON"
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s created."
+msgstr "%s створено."
+
+#: pages/plugins/jsonexport/management/commands/pages_import_json.py:38
+#, python-format
+msgid "%s modified."
+msgstr "%s змінено."
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:6
+msgid "Home"
+msgstr "Головна"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:9
+msgid "Import Pages"
+msgstr "Імпортувати сторінки"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:24
+msgid "Import"
+msgstr "Імпорт"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:30
+msgid "Importing pages failed:"
+msgstr "Помилка Імпорту сторінок:"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:37
+msgid "Import completed."
+msgstr "Імпорт завершено."
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:43
+msgid "created"
+msgstr "створено"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:45
+msgid "modified"
+msgstr "змінено"
+
+#: pages/plugins/jsonexport/templates/admin/pages/page/import_pages.html:58
+msgid "Return to page list"
+msgstr "Повернутися зо списку сторінок"
+
+#: pages/plugins/jsonexport/utils.py:126
+#, python-format
+msgid "Could not find page for redirect-to field '%s'"
+msgstr "Не вдалося знайти сторінку для перенаправлення в поле '%s'"
+
+#: pages/plugins/jsonexport/utils.py:157
+#, python-format
+msgid "Language '%s' not imported"
+msgstr "Мова \"%s\" не імпортується"
+
+#: pages/plugins/jsonexport/utils.py:186
+#, python-format
+msgid "Original author '%s' not found"
+msgstr "Оригінального автора \"%s\" не знайдено"
+
+#: pages/plugins/jsonexport/utils.py:224
+#, python-format
+msgid "Could not add site '%s' to page"
+msgstr "Не вдалося додати сайт \"%s\" на сторінку"
+
+#: pages/plugins/jsonexport/utils.py:280
+#, python-format
+msgid "JSON file is invalid: %s"
+msgstr "Файл JSON %s має помилки"
+
+#: pages/plugins/jsonexport/utils.py:317
+#, python-format
+msgid "Unsupported file version: %s"
+msgstr "Ця версія файлу не підтримується: %s"
+
+#: pages/plugins/jsonexport/utils.py:345
+#, python-format
+msgid "%s has no common language with this site"
+msgstr "%s не має спільної мови з цим сайтом"
+
+#: pages/plugins/jsonexport/utils.py:350
+#, python-format
+msgid ""
+"%s did not include its parent page and a matching one was not found on this "
+"site"
+msgstr ""
+"%s не включає свою батьківську сторінку, а відповідна не знайдена на цьому "
+"сайті"
+
+#: pages/plugins/jsonexport/utils.py:354
+#, python-format
+msgid "%(page)s uses a template not found on this site: %(template)s"
+msgstr ""
+"%(page)s використовує шаблон, не знайдений на цьому веб-сайті: %(template)s"
+
+#: pages/plugins/jsonexport/utils.py:361
+#, python-format
+msgid ""
+"%(page)s template contents are different than our template: %(template)s"
+msgstr "Вміст шаблону %(page)s відрізняється від нашого шаблону: %(template)s"
+
+#: pages/templates/admin/pages/page/change_form.html:4
+msgid "Edit"
+msgstr "Редагувати"
+
+#: pages/templates/admin/pages/page/change_form.html:19
+msgid "History"
+msgstr "Історія"
+
+#: pages/templates/admin/pages/page/change_form.html:20
+msgid "View on site"
+msgstr "Переглянути на сайті"
+
+#: pages/templates/admin/pages/page/change_list.html:18
+#: pages/templates/admin/pages/page/change_list.html:20
+#: pages/templates/pages/examples/index.html:74
+msgid "Search"
+msgstr "Пошук"
+
+#: pages/templates/admin/pages/page/change_list_table.html:10
+msgid "languages"
+msgstr "Мови"
+
+#: pages/templates/admin/pages/page/change_list_table.html:11
+msgid "last modification"
+msgstr "остання зміна"
+
+#: pages/templates/admin/pages/page/change_list_table.html:12
+msgid "published"
+msgstr "опубліковано"
+
+#: pages/templates/admin/pages/page/menu.html:25
+msgid "undefined"
+msgstr "не визначено"
+
+#: pages/templates/admin/pages/page/menu.html:33
+msgid "view this page"
+msgstr "дивитись цю сторінку"
+
+#: pages/templates/admin/pages/page/menu.html:34
+msgid "move this page"
+msgstr "перенести цю сторінку"
+
+#: pages/templates/admin/pages/page/menu.html:35
+msgid "insert a new page here"
+msgstr "вставити нову сторінку тут"
+
+#: pages/templates/admin/pages/page/menu.html:37
+msgid "delete this page"
+msgstr "видалити цю сторінку"
+
+#: pages/templates/admin/pages/page/menu.html:41
+msgid "don&#x27;t move this page"
+msgstr "не переміщуйте цю сторінку"
+
+#: pages/templates/admin/pages/page/menu.html:41
+#: pages/templates/admin/pages/page/menu.html:45
+msgid "cancel"
+msgstr "відмінити"
+
+#: pages/templates/admin/pages/page/menu.html:45
+msgid "don&#x27;t insert a new page here"
+msgstr "не вставляйте сюди нову сторінку"
+
+#: pages/templates/admin/pages/page/menu.html:46
+msgid "insert above"
+msgstr "вставити зверху"
+
+#: pages/templates/admin/pages/page/menu.html:47
+msgid "insert below"
+msgstr "вставити знизу"
+
+#: pages/templates/admin/pages/page/menu.html:48
+msgid "insert as child"
+msgstr "вставити як підлегла"
+
+#: pages/templates/admin/pages/page/menu.html:61
+#, python-format
+msgid "edit %(lang)s translation"
+msgstr "редагувати переклад: %(lang)s"
+
+#: pages/templates/admin/pages/page/menu.html:64
+#, python-format
+msgid "create %(lang)s translation"
+msgstr "створити переклад: %(lang)s "
+
+#: pages/templates/admin/pages/page/menu.html:71
+#: pages/templates/pages/revisions.html:6
+msgid "DATETIME_FORMAT"
+msgstr "j. N Y, H:i"
+
+#: pages/templates/admin/pages/page/menu.html:92
+msgid "In navigation"
+msgstr "У навыгації"
+
+#: pages/templates/pages/contact.html:4
+msgid "Send"
+msgstr "Видіслати"
+
+#: pages/templates/pages/revisions.html:4
+msgid "Revisions"
+msgstr "Ревізії"
+
+#: pages/templates/pages/traduction_helper.html:4
+msgid "Wanted language has not been translated yet."
+msgstr "Ще не перекладено на потрібну мову."
+
+#: pages/templates/pages/widgets/languages.html:19
+msgid "Delete this translation"
+msgstr "Видалити цей переклад"
+
+#: pages/testproj/documents/models.py:11
+msgid "text"
+msgstr "текст"
+
+#: pages/testproj/test_settings.py:120
+msgid "German"
+msgstr "Німецька"
+
+#: pages/testproj/test_settings.py:121
+msgid "Français"
+msgstr "Французька"
+
+#: pages/testproj/test_settings.py:122
+msgid "US English"
+msgstr "Американська англійська"
+
+#: pages/testproj/test_settings.py:129
+msgid "French"
+msgstr "Французька"
+
+#: pages/testproj/test_settings.py:130
+msgid "Belgium french"
+msgstr "Бельгійська французька"
+
+#: pages/testproj/test_settings.py:131
+msgid "Italian"
+msgstr "Італьянська"
+
+#: pages/urlconf_registry.py:36
+#, python-format
+msgid "The urlconf %s has already been registered."
+msgstr "Urlconf %s вже зареєстровано."
+
+#: pages/urlconf_registry.py:46
+#, python-format
+msgid "The urlconf %s has not been registered."
+msgstr "Urlconf %s не зареєстровано."
+
+#: pages/widgets.py:114
+msgid "Please save the page to show the file field"
+msgstr "Збережіть сторінку, щоб показати поле файлу"
+
+#: pages/widgets.py:115
+msgid "Delete file"
+msgstr "Видалити файл"
+
+#: pages/widgets.py:123
+#, python-format
+msgid "Current file: %s<br/>"
+msgstr "Поточний файл: %s<br/>"
+
+#: pages/widgets.py:137
+msgid "Please save the page to show the image field"
+msgstr "Збережіть сторінку, щоб показати поле зображення"
+
+#: pages/widgets.py:138
+msgid "Delete image"
+msgstr "Видалити зображення"
+
+#: pages/widgets_registry.py:30
+#, python-format
+msgid "The widget %s has already been registered."
+msgstr "Віджет %s вже зареєстрований."
+
+#: pages/widgets_registry.py:42
+#, python-format
+msgid "The widget %s has not been registered."
+msgstr "Віджет %s не зареєстрований."

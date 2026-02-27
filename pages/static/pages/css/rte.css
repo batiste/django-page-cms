@@ -1,0 +1,86 @@
+
+.rte {
+    width:100%;
+}
+
+#frameBody {
+    font-family: Roboto,"Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+    font-size:13px;
+    font-weight:normal;
+    margin:0;
+    padding:8px;
+}
+
+#frameBody p {
+    border-left:1px #bbb solid;
+    padding-left:4px;
+}
+
+iframe.rte {
+    width:98%;
+    border:1px #ccc solid;
+}
+
+.rte-toolbar { 
+    overflow:hidden; 
+    width:100%;
+    clear:both;
+    margin-bottom:4px;
+}
+
+.rte-toolbar select { 
+    font-size:16px;
+    padding: 5px 12px;
+}
+
+.rte-toolbar i { 
+    font-size:20px;
+    margin: 1px 1px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 6px;
+    vertical-align: bottom;
+}
+
+.rte-toolbar a, .rte-toolbar a img {
+	border:0;
+}
+
+form .rte-toolbar p {
+    float:left;
+    margin:0;
+    padding:0;
+    padding-right:5px;
+}
+
+#frameBody #attributes {
+    position:absolute;
+    padding: 0.5em 0.4em;
+    border:#bbb 1px solid;
+    border-radius: 3px;
+    z-index:1000;
+    background: #fff;
+}
+
+#frameBody #attributes label {
+    display:block;
+    margin-bottom:4px;
+}
+
+#frameBody #attributes input {
+    width:6em;
+}
+
+#frameBody #attributes label span {
+    width:4em;
+    display: inline-block;
+}
+
+#frameBody img, #frameBody #remove {
+    cursor:pointer;
+}
+
+
+
+

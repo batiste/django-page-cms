@@ -1,0 +1,15 @@
+{% extends "pages/examples/index.html" %}
+{% load ckeditor_placeholder %}
+{% load pages_tags %}
+
+{% block title %}CKEditor template{% endblock %}
+
+{% block content %}
+<div style="width:70%">
+    <div>content
+        <div id="ckeditor-content" class="placeholder">
+            {% ckeditor_placeholder "welcome_text" with ckeditor:minimal %}
+        </div>
+    </div>
+</div>
+{% endblock %}

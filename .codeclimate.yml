@@ -1,0 +1,8 @@
+languages:
+  Python: true
+  JavaScript: true
+exclude_paths:
+  - "pages/static/pages/javascript/jquery*"
+  - "doc/*"
+  - "example/*"
+  - "pages/tests/*"

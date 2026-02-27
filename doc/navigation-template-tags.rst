@@ -8,6 +8,21 @@ Django-pages-cms offers various template tags which can be used to create a site
 .. contents::
     :local:
 
+pages_navigation variable
+===========================
+
+By default the variable `pages_navigation` will be available within
+all of the CMS pages. `pages_navigation` is a list of Pages obtained
+by calling the `get_navigation` method on the `Details` class based view
+of the CMS::
+
+    def get_navigation(self, request, path, lang):
+      """Get the pages that are at the root level."""
+      return Page.objects.navigation().order_by("tree_id")
+
+You can subclass the `Details` class based view to change
+this behaviour.
+
 pages_menu
 ==========
 
@@ -78,15 +93,29 @@ Again, the default template `pages/sub_menu.html` will render the items as a nes
 unordered list (see above).
 
 
+pages_siblings_menu
+===================
+
+The pages_siblings_menu tag shows all the children of the immediate parent of the current page. This can be used for example as a secondary menu.
+
+Use the following snippet to display a list of all the children of the
+immediate parent of the current page::
+
+    <ul>
+    {% pages_siblings_menu current_page %}
+    </ul>
+
+Again, the default template `pages/sub_menu.html` will render the items as a nested,
+unordered list (see above).
+
+
 pages_breadcrumb
 ================
 
 With the pages_breadcrumb tag, it is possible to use the "breadcrumb"/"you are here"
 navigational pattern, consisting of a list of all parents of the current page::
 
-    <ul>
     {% pages_breadcrumb current_page %}
-    </ul>
 
 The output of the pages_breadcrumb tag is defined by the template `pages/breadcrumb.html`.
 

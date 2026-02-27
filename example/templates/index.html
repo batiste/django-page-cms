@@ -1,0 +1,103 @@
+{% load pages_tags static i18n %}
+<!DOCTYPE html>
+<html lang="{{ language }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- {% trans "SEO Options" %} -->
+    <!-- {% trans "meta description" %} -->
+    <meta name="description" content="{% placeholder "meta_description" section "SEO Options" %}">
+    <!-- {% trans "meta keywords" %} -->
+    <meta name="description" content="{% placeholder "meta_keywords" section "SEO Options" %}" />
+    <meta name="author" content="">
+
+    <title>{% placeholder 'title' %}</title>
+
+    {% pages_edit_media %}
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="{% static "cms/main.css" %}" rel="stylesheet">
+    <link href="{% static "cms/blog.css" %}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar shadow-sm">
+    <div class="container d-flex flex-column flex-md-row align-items-center bg-white">
+      <h5 class="my-0 mr-md-0 font-weight-normal">
+        <a href="/{{ lang }}/"><img src="https://django-page-cms.readthedocs.io/en/latest/_static/gerbi.png"></a>
+      </h5>
+      <nav class="my-2 my-md-0 mr-md-3">
+        {% for page in pages_navigation %}
+          <a href="{% show_absolute_url page %}" class="p-2 text-dark{% ifequal page.id current_page.id %} font-weight-bolder{% endifequal %}">
+            {% show_content page "title" %}
+          </a>
+        {% endfor %}
+      </nav>
+      <div class="nav-actions">
+        {% include "language-selector.html" %}
+        <a class="btn btn-primary" href="/admin/">{% trans "Login" %}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {% block header %}
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">{% placeholder "title" %}</h1>
+      <!-- {% trans "lead" %} -->
+      <p class="lead">{% placeholder "lead" with Textarea %}</p>
+    </div>
+    {% endblock %}
+
+    <div>
+    {% block content %}
+      <!-- {% trans "content" %} -->
+      {% placeholder "content" with RichTextarea %}
+    {% endblock %}
+    </div>
+
+
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <img class="mb-2" src="https://django-page-cms.readthedocs.io/en/latest/_static/gerbi.png" alt="" height="24">
+          <small class="d-block mb-3 text-muted">&copy; 2017-2019</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Features</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Cool stuff</a></li>
+            <li><a class="text-muted" href="#">Random feature</a></li>
+            <li><a class="text-muted" href="#">Team feature</a></li>
+            <li><a class="text-muted" href="#">Stuff for developers</a></li>
+            <li><a class="text-muted" href="#">Another one</a></li>
+            <li><a class="text-muted" href="#">Last time</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Resource</a></li>
+            <li><a class="text-muted" href="#">Resource name</a></li>
+            <li><a class="text-muted" href="#">Another resource</a></li>
+            <li><a class="text-muted" href="#">Final resource</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>About</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Team</a></li>
+            <li><a class="text-muted" href="#">Locations</a></li>
+            <li><a class="text-muted" href="#">Privacy</a></li>
+            <li><a class="text-muted" href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </div>
+  {% pages_edit_init %}
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</html>

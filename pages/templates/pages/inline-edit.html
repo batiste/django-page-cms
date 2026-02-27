@@ -1,0 +1,112 @@
+{% load static admin_urls %}
+<div id="page-edit-bar">
+  <a href="{% url 'admin:logout' %}" class="btn btn-default">Logout</a>
+  <a href="{% url "admin:pages_page_change" current_page.id %}" class="btn btn-default">Edit in admin</a>
+  {% if request.COOKIES.enable_edit_mode %}
+    <button id="page-disable-edit" class="btn btn-primary">Disable Edit Mode</button>
+  {% else %}
+    <button id="page-enable-edit" class="btn btn-warning">Enable Edit Mode</button>
+  {% endif %}
+</div>
+
+<div id="edit-overlay" style="display:none">
+  <form class="form-group" action="" method="post" target="post-iframe" enctype="multipart/form-data">
+  {% csrf_token %}
+  <button style="float:right" id="save-edit">Save</button>
+  <button style="float:right" id="undo-edit">Undo</button>
+  {% for field in form %}
+    <div class="inline-edit-field">
+    <label for="id_{{ field.name }}">{{ field.name }}</label>
+    {{ field }}
+    </div>
+  {% endfor %}
+  </form>
+</div>
+
+<iframe id="post-iframe" name="post-iframe"></iframe>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src='{% static "pages/javascript/pages.js" %}'></script>
+
+<script>
+  var plc = $("*").contents().filter(function(){
+    return (this.nodeValue && this.nodeValue.startsWith("placeholder") && this.nodeType == Node.COMMENT_NODE)
+  });
+  var page_id = "{{ current_page.id }}";
+  var lang = "{{ lang }}";
+
+  plc.each(function(i, el) {
+    $(el.parentNode).attr('data-placeholder-name', el.nodeValue.split(";")[1]);
+    $(el).remove();
+  });
+
+  $(document.body).addClass('pages-cms-edit-mode');
+  {% if request.COOKIES.enable_edit_mode %}
+    $(document.body).addClass('pages-cms-edit-mode--enabled');
+  {% endif %}
+
+  var overlay = $("#edit-overlay");
+  var name, page_id, lang, element;
+
+  $(document).on('click', '#undo-edit', function(e) {
+    e.preventDefault();
+    overlay.hide();
+  });
+
+  $(document).on('click', '#page-enable-edit', function(e) {
+    pages.cookie('enable_edit_mode', 'enabled', {path: '/'});
+    window.location.reload();
+  });
+
+  $(document).on('click', '#page-disable-edit', function(e) {
+    pages.cookie('enable_edit_mode', null, {path: '/'});
+    window.location.reload();
+  });
+
+  $(document).on('click', '#save-edit', function(e) {
+    setTimeout(function(){
+      overlay.find('button,input').prop('disabled', true);
+    }, 100);
+    //overlay.find('form').submit();
+  });
+
+  $(document).on('click', '[data-placeholder-name]', function(e) {
+    element = $(this);
+    overlay.show();
+    name = $(this).attr('data-placeholder-name');
+
+    var modify_url = '{% url "admin:page-modify-placeholder" current_page.id %}';
+    modify_url = modify_url + '?content_type=' + name + '&language_id=' + lang
+
+    var form = overlay.find('form');
+    form.attr('action', modify_url);
+    var label = form.find("[for='id_" + name + "']");
+
+    overlay.find('.inline-edit-field').hide();
+    $(label[0].parentNode).show();
+
+    var offset = $(this).offset();
+
+    overlay.css('top', offset.top-5);
+    overlay.css('left', offset.left-5);
+    overlay.css('min-width', $(this).width()+5);
+    overlay.css('min-height', $(this).height()+5);
+
+    overlay.find('input,textarea').addClass('form-control').focus();
+
+    label.show();
+  });
+
+  $('#post-iframe').load(function() {
+    console.log('iframe loaded');
+    var get_content_url = '{% url "admin:page-get-last-content" current_page.id %}';
+    get_content_url = get_content_url + '?content_type=' + name + '&language_id=' + lang
+    $.get(get_content_url, function(result) {
+        setTimeout(function(){
+          overlay.find('button,input').prop('disabled', false);
+        }, 100);
+        overlay.hide();
+        element.html(result);
+    });
+  });
+</script>

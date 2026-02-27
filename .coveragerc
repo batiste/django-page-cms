@@ -1,0 +1,8 @@
+[report]
+omit =
+    */tests/*
+    */testproj/*
+    */plugins/*
+    pages/serializers.py
+    pages/api.py
+    pages/search_indexes.py

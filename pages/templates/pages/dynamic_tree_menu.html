@@ -1,5 +1,5 @@
 {% load pages_tags cache %}
-{% if page.status %}
+{% if page.calculated_status %}
 <li {% ifequal page current_page %}class="selected"{% endifequal %}>
 <a href="{% show_absolute_url page %}">{% show_content page "title" %}</a>
 {% if children %}

@@ -1,0 +1,8 @@
+{% extends "pages/tests/block.html" %}
+{% load pages_tags %}
+{% block content %}
+{% if 1 == 1 %}
+	{{ block.super }}
+{% endif %}
+{% placeholder body2 %}
+{% endblock %}
